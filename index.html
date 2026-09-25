@@ -40,7 +40,7 @@ const CATS = {
   kids:   { label: 'With Kids',      icon: '🧸', basis: 'trend',   dot: '#f43f5e' },
   nature: { label: 'Nature & Views', icon: '🏔️', basis: 'trend',   dot: '#10b981' },
   city:   { label: 'City Sights',    icon: '🏙️', basis: 'trend',   dot: '#0ea5e9' },
-  food:   { label: 'Food',           icon: '🍜', basis: 'reviews', dot: '#f59e0b', criteria: 'Picked from places with a Google rating of 4.5+ and 1,500+ reviews, one per cuisine type (no chains).' },
+  food:   { label: 'Food',           icon: '🍜', basis: 'reviews', dot: '#f59e0b', criteria: 'Picked from places with a Google rating of 4.5+ and 1,500+ reviews, spread across Metro Vancouver and across cuisines (no chains).' },
   hidden: { label: 'Hidden Gems',    icon: '💎', basis: 'reviews', dot: '#8b5cf6', criteria: 'Places with a Google rating of 4.6+ and 1,000+ reviews, but low search volume. Visitors love them, yet they are still under the radar.' }
 };
 const hasTrend = s => Array.isArray(s.trend);
@@ -54,10 +54,15 @@ const RADII = [2, 5, 10, 25, 'any'];
 const OUT_OF_AREA_KM = 60;
 const ORIGINS = {
   downtown:  { label: 'Downtown',        lat: 49.2827, lng: -123.1207 },
+  northvan:  { label: 'North Vancouver', lat: 49.3200, lng: -123.0724 },
   burnaby:   { label: 'Burnaby',         lat: 49.2488, lng: -122.9805 },
   richmond:  { label: 'Richmond',        lat: 49.1666, lng: -123.1336 },
-  northvan:  { label: 'North Vancouver', lat: 49.3200, lng: -123.0724 },
-  coquitlam: { label: 'Coquitlam',       lat: 49.2838, lng: -122.7932 }
+  newwest:   { label: 'New Westminster', lat: 49.2057, lng: -122.9110 },
+  coquitlam: { label: 'Coquitlam',       lat: 49.2838, lng: -122.7932 },
+  surrey:    { label: 'Surrey',          lat: 49.1913, lng: -122.8490 },
+  delta:     { label: 'Delta',           lat: 49.0847, lng: -123.0587 },
+  langley:   { label: 'Langley',         lat: 49.1044, lng: -122.6600 },
+  mapleridge:{ label: 'Maple Ridge',     lat: 49.2194, lng: -122.5984 }
 };
 
 // ───────── 스팟 데이터 ─────────
@@ -619,7 +624,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   }
 
   mapView(items) {
-    const W = 720, H = 600, B = { n: 49.40, s: 49.10, w: -123.30, e: -122.75 };
+    // 메트로 밴쿠버 전체(웨스트밴쿠버~메이플 리지, 노스쇼어~국경)가 들어가는 범위
+    const W = 720, H = 560, B = { n: 49.42, s: 49.00, w: -123.30, e: -122.48 };
     const P = (lat, lng) => [((lng - B.w) / (B.e - B.w)) * W, ((B.n - lat) / (B.n - B.s)) * H];
     const origin = this.origin();
     const labels = Object.values(ORIGINS).map(o => { const [x, y] = P(o.lat, o.lng); return `<text x="${x}" y="${y + 26}" text-anchor="middle" font-size="12" class="fill-slate-400 dark:fill-slate-500" font-weight="600">${o.label}</text>`; }).join('');

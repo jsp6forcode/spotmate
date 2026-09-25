@@ -6,7 +6,8 @@
 #   GOOGLE_PLACES_API_KEY=발급받은키
 # 사용법: powershell -ExecutionPolicy Bypass -File tools\places-discover.ps1 [-MinRating 4.5] [-MinReviews 500]
 # -Only 'ramen in Vancouver','parks in Vancouver' 처럼 일부 검색어만 다시 조회할 수 있어요.
-param([double]$MinRating = 4.5, [int]$MinReviews = 500, [string[]]$Only = @())
+# -Set metro 로 메트로 밴쿠버 교외 지역 검색어 세트를 써요.
+param([double]$MinRating = 4.5, [int]$MinReviews = 500, [string[]]$Only = @(), [string]$Set = 'vancouver')
 
 $root = Split-Path $PSScriptRoot -Parent
 $envFile = Join-Path $root '.env.local'
@@ -22,6 +23,14 @@ $queries = [ordered]@{
              'beaches in Vancouver', 'museums in Vancouver', 'lakes near Vancouver BC', 'tourist attractions Burnaby')
 }
 
+if ($Set -eq 'metro') {
+  $queries = [ordered]@{
+    food   = @('best restaurants in Surrey BC', 'best restaurants in Burnaby', 'best restaurants in Richmond BC', 'best restaurants in Coquitlam',
+               'best restaurants in North Vancouver', 'best restaurants in New Westminster', 'best restaurants in Langley BC', 'best restaurants in Port Moody')
+    hidden = @('parks in Surrey BC', 'parks in Coquitlam', 'parks in Langley BC', 'parks in Delta BC', 'hiking trails Maple Ridge',
+               'parks in Port Moody', 'parks in Richmond BC', 'tourist attractions Surrey BC', 'tourist attractions New Westminster', 'tourist attractions Langley BC')
+  }
+}
 $fields = 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.primaryTypeDisplayName,places.location'
 $headers = @{ 'X-Goog-Api-Key' = $key; 'X-Goog-FieldMask' = $fields }
 $calls = 0

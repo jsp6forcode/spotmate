@@ -104,6 +104,15 @@
       "why": "It is being searched alongside nearby hikes like Lynn Valley and the Grouse Grind.",
       "tips": ["The parking lot fills up early on weekends"]
     },
+    {
+      "id": "buntzen", "cat": "nature", "name": "Buntzen Lake", "area": "Anmore",
+      "lat": 49.3475, "lng": -122.8601, "emoji": "🏞️", "placeId": "ChIJ9cJaIxJ8hlQRoga86Y6X3Nc",
+      "trend": [4, 8, 13], "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Mountain lake with lakeside trails, a floating bridge, and paddling",
+      "signals": ["buntzen lake camping (+350%)", "buntzen lake kayak rental", "diez vistas trail"],
+      "why": "Searches for camping (+350%), kayak rentals, and the Diez Vistas trail are rising.",
+      "tips": ["Parking fills up on warm weekends, so check the parking rules before you go"]
+    },
 
     {
       "id": "granville", "cat": "city", "name": "Granville Island", "area": "False Creek",
@@ -159,6 +168,15 @@
       "why": "Searches for 'free Fridays' are surging. Today's score is above this month's average.",
       "tips": []
     },
+    {
+      "id": "fortlangley", "cat": "city", "name": "Fort Langley", "area": "Langley",
+      "lat": 49.1691, "lng": -122.5794, "emoji": "🏘️", "placeId": "ChIJfbeoY1nShVQRgczQebI7Kog",
+      "trend": [46, 58, 56], "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "attraction", "weather": ["sunny", "cloudy"],
+      "summary": "Historic riverside village with cafés, antique shops, and a national historic site",
+      "signals": ["grave tales fort langley", "fort langley antique mall", "saba cafe", "tap fort langley"],
+      "why": "Searches for a ghost-story walking tour ('Grave Tales'), the antique mall, and local cafés are rising. It is one of the few spots outside Vancouver with a steady search signal.",
+      "tips": ["Fort Langley National Historic Site is a short walk from the village centre"]
+    },
 
     {
       "id": "iden", "cat": "food", "name": "iDen & Quanjude Beijing Duck House", "area": "Cambie",
@@ -208,6 +226,66 @@
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Cafe on Howe Street downtown", "signals": [], "why": "", "tips": []
     },
+    {
+      "id": "p2p", "cat": "food", "name": "Paratha 2 Pasta", "area": "Surrey",
+      "lat": 49.1502, "lng": -122.8899, "emoji": "🍝", "placeId": "ChIJqUiN5w_ZhVQRizEWoQ3SYsE",
+      "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Indian restaurant with a menu that runs from parathas to pasta", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "afghankitchen", "cat": "food", "name": "Afghan Kitchen", "area": "South Surrey",
+      "lat": 49.0445, "lng": -122.7764, "emoji": "🍢", "placeId": "ChIJse82JpPEhVQRzhz30hab1Mo",
+      "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Afghan kebabs, rice dishes, and bread", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "tenen", "cat": "food", "name": "Tenen Restaurant", "area": "Burnaby",
+      "lat": 49.2154, "lng": -122.989, "emoji": "🥟", "placeId": "ChIJQ94YI0F2hlQRThl4MaBwzO0",
+      "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Eastern European home-style cooking", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "narenj", "cat": "food", "name": "Narenj", "area": "North Vancouver",
+      "lat": 49.3189, "lng": -123.065, "emoji": "🍚", "placeId": "ChIJi7NJrW5xhlQRIFM6qpLfgcQ",
+      "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Persian restaurant in North Vancouver", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "lamajoun", "cat": "food", "name": "Lamajoun", "area": "Richmond",
+      "lat": 49.1958, "lng": -123.0952, "emoji": "🥙", "placeId": "ChIJvypt7AB1hlQRAHHd5nfljSQ",
+      "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Casual restaurant named after lahmajoun, the thin Armenian flatbread", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "flyingbeaver", "cat": "food", "name": "Flying Beaver Bar & Grill", "area": "Richmond (Sea Island)",
+      "lat": 49.1773, "lng": -123.1683, "emoji": "🛩️", "placeId": "ChIJGfIH_CcLhlQRXUIWNqgCxw8",
+      "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Riverside pub by the Fraser River float plane dock", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "wildthyme", "cat": "food", "name": "Wild Thyme", "area": "New Westminster",
+      "lat": 49.2092, "lng": -122.9322, "emoji": "🧆", "placeId": "ChIJq6reudd3hlQReZKZ57G15ms",
+      "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Lebanese restaurant on 12th Street", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "brodeurs", "cat": "food", "name": "Brodeur's Bistro", "area": "Langley",
+      "lat": 49.1589, "lng": -122.6579, "emoji": "🦐", "placeId": "ChIJHQUqeADRhVQR1E4Q5w0AE0w",
+      "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Cajun bistro", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "udupi", "cat": "food", "name": "Udupi Adda", "area": "Langley",
+      "lat": 49.1035, "lng": -122.656, "emoji": "🍛", "placeId": "ChIJo_Up6jfPhVQRw4M8svHWiS4",
+      "trend": null, "env": "indoor", "price": "$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "South Indian vegetarian restaurant", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "singaporehawker", "cat": "food", "name": "Singapore Hawker", "area": "Coquitlam",
+      "lat": 49.282, "lng": -122.7986, "emoji": "🍤", "placeId": "ChIJn2qjAFd_hlQR9-BKj8ElcLw",
+      "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Singaporean hawker-style dishes", "signals": [], "why": "", "tips": []
+    },
 
     {
       "id": "qepark", "cat": "hidden", "name": "Queen Elizabeth Park", "area": "Little Mountain",
@@ -243,7 +321,7 @@
     },
     {
       "id": "whytecliff", "cat": "hidden", "name": "Whytecliff Park", "area": "Horseshoe Bay",
-      "lat": 49.374, "lng": -123.2874, "emoji": "🪨", "placeId": "ChIJMSLx3oxrhlQRPo56WANJmPM",
+      "lat": 49.374, "lng": -123.2874, "emoji": "🏝️", "placeId": "ChIJMSLx3oxrhlQRPo56WANJmPM",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Coastal park with a rocky islet you can walk to at low tide",
       "signals": [], "why": "", "tips": ["Depending on the tide, you can't always cross to the islet"]
@@ -260,6 +338,86 @@
       "trend": null, "env": "outdoor", "price": "Free", "time": "2 hrs", "crowd": "park", "weather": ["sunny"],
       "summary": "Rocky lookout over Indian Arm at the end of a short hike",
       "signals": [], "why": "", "tips": ["Parking in Deep Cove is tough on weekends, so start early"]
+    },
+    {
+      "id": "rockypoint", "cat": "hidden", "name": "Rocky Point Park", "area": "Port Moody",
+      "lat": 49.2804, "lng": -122.8495, "emoji": "🌊", "placeId": "ChIJP6T4Jh55hlQRlIjDgGzwVOY",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Waterfront park at the end of Burrard Inlet, with a pier and trails", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "goldenears", "cat": "hidden", "name": "Golden Ears Park", "area": "Maple Ridge",
+      "lat": 49.2781, "lng": -122.515, "emoji": "⛰️", "placeId": "ChIJLfu9PdebhlQRgp71o2-R60c",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Large provincial park with Alouette Lake, waterfalls, and hikes",
+      "signals": [], "why": "", "tips": ["In peak season BC Parks may require a free day-use pass, so check before you go"]
+    },
+    {
+      "id": "bearcreek", "cat": "hidden", "name": "Bear Creek Park", "area": "Surrey",
+      "lat": 49.1591, "lng": -122.8401, "emoji": "🚂", "placeId": "ChIJPebCQezZhVQRhg3zZ6bQeRo",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
+      "summary": "Big city park with gardens and a miniature train", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "blackiespit", "cat": "hidden", "name": "Blackie Spit", "area": "Crescent Beach, Surrey",
+      "lat": 49.061, "lng": -122.8791, "emoji": "🐦", "placeId": "ChIJk0fX7cbchVQRcaa9vj9ntME",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Sand spit at Crescent Beach, known for birdwatching", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "redwood", "cat": "hidden", "name": "Redwood Park", "area": "South Surrey",
+      "lat": 49.0348, "lng": -122.7288, "emoji": "🌳", "placeId": "ChIJ3eCihU3EhVQR5kJzlsXavys",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Forest park with towering redwood trees", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "mundy", "cat": "hidden", "name": "Mundy Park", "area": "Coquitlam",
+      "lat": 49.2565, "lng": -122.8256, "emoji": "🍂", "placeId": "ChIJycv27JB4hlQRw58p1LpogL8",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Coquitlam's biggest park, with forest loops around two small lakes", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "garrypoint", "cat": "hidden", "name": "Garry Point Park", "area": "Steveston, Richmond",
+      "lat": 49.1256, "lng": -123.1961, "emoji": "🪁", "placeId": "ChIJff6cB3UKhlQRWAvA83ex7-k",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Oceanfront park at the mouth of the Fraser, popular for kites and sunsets", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "terranova", "cat": "hidden", "name": "Terra Nova Adventure Play", "area": "Richmond",
+      "lat": 49.1735, "lng": -123.1993, "emoji": "🧗", "placeId": "ChIJZbpCCxsLhlQRrLu7A-1SfPY",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
+      "summary": "Adventure playground with climbing structures and big slides", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "centennial", "cat": "hidden", "name": "Centennial Beach", "area": "Tsawwassen, Delta",
+      "lat": 49.0187, "lng": -123.0413, "emoji": "🏖️", "placeId": "ChIJ67YBQ0fmhVQRBhMCVCTofi8",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny"],
+      "summary": "Shallow, sandy beach on Boundary Bay",
+      "signals": [], "why": "", "tips": ["At low tide the water pulls back a long way"]
+    },
+    {
+      "id": "queenspark", "cat": "hidden", "name": "Queen's Park", "area": "New Westminster",
+      "lat": 49.2151, "lng": -122.9059, "emoji": "🐑", "placeId": "ChIJHTtJAgrYhVQR1fxvihZ0PyA",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Historic park with gardens, playgrounds, and a seasonal petting farm", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "barnet", "cat": "hidden", "name": "Barnet Marine Park", "area": "Burnaby",
+      "lat": 49.2887, "lng": -122.9506, "emoji": "⚓", "placeId": "ChIJcx2i4415hlQREW0hnDPgkCc",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Waterfront park on Burrard Inlet with a pier and a small beach", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "campbellvalley", "cat": "hidden", "name": "Campbell Valley Park", "area": "Langley",
+      "lat": 49.0209, "lng": -122.658, "emoji": "🐴", "placeId": "ChIJLXl-KwbGhVQRtoVk1IRBH9U",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Rural regional park with meadow and forest trails, including horse trails", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "derbyreach", "cat": "hidden", "name": "Derby Reach Park", "area": "Langley",
+      "lat": 49.1975, "lng": -122.6051, "emoji": "🏕️", "placeId": "ChIJdaixrQzThVQRaMUqZLQflZg",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Fraser River park with riverside trails and a campground", "signals": [], "why": "", "tips": []
     }
   ]
 }
