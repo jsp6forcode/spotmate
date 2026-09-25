@@ -98,6 +98,39 @@ function vanClock(date = new Date()) {
   return { h: +p.hour % 24, weekend: p.weekday === 'Sat' || p.weekday === 'Sun' };
 }
 const hourLabel = h => h === 12 ? '12p' : h > 12 ? `${h - 12}p` : `${h}a`;
+
+// ───────── 행사 (파머스 마켓, 축제) ─────────
+// data/events.json: schedule = { from, to, weekdays?(0=일), start?, end?, hoursText? }
+let EVENTS = [];
+let EVENTS_META = { updatedAt: '', note: '' };
+const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const EVENT_TYPES = { market: 'Farmers market', festival: 'Festival', seasonal: 'Seasonal' };
+const VAN_DATE = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' });
+// 밴쿠버 기준 오늘(+n일) 날짜 'YYYY-MM-DD'
+const vanDate = (n = 0) => VAN_DATE.format(new Date(Date.now() + n * 864e5));
+const dowOf = iso => new Date(iso + 'T12:00:00Z').getUTCDay();
+const shortDate = iso => `${MON[+iso.slice(5, 7) - 1]} ${+iso.slice(8, 10)}`;
+function occursOn(ev, iso) {
+  const s = ev.schedule;
+  return iso >= s.from && iso <= s.to && (!s.weekdays || s.weekdays.includes(dowOf(iso)));
+}
+// 오늘부터 days일 안에 열리는 날짜들
+const upcomingDates = (ev, days) => Array.from({ length: days }, (_, i) => vanDate(i)).filter(d => occursOn(ev, d));
+function dayLabel(iso) {
+  if (iso === vanDate(0)) return 'Today';
+  if (iso === vanDate(1)) return 'Tomorrow';
+  return `${DOW[dowOf(iso)]}, ${shortDate(iso)}`;
+}
+const fmtTime = t => { const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}${m ? ':' + String(m).padStart(2, '0') : ''}${h >= 12 ? 'pm' : 'am'}`; };
+const eventHours = ev => ev.schedule.hoursText || (ev.schedule.start ? `${fmtTime(ev.schedule.start)}–${fmtTime(ev.schedule.end)}` : 'Times vary');
+function eventWhen(ev) {
+  const s = ev.schedule;
+  if (s.weekdays && s.weekdays.length === 1) return `Every ${DOW[s.weekdays[0]]} until ${shortDate(s.to)}`;
+  if (s.weekdays) return `${s.weekdays.slice().sort((a, b) => ((a + 6) % 7) - ((b + 6) % 7)).map(d => DOW[d]).join(', ')} until ${shortDate(s.to)}`;
+  return s.from === s.to ? shortDate(s.from) : `${shortDate(s.from)} – ${shortDate(s.to)}`;
+}
+const eventMapsUrl = ev => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(ev.venue.replace(/\s*\(.*?\)\s*/g, ' ') + ' ' + ev.area + ' BC');
 // 밴쿠버 현재 날씨 (Open-Meteo, 키 없이 무료). WMO 날씨 코드를 앱의 3가지 날씨로 묶어요.
 const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=49.2827&longitude=-123.1207&current=temperature_2m,weather_code&timezone=America%2FVancouver';
 function weatherKind(code) {
@@ -163,6 +196,11 @@ class App {
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
       SPOTS = data.spots;
+      // 행사 정보: 없어도 스팟은 그대로 보여줘요
+      try {
+        const er = await fetch('data/events.json', { cache: 'no-cache' });
+        if (er.ok) { const ed = await er.json(); EVENTS = ed.events || []; EVENTS_META = { updatedAt: ed.updatedAt || '', note: ed.note || '' }; }
+      } catch (e) {}
       // 월 1회 점검(tools/refresh-reviews.ps1)에서 폐업하거나 기준에서 벗어난 스팟은 숨겨요. 파일이 없으면 그냥 넘어가요
       try {
         const st = await fetch('data/review-status.json', { cache: 'no-cache' });
@@ -193,6 +231,7 @@ class App {
   // ── 데이터 ──
   list() {
     const { cat, tf, sort, radius } = this.state;
+    if (cat === 'events') return [];
     const ti = TF[tf].i;
     const origin = this.origin();
     let items = SPOTS.filter(s =>
@@ -207,6 +246,26 @@ class App {
     if (sort === 'trend') items.sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
     if (sort === 'distance') items.sort((a, b) => a.dist - b.dist);
     return items;
+  }
+  // 앞으로 days일 안에 열리는 행사 (위치 필터 적용, 가까운 날짜 → 가까운 거리 순)
+  upcomingEvents(days) {
+    const origin = this.origin(), near = this.nearActive(), { radius } = this.state;
+    return EVENTS.map(ev => {
+      const dates = upcomingDates(ev, days);
+      return dates.length ? { ...ev, dates, next: dates[0], dist: origin && ev.lat != null ? km(origin, ev) : null } : null;
+    }).filter(Boolean)
+      .filter(ev => !near || radius === 'any' || (ev.dist != null && ev.dist <= radius))
+      .sort((a, b) => a.next.localeCompare(b.next) || (a.dist ?? 1e9) - (b.dist ?? 1e9));
+  }
+  // 스팟 id → 7일 안에 그 장소에서 열리는 가장 가까운 행사
+  spotEvents() {
+    const map = {};
+    EVENTS.forEach(ev => {
+      if (!ev.spotId) return;
+      const next = upcomingDates(ev, 7)[0];
+      if (next && (!map[ev.spotId] || next < map[ev.spotId].next)) map[ev.spotId] = { ev, next };
+    });
+    return map;
   }
   nearActive() {
     const { nearKey, origin } = this.state;
@@ -379,6 +438,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   render() {
     document.documentElement.classList.toggle('dark', this.state.dark);
     const items = this.list();
+    this._spotEvents = this.spotEvents();
     const { view, modal } = this.state;
     const prevModal = this._lastModal;
     this._lastModal = modal;
@@ -395,14 +455,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.header()}
         ${this.controls(items)}
         <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
-          ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : `
+          ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : this.state.cat === 'events' ? this.eventsView() : `
             ${this.criteriaBanner(items)}
+            ${this.eventsStrip()}
             ${this.weatherBanner(items)}
             ${view === 'list' ? this.listView(items) : this.mapView(items)}
           `}
         </main>
         <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-10 text-xs text-slate-500 dark:text-slate-400">
-          Trend index: based on Google Trends search interest · Weather: Open-Meteo · Coordinates: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
+          Trend index: based on Google Trends search interest · Weather: Open-Meteo · Coordinates: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Events: compiled from official market and organizer pages (check before you go) · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
         </footer>
       </div>
       ${modal ? this.modal(byId(modal), items) : ''}
@@ -478,21 +539,23 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div data-keep-scroll="cats" class="flex gap-2 overflow-x-auto no-scrollbar" role="group" aria-label="Category">
           ${chip('cat', 'all', 'All', s.cat === 'all')}
           ${Object.entries(CATS).map(([k, c]) => chip('cat', k, `${c.icon} ${c.label}`, s.cat === k)).join('')}
+          ${chip('cat', 'events', '🎪 Events', s.cat === 'events')}
         </div>
         <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
-          ${s.cat === 'all' || CATS[s.cat].basis === 'trend' ? `
+          ${s.cat === 'all' || (CATS[s.cat] && CATS[s.cat].basis === 'trend') ? `
           <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Trend period">
             ${Object.entries(TF).map(([k, t]) => seg('tf', k, (k === 'today' ? '📈 ' : k === 'week' ? '🔥 ' : '📅 ') + t.label, s.tf === k)).join('')}
           </div>` : ''}
+          ${s.cat === 'events' ? '' : `
           <label class="ml-auto flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Sort
             <select data-act="sort" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm">
               <option value="trend" ${s.sort === 'trend' ? 'selected' : ''}>Trending</option>
               <option value="distance" ${s.sort === 'distance' ? 'selected' : ''}>Distance</option>
             </select>
-          </label>
+          </label>`}
         </div>
         ${this.locationBar(items)}
-        <p class="text-xs text-slate-500 dark:text-slate-400">${plural(items.length, 'spot')} · Trend index from Google Trends (BC) as of ${esc(DATA_META.updatedAt)} · Crowd levels are estimates.</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, 'spot')} · Trend index from Google Trends (BC) as of ${esc(DATA_META.updatedAt)} · Crowd levels are estimates.`}</p>
       </div>
     </section>`;
   }
@@ -500,11 +563,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   // 위치 기반 필터: 기준 위치(현재 위치 또는 지역) + 반경
   locationBar(items) {
     const s = this.state, near = this.nearActive();
+    const countLabel = s.cat === 'events' ? plural(this.upcomingEvents(45).length, 'event') : plural(items.length, 'spot');
     const seg = (val, label, on) => `<button data-act="radius" data-val="${val}" aria-pressed="${on}" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
     let status = s.geoMsg;
     if (!status && near) status = s.radius === 'any'
-      ? `Showing all ${plural(items.length, 'spot')}, with distances from ${this.originLabel()}.`
-      : `${plural(items.length, 'spot')} within ${s.radius} km of ${this.originLabel()}.`;
+      ? `Showing all ${countLabel}, with distances from ${this.originLabel()}.`
+      : `${countLabel} within ${s.radius} km of ${this.originLabel()}.`;
     if (!status && !near && s.sort === 'distance') status = 'Distances are from Downtown. Pick a location to change that.';
     return `
         <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
@@ -523,6 +587,56 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <button data-act="nearoff" class="text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 underline">Clear location</button>` : ''}
           ${status ? `<span class="w-full text-xs text-slate-600 dark:text-slate-300" role="status">${esc(status)}</span>` : ''}
         </div>`;
+  }
+
+  // ── 행사 ──
+  eventRow(ev, compact = false) {
+    const spot = ev.spotId && byId(ev.spotId);
+    return `
+      <div class="flex gap-3 rounded-xl p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
+        <div class="w-16 shrink-0 text-center">
+          <p class="text-2xl" aria-hidden="true">${esc(ev.icon || '🎪')}</p>
+          <p class="mt-1 text-xs font-bold text-violet-700 dark:text-violet-300 leading-tight">${esc(dayLabel(ev.next))}</p>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="font-bold leading-snug">${esc(ev.name)}</p>
+          <p class="text-sm text-slate-600 dark:text-slate-300">${esc(eventHours(ev))} · ${esc(eventWhen(ev))}</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">${esc(EVENT_TYPES[ev.type] || 'Event')} · ${esc(ev.venue)}${ev.dist != null ? ` · ${ev.dist.toFixed(1)} km` : ''}</p>
+          ${compact ? '' : `<p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(ev.summary)}</p>`}
+          <p class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs font-semibold">
+            ${ev.lat != null ? `<a href="${eventMapsUrl(ev)}" target="_blank" rel="noopener" class="text-indigo-700 dark:text-indigo-300">🗺️ Directions</a>` : ''}
+            <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="text-slate-600 dark:text-slate-300 underline">Official info ↗</a>
+            ${spot ? `<button data-act="open" data-val="${spot.id}" class="text-violet-700 dark:text-violet-300">See ${esc(spot.name)} →</button>` : ''}
+          </p>
+        </div>
+      </div>`;
+  }
+  // 목록 위: 이번 주(7일) 행사 미리보기
+  eventsStrip() {
+    const evs = this.upcomingEvents(7);
+    if (!evs.length) return '';
+    return `
+    <section class="mt-6">
+      <div class="flex items-end justify-between gap-3">
+        <h2 class="text-lg font-bold">🎪 Happening this week${this.nearActive() ? ' near ' + esc(this.originLabel()) : ''}</h2>
+        <button data-act="cat" data-val="events" class="text-sm font-semibold text-violet-700 dark:text-violet-300">See all ${evs.length} →</button>
+      </div>
+      <div class="mt-3 grid gap-3 md:grid-cols-2">${evs.slice(0, 4).map(ev => this.eventRow(ev, true)).join('')}</div>
+    </section>`;
+  }
+  eventsView() {
+    const evs = this.upcomingEvents(45), today = vanDate(0), week = vanDate(6);
+    const group = (title, list) => list.length ? `<h2 class="mt-8 text-lg font-bold">${title}</h2><div class="mt-3 grid gap-3 md:grid-cols-2">${list.map(ev => this.eventRow(ev)).join('')}</div>` : '';
+    const note = `<p class="mt-6 text-xs text-slate-500 dark:text-slate-400">${esc(EVENTS_META.note)} Last checked ${esc(EVENTS_META.updatedAt)}.</p>`;
+    if (!evs.length) return `${note}
+      <div class="mt-6 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
+        <p class="text-lg font-bold">No events coming up${this.nearActive() ? ` within ${this.state.radius} km` : ''}</p>
+        ${this.nearActive() ? '<button data-act="radius" data-val="any" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show any distance</button>' : ''}
+      </div>`;
+    return note
+      + group('Today', evs.filter(e => e.next === today))
+      + group('This week', evs.filter(e => e.next > today && e.next <= week))
+      + group('Coming up', evs.filter(e => e.next > week));
   }
 
   // 리뷰 기준(먹거리)과 히든젬 표시의 기준을 카드마다 반복하지 않고 목록 위에 한 번만 보여줘요
@@ -585,6 +699,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   card(s) {
     const c = CATS[s.cat], tf = TF[this.state.tf], saved = this.state.plan.includes(s.id);
     const crowd = this.crowdBadge(this.crowdAt(s, vanClock())), rise = this.rising(s);
+    const evHere = this._spotEvents && this._spotEvents[s.id];
     return `
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-2 hover:ring-violet-400 dark:hover:ring-violet-600 hover:shadow-lg transition overflow-hidden">
       <div class="relative">
@@ -596,6 +711,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <h3 class="text-lg font-bold leading-snug group-hover:text-violet-700 dark:group-hover:text-violet-300">${esc(s.name)}</h3>
         <p class="text-sm text-slate-500 dark:text-slate-400">${esc(s.area)}${s.dist != null ? `, ${s.dist.toFixed(1)} km` : ''}</p>
         <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">${esc(s.summary)}</p>
+        ${evHere ? `<p class="mt-2 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${esc(evHere.ev.icon || '🎪')} ${esc(dayLabel(evHere.next))}: ${esc(evHere.ev.name)}</p>` : ''}
         <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-600 dark:text-slate-300">
           <span>💰 ${esc(s.price)}</span><span>⏱️ ${esc(s.time)}</span><span>${ENV_ICON[s.env]} ${ENV[s.env]}</span>
           ${s.kids ? '<span class="font-semibold text-rose-600 dark:text-rose-300">🧸 Kid-friendly</span>' : ''}
@@ -825,6 +941,21 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">${esc(s.summary)}</p>
             <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="mt-3 inline-block text-sm font-semibold text-amber-800 dark:text-amber-300">See the latest ratings and reviews on Google Maps →</a>
           </section>`}
+
+          ${(() => {
+            const evs = EVENTS.filter(ev => ev.spotId === s.id).map(ev => ({ ...ev, next: upcomingDates(ev, 60)[0] })).filter(ev => ev.next);
+            return evs.length ? `
+          <section>
+            <h3 class="font-bold">🎪 Events here</h3>
+            <div class="mt-2 space-y-2">${evs.map(ev => `
+              <div class="rounded-xl p-3 bg-fuchsia-50 dark:bg-fuchsia-500/10 text-sm">
+                <p class="font-semibold">${esc(ev.icon || '🎪')} ${esc(ev.name)}</p>
+                <p class="text-slate-600 dark:text-slate-300">Next: ${esc(dayLabel(ev.next))} · ${esc(eventHours(ev))} · ${esc(eventWhen(ev))}</p>
+                <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="text-xs font-semibold underline text-slate-600 dark:text-slate-300">Official info ↗</a>
+              </div>`).join('')}
+            </div>
+          </section>` : '';
+          })()}
 
           <section>
             <div class="flex items-center justify-between">
