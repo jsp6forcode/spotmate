@@ -163,6 +163,11 @@ class App {
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
       SPOTS = data.spots;
+      // 월 1회 점검(tools/refresh-reviews.ps1)에서 폐업하거나 기준에서 벗어난 스팟은 숨겨요. 파일이 없으면 그냥 넘어가요
+      try {
+        const st = await fetch('data/review-status.json', { cache: 'no-cache' });
+        if (st.ok) { const { inactive = {} } = await st.json(); SPOTS = SPOTS.filter(s => !inactive[s.id]); }
+      } catch (e) {}
       DATA_META = { source: data.source, updatedAt: data.updatedAt, trendNote: data.trendNote || '', coordsNote: data.coordsNote || '' };
       let plan = [];
       try { plan = JSON.parse(load('spotmate-plan') || '[]').filter(id => byId(id)); } catch (e) {}

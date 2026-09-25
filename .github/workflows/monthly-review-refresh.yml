@@ -1,0 +1,43 @@
+# 매달 1일: 히든젬 / Family pick / 먹거리 스팟이 아직 기준을 만족하는지 Places API로 점검
+name: Monthly review refresh
+
+on:
+  schedule:
+    - cron: '0 11 1 * *'   # 매달 1일 11:00 UTC (밴쿠버 새벽 3~4시)
+  workflow_dispatch:        # Actions 탭에서 수동 실행도 가능
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check places against criteria
+        shell: pwsh
+        env:
+          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
+        run: ./tools/refresh-reviews.ps1
+
+      - name: Commit and redeploy if changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "spotmate-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/review-status.json
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Monthly review refresh ($(date -u +%Y-%m-%d))"
+            git push
+            # 봇 푸시는 Pages 빌드를 자동으로 트리거하지 않을 수 있어서 직접 요청
+            gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
+          fi
