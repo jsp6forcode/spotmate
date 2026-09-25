@@ -40,6 +40,15 @@ if ($Set -eq 'gems') {
                'gardens in Vancouver', 'beaches in Vancouver', 'viewpoints North Vancouver')
   }
 }
+if ($Set -eq 'food500') {
+  # 먹거리 기준(리뷰 500+) 보강용: 식당이 적은 지역 위주
+  $queries = [ordered]@{
+    food = @('best restaurants in Coquitlam', 'best restaurants in Port Coquitlam', 'best restaurants in Port Moody', 'best restaurants in Burnaby',
+             'best restaurants in Delta BC', 'best restaurants in Maple Ridge', 'best restaurants in West Vancouver', 'best restaurants in North Vancouver',
+             'best restaurants in Richmond BC', 'best restaurants in Surrey BC', 'best restaurants in New Westminster', 'best restaurants in Langley BC',
+             'best cafe in Coquitlam', 'best bakery in Burnaby')
+  }
+}
 $fields = 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.primaryTypeDisplayName,places.location'
 $headers = @{ 'X-Goog-Api-Key' = $key; 'X-Goog-FieldMask' = $fields }
 $calls = 0
