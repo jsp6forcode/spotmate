@@ -339,6 +339,7 @@ class App {
         ${this.controls(items)}
         <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
           ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : `
+            ${this.criteriaBanner()}
             ${this.weatherBanner(items)}
             ${view === 'list' ? this.listView(items) : this.mapView(items)}
           `}
@@ -452,9 +453,19 @@ class App {
           </select>
           <span class="text-slate-600 dark:text-slate-300">${esc(s.geoMsg || `${this.origin().label || '현재 위치'} 기준 직선거리예요.`)}</span>
         </div>` : ''}
-        <p class="text-xs text-slate-500 dark:text-slate-400">${items.length}곳 · 트렌드 지수는 Google Trends(BC) ${esc(DATA_META.updatedAt)} 기준 · 혼잡도는 예상치예요.</p>
-        ${s.cat !== 'all' && CATS[s.cat].criteria ? `<p class="text-xs font-semibold text-slate-600 dark:text-slate-300">⭐ ${CATS[s.cat].label}: ${esc(CATS[s.cat].criteria)}</p>` : ''}
-      </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400">${items.length}곳 · 트렌드 지수는 Google Trends(BC) ${esc(DATA_META.updatedAt)} 기준 · 혼잡도는 예상치예요.</p>      </div>
+    </section>`;
+  }
+
+  // 리뷰 기준 카테고리(먹거리, 히든젬)는 고른 기준을 카드마다 반복하지 않고 목록 위에 한 번만 보여줘요
+  criteriaBanner() {
+    const c = CATS[this.state.cat];
+    if (!c || !c.criteria) return '';
+    return `
+    <section class="mt-6 rounded-2xl p-5 bg-white dark:bg-slate-900 ring-1 ring-amber-200 dark:ring-amber-500/30">
+      <p class="text-sm font-bold text-amber-800 dark:text-amber-300">${c.icon} ${c.label}, 이렇게 골랐어요</p>
+      <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(c.criteria)} 검색 트렌드 순위가 아니어서 목록 순서에 순위 의미는 없어요.</p>
+      <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">최신 평점과 리뷰는 각 장소의 Google 지도에서 확인할 수 있어요.</p>
     </section>`;
   }
 
@@ -513,10 +524,6 @@ class App {
         <div class="mt-4 rounded-xl p-3 bg-violet-50 dark:bg-violet-500/10">
           <p class="text-xs font-bold text-violet-700 dark:text-violet-300">✨ 왜 뜨고 있나</p>
           <p class="mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(s.why)}</p>
-        </div>` : c.criteria ? `
-        <div class="mt-4 rounded-xl p-3 bg-amber-50 dark:bg-amber-500/10">
-          <p class="text-xs font-bold text-amber-800 dark:text-amber-300">⭐ 이렇게 골랐어요</p>
-          <p class="mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(c.criteria)}</p>
         </div>` : ''}
         <p class="mt-3 text-xs"><span class="font-semibold px-2 py-1 rounded-full ${crowd.c}">지금 예상 혼잡도: ${crowd.t}</span></p>
         <div class="mt-auto pt-4 grid">
