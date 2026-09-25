@@ -41,7 +41,7 @@ const CATS = {
   landmark: { label: '유명 여행지', icon: '🏔️', chip: 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300',          dot: '#0ea5e9' },
   hidden:   { label: '히든젬',     icon: '💎', chip: 'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300', dot: '#8b5cf6' }
 };
-const TF = { now: { label: '실시간', i: 0 }, week: { label: '이번 주', i: 1 }, month: { label: '이번 달', i: 2 } };
+const TF = { today: { label: '오늘', i: 0 }, week: { label: '이번 주', i: 1 }, month: { label: '이번 달', i: 2 } };
 const WEATHER = { sunny: { label: '맑음', icon: '☀️' }, cloudy: { label: '흐림', icon: '☁️' }, rain: { label: '비', icon: '🌧️' } };
 const ENV = { indoor: '실내', outdoor: '야외', both: '실내+야외' };
 const ORIGINS = {
@@ -53,7 +53,7 @@ const ORIGINS = {
 };
 
 // ───────── 스팟 데이터 ─────────
-// data/spots.json에서 불러와요. trend: [실시간, 이번 주, 이번 달] 트렌드 지수
+// data/spots.json에서 불러와요. trend: [오늘, 이번 주, 이번 달] 트렌드 지수
 let SPOTS = [];
 let DATA_META = { source: 'sample', updatedAt: '' };
 
@@ -105,7 +105,7 @@ class App {
     const savedDark = load('spotmate-dark');
     const prefersDark = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches;
     this.state = {
-      cat: 'all', tf: 'now', env: 'all', sort: 'trend',
+      cat: 'all', tf: 'today', env: 'all', sort: 'trend',
       weather: 'cloudy', weatherAuto: true, live: null,
       view: 'list', dark: savedDark === null ? prefersDark : savedDark === '1',
       origin: null, originKey: 'downtown', geoMsg: '',
@@ -293,7 +293,7 @@ class App {
 - 마지막 문장은 지금 방문하려는 사람에게 주는 짧은 팁으로 끝내.
 - 인사말, 머리말, 마크다운 없이 본문만.
 
-데이터: ${JSON.stringify({ 이름: s.name, 지역: s.area, 카테고리: CATS[s.cat].label, 환경: ENV[s.env], 트렌드지수: { 실시간: s.trend[0], 이번주: s.trend[1], 이번달: s.trend[2] }, 신호: s.signals, 잘맞는날씨: s.weather.map(w => WEATHER[w].label) })}`;
+데이터: ${JSON.stringify({ 이름: s.name, 지역: s.area, 카테고리: CATS[s.cat].label, 환경: ENV[s.env], 트렌드지수: { 오늘: s.trend[0], 이번주: s.trend[1], 이번달: s.trend[2] }, 신호: s.signals, 잘맞는날씨: s.weather.map(w => WEATHER[w].label) })}`;
     try {
       const { text } = await this.sample(prompt, {
         modelTier: 'quick', signal: ctl.signal,
@@ -415,7 +415,7 @@ class App {
         </div>
         <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
           <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="트렌드 기간">
-            ${Object.entries(TF).map(([k, t]) => seg('tf', k, (k === 'now' ? '⚡ ' : k === 'week' ? '🔥 ' : '📅 ') + t.label, s.tf === k)).join('')}
+            ${Object.entries(TF).map(([k, t]) => seg('tf', k, (k === 'today' ? '📈 ' : k === 'week' ? '🔥 ' : '📅 ') + t.label, s.tf === k)).join('')}
           </div>
           <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="실내 야외">
             ${seg('env', 'all', '전체', s.env === 'all')}${seg('env', 'indoor', '🏠 실내', s.env === 'indoor')}${seg('env', 'outdoor', '🌳 야외', s.env === 'outdoor')}
@@ -679,7 +679,7 @@ class App {
           ${st.trendInfo ? `
           <div class="rounded-xl p-4 bg-violet-50 dark:bg-violet-500/10 text-sm text-slate-700 dark:text-slate-300">
             <p class="font-bold text-slate-900 dark:text-white">트렌드 지수는 이렇게 매겨요</p>
-            <p class="mt-2">검색량 변화, 방문 후기 증가 속도, SNS 언급, 계절과 날씨 영향을 합친 0-100 점수예요. 실시간 ${s.trend[0]}, 이번 주 ${s.trend[1]}, 이번 달 ${s.trend[2]}.</p>
+            <p class="mt-2">검색량 변화, 방문 후기 증가 속도, SNS 언급, 계절과 날씨 영향을 합친 0-100 점수예요. 오늘 ${s.trend[0]}, 이번 주 ${s.trend[1]}, 이번 달 ${s.trend[2]}.</p>
             <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">지금은 샘플 값이에요. 실제 데이터 연동은 다음 단계에서 붙일 수 있어요.</p>
           </div>` : ''}
 
