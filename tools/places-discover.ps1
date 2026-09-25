@@ -31,6 +31,15 @@ if ($Set -eq 'metro') {
                'parks in Port Moody', 'parks in Richmond BC', 'tourist attractions Surrey BC', 'tourist attractions New Westminster', 'tourist attractions Langley BC')
   }
 }
+if ($Set -eq 'gems') {
+  # 히든젬(리뷰 500+) 보강용: 스팟이 적은 교외 지역 위주
+  $queries = [ordered]@{
+    hidden = @('parks in Coquitlam', 'parks in Port Coquitlam', 'things to do in Port Moody', 'hiking trails Coquitlam', 'lakes near Coquitlam',
+               'parks in Burnaby', 'parks in North Vancouver', 'parks in West Vancouver', 'parks in Surrey BC', 'parks in Langley BC',
+               'parks in Delta BC', 'parks in Richmond BC', 'parks in New Westminster', 'hiking trails Maple Ridge', 'museums in Metro Vancouver',
+               'gardens in Vancouver', 'beaches in Vancouver', 'viewpoints North Vancouver')
+  }
+}
 $fields = 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.primaryTypeDisplayName,places.location'
 $headers = @{ 'X-Goog-Api-Key' = $key; 'X-Goog-FieldMask' = $fields }
 $calls = 0

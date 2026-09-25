@@ -288,136 +288,280 @@
     },
 
     {
-      "id": "qepark", "cat": "hidden", "name": "Queen Elizabeth Park", "area": "Little Mountain",
+      "id": "qepark", "cat": "nature", "gem": true, "name": "Queen Elizabeth Park", "area": "Little Mountain",
       "lat": 49.241, "lng": -123.112, "emoji": "🌷", "placeId": "ChIJIcZrTvVzhlQRiKTnD03vt7Q",
       "trend": null, "env": "both", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy", "rain"],
       "summary": "Garden park on the highest point in the city",
       "signals": [], "why": "", "tips": ["The Bloedel Conservatory at the top is a good stop even on rainy days"]
     },
     {
-      "id": "vandusen", "cat": "hidden", "name": "VanDusen Botanical Garden", "area": "Shaughnessy",
+      "id": "vandusen", "cat": "nature", "gem": true, "name": "VanDusen Botanical Garden", "area": "Shaughnessy",
       "lat": 49.2396, "lng": -123.1326, "emoji": "🌺", "placeId": "ChIJwW3HeIZzhlQRVxJgWI8VjAg",
       "trend": null, "env": "outdoor", "price": "$$", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Large botanical garden that changes with every season", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "moa", "cat": "hidden", "name": "Museum of Anthropology", "area": "UBC",
+      "id": "moa", "cat": "city", "gem": true, "name": "Museum of Anthropology", "area": "UBC",
       "lat": 49.2695, "lng": -123.2594, "emoji": "🏛️", "placeId": "ChIJrf8w27NyhlQR44St4PQccfY",
       "trend": null, "env": "indoor", "price": "$$", "time": "2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "UBC museum famous for its Indigenous art and totem pole collection", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "lighthouse", "cat": "hidden", "name": "Lighthouse Park", "area": "West Vancouver",
+      "id": "lighthouse", "cat": "nature", "gem": true, "name": "Lighthouse Park", "area": "West Vancouver",
       "lat": 49.3343, "lng": -123.2614, "emoji": "🗼", "placeId": "ChIJIUj0JVRshlQRhB-coT_zlFE",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Old-growth forest trails that end at a lighthouse and the sea",
       "signals": [], "why": "", "tips": ["There are rocky sections, so wear sneakers"]
     },
     {
-      "id": "bvm", "cat": "hidden", "name": "Burnaby Village Museum", "area": "Burnaby",
+      "id": "bvm", "cat": "kids", "gem": true, "name": "Burnaby Village Museum", "area": "Burnaby",
       "lat": 49.2399, "lng": -122.9669, "emoji": "🎠", "placeId": "ChIJA288NqZ3hlQRdrlOknfGAMk",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Open-air museum recreating a 1920s village, with a vintage carousel", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "whytecliff", "cat": "hidden", "name": "Whytecliff Park", "area": "Horseshoe Bay",
+      "id": "whytecliff", "cat": "nature", "gem": true, "name": "Whytecliff Park", "area": "Horseshoe Bay",
       "lat": 49.374, "lng": -123.2874, "emoji": "🏝️", "placeId": "ChIJMSLx3oxrhlQRPo56WANJmPM",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Coastal park with a rocky islet you can walk to at low tide",
       "signals": [], "why": "", "tips": ["Depending on the tide, you can't always cross to the islet"]
     },
     {
-      "id": "nitobe", "cat": "hidden", "name": "Nitobe Memorial Garden", "area": "UBC",
+      "id": "nitobe", "cat": "nature", "gem": true, "name": "Nitobe Memorial Garden", "area": "UBC",
       "lat": 49.2662, "lng": -123.2596, "emoji": "⛩️", "placeId": "ChIJDzRjfrRyhlQR8SRHq2eOtwk",
       "trend": null, "env": "outdoor", "price": "$", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy", "rain"],
       "summary": "Traditional Japanese garden on the UBC campus", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "quarry", "cat": "hidden", "name": "Quarry Rock", "area": "Deep Cove",
+      "id": "quarry", "cat": "nature", "gem": true, "name": "Quarry Rock", "area": "Deep Cove",
       "lat": 49.3344, "lng": -122.9378, "emoji": "🥾", "placeId": "ChIJ9-boVK57hlQREBFD4OyKc0s",
       "trend": null, "env": "outdoor", "price": "Free", "time": "2 hrs", "crowd": "park", "weather": ["sunny"],
       "summary": "Rocky lookout over Indian Arm at the end of a short hike",
       "signals": [], "why": "", "tips": ["Parking in Deep Cove is tough on weekends, so start early"]
     },
     {
-      "id": "rockypoint", "cat": "hidden", "name": "Rocky Point Park", "area": "Port Moody",
+      "id": "rockypoint", "cat": "nature", "gem": true, "name": "Rocky Point Park", "area": "Port Moody",
       "lat": 49.2804, "lng": -122.8495, "emoji": "🌊", "placeId": "ChIJP6T4Jh55hlQRlIjDgGzwVOY",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Waterfront park at the end of Burrard Inlet, with a pier and trails", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "goldenears", "cat": "hidden", "name": "Golden Ears Park", "area": "Maple Ridge",
+      "id": "goldenears", "cat": "nature", "gem": true, "name": "Golden Ears Park", "area": "Maple Ridge",
       "lat": 49.2781, "lng": -122.515, "emoji": "⛰️", "placeId": "ChIJLfu9PdebhlQRgp71o2-R60c",
       "trend": null, "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Large provincial park with Alouette Lake, waterfalls, and hikes",
       "signals": [], "why": "", "tips": ["In peak season BC Parks may require a free day-use pass, so check before you go"]
     },
     {
-      "id": "bearcreek", "cat": "hidden", "name": "Bear Creek Park", "area": "Surrey",
+      "id": "bearcreek", "cat": "kids", "gem": true, "name": "Bear Creek Park", "area": "Surrey",
       "lat": 49.1591, "lng": -122.8401, "emoji": "🚂", "placeId": "ChIJPebCQezZhVQRhg3zZ6bQeRo",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Big city park with gardens and a miniature train", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "blackiespit", "cat": "hidden", "name": "Blackie Spit", "area": "Crescent Beach, Surrey",
+      "id": "blackiespit", "cat": "nature", "gem": true, "name": "Blackie Spit", "area": "Crescent Beach, Surrey",
       "lat": 49.061, "lng": -122.8791, "emoji": "🐦", "placeId": "ChIJk0fX7cbchVQRcaa9vj9ntME",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Sand spit at Crescent Beach, known for birdwatching", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "redwood", "cat": "hidden", "name": "Redwood Park", "area": "South Surrey",
+      "id": "redwood", "cat": "nature", "gem": true, "name": "Redwood Park", "area": "South Surrey",
       "lat": 49.0348, "lng": -122.7288, "emoji": "🌳", "placeId": "ChIJ3eCihU3EhVQR5kJzlsXavys",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Forest park with towering redwood trees", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "mundy", "cat": "hidden", "name": "Mundy Park", "area": "Coquitlam",
+      "id": "mundy", "cat": "nature", "gem": true, "name": "Mundy Park", "area": "Coquitlam",
       "lat": 49.2565, "lng": -122.8256, "emoji": "🍂", "placeId": "ChIJycv27JB4hlQRw58p1LpogL8",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Coquitlam's biggest park, with forest loops around two small lakes", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "garrypoint", "cat": "hidden", "name": "Garry Point Park", "area": "Steveston, Richmond",
+      "id": "garrypoint", "cat": "nature", "gem": true, "name": "Garry Point Park", "area": "Steveston, Richmond",
       "lat": 49.1256, "lng": -123.1961, "emoji": "🪁", "placeId": "ChIJff6cB3UKhlQRWAvA83ex7-k",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Oceanfront park at the mouth of the Fraser, popular for kites and sunsets", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "terranova", "cat": "hidden", "name": "Terra Nova Adventure Play", "area": "Richmond",
+      "id": "terranova", "cat": "kids", "gem": true, "name": "Terra Nova Adventure Play", "area": "Richmond",
       "lat": 49.1735, "lng": -123.1993, "emoji": "🧗", "placeId": "ChIJZbpCCxsLhlQRrLu7A-1SfPY",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Adventure playground with climbing structures and big slides", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "centennial", "cat": "hidden", "name": "Centennial Beach", "area": "Tsawwassen, Delta",
+      "id": "centennial", "cat": "nature", "gem": true, "name": "Centennial Beach", "area": "Tsawwassen, Delta",
       "lat": 49.0187, "lng": -123.0413, "emoji": "🏖️", "placeId": "ChIJ67YBQ0fmhVQRBhMCVCTofi8",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny"],
       "summary": "Shallow, sandy beach on Boundary Bay",
       "signals": [], "why": "", "tips": ["At low tide the water pulls back a long way"]
     },
     {
-      "id": "queenspark", "cat": "hidden", "name": "Queen's Park", "area": "New Westminster",
+      "id": "queenspark", "cat": "kids", "gem": true, "name": "Queen's Park", "area": "New Westminster",
       "lat": 49.2151, "lng": -122.9059, "emoji": "🐑", "placeId": "ChIJHTtJAgrYhVQR1fxvihZ0PyA",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Historic park with gardens, playgrounds, and a seasonal petting farm", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "barnet", "cat": "hidden", "name": "Barnet Marine Park", "area": "Burnaby",
+      "id": "barnet", "cat": "nature", "gem": true, "name": "Barnet Marine Park", "area": "Burnaby",
       "lat": 49.2887, "lng": -122.9506, "emoji": "⚓", "placeId": "ChIJcx2i4415hlQREW0hnDPgkCc",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Waterfront park on Burrard Inlet with a pier and a small beach", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "campbellvalley", "cat": "hidden", "name": "Campbell Valley Park", "area": "Langley",
+      "id": "campbellvalley", "cat": "nature", "gem": true, "name": "Campbell Valley Park", "area": "Langley",
       "lat": 49.0209, "lng": -122.658, "emoji": "🐴", "placeId": "ChIJLXl-KwbGhVQRtoVk1IRBH9U",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Rural regional park with meadow and forest trails, including horse trails", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "derbyreach", "cat": "hidden", "name": "Derby Reach Park", "area": "Langley",
+      "id": "derbyreach", "cat": "nature", "gem": true, "name": "Derby Reach Park", "area": "Langley",
       "lat": 49.1975, "lng": -122.6051, "emoji": "🏕️", "placeId": "ChIJdaixrQzThVQRaMUqZLQflZg",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Fraser River park with riverside trails and a campground", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "towncentre", "cat": "nature", "gem": true, "name": "Town Centre Park & Lafarge Lake", "area": "Coquitlam",
+      "lat": 49.2868, "lng": -122.7887, "emoji": "🦢", "placeId": "ChIJZ39GJCV_hlQRRvKeSkLWrm4",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Big park around Lafarge Lake, with a walking loop that circles the water", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "comolake", "cat": "nature", "gem": true, "name": "Como Lake Park", "area": "Coquitlam",
+      "lat": 49.2603, "lng": -122.8586, "emoji": "🦆", "placeId": "ChIJCf0FFl94hlQRS8EyW2PfAMA",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Small neighbourhood lake with an easy loop trail", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "crunch", "cat": "nature", "gem": true, "name": "Coquitlam Crunch", "area": "Coquitlam",
+      "lat": 49.2813, "lng": -122.8146, "emoji": "🥾", "placeId": "ChIJdX9IK854hlQRSxV3OYCCrcg",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Steep uphill trail and stair workout with views at the top", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "minnekhada", "cat": "nature", "gem": true, "name": "Minnekhada Regional Park", "area": "Coquitlam",
+      "lat": 49.3019, "lng": -122.6977, "emoji": "🌾", "placeId": "ChIJ4SJUzut_hlQRVzM0aFprXOs",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Quiet marshes and forest trails with lookouts over the Pitt River area", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "lionspark", "cat": "kids", "gem": true, "name": "Lions Park", "area": "Port Coquitlam",
+      "lat": 49.267, "lng": -122.7796, "emoji": "🦁", "placeId": "ChIJjT6uklJ_hlQRGDSNP2-qizI",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Riverside park in Port Coquitlam with play areas and trails", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "sasamat", "cat": "nature", "gem": true, "name": "Sasamat Lake", "area": "Port Moody / Belcarra",
+      "lat": 49.3199, "lng": -122.8891, "emoji": "🏊", "placeId": "ChIJ-4seBed7hlQRLYE4V5cwhn0",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny"],
+      "summary": "Forest lake known for its warm water in summer and a floating dock", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "coquitlamriver", "cat": "nature", "gem": true, "name": "Coquitlam River Park", "area": "Coquitlam",
+      "lat": 49.2866, "lng": -122.7721, "emoji": "🎣", "placeId": "ChIJd9qQsjh_hlQRSuv6e7aDXBY",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Riverside trails along the Coquitlam River", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "deerlakepark", "cat": "nature", "gem": true, "name": "Deer Lake Park", "area": "Burnaby",
+      "lat": 49.2353, "lng": -122.9764, "emoji": "🛶", "placeId": "ChIJVVqTPlV2hlQRWALqiYz6Zn4",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Lake with boardwalk trails, next to the Burnaby Village Museum", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "centralpark", "cat": "nature", "gem": true, "name": "Central Park", "area": "Burnaby",
+      "lat": 49.2276, "lng": -123.0181, "emoji": "🌲", "placeId": "ChIJc6RIWYp2hlQRn1enR_bqb2A",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Tall forest park near Metrotown with trails, a pond, and pitch and putt", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "cates", "cat": "nature", "gem": true, "name": "Cates Park (Whey-ah-Wichen)", "area": "North Vancouver",
+      "lat": 49.3031, "lng": -122.9572, "emoji": "🏝️", "placeId": "ChIJHQxQhRd6hlQRZRH5W-FuRuw",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Waterfront park where Indian Arm meets Burrard Inlet", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "capilanoriver", "cat": "nature", "gem": true, "name": "Capilano River Regional Park", "area": "North Vancouver",
+      "lat": 49.3484, "lng": -123.1154, "emoji": "🐟", "placeId": "ChIJuUaFeMdvhlQRRNL_qzhUnSI",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Canyon trails below Cleveland Dam, next to a salmon hatchery", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "lynnheadwaters", "cat": "nature", "gem": true, "name": "Lynn Headwaters Regional Park", "area": "North Vancouver",
+      "lat": 49.4041, "lng": -123.0481, "emoji": "🏔️", "placeId": "ChIJU1fiu0plhlQROS-YfXoTeRc",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Backcountry-feeling trails up the Lynn Creek valley, including Norvan Falls", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "cypressfalls", "cat": "nature", "gem": true, "name": "Cypress Falls Park", "area": "West Vancouver",
+      "lat": 49.3542, "lng": -123.2384, "emoji": "💧", "placeId": "ChIJqTarZTtshlQRNazojLTn650",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy", "rain"],
+      "summary": "Short forest hike to a pair of waterfalls", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "deasisland", "cat": "nature", "gem": true, "name": "Deas Island Regional Park", "area": "Delta",
+      "lat": 49.1214, "lng": -123.0649, "emoji": "🦅", "placeId": "ChIJAYnYN8zfhVQRves7o5BO21s",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Fraser River island park with trails and heritage buildings", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "watershed", "cat": "nature", "gem": true, "name": "Watershed Park", "area": "North Delta",
+      "lat": 49.112, "lng": -122.9017, "emoji": "🌿", "placeId": "ChIJNU5IgQfchVQR1i3a6VAW824",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Forest trails through a quiet wooded park", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "kanaka", "cat": "nature", "gem": true, "name": "Kanaka Creek Regional Park", "area": "Maple Ridge",
+      "lat": 49.2107, "lng": -122.5208, "emoji": "🌊", "placeId": "ChIJb7rlDNoshFQR6OrSwkjdyVM",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Creekside trails with waterfalls, including Cliff Falls", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "tynehead", "cat": "nature", "gem": true, "name": "Tynehead Regional Park", "area": "Surrey",
+      "lat": 49.1825, "lng": -122.7587, "emoji": "🦋", "placeId": "ChIJNx2AIijXhVQRnbuNUiandwY",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Meadows and forest along the Serpentine River", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "greentimbers", "cat": "nature", "gem": true, "name": "Green Timbers Urban Forest", "area": "Surrey",
+      "lat": 49.1803, "lng": -122.8187, "emoji": "🌲", "placeId": "ChIJk-ZrqmXXhVQRdLzdHqRwRTQ",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Urban forest with a lake and walking trails in the middle of Surrey", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "iona", "cat": "nature", "gem": true, "name": "Iona Beach Regional Park", "area": "Richmond",
+      "lat": 49.2142, "lng": -123.1873, "emoji": "✈️", "placeId": "ChIJ5ad3Hq4MhlQRusrBIIY-U6U",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Long jetty walk out into the Strait of Georgia, next to the airport", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "esplanade", "cat": "city", "gem": true, "name": "Waterfront Esplanade", "area": "New Westminster",
+      "lat": 49.2011, "lng": -122.9094, "emoji": "🚢", "placeId": "ChIJj9a14mTYhVQRg0l5D73BomY",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Boardwalk along the Fraser River at the New Westminster Quay", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "sendall", "cat": "nature", "gem": true, "name": "Sendall Gardens", "area": "Langley",
+      "lat": 49.0921, "lng": -122.6637, "emoji": "🌸", "placeId": "ChIJ_0VC-8bPhVQRratoFOJjxq8",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Small garden park with ponds and a greenhouse", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "kits", "cat": "nature", "gem": true, "name": "Kitsilano Beach", "area": "Kitsilano",
+      "lat": 49.2757, "lng": -123.1537, "emoji": "🏐", "placeId": "ChIJnVFsezVyhlQRf5O-Pe5uQ04",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny"],
+      "summary": "Busy city beach with volleyball courts and mountain views", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "spanishbanks", "cat": "nature", "gem": true, "name": "Spanish Banks", "area": "West Point Grey",
+      "lat": 49.2776, "lng": -123.2209, "emoji": "🌅", "placeId": "ChIJLQnMgZJyhlQRnRaqpqnAhgg",
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Wide, calm beach with huge tidal flats at low tide", "signals": [], "why": "", "tips": []
+    },
+    {
+      "id": "billreid", "cat": "city", "gem": true, "name": "Bill Reid Gallery", "area": "Downtown",
+      "lat": 49.2846, "lng": -123.1194, "emoji": "🖌️", "placeId": "ChIJ09HC74FxhlQRHyXyCAa8AJQ",
+      "trend": null, "env": "indoor", "price": "$", "time": "1 hr", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Gallery of Northwest Coast Indigenous art", "signals": [], "why": "", "tips": []
     }
   ]
 }
