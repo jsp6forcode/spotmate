@@ -1,265 +1,265 @@
 {
   "updatedAt": "2026-09-25",
   "source": "google-trends-manual",
-  "trendNote": "Google Trends(브리티시컬럼비아) 검색 관심도. 오늘=9/25 하루 값, 이번 주=최근 7일 평균, 이번 달=최근 30일 평균. 전체 최고값(이번 달 Stanley Park)=100으로 환산.",
-  "coordsNote": "좌표 © OpenStreetMap contributors",
+  "trendNote": "Search interest from Google Trends (British Columbia). Today = the single day of Sep 25, this week = average of the last 7 days, this month = average of the last 30 days. Scaled so the overall highest value (Stanley Park, this month) = 100.",
+  "coordsNote": "Coordinates © OpenStreetMap contributors",
   "spots": [
     {
-      "id": "playland", "cat": "kids", "name": "Playland", "area": "헤이스팅스 파크",
+      "id": "playland", "cat": "kids", "name": "Playland", "area": "Hastings Park",
       "lat": 49.2827, "lng": -123.0364, "emoji": "🎢", "placeId": "ChIJm1iznN5whlQRaE-axeldswo",
-      "trend": [7, 11, 50], "env": "outdoor", "price": "$$$", "time": "반나절", "crowd": "attraction", "weather": ["sunny", "cloudy"],
-      "summary": "PNE 부지 안의 놀이공원",
+      "trend": [7, 11, 50], "env": "outdoor", "price": "$$$", "time": "Half day", "crowd": "attraction", "weather": ["sunny", "cloudy"],
+      "summary": "Amusement park on the PNE grounds",
       "signals": ["fright nights at playland", "thrill seeker pass playland", "playland expansion"],
-      "why": "이번 달 점수는 8월 말~노동절 연휴(PNE 시즌) 검색이 끌어올렸고, 최근 일주일은 크게 잦아들었어요. 대신 핼러윈 행사 'Fright Nights' 검색이 새로 나타나 10월 시즌 관심이 시작되는 것으로 보여요.",
-      "tips": ["시즌마다 운영일이 달라서 방문 전 공식 일정을 확인하세요"]
+      "why": "This month's score was driven by searches from late August through Labour Day (PNE season), and it has cooled off a lot in the past week. Searches for the Halloween event 'Fright Nights' have just appeared, so interest in the October season looks like it is starting.",
+      "tips": ["Opening days change by season, so check the official schedule before you go"]
     },
     {
-      "id": "aquarium", "cat": "kids", "name": "Vancouver Aquarium", "area": "스탠리 파크",
+      "id": "aquarium", "cat": "kids", "name": "Vancouver Aquarium", "area": "Stanley Park",
       "lat": 49.3005, "lng": -123.1312, "emoji": "🦦", "placeId": "ChIJp2zKeo1xhlQRWOMOmCcWJV8",
-      "trend": [45, 35, 44], "env": "indoor", "price": "$$$", "time": "2-3시간", "crowd": "attraction", "weather": ["rain", "cloudy"],
-      "summary": "스탠리 파크 안의 수족관",
+      "trend": [45, 35, 44], "env": "indoor", "price": "$$$", "time": "2–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy"],
+      "summary": "Aquarium inside Stanley Park",
       "signals": ["vancouver aquarium discount", "vancouver museums", "botanical garden vancouver"],
-      "why": "할인 정보, 그리고 박물관이나 식물원 같은 다른 실내 명소를 함께 찾는 검색이 늘었어요. 오늘 점수가 이번 주 평균보다 높아서 주말 나들이를 미리 알아보는 수요로 보여요.",
-      "tips": ["스탠리 파크 주차는 유료예요"]
+      "why": "More people are searching for discounts, alongside other indoor attractions like museums and botanical gardens. Today's score is above this week's average, which looks like people planning ahead for a weekend outing.",
+      "tips": ["Parking in Stanley Park is paid"]
     },
     {
-      "id": "scienceworld", "cat": "kids", "name": "Science World", "area": "폴스크릭",
+      "id": "scienceworld", "cat": "kids", "name": "Science World", "area": "False Creek",
       "lat": 49.2735, "lng": -123.1037, "emoji": "🔬", "placeId": "ChIJnZHwi2NxhlQRN3CYHzc3giE",
-      "trend": [33, 28, 37], "env": "indoor", "price": "$$", "time": "2-3시간", "crowd": "attraction", "weather": ["rain", "cloudy"],
-      "summary": "직접 만지며 배우는 체험형 과학관",
+      "trend": [33, 28, 37], "env": "indoor", "price": "$$", "time": "2–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy"],
+      "summary": "Hands-on, interactive science centre",
       "signals": ["things to do near me", "telus world of science vancouver", "pne"],
-      "why": "'things to do near me' 같은 나들이 검색과 함께 떠올랐어요. 공식 이름은 TELUS World of Science지만, 검색은 거의 다 'Science World'로 해요.",
+      "why": "It is showing up alongside outing searches like 'things to do near me'. The official name is TELUS World of Science, but almost everyone still searches for 'Science World'.",
       "tips": []
     },
     {
-      "id": "capilano", "cat": "kids", "name": "Capilano Suspension Bridge", "area": "노스밴쿠버",
+      "id": "capilano", "cat": "kids", "name": "Capilano Suspension Bridge", "area": "North Vancouver",
       "lat": 49.3427, "lng": -123.116, "emoji": "🌉", "placeId": "ChIJSd7cANJvhlQRXg8TheyzUPM",
-      "trend": [13, 22, 27], "env": "outdoor", "price": "$$$", "time": "2시간", "crowd": "attraction", "weather": ["sunny", "cloudy"],
-      "summary": "협곡 위 현수교와 숲속 트리탑 산책로",
+      "trend": [13, 22, 27], "env": "outdoor", "price": "$$$", "time": "2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
+      "summary": "Suspension bridge over a canyon, plus treetop walkways",
       "signals": ["canyon frights at capilano suspension bridge", "capilano suspension bridge lights", "capilano suspension bridge christmas"],
-      "why": "핼러윈 행사(Canyon Frights)와 연말 조명 행사 관련 검색이 새로 급증했어요. 시즌 행사를 미리 알아보는 관심으로 보여요.",
-      "tips": ["시즌 행사는 운영 기간이 정해져 있어서 방문 전 일정을 확인하세요"]
+      "why": "Searches for its Halloween event (Canyon Frights) and holiday light show have spiked. It looks like people are checking out the seasonal events early.",
+      "tips": ["Seasonal events run on set dates, so check the schedule before you go"]
     },
 
     {
-      "id": "stanley", "cat": "nature", "name": "Stanley Park", "area": "웨스트엔드",
+      "id": "stanley", "cat": "nature", "name": "Stanley Park", "area": "West End",
       "lat": 49.3021, "lng": -123.1413, "emoji": "🌲", "placeId": "ChIJo-QmrYxxhlQRFuIJtJ1jSjY",
-      "trend": [45, 72, 100], "env": "outdoor", "price": "무료", "time": "2-3시간", "crowd": "park", "weather": ["sunny", "cloudy"],
-      "summary": "바다를 따라 도는 시월 산책로가 있는 도심 대형 공원",
+      "trend": [45, 72, 100], "env": "outdoor", "price": "Free", "time": "2–3 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Huge downtown park ringed by the oceanside Seawall",
       "signals": ["astra lumina stanley park", "malkin bowl", "vancouver map"],
-      "why": "공원 안 야간 조명 산책 'Astra Lumina' 관련 검색이 급상승했어요. 이번 달 트렌드 점수가 전체 스팟 중 가장 높아요.",
-      "tips": ["시월(Seawall)을 자전거로 달릴 땐 한 방향 통행이에요"]
+      "why": "Searches for 'Astra Lumina', the illuminated night walk in the park, are surging. It has the highest trend score of any spot this month.",
+      "tips": ["Cycling on the Seawall is one-way"]
     },
     {
-      "id": "grouse", "cat": "nature", "name": "Grouse Mountain", "area": "노스밴쿠버",
+      "id": "grouse", "cat": "nature", "name": "Grouse Mountain", "area": "North Vancouver",
       "lat": 49.3795, "lng": -123.0768, "emoji": "🚡", "placeId": "ChIJPYvlUnZlhlQRAr1xzquQE14",
-      "trend": [30, 52, 64], "env": "outdoor", "price": "$$$", "time": "반나절", "crowd": "attraction", "weather": ["sunny"],
-      "summary": "곤돌라로 오르는 도시 전망 산",
+      "trend": [30, 52, 64], "env": "outdoor", "price": "$$$", "time": "Half day", "crowd": "attraction", "weather": ["sunny"],
+      "summary": "Mountain with city views, reached by gondola",
       "signals": ["crown mountain hike", "north vancouver weather", "grouse mountain customer service"],
-      "why": "정상에서 이어지는 크라운 마운틴 하이킹 검색이 급증했어요. 노스밴쿠버 날씨를 함께 찾는 경우가 많아서, 맑은 날 전망을 노리는 수요로 보여요.",
-      "tips": ["정상은 도시보다 춥고 구름에 가릴 수 있어서 출발 전 날씨를 확인하세요"]
+      "why": "Searches for the Crown Mountain hike, which starts from the summit, have spiked. People often look up the North Vancouver weather at the same time, so they are likely waiting for a clear day for the views.",
+      "tips": ["The summit is colder than the city and can be in the clouds, so check the weather before you go"]
     },
     {
-      "id": "deepcove", "cat": "nature", "name": "Deep Cove", "area": "노스밴쿠버",
+      "id": "deepcove", "cat": "nature", "name": "Deep Cove", "area": "North Vancouver",
       "lat": 49.3252, "lng": -122.9466, "emoji": "🛶", "placeId": "ChIJMTAoTEx6hlQRIhYukN2ggBE",
-      "trend": [18, 34, 45], "env": "outdoor", "price": "무료", "time": "2-3시간", "crowd": "park", "weather": ["sunny", "cloudy"],
-      "summary": "카약과 하이킹의 출발점인 바닷가 마을",
+      "trend": [18, 34, 45], "env": "outdoor", "price": "Free", "time": "2–3 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Seaside village and jumping-off point for kayaking and hikes",
       "signals": ["fire in deep cove", "deep cove theatre", "north shore news"],
-      "why": "최근 급상승 검색어는 '딥 코브 화재' 같은 지역 뉴스 관련이 많아요. 그래서 이 점수에는 관광 관심이 아닌 검색도 섞여 있을 수 있어요.",
-      "tips": ["주말엔 주차 공간이 빨리 차요"]
+      "why": "Many of the recent rising searches are local news, like 'fire in Deep Cove'. So this score may include searches that have nothing to do with visiting.",
+      "tips": ["Parking fills up fast on weekends"]
     },
     {
-      "id": "englishbay", "cat": "nature", "name": "English Bay", "area": "웨스트엔드",
+      "id": "englishbay", "cat": "nature", "name": "English Bay", "area": "West End",
       "lat": 49.2865, "lng": -123.1437, "emoji": "🌅", "placeId": "ChIJ86zkaC9yhlQR4GhBA8iTiy4",
-      "trend": [11, 20, 20], "env": "outdoor", "price": "무료", "time": "1-2시간", "crowd": "park", "weather": ["sunny", "cloudy"],
-      "summary": "노을 명소로 알려진 도심 해변",
+      "trend": [11, 20, 20], "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Downtown beach known for its sunsets",
       "signals": ["english bay water temperature (+400%)", "sunset beach", "sylvia hotel"],
-      "why": "'잉글리시 베이 수온' 검색이 400% 늘었어요. 바로 옆 선셋 비치와 함께 찾는 경우가 많아요.",
+      "why": "Searches for the English Bay water temperature are up 400%. People often search for Sunset Beach next door at the same time.",
       "tips": []
     },
     {
-      "id": "seatosky", "cat": "nature", "name": "Sea to Sky Gondola", "area": "스쿼미시",
+      "id": "seatosky", "cat": "nature", "name": "Sea to Sky Gondola", "area": "Squamish",
       "lat": 49.6751, "lng": -123.157, "emoji": "🏔️", "placeId": "ChIJZ2GCywdYhlQRB8ip3H65t6c",
-      "trend": [11, 17, 20], "env": "outdoor", "price": "$$$", "time": "반나절", "crowd": "attraction", "weather": ["sunny"],
-      "summary": "하우 사운드 피오르를 내려다보는 곤돌라",
+      "trend": [11, 17, 20], "env": "outdoor", "price": "$$$", "time": "Half day", "crowd": "attraction", "weather": ["sunny"],
+      "summary": "Gondola overlooking the Howe Sound fjord",
       "signals": ["sea to sky gondola shuttle", "sea to sky highway", "britannia mine museum"],
-      "why": "셔틀과 씨투스카이 하이웨이 검색이 함께 늘었어요. 차 없이 가는 방법이나 드라이브 코스를 알아보는 관심으로 보여요.",
-      "tips": ["밴쿠버에서 차로 1시간 정도 걸려요"]
+      "why": "Searches for the shuttle and the Sea to Sky Highway are rising together. It looks like people are figuring out how to get there without a car, or planning a scenic drive.",
+      "tips": ["About an hour's drive from Vancouver"]
     },
     {
-      "id": "cypress", "cat": "nature", "name": "Cypress Mountain", "area": "웨스트밴쿠버",
+      "id": "cypress", "cat": "nature", "name": "Cypress Mountain", "area": "West Vancouver",
       "lat": 49.3977, "lng": -123.2011, "emoji": "⛷️", "placeId": "ChIJdZb1mNZghlQR8y_TxqYSF4I",
-      "trend": [9, 13, 15], "env": "outdoor", "price": "무료-$$$", "time": "1-3시간", "crowd": "park", "weather": ["sunny", "cloudy"],
-      "summary": "겨울엔 스키장, 가는 길엔 도시 전망대",
+      "trend": [9, 13, 15], "env": "outdoor", "price": "Free–$$$", "time": "1–3 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Ski hill in winter, with a city lookout on the way up",
       "signals": ["cypress mountain season pass", "cypress mountain shuttle", "cypress lookout"],
-      "why": "시즌권과 셔틀 검색이 새로 나타났어요. 겨울 스키 시즌을 준비하는 관심으로 보이고, 가는 길에 있는 전망대(Cypress Lookout)도 함께 찾아요.",
+      "why": "Searches for season passes and the shuttle have just appeared, which looks like people getting ready for ski season. The lookout on the way up (Cypress Lookout) is getting searched too.",
       "tips": []
     },
     {
-      "id": "lynn", "cat": "nature", "name": "Lynn Canyon", "area": "노스밴쿠버",
+      "id": "lynn", "cat": "nature", "name": "Lynn Canyon", "area": "North Vancouver",
       "lat": 49.3437, "lng": -123.0198, "emoji": "🌿", "placeId": "ChIJo6mwbbx6hlQRfy2H6pWyz-k",
-      "trend": [6, 10, 14], "env": "outdoor", "price": "무료", "time": "1-2시간", "crowd": "park", "weather": ["sunny", "cloudy"],
-      "summary": "무료로 건너는 흔들다리와 계곡 트레일",
+      "trend": [6, 10, 14], "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Free suspension bridge and canyon trails",
       "signals": ["lynn valley hike", "lynn canyon ecology centre", "grouse grind"],
-      "why": "린 밸리, 그라우스 그라인드 같은 주변 하이킹 코스와 함께 검색되고 있어요.",
-      "tips": ["주말엔 주차장이 일찍 차요"]
+      "why": "It is being searched alongside nearby hikes like Lynn Valley and the Grouse Grind.",
+      "tips": ["The parking lot fills up early on weekends"]
     },
 
     {
-      "id": "granville", "cat": "city", "name": "Granville Island", "area": "폴스크릭",
+      "id": "granville", "cat": "city", "name": "Granville Island", "area": "False Creek",
       "lat": 49.2708, "lng": -123.1343, "emoji": "🥖", "placeId": "ChIJG3q8d85zhlQRIH1pyAsVpEc",
-      "trend": [59, 74, 84], "env": "both", "price": "무료", "time": "2-3시간", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
-      "summary": "퍼블릭 마켓과 공방이 모인 섬",
+      "trend": [59, 74, 84], "env": "both", "price": "Free", "time": "2–3 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Island home to the Public Market and artisan studios",
       "signals": ["granville island donuts", "granville island tea company", "dockside restaurant vancouver", "kitsilano beach"],
-      "why": "섬 안 도넛 가게, 차 전문점 같은 먹거리 검색이 급상승했어요. 키칠라노 비치를 함께 찾는 사람도 늘었어요.",
-      "tips": ["아쿠아버스나 폴스크릭 페리를 타면 주차 걱정이 없어요"]
+      "why": "Food searches are surging, like the island's donut shop and tea company. More people are also searching for Kitsilano Beach at the same time.",
+      "tips": ["Take the Aquabus or False Creek Ferries and skip the parking hunt"]
     },
     {
-      "id": "canadaplace", "cat": "city", "name": "Canada Place", "area": "워터프런트",
+      "id": "canadaplace", "cat": "city", "name": "Canada Place", "area": "Waterfront",
       "lat": 49.2876, "lng": -123.1136, "emoji": "⛵", "placeId": "ChIJIeDiJJ1xhlQRCWHIheB_Bbc",
-      "trend": [53, 63, 81], "env": "both", "price": "무료", "time": "1시간", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
-      "summary": "돛 모양 지붕의 항구 랜드마크",
+      "trend": [53, 63, 81], "env": "both", "price": "Free", "time": "1 hr", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Harbourfront landmark with a sail-shaped roof",
       "signals": ["canada place webcam", "canada place camera"],
-      "why": "'캐나다 플레이스 웹캠' 검색이 급증했어요. 크루즈 터미널이 있는 곳이라 크루즈 승객의 검색이 섞여 있을 가능성이 커요.",
+      "why": "Searches for the Canada Place webcam have spiked. It is also the cruise ship terminal, so cruise passengers' searches are likely mixed in.",
       "tips": []
     },
     {
-      "id": "steveston", "cat": "city", "name": "Steveston", "area": "리치먼드",
+      "id": "steveston", "cat": "city", "name": "Steveston", "area": "Richmond",
       "lat": 49.1231, "lng": -123.184, "emoji": "🎣", "placeId": "ChIJ170JiUThhVQR2uY6eymTnoA",
-      "trend": [42, 58, 62], "env": "outdoor", "price": "무료", "time": "반나절", "crowd": "park", "weather": ["sunny", "cloudy"],
-      "summary": "어선이 드나드는 부두 마을",
+      "trend": [42, 58, 62], "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Fishing village with a working wharf",
       "signals": ["save on foods steveston", "shoppers drug mart steveston"],
-      "why": "급상승 검색어가 대부분 동네 상점 관련이에요. 스티브스턴은 동네 이름이기도 해서, 관광 관심보다 점수가 높게 나올 수 있어요.",
-      "tips": ["부두(Fisherman's Wharf)에서 어선이 직접 해산물을 팔기도 해요"]
+      "why": "Most of the rising searches are about local stores. Steveston is also a neighbourhood name, so its score may run higher than actual visitor interest.",
+      "tips": ["Fishing boats sometimes sell seafood straight off the boat at Fisherman's Wharf"]
     },
     {
-      "id": "gastown", "cat": "city", "name": "Gastown", "area": "다운타운",
+      "id": "gastown", "cat": "city", "name": "Gastown", "area": "Downtown",
       "lat": 49.2844, "lng": -123.1089, "emoji": "🕰️", "placeId": "ChIJ36zlvedzhlQRAFUUd93cPgg",
-      "trend": [42, 50, 57], "env": "outdoor", "price": "무료", "time": "1-2시간", "crowd": "attraction", "weather": ["cloudy", "sunny"],
-      "summary": "증기 시계가 있는 밴쿠버의 옛 도심",
+      "trend": [42, 50, 57], "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["cloudy", "sunny"],
+      "summary": "Vancouver's historic old town, home of the steam clock",
       "signals": ["bars in gastown", "guu gastown", "pourhouse vancouver"],
-      "why": "바와 레스토랑 검색이 급상승했어요. 저녁 외식이나 술자리 장소로 찾는 관심이 커 보여요.",
-      "tips": ["증기 시계는 15분마다 증기를 뿜으며 울려요"]
+      "why": "Searches for bars and restaurants are surging. It looks like people are picking it for dinners and nights out.",
+      "tips": ["The steam clock whistles and puffs steam every 15 minutes"]
     },
     {
-      "id": "nightmarket", "cat": "city", "name": "Richmond Night Market", "area": "리치먼드",
+      "id": "nightmarket", "cat": "city", "name": "Richmond Night Market", "area": "Richmond",
       "lat": 49.1938, "lng": -123.1336, "emoji": "🏮", "placeId": "ChIJQ7wAFCR1hlQRL7RB8W3XeOU",
-      "trend": [9, 51, 52], "env": "outdoor", "price": "$", "time": "2시간", "crowd": "meal", "weather": ["sunny", "cloudy"],
-      "summary": "여름 시즌에 주말마다 열리는 야시장",
+      "trend": [9, 51, 52], "env": "outdoor", "price": "$", "time": "2 hrs", "crowd": "meal", "weather": ["sunny", "cloudy"],
+      "summary": "Summer-season night market open on weekends",
       "signals": ["richmond night market closing date", "why is the richmond night market closing", "richmond night market entrance fee"],
-      "why": "'폐장일', '왜 문을 닫나' 같은 검색이 급증했어요. 주말(9/19~20)에 검색이 몰리고 평일엔 크게 줄어요.",
-      "tips": ["방문 전 공식 사이트에서 운영 여부를 꼭 확인하세요"]
+      "why": "Searches like 'closing date' and 'why is it closing' have spiked. Searches peak on weekends (Sep 19–20) and drop off sharply on weekdays.",
+      "tips": ["Check the official site to confirm it's open before you go"]
     },
     {
-      "id": "vag", "cat": "city", "name": "Vancouver Art Gallery", "area": "다운타운",
+      "id": "vag", "cat": "city", "name": "Vancouver Art Gallery", "area": "Downtown",
       "lat": 49.2828, "lng": -123.1206, "emoji": "🖼️", "placeId": "ChIJwXz9f39xhlQRT3qxXAPDlbU",
-      "trend": [20, 17, 15], "env": "indoor", "price": "$$", "time": "1-2시간", "crowd": "attraction", "weather": ["rain", "cloudy"],
-      "summary": "다운타운 한가운데의 시립 미술관",
+      "trend": [20, 17, 15], "env": "indoor", "price": "$$", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy"],
+      "summary": "The city's art museum, right in the middle of downtown",
       "signals": ["vancouver art gallery free fridays", "vancouver art gallery north plaza"],
-      "why": "'무료 금요일(free fridays)' 검색이 급상승했어요. 오늘 점수가 이번 달 평균보다 높아요.",
+      "why": "Searches for 'free Fridays' are surging. Today's score is above this month's average.",
       "tips": []
     },
 
     {
-      "id": "iden", "cat": "food", "name": "iDen & Quanjude Beijing Duck House", "area": "캠비",
+      "id": "iden", "cat": "food", "name": "iDen & Quanjude Beijing Duck House", "area": "Cambie",
       "lat": 49.2602, "lng": -123.1147, "emoji": "🦆", "placeId": "ChIJod2tPlFzhlQRCSDoo93R3-M",
-      "trend": null, "env": "indoor", "price": "$$$", "time": "1.5시간", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
-      "summary": "북경오리 요리로 이름난 중식당", "signals": [], "why": "", "tips": []
+      "trend": null, "env": "indoor", "price": "$$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Chinese restaurant known for Peking duck", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "miku", "cat": "food", "name": "Miku", "area": "워터프런트",
+      "id": "miku", "cat": "food", "name": "Miku", "area": "Waterfront",
       "lat": 49.2868, "lng": -123.1123, "emoji": "🍣", "placeId": "ChIJlyu4u4NxhlQRkUpN_iFwl8Q",
-      "trend": null, "env": "indoor", "price": "$$$", "time": "1.5시간", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
-      "summary": "토치로 그을린 아부리 스시로 유명한 워터프런트 스시집", "signals": [], "why": "", "tips": []
+      "trend": null, "env": "indoor", "price": "$$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Waterfront sushi spot famous for torch-seared aburi sushi", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "danbo", "cat": "food", "name": "Ramen Danbo Robson", "area": "롭슨 스트리트",
+      "id": "danbo", "cat": "food", "name": "Ramen Danbo Robson", "area": "Robson Street",
       "lat": 49.2875, "lng": -123.1289, "emoji": "🍜", "placeId": "ChIJtwgTP4dxhlQRo5wIHcln0es",
-      "trend": null, "env": "indoor", "price": "$$", "time": "1시간", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
-      "summary": "후쿠오카식 돈코츠 라멘 전문점", "signals": [], "why": "", "tips": []
+      "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Fukuoka-style tonkotsu ramen shop", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "medina", "cat": "food", "name": "Cafe Medina", "area": "다운타운",
+      "id": "medina", "cat": "food", "name": "Cafe Medina", "area": "Downtown",
       "lat": 49.2806, "lng": -123.1169, "emoji": "🧇", "placeId": "ChIJEa8g6HtxhlQRa_lcrLrlVQw",
-      "trend": null, "env": "indoor", "price": "$$", "time": "1시간", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
-      "summary": "와플과 지중해풍 브런치로 유명한 카페", "signals": [], "why": "", "tips": []
+      "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Brunch cafe known for waffles and Mediterranean dishes", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "bluewater", "cat": "food", "name": "Blue Water Cafe", "area": "예일타운",
+      "id": "bluewater", "cat": "food", "name": "Blue Water Cafe", "area": "Yaletown",
       "lat": 49.2761, "lng": -123.1211, "emoji": "🦪", "placeId": "ChIJZ04tZ9ZzhlQRDsJZp_cOS4U",
-      "trend": null, "env": "indoor", "price": "$$$$", "time": "1.5시간", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
-      "summary": "해산물과 로 바(raw bar)로 알려진 예일타운 레스토랑", "signals": [], "why": "", "tips": []
+      "trend": null, "env": "indoor", "price": "$$$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Yaletown restaurant known for seafood and its raw bar", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "savio", "cat": "food", "name": "Osteria Savio Volpe", "area": "마운트 플레전트",
+      "id": "savio", "cat": "food", "name": "Osteria Savio Volpe", "area": "Mount Pleasant",
       "lat": 49.2575, "lng": -123.0909, "emoji": "🍝", "placeId": "ChIJ71LS51dxhlQRfq2bLYvY8gY",
-      "trend": null, "env": "indoor", "price": "$$$", "time": "1.5시간", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
-      "summary": "파스타와 화덕 요리를 내는 이탈리안 오스테리아", "signals": [], "why": "", "tips": []
+      "trend": null, "env": "indoor", "price": "$$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Italian osteria serving pasta and wood-fired dishes", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "bisou", "cat": "food", "name": "Bisou Bakehouse", "area": "웨스트엔드",
+      "id": "bisou", "cat": "food", "name": "Bisou Bakehouse", "area": "West End",
       "lat": 49.2863, "lng": -123.1399, "emoji": "🥐", "placeId": "ChIJ5TZ41eBzhlQRFwUz7_YhsvI",
-      "trend": null, "env": "indoor", "price": "$", "time": "30분", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
-      "summary": "빵과 커피를 파는 웨스트엔드 베이커리 카페", "signals": [], "why": "", "tips": []
+      "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "West End bakery cafe for pastries and coffee", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "guffo", "cat": "food", "name": "Guffo Café", "area": "다운타운",
+      "id": "guffo", "cat": "food", "name": "Guffo Café", "area": "Downtown",
       "lat": 49.2866, "lng": -123.1145, "emoji": "☕", "placeId": "ChIJLU1neKdxhlQRq0iyFFXtelo",
-      "trend": null, "env": "indoor", "price": "$", "time": "30분", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
-      "summary": "다운타운 하우 스트리트의 카페", "signals": [], "why": "", "tips": []
+      "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "Cafe on Howe Street downtown", "signals": [], "why": "", "tips": []
     },
 
     {
-      "id": "qepark", "cat": "hidden", "name": "Queen Elizabeth Park", "area": "리틀 마운틴",
+      "id": "qepark", "cat": "hidden", "name": "Queen Elizabeth Park", "area": "Little Mountain",
       "lat": 49.241, "lng": -123.112, "emoji": "🌷", "placeId": "ChIJIcZrTvVzhlQRiKTnD03vt7Q",
-      "trend": null, "env": "both", "price": "무료", "time": "1-2시간", "crowd": "park", "weather": ["sunny", "cloudy", "rain"],
-      "summary": "밴쿠버 시내에서 가장 높은 언덕의 정원 공원",
-      "signals": [], "why": "", "tips": ["꼭대기의 블로델 온실(Bloedel Conservatory)은 비 오는 날에도 둘러보기 좋아요"]
+      "trend": null, "env": "both", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy", "rain"],
+      "summary": "Garden park on the highest point in the city",
+      "signals": [], "why": "", "tips": ["The Bloedel Conservatory at the top is a good stop even on rainy days"]
     },
     {
-      "id": "vandusen", "cat": "hidden", "name": "VanDusen Botanical Garden", "area": "쇼너시",
+      "id": "vandusen", "cat": "hidden", "name": "VanDusen Botanical Garden", "area": "Shaughnessy",
       "lat": 49.2396, "lng": -123.1326, "emoji": "🌺", "placeId": "ChIJwW3HeIZzhlQRVxJgWI8VjAg",
-      "trend": null, "env": "outdoor", "price": "$$", "time": "1-2시간", "crowd": "park", "weather": ["sunny", "cloudy"],
-      "summary": "계절마다 풍경이 바뀌는 넓은 식물원", "signals": [], "why": "", "tips": []
+      "trend": null, "env": "outdoor", "price": "$$", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Large botanical garden that changes with every season", "signals": [], "why": "", "tips": []
     },
     {
       "id": "moa", "cat": "hidden", "name": "Museum of Anthropology", "area": "UBC",
       "lat": 49.2695, "lng": -123.2594, "emoji": "🏛️", "placeId": "ChIJrf8w27NyhlQR44St4PQccfY",
-      "trend": null, "env": "indoor", "price": "$$", "time": "2시간", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
-      "summary": "원주민 예술과 토템폴 컬렉션으로 유명한 UBC 인류학 박물관", "signals": [], "why": "", "tips": []
+      "trend": null, "env": "indoor", "price": "$$", "time": "2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
+      "summary": "UBC museum famous for its Indigenous art and totem pole collection", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "lighthouse", "cat": "hidden", "name": "Lighthouse Park", "area": "웨스트밴쿠버",
+      "id": "lighthouse", "cat": "hidden", "name": "Lighthouse Park", "area": "West Vancouver",
       "lat": 49.3343, "lng": -123.2614, "emoji": "🗼", "placeId": "ChIJIUj0JVRshlQRhB-coT_zlFE",
-      "trend": null, "env": "outdoor", "price": "무료", "time": "1-2시간", "crowd": "park", "weather": ["sunny", "cloudy"],
-      "summary": "원시림 숲길 끝에 등대와 바다가 나오는 공원",
-      "signals": [], "why": "", "tips": ["바위 구간이 있어서 운동화를 신는 게 좋아요"]
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Old-growth forest trails that end at a lighthouse and the sea",
+      "signals": [], "why": "", "tips": ["There are rocky sections, so wear sneakers"]
     },
     {
-      "id": "bvm", "cat": "hidden", "name": "Burnaby Village Museum", "area": "버나비",
+      "id": "bvm", "cat": "hidden", "name": "Burnaby Village Museum", "area": "Burnaby",
       "lat": 49.2399, "lng": -122.9669, "emoji": "🎠", "placeId": "ChIJA288NqZ3hlQRdrlOknfGAMk",
-      "trend": null, "env": "outdoor", "price": "무료", "time": "1-2시간", "crowd": "attraction", "weather": ["sunny", "cloudy"],
-      "summary": "1920년대 마을을 재현한 야외 박물관, 옛 회전목마가 있어요", "signals": [], "why": "", "tips": []
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
+      "summary": "Open-air museum recreating a 1920s village, with a vintage carousel", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "whytecliff", "cat": "hidden", "name": "Whytecliff Park", "area": "호스슈 베이",
+      "id": "whytecliff", "cat": "hidden", "name": "Whytecliff Park", "area": "Horseshoe Bay",
       "lat": 49.374, "lng": -123.2874, "emoji": "🪨", "placeId": "ChIJMSLx3oxrhlQRPo56WANJmPM",
-      "trend": null, "env": "outdoor", "price": "무료", "time": "1-2시간", "crowd": "park", "weather": ["sunny", "cloudy"],
-      "summary": "썰물 때 걸어서 건너는 바위섬과 해안 전망이 있는 공원",
-      "signals": [], "why": "", "tips": ["바위섬은 물때에 따라 건널 수 없는 시간이 있어요"]
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
+      "summary": "Coastal park with a rocky islet you can walk to at low tide",
+      "signals": [], "why": "", "tips": ["Depending on the tide, you can't always cross to the islet"]
     },
     {
       "id": "nitobe", "cat": "hidden", "name": "Nitobe Memorial Garden", "area": "UBC",
       "lat": 49.2662, "lng": -123.2596, "emoji": "⛩️", "placeId": "ChIJDzRjfrRyhlQR8SRHq2eOtwk",
-      "trend": null, "env": "outdoor", "price": "$", "time": "1시간", "crowd": "park", "weather": ["sunny", "cloudy", "rain"],
-      "summary": "UBC 캠퍼스 안의 전통 일본 정원", "signals": [], "why": "", "tips": []
+      "trend": null, "env": "outdoor", "price": "$", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy", "rain"],
+      "summary": "Traditional Japanese garden on the UBC campus", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "quarry", "cat": "hidden", "name": "Quarry Rock", "area": "딥 코브",
+      "id": "quarry", "cat": "hidden", "name": "Quarry Rock", "area": "Deep Cove",
       "lat": 49.3344, "lng": -122.9378, "emoji": "🥾", "placeId": "ChIJ9-boVK57hlQREBFD4OyKc0s",
-      "trend": null, "env": "outdoor", "price": "무료", "time": "2시간", "crowd": "park", "weather": ["sunny"],
-      "summary": "짧은 하이킹 끝에 인디언 암 전망이 펼쳐지는 바위 전망대",
-      "signals": [], "why": "", "tips": ["주말엔 딥 코브 주차가 어려워서 일찍 출발하는 게 좋아요"]
+      "trend": null, "env": "outdoor", "price": "Free", "time": "2 hrs", "crowd": "park", "weather": ["sunny"],
+      "summary": "Rocky lookout over Indian Arm at the end of a short hike",
+      "signals": [], "why": "", "tips": ["Parking in Deep Cove is tough on weekends, so start early"]
     }
   ]
 }

@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SpotMate</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
   darkMode: 'class',
   theme: { extend: { fontFamily: {
-    sans: ['"IBM Plex Sans KR"', 'system-ui', '-apple-system', '"Apple SD Gothic Neo"', '"Malgun Gothic"', 'sans-serif'],
+    sans: ['"IBM Plex Sans"', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
     brand: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif']
   } } }
 };
@@ -37,23 +37,23 @@ tailwind.config = {
 // ───────── 메타 데이터 ─────────
 // basis: 'trend' = 검색량(Google Trends) 순위, 'reviews' = Google 리뷰 기준으로 고른 추천 (순위 없음)
 const CATS = {
-  kids:   { label: '아이랑',    icon: '🧸', basis: 'trend',   dot: '#f43f5e' },
-  nature: { label: '자연·전망', icon: '🏔️', basis: 'trend',   dot: '#10b981' },
-  city:   { label: '도시 명소', icon: '🏙️', basis: 'trend',   dot: '#0ea5e9' },
-  food:   { label: '먹거리',    icon: '🍜', basis: 'reviews', dot: '#f59e0b', criteria: 'Google 평점 4.5 이상, 리뷰 1,500개 이상인 곳 중 종류별로 골랐어요 (체인점 제외).' },
-  hidden: { label: '히든젬',    icon: '💎', basis: 'reviews', dot: '#8b5cf6', criteria: 'Google 평점 4.6 이상, 리뷰 1,000개 이상인데 검색량은 적은 곳이에요. 가본 사람은 만족하지만 아직 덜 알려진 곳이에요.' }
+  kids:   { label: 'With Kids',      icon: '🧸', basis: 'trend',   dot: '#f43f5e' },
+  nature: { label: 'Nature & Views', icon: '🏔️', basis: 'trend',   dot: '#10b981' },
+  city:   { label: 'City Sights',    icon: '🏙️', basis: 'trend',   dot: '#0ea5e9' },
+  food:   { label: 'Food',           icon: '🍜', basis: 'reviews', dot: '#f59e0b', criteria: 'Picked from places with a Google rating of 4.5+ and 1,500+ reviews, one per cuisine type (no chains).' },
+  hidden: { label: 'Hidden Gems',    icon: '💎', basis: 'reviews', dot: '#8b5cf6', criteria: 'Places with a Google rating of 4.6+ and 1,000+ reviews, but low search volume. Visitors love them, yet they are still under the radar.' }
 };
 const hasTrend = s => Array.isArray(s.trend);
-const TF = { today: { label: '오늘', i: 0 }, week: { label: '이번 주', i: 1 }, month: { label: '이번 달', i: 2 } };
-const WEATHER = { sunny: { label: '맑음', icon: '☀️' }, cloudy: { label: '흐림', icon: '☁️' }, rain: { label: '비', icon: '🌧️' } };
-const ENV = { indoor: '실내', outdoor: '야외', both: '실내+야외' };
+const TF = { today: { label: 'Today', i: 0 }, week: { label: 'This week', i: 1 }, month: { label: 'This month', i: 2 } };
+const WEATHER = { sunny: { label: 'Sunny', icon: '☀️' }, cloudy: { label: 'Cloudy', icon: '☁️' }, rain: { label: 'Rain', icon: '🌧️' } };
+const ENV = { indoor: 'Indoor', outdoor: 'Outdoor', both: 'Indoor + outdoor' };
 const ENV_ICON = { indoor: '🏠', outdoor: '🌳', both: '🏠🌳' };
 const ORIGINS = {
-  downtown:  { label: '다운타운',   lat: 49.2827, lng: -123.1207 },
-  burnaby:   { label: '버나비',     lat: 49.2488, lng: -122.9805 },
-  richmond:  { label: '리치먼드',   lat: 49.1666, lng: -123.1336 },
-  northvan:  { label: '노스밴쿠버', lat: 49.3200, lng: -123.0724 },
-  coquitlam: { label: '코퀴틀람',   lat: 49.2838, lng: -122.7932 }
+  downtown:  { label: 'Downtown',        lat: 49.2827, lng: -123.1207 },
+  burnaby:   { label: 'Burnaby',         lat: 49.2488, lng: -122.9805 },
+  richmond:  { label: 'Richmond',        lat: 49.1666, lng: -123.1336 },
+  northvan:  { label: 'North Vancouver', lat: 49.3200, lng: -123.0724 },
+  coquitlam: { label: 'Coquitlam',       lat: 49.2838, lng: -122.7932 }
 };
 
 // ───────── 스팟 데이터 ─────────
@@ -69,6 +69,7 @@ const pid = (k, s) => s.placeId ? `&${k}=${encodeURIComponent(s.placeId)}` : '';
 const mapsUrl = s => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(s.name + ' BC') + pid('query_place_id', s);
 const dirUrl = s => 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(s.name + ' BC') + pid('destination_place_id', s);
 const infoUrl = s => 'https://www.google.com/search?q=' + encodeURIComponent(s.name + ' Vancouver');
+const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 function km(a, b) {
   const R = 6371, r = x => x * Math.PI / 180;
   const dLat = r(b.lat - a.lat), dLng = r(b.lng - a.lng);
@@ -82,6 +83,7 @@ function vanClock(date = new Date()) {
   const p = {}; VAN_FMT.formatToParts(date).forEach(x => p[x.type] = x.value);
   return { h: +p.hour % 24, weekend: p.weekday === 'Sat' || p.weekday === 'Sun' };
 }
+const hourLabel = h => h === 12 ? '12p' : h > 12 ? `${h - 12}p` : `${h}a`;
 // 밴쿠버 현재 날씨 (Open-Meteo, 키 없이 무료). WMO 날씨 코드를 앱의 3가지 날씨로 묶어요.
 const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=49.2827&longitude=-123.1207&current=temperature_2m,weather_code&timezone=America%2FVancouver';
 function weatherKind(code) {
@@ -90,17 +92,17 @@ function weatherKind(code) {
   return 'rain'; // 이슬비, 비, 눈, 소나기, 뇌우
 }
 function weatherDesc(code) {
-  if (code === 0) return '맑음';
-  if (code === 1) return '대체로 맑음';
-  if (code === 2) return '구름 조금';
-  if (code === 3) return '흐림';
-  if (code <= 48) return '안개';
-  if (code <= 57) return '이슬비';
-  if (code <= 67) return '비';
-  if (code <= 77) return '눈';
-  if (code <= 82) return '소나기';
-  if (code <= 86) return '눈 소나기';
-  return '뇌우';
+  if (code === 0) return 'clear';
+  if (code === 1) return 'mostly clear';
+  if (code === 2) return 'partly cloudy';
+  if (code === 3) return 'overcast';
+  if (code <= 48) return 'foggy';
+  if (code <= 57) return 'drizzle';
+  if (code <= 67) return 'rain';
+  if (code <= 77) return 'snow';
+  if (code <= 82) return 'showers';
+  if (code <= 86) return 'snow showers';
+  return 'thunderstorms';
 }
 function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -148,7 +150,7 @@ class App {
       try { plan = JSON.parse(load('spotmate-plan') || '[]').filter(id => byId(id)); } catch (e) {}
       this.set({ loading: false, plan });
     } catch (e) {
-      this.set({ loading: false, loadError: '스팟 정보를 불러오지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요.' });
+      this.set({ loading: false, loadError: "We couldn't load the spots. Check your connection and try again." });
     }
   }
   async loadWeather() {
@@ -189,8 +191,8 @@ class App {
   rising(s) {
     const ti = TF[this.state.tf].i;
     if (!hasTrend(s)) return '';
-    if (ti < 2 && s.trend[ti] - s.trend[2] >= 8) return '급상승';
-    if (ti === 2 && s.trend[2] >= 88) return '이달의 픽';
+    if (ti < 2 && s.trend[ti] - s.trend[2] >= 8) return 'Rising';
+    if (ti === 2 && s.trend[2] >= 88) return 'Top pick';
     return '';
   }
   crowdAt(s, { h, weekend }) {
@@ -206,9 +208,9 @@ class App {
   }
   crowdBadge(level) {
     return [
-      { t: '한산', c: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300' },
-      { t: '보통', c: 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300' },
-      { t: '붐빔', c: 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300' }
+      { t: 'Quiet', c: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300' },
+      { t: 'Moderate', c: 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300' },
+      { t: 'Busy', c: 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300' }
     ][level];
   }
   weatherPick(items) {
@@ -216,9 +218,9 @@ class App {
     const pick = [...items].filter(s => s.weather.includes(w)).sort((a, b) => (b.score ?? -1) - (a.score ?? -1))[0];
     if (!pick) return null;
     let reason;
-    if (w === 'rain') reason = pick.env === 'outdoor' ? '비 오는 날 오히려 운치가 살아나는 곳이에요.' : '실내라 비 걱정 없이 즐길 수 있어요.';
-    else if (w === 'sunny') reason = pick.env === 'indoor' ? '맑은 날 가볍게 들르기 좋은 곳이에요.' : '맑은 날 경치가 가장 빛나는 곳이에요.';
-    else reason = '흐린 날에도 만족도가 떨어지지 않는 곳이에요.';
+    if (w === 'rain') reason = pick.env === 'outdoor' ? 'It actually gets moodier and more atmospheric in the rain.' : "It's indoors, so the rain won't get in the way.";
+    else if (w === 'sunny') reason = pick.env === 'indoor' ? 'An easy stop on a sunny day.' : 'This is where a clear day really shines.';
+    else reason = "Still a great visit when it's overcast.";
     return { pick, reason };
   }
 
@@ -266,22 +268,22 @@ class App {
     this.set({ plan, copyMsg: '', copyText: '' });
   }
   locate() {
-    if (!navigator.geolocation) return this.set({ geoMsg: '이 브라우저는 위치 확인을 지원하지 않아요. 출발 지역을 골라 주세요.' });
-    this.set({ geoMsg: '현재 위치를 확인하는 중이에요...', sort: 'distance' });
+    if (!navigator.geolocation) return this.set({ geoMsg: "This browser can't share your location. Pick a starting area instead." });
+    this.set({ geoMsg: 'Finding your location...', sort: 'distance' });
     navigator.geolocation.getCurrentPosition(
-      p => this.set({ origin: { lat: p.coords.latitude, lng: p.coords.longitude, label: '현재 위치' }, geoMsg: '현재 위치 기준으로 정렬했어요.' }),
-      () => this.set({ origin: null, geoMsg: '위치를 가져오지 못했어요. 출발 지역을 골라 주세요.' }),
+      p => this.set({ origin: { lat: p.coords.latitude, lng: p.coords.longitude, label: 'You are here' }, geoMsg: 'Sorted by distance from your location.' }),
+      () => this.set({ origin: null, geoMsg: "We couldn't get your location. Pick a starting area instead." }),
       { timeout: 8000, maximumAge: 300000 }
     );
   }
   async copyPlan() {
     const spots = this.state.plan.map(byId);
-    const text = 'SpotMate 내 플랜\n\n' + spots.map((s, i) => `${i + 1}. ${s.name} (${s.area})\n   ${mapsUrl(s)}`).join('\n');
+    const text = 'My SpotMate plan\n\n' + spots.map((s, i) => `${i + 1}. ${s.name} (${s.area})\n   ${mapsUrl(s)}`).join('\n');
     try {
       await navigator.clipboard.writeText(text);
-      this.set({ copyMsg: '플랜을 복사했어요. 메신저에 붙여넣어 공유하세요.', copyText: '' });
+      this.set({ copyMsg: 'Plan copied. Paste it into a chat to share.', copyText: '' });
     } catch (e) {
-      this.set({ copyMsg: '자동 복사가 막혀 있어요. 아래 내용을 직접 복사해 주세요.', copyText: text });
+      this.set({ copyMsg: "Auto-copy is blocked here. Copy the text below instead.", copyText: text });
     }
   }
   async runAI(id) {
@@ -291,15 +293,15 @@ class App {
     if (this.aiCtl) this.aiCtl.abort();
     const ctl = new AbortController(); this.aiCtl = ctl;
     this.ai[key] = { status: 'loading', text: '' }; this.render();
-    const today = new Date().toLocaleDateString('ko-KR', { timeZone: TZ, year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
-    const prompt = `너는 밴쿠버 로컬 트렌드 분석가야. 오늘은 ${today}.
-아래 장소가 "${TF[tf].label}" 기준으로 왜 많이 검색되고 주목받는지 한국어 2~3문장으로 설명해 줘.
-- 주어진 신호와 시기, 오늘 날씨(${WEATHER[weather].label})만 근거로 삼아.
-- 데이터에 없는 수치, 이벤트, 날짜를 지어내지 마. 추정은 "~일 가능성이 커요"처럼 표현해.
-- 마지막 문장은 지금 방문하려는 사람에게 주는 짧은 팁으로 끝내.
-- 인사말, 머리말, 마크다운 없이 본문만.
+    const today = new Date().toLocaleDateString('en-CA', { timeZone: TZ, year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+    const prompt = `You are a Vancouver local-trends analyst. Today is ${today}.
+In 2-3 sentences of plain English, explain why the place below is getting searched and talked about (${TF[tf].label.toLowerCase()}).
+- Use only the given signals, the season, and today's weather (${WEATHER[weather].label}) as evidence.
+- Do not invent numbers, events, or dates that are not in the data. Phrase guesses as "likely" or "probably".
+- End with one short tip for someone planning to go now.
+- No greeting, no preamble, no markdown. Body text only.
 
-데이터: ${JSON.stringify({ 이름: s.name, 지역: s.area, 카테고리: CATS[s.cat].label, 환경: ENV[s.env], 트렌드지수: hasTrend(s) ? { 오늘: s.trend[0], 이번주: s.trend[1], 이번달: s.trend[2] } : '없음(리뷰 기준 추천)', 급상승검색어: s.signals, 잘맞는날씨: s.weather.map(w => WEATHER[w].label) })}`;
+Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label, setting: ENV[s.env], trendIndex: hasTrend(s) ? { today: s.trend[0], thisWeek: s.trend[1], thisMonth: s.trend[2] } : 'none (picked by reviews)', risingSearches: s.signals, goodWeather: s.weather.map(w => WEATHER[w].label) })}`;
     try {
       const { text } = await this.sample(prompt, {
         modelTier: 'quick', signal: ctl.signal,
@@ -309,9 +311,9 @@ class App {
     } catch (e) {
       if (e && e.code === 'cancelled') this.ai[key] = { status: 'idle', text: '' };
       else {
-        const msg = e && e.code === 'not_granted' ? 'AI 분석 사용이 허용되지 않았어요.'
-          : e && e.code === 'rate_limited' ? '요청이 많아요. 잠시 뒤 다시 눌러 주세요.'
-          : 'AI 분석을 불러오지 못했어요. 다시 눌러 주세요.';
+        const msg = e && e.code === 'not_granted' ? "AI analysis isn't enabled here."
+          : e && e.code === 'rate_limited' ? 'Too many requests right now. Try again in a moment.'
+          : "We couldn't load the AI analysis. Try again.";
         this.ai[key] = { status: 'error', text: (e && e.text) || '', msg };
       }
     }
@@ -345,7 +347,7 @@ class App {
           `}
         </main>
         <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-10 text-xs text-slate-500 dark:text-slate-400">
-          트렌드 지수: Google Trends 검색 관심도 기반 · 날씨: Open-Meteo · 좌표: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors
+          Trend index: based on Google Trends search interest · Weather: Open-Meteo · Coordinates: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors
         </footer>
       </div>
       ${modal ? this.modal(byId(modal), items) : ''}
@@ -366,10 +368,10 @@ class App {
     const { loadError } = this.state;
     return `
       <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center" role="status">
-        <p class="text-lg font-bold">${loadError ? '앗, 문제가 생겼어요' : '스팟을 불러오는 중이에요...'}</p>
+        <p class="text-lg font-bold">${loadError ? 'Something went wrong' : 'Loading spots...'}</p>
         ${loadError ? `
           <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">${esc(loadError)}</p>
-          <button data-act="retry" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">다시 시도</button>` : ''}
+          <button data-act="retry" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Try again</button>` : ''}
       </div>`;
   }
 
@@ -396,15 +398,15 @@ class App {
         <div class="flex items-start justify-between gap-4">
           <div>
             <h1 class="font-brand text-5xl md:text-6xl font-extrabold tracking-tight leading-none">SpotMate</h1>
-            <p class="mt-3 text-white/85 text-base md:text-lg">지금 핫한 밴쿠버 스팟, 왜 핫한지는 AI가 콕 집어줘요</p>
+            <p class="mt-3 text-white/85 text-base md:text-lg">Vancouver's hottest spots right now, and AI tells you why they're hot</p>
           </div>
           <div class="flex items-center gap-2">
-            <span class="hidden sm:inline-block text-sm font-semibold px-3 py-1.5 rounded-full bg-white/15 border border-white/25">📍 밴쿠버</span>
-            <button data-act="dark" aria-label="${dark ? '라이트 모드로 전환' : '다크 모드로 전환'}" class="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 border border-white/25 flex items-center justify-center">${dark ? '☀️' : '🌙'}</button>
+            <span class="hidden sm:inline-block text-sm font-semibold px-3 py-1.5 rounded-full bg-white/15 border border-white/25">📍 Vancouver</span>
+            <button data-act="dark" aria-label="${dark ? 'Switch to light mode' : 'Switch to dark mode'}" class="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 border border-white/25 flex items-center justify-center">${dark ? '☀️' : '🌙'}</button>
           </div>
         </div>
         <nav class="mt-6 inline-flex gap-1 p-1 rounded-full bg-white/10 border border-white/25 backdrop-blur">
-          ${tab('list', '📋 리스트')}${tab('map', '🗺️ 지도')}${tab('plan', `💾 내 플랜${plan.length ? ` (${plan.length})` : ''}`)}
+          ${tab('list', '📋 List')}${tab('map', '🗺️ Map')}${tab('plan', `💾 My plan${plan.length ? ` (${plan.length})` : ''}`)}
         </nav>
       </div>
     </header>`;
@@ -415,45 +417,45 @@ class App {
     if (s.view === 'plan') return '';
     const chip = (act, val, label, on) => `<button data-act="${act}" data-val="${val}" aria-pressed="${on}" class="shrink-0 px-3.5 py-2 rounded-full text-sm font-semibold border transition-colors ${on ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white' : 'bg-white/70 text-slate-700 border-slate-200 hover:border-slate-400 dark:bg-slate-800/70 dark:text-slate-200 dark:border-slate-700 dark:hover:border-slate-500'}">${label}</button>`;
     const seg = (act, val, label, on) => `<button data-act="${act}" data-val="${val}" aria-pressed="${on}" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
-    const counts = {}; SPOTS.forEach(x => counts[x.cat] = (counts[x.cat] || 0) + 1);
     return `
     <section class="sticky-bar z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800">
       <div class="max-w-6xl mx-auto px-4 md:px-6 py-4 space-y-3">
-        <div data-keep-scroll="cats" class="flex gap-2 overflow-x-auto no-scrollbar" role="group" aria-label="카테고리">
-          ${chip('cat', 'all', '전체', s.cat === 'all')}
+        <div data-keep-scroll="cats" class="flex gap-2 overflow-x-auto no-scrollbar" role="group" aria-label="Category">
+          ${chip('cat', 'all', 'All', s.cat === 'all')}
           ${Object.entries(CATS).map(([k, c]) => chip('cat', k, `${c.icon} ${c.label}`, s.cat === k)).join('')}
         </div>
         <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
           ${s.cat === 'all' || CATS[s.cat].basis === 'trend' ? `
-          <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="트렌드 기간">
+          <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Trend period">
             ${Object.entries(TF).map(([k, t]) => seg('tf', k, (k === 'today' ? '📈 ' : k === 'week' ? '🔥 ' : '📅 ') + t.label, s.tf === k)).join('')}
           </div>` : ''}
-          <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="실내 야외">
-            ${seg('env', 'all', '전체', s.env === 'all')}${seg('env', 'indoor', '🏠 실내', s.env === 'indoor')}${seg('env', 'outdoor', '🌳 야외', s.env === 'outdoor')}
+          <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Indoor or outdoor">
+            ${seg('env', 'all', 'All', s.env === 'all')}${seg('env', 'indoor', '🏠 Indoor', s.env === 'indoor')}${seg('env', 'outdoor', '🌳 Outdoor', s.env === 'outdoor')}
           </div>
-          <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="오늘 날씨">
+          <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Today's weather">
             ${Object.entries(WEATHER).map(([k, w]) => seg('weather', k, `${w.icon} ${w.label}`, s.weather === k)).join('')}
           </div>
-          ${s.live ? `<span class="text-xs font-semibold text-slate-600 dark:text-slate-300">📡 지금 밴쿠버 ${esc(s.live.desc)} ${s.live.temp}°C${s.weatherAuto
-            ? ' · 자동 적용 중'
-            : ` · <button data-act="weatherlive" class="underline text-violet-700 dark:text-violet-300">실제 날씨로 되돌리기</button>`}</span>` : ''}
-          <label class="ml-auto flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">정렬
+          ${s.live ? `<span class="text-xs font-semibold text-slate-600 dark:text-slate-300">📡 Vancouver now: ${esc(s.live.desc)}, ${s.live.temp}°C${s.weatherAuto
+            ? ' · applied automatically'
+            : ` · <button data-act="weatherlive" class="underline text-violet-700 dark:text-violet-300">use live weather</button>`}</span>` : ''}
+          <label class="ml-auto flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Sort
             <select data-act="sort" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm">
-              <option value="trend" ${s.sort === 'trend' ? 'selected' : ''}>트렌드순</option>
-              <option value="distance" ${s.sort === 'distance' ? 'selected' : ''}>거리순</option>
+              <option value="trend" ${s.sort === 'trend' ? 'selected' : ''}>Trending</option>
+              <option value="distance" ${s.sort === 'distance' ? 'selected' : ''}>Distance</option>
             </select>
           </label>
         </div>
         ${s.sort === 'distance' ? `
         <div class="flex flex-wrap items-center gap-2 text-sm">
-          <button data-act="geo" class="px-3 py-2 rounded-lg font-semibold bg-violet-600 hover:bg-violet-700 text-white">📍 현재 위치 사용</button>
-          <span class="text-slate-500 dark:text-slate-400">또는 출발 지역</span>
+          <button data-act="geo" class="px-3 py-2 rounded-lg font-semibold bg-violet-600 hover:bg-violet-700 text-white">📍 Use my location</button>
+          <span class="text-slate-500 dark:text-slate-400">or start from</span>
           <select data-act="origin" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">
             ${Object.entries(ORIGINS).map(([k, o]) => `<option value="${k}" ${!s.origin && s.originKey === k ? 'selected' : ''}>${o.label}</option>`).join('')}
           </select>
-          <span class="text-slate-600 dark:text-slate-300">${esc(s.geoMsg || `${this.origin().label || '현재 위치'} 기준 직선거리예요.`)}</span>
+          <span class="text-slate-600 dark:text-slate-300">${esc(s.geoMsg || `Straight-line distance from ${this.origin().label || 'your location'}.`)}</span>
         </div>` : ''}
-        <p class="text-xs text-slate-500 dark:text-slate-400">${items.length}곳 · 트렌드 지수는 Google Trends(BC) ${esc(DATA_META.updatedAt)} 기준 · 혼잡도는 예상치예요.</p>      </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400">${plural(items.length, 'spot')} · Trend index from Google Trends (BC) as of ${esc(DATA_META.updatedAt)} · Crowd levels are estimates.</p>
+      </div>
     </section>`;
   }
 
@@ -463,9 +465,9 @@ class App {
     if (!c || !c.criteria) return '';
     return `
     <section class="mt-6 rounded-2xl p-5 bg-white dark:bg-slate-900 ring-1 ring-amber-200 dark:ring-amber-500/30">
-      <p class="text-sm font-bold text-amber-800 dark:text-amber-300">${c.icon} ${c.label}, 이렇게 골랐어요</p>
-      <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(c.criteria)} 검색 트렌드 순위가 아니어서 목록 순서에 순위 의미는 없어요.</p>
-      <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">최신 평점과 리뷰는 각 장소의 Google 지도에서 확인할 수 있어요.</p>
+      <p class="text-sm font-bold text-amber-800 dark:text-amber-300">${c.icon} How we picked ${c.label}</p>
+      <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(c.criteria)} This isn't a search-trend ranking, so the order doesn't mean anything.</p>
+      <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Check each place on Google Maps for the latest ratings and reviews.</p>
     </section>`;
   }
 
@@ -475,8 +477,8 @@ class App {
     const w = WEATHER[this.state.weather];
     return `
     <button data-act="open" data-val="${wp.pick.id}" class="mt-6 w-full text-left rounded-2xl p-5 bg-gradient-to-r from-amber-100 to-rose-100 dark:from-amber-500/10 dark:to-rose-500/10 border border-amber-200 dark:border-amber-500/20 hover:border-amber-300 dark:hover:border-amber-400/40 transition-colors">
-      <p class="text-sm font-semibold text-amber-800 dark:text-amber-300">${w.icon} ${this.state.weatherAuto && this.state.live ? `지금 밴쿠버는 ${esc(this.state.live.desc)}, ${this.state.live.temp}°C` : `오늘 날씨가 ${w.label}이라면`}</p>
-      <p class="mt-1 text-xl font-bold text-slate-900 dark:text-white">${esc(wp.pick.name)}이(가) 최고예요</p>
+      <p class="text-sm font-semibold text-amber-800 dark:text-amber-300">${w.icon} ${this.state.weatherAuto && this.state.live ? `Vancouver right now: ${esc(this.state.live.desc)}, ${this.state.live.temp}°C` : `If it's ${w.label.toLowerCase()} today`}</p>
+      <p class="mt-1 text-xl font-bold text-slate-900 dark:text-white">Your best bet: ${esc(wp.pick.name)}</p>
       <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${wp.reason} ${CATS[wp.pick.cat].icon} ${CATS[wp.pick.cat].label}, ${esc(wp.pick.area)}</p>
     </button>`;
   }
@@ -499,15 +501,15 @@ class App {
     const c = CATS[s.cat], tf = TF[this.state.tf], saved = this.state.plan.includes(s.id);
     const crowd = this.crowdBadge(this.crowdAt(s, vanClock())), rise = this.rising(s);
     return `
-    <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="${esc(s.name)} 자세히 보기" class="group cursor-pointer flex flex-col rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-2 hover:ring-violet-400 dark:hover:ring-violet-600 hover:shadow-lg transition overflow-hidden">
+    <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-2 hover:ring-violet-400 dark:hover:ring-violet-600 hover:shadow-lg transition overflow-hidden">
       <div class="relative">
         ${this.cover(s, 'h-40')}
         <span class="absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full bg-white/90 text-slate-900 shadow-sm">${c.icon} ${c.label}</span>
-        <span class="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full bg-slate-900/75 text-white">${s.rank ? `${tf.label} ${s.rank}위` : '⭐ 리뷰 추천'}</span>
+        <span class="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full bg-slate-900/75 text-white">${s.rank ? `#${s.rank} ${tf.label.toLowerCase()}` : '⭐ Review pick'}</span>
       </div>
       <div class="p-5 flex flex-col flex-1">
         <h3 class="text-lg font-bold leading-snug group-hover:text-violet-700 dark:group-hover:text-violet-300">${esc(s.name)}</h3>
-        <p class="text-sm text-slate-500 dark:text-slate-400">${esc(s.area)}${s.dist != null ? `, ${s.dist.toFixed(1)}km` : ''}</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400">${esc(s.area)}${s.dist != null ? `, ${s.dist.toFixed(1)} km` : ''}</p>
         <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">${esc(s.summary)}</p>
         <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-600 dark:text-slate-300">
           <span>💰 ${esc(s.price)}</span><span>⏱️ ${esc(s.time)}</span><span>${ENV_ICON[s.env]} ${ENV[s.env]}</span>
@@ -515,19 +517,19 @@ class App {
         ${s.score != null ? `
         <div class="mt-4">
           <div class="flex items-center justify-between text-xs font-semibold mb-1">
-            <span class="text-slate-500 dark:text-slate-400">${tf.label} 트렌드 지수 ${rise ? `<span class="ml-1 px-1.5 py-0.5 rounded bg-rose-500 text-white">${rise}</span>` : ''}</span>
+            <span class="text-slate-500 dark:text-slate-400">Trend index (${tf.label.toLowerCase()}) ${rise ? `<span class="ml-1 px-1.5 py-0.5 rounded bg-rose-500 text-white">${rise}</span>` : ''}</span>
             <span class="text-violet-700 dark:text-violet-300">${s.score}</span>
           </div>
           <div class="h-2 rounded-full bg-slate-100 dark:bg-slate-800"><div class="h-2 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500" style="width:${s.score}%"></div></div>
         </div>` : ''}
         ${s.why ? `
         <div class="mt-4 rounded-xl p-3 bg-violet-50 dark:bg-violet-500/10">
-          <p class="text-xs font-bold text-violet-700 dark:text-violet-300">✨ 왜 뜨고 있나</p>
+          <p class="text-xs font-bold text-violet-700 dark:text-violet-300">✨ Why it's hot</p>
           <p class="mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(s.why)}</p>
         </div>` : ''}
-        <p class="mt-3 text-xs"><span class="font-semibold px-2 py-1 rounded-full ${crowd.c}">지금 예상 혼잡도: ${crowd.t}</span></p>
+        <p class="mt-3 text-xs"><span class="font-semibold px-2 py-1 rounded-full ${crowd.c}">Expected crowd now: ${crowd.t}</span></p>
         <div class="mt-auto pt-4 grid">
-          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="py-2.5 rounded-xl font-semibold text-sm border ${saved ? 'bg-amber-100 border-amber-300 text-amber-800 dark:bg-amber-500/15 dark:border-amber-500/40 dark:text-amber-300' : 'border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200'}">${saved ? '★ 플랜에 담김' : '☆ 플랜에 담기'}</button>
+          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="py-2.5 rounded-xl font-semibold text-sm border ${saved ? 'bg-amber-100 border-amber-300 text-amber-800 dark:bg-amber-500/15 dark:border-amber-500/40 dark:text-amber-300' : 'border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200'}">${saved ? '★ In my plan' : '☆ Add to plan'}</button>
         </div>
       </div>
     </article>`;
@@ -536,9 +538,9 @@ class App {
   listView(items) {
     if (!items.length) return `
       <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
-        <p class="text-lg font-bold">조건에 맞는 스팟이 없어요</p>
-        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">실내/야외를 '전체'로 바꾸거나 다른 카테고리를 골라 보세요.</p>
-        <button data-act="env" data-val="all" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">실내/야외 전체 보기</button>
+        <p class="text-lg font-bold">No spots match these filters</p>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Set indoor/outdoor to "All" or try another category.</p>
+        <button data-act="env" data-val="all" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show indoor and outdoor</button>
       </div>`;
     return `<div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">${items.map(s => this.card(s)).join('')}</div>`;
   }
@@ -558,15 +560,15 @@ class App {
         <text x="${x}" y="${y + 4.5}" text-anchor="middle" font-size="12" font-weight="800" fill="white">${s.rank || '★'}</text></g>`;
     }).join('');
     let originMark = '';
-    if (origin) { const [x, y] = P(origin.lat, origin.lng); originMark = `<g><circle cx="${x}" cy="${y}" r="9" fill="#111827" stroke="white" stroke-width="3"/><text x="${x}" y="${y - 16}" text-anchor="middle" font-size="12" font-weight="700" class="fill-slate-900 dark:fill-white">${esc(origin.label || '현재 위치')}</text></g>`; }
+    if (origin) { const [x, y] = P(origin.lat, origin.lng); originMark = `<g><circle cx="${x}" cy="${y}" r="9" fill="#111827" stroke="white" stroke-width="3"/><text x="${x}" y="${y - 16}" text-anchor="middle" font-size="12" font-weight="700" class="fill-slate-900 dark:fill-white">${esc(origin.label || 'You are here')}</text></g>`; }
     return `
     <div class="mt-6 grid gap-5 lg:grid-cols-3">
       <div class="lg:col-span-2 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden">
         <div class="px-5 py-3 flex flex-wrap gap-3 text-xs font-semibold border-b border-slate-100 dark:border-slate-800">
           ${Object.values(CATS).map(c => `<span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full" style="background:${c.dot}"></span>${c.label}</span>`).join('')}
-          <span class="text-slate-500 dark:text-slate-400">숫자 = ${TF[this.state.tf].label} 순위, ★ = 리뷰 추천</span>
+          <span class="text-slate-500 dark:text-slate-400">Number = rank (${TF[this.state.tf].label.toLowerCase()}), ★ = review pick</span>
         </div>
-        ${outside.length ? `<p class="px-5 py-2 text-xs text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">지도 범위 밖: ${outside.map(s => esc(`${s.name} (${s.area})`)).join(', ')}</p>` : ''}
+        ${outside.length ? `<p class="px-5 py-2 text-xs text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">Outside the map: ${outside.map(s => esc(`${s.name} (${s.area})`)).join(', ')}</p>` : ''}
         <div data-keep-scroll="map" style="overflow-x:auto">
           <svg viewBox="0 0 ${W} ${H}" class="w-full min-w-[520px] bg-sky-50 dark:bg-slate-800/60">
             ${Array.from({ length: 11 }, (_, i) => `<line x1="${i * 72}" y1="0" x2="${i * 72}" y2="${H}" class="stroke-sky-100 dark:stroke-slate-700/60"/>`).join('')}
@@ -581,10 +583,10 @@ class App {
             <span class="w-7 h-7 shrink-0 rounded-full text-white text-xs font-extrabold flex items-center justify-center" style="background:${CATS[s.cat].dot}">${s.rank || '★'}</span>
             <span class="flex-1 min-w-0">
               <span class="block font-bold truncate">${esc(s.name)}</span>
-              <span class="block text-xs text-slate-500 dark:text-slate-400">${CATS[s.cat].label}, ${esc(s.area)}${s.dist != null ? `, ${s.dist.toFixed(1)}km` : ''}</span>
+              <span class="block text-xs text-slate-500 dark:text-slate-400">${CATS[s.cat].label}, ${esc(s.area)}${s.dist != null ? `, ${s.dist.toFixed(1)} km` : ''}</span>
             </span>
             <span class="text-sm font-bold text-violet-700 dark:text-violet-300">${s.score ?? ''}</span>
-          </button>`).join('') || '<p class="text-sm text-slate-500">조건에 맞는 스팟이 없어요.</p>'}
+          </button>`).join('') || '<p class="text-sm text-slate-500">No spots match these filters.</p>'}
       </div>
     </div>`;
   }
@@ -593,35 +595,35 @@ class App {
     const spots = this.state.plan.map(byId);
     if (!spots.length) return `
       <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
-        <p class="text-lg font-bold">아직 담은 스팟이 없어요</p>
-        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">카드의 ☆ 플랜에 담기를 누르면 여기에 모여요. 이 브라우저에 저장돼요.</p>
-        <button data-act="view" data-val="list" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">스팟 둘러보기</button>
+        <p class="text-lg font-bold">Your plan is empty</p>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Tap ☆ Add to plan on any card to collect spots here. Your plan is saved in this browser.</p>
+        <button data-act="view" data-val="list" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Browse spots</button>
       </div>`;
     let total = 0;
     const rows = spots.map((s, i) => {
       const leg = i > 0 ? km(spots[i - 1], s) : null; if (leg) total += leg;
       return `
-      ${leg != null ? `<p class="pl-12 text-xs text-slate-500 dark:text-slate-400">↓ 직선 ${leg.toFixed(1)}km</p>` : ''}
+      ${leg != null ? `<p class="pl-12 text-xs text-slate-500 dark:text-slate-400">↓ ${leg.toFixed(1)} km straight-line</p>` : ''}
       <div class="flex items-center gap-3 rounded-xl p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
         <span class="w-8 h-8 shrink-0 rounded-full text-white text-sm font-extrabold flex items-center justify-center" style="background:${CATS[s.cat].dot}">${i + 1}</span>
         <button data-act="open" data-val="${s.id}" class="flex-1 min-w-0 text-left">
           <span class="block font-bold truncate">${esc(s.name)}</span>
           <span class="block text-xs text-slate-500 dark:text-slate-400">${CATS[s.cat].icon} ${CATS[s.cat].label}, ${esc(s.area)}, ${esc(s.time)}</span>
         </button>
-        <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="text-sm font-semibold text-violet-700 dark:text-violet-300 px-2">길찾기</a>
-        <button data-act="save" data-val="${s.id}" class="text-sm font-semibold text-slate-500 hover:text-rose-600 px-2" aria-label="${esc(s.name)} 빼기">빼기</button>
+        <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="text-sm font-semibold text-violet-700 dark:text-violet-300 px-2">Directions</a>
+        <button data-act="save" data-val="${s.id}" class="text-sm font-semibold text-slate-500 hover:text-rose-600 px-2" aria-label="Remove ${esc(s.name)}">Remove</button>
       </div>`;
     }).join('');
     return `
     <div class="mt-8 max-w-2xl">
       <div class="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 class="text-2xl font-bold">내 플랜</h2>
-          <p class="text-sm text-slate-500 dark:text-slate-400">${spots.length}곳${spots.length > 1 ? `, 담은 순서대로 이동하면 직선 약 ${total.toFixed(1)}km` : ''}</p>
+          <h2 class="text-2xl font-bold">My plan</h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400">${plural(spots.length, 'spot')}${spots.length > 1 ? `, about ${total.toFixed(1)} km straight-line in the order you added them` : ''}</p>
         </div>
         <div class="flex gap-2">
-          <button data-act="copyplan" class="px-4 py-2 rounded-lg font-semibold bg-violet-600 hover:bg-violet-700 text-white">🔗 플랜 공유용 복사</button>
-          <button data-act="clearplan" class="px-4 py-2 rounded-lg font-semibold border border-slate-200 dark:border-slate-700">모두 비우기</button>
+          <button data-act="copyplan" class="px-4 py-2 rounded-lg font-semibold bg-violet-600 hover:bg-violet-700 text-white">🔗 Copy to share</button>
+          <button data-act="clearplan" class="px-4 py-2 rounded-lg font-semibold border border-slate-200 dark:border-slate-700">Clear all</button>
         </div>
       </div>
       ${this.state.copyMsg ? `<p class="mt-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300">${esc(this.state.copyMsg)}</p>` : ''}
@@ -642,7 +644,7 @@ class App {
       const lv = this.crowdAt(s, { h, weekend: now.weekend }), isNow = now.h === h;
       return `<div class="flex flex-col items-center gap-1 flex-1">
         <div class="w-full rounded-t ${isNow ? 'bg-violet-600' : 'bg-violet-300 dark:bg-violet-500/50'}" style="height:${[10, 26, 44][lv]}px"></div>
-        <span class="text-[10px] ${isNow ? 'font-bold text-violet-700 dark:text-violet-300' : 'text-slate-500 dark:text-slate-400'}">${h}</span></div>`;
+        <span class="text-[10px] ${isNow ? 'font-bold text-violet-700 dark:text-violet-300' : 'text-slate-500 dark:text-slate-400'}">${hourLabel(h)}</span></div>`;
     }).join('');
     const crowd = this.crowdBadge(this.crowdAt(s, now));
 
@@ -650,92 +652,92 @@ class App {
     if (this.sample) {
       if (ai && ai.status === 'loading') aiBlock = `
         <div class="mt-3 rounded-lg p-3 bg-white dark:bg-slate-800 ring-1 ring-violet-200 dark:ring-violet-500/30">
-          <p id="ai-out" class="text-sm text-slate-800 dark:text-slate-200 whitespace-pre-line">${esc(ai.text || '분석하는 중이에요...')}</p>
-          <button data-act="aistop" class="mt-2 text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">멈추기</button>
+          <p id="ai-out" class="text-sm text-slate-800 dark:text-slate-200 whitespace-pre-line">${esc(ai.text || 'Analyzing...')}</p>
+          <button data-act="aistop" class="mt-2 text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">Stop</button>
         </div>`;
       else if (ai && (ai.status === 'done' || ai.status === 'error')) aiBlock = `
         <div class="mt-3 rounded-lg p-3 bg-white dark:bg-slate-800 ring-1 ring-violet-200 dark:ring-violet-500/30">
-          ${ai.text ? `<p class="text-xs font-bold text-violet-700 dark:text-violet-300">AI 분석 (${tf.label}, ${WEATHER[st.weather].label})</p><p class="mt-1 text-sm text-slate-800 dark:text-slate-200 whitespace-pre-line">${esc(ai.text)}</p>` : ''}
+          ${ai.text ? `<p class="text-xs font-bold text-violet-700 dark:text-violet-300">AI analysis (${tf.label.toLowerCase()}, ${WEATHER[st.weather].label.toLowerCase()})</p><p class="mt-1 text-sm text-slate-800 dark:text-slate-200 whitespace-pre-line">${esc(ai.text)}</p>` : ''}
           ${ai.msg ? `<p class="mt-1 text-sm text-rose-600 dark:text-rose-400">${esc(ai.msg)}</p>` : ''}
-          <button data-act="ai" data-val="${s.id}" class="mt-2 text-xs font-semibold text-violet-700 dark:text-violet-300">다시 분석하기</button>
+          <button data-act="ai" data-val="${s.id}" class="mt-2 text-xs font-semibold text-violet-700 dark:text-violet-300">Analyze again</button>
         </div>`;
-      else aiBlock = `<button data-act="ai" data-val="${s.id}" class="mt-3 px-3 py-2 rounded-lg text-sm font-semibold bg-violet-600 hover:bg-violet-700 text-white">🤖 지금 기준으로 AI 분석 받기</button>`;
+      else aiBlock = `<button data-act="ai" data-val="${s.id}" class="mt-3 px-3 py-2 rounded-lg text-sm font-semibold bg-violet-600 hover:bg-violet-700 text-white">🤖 Get an AI take for right now</button>`;
     }
 
     return `
     <div data-act="close" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center" style="padding-top:max(12px, env(safe-area-inset-top, 0px)); padding-bottom:max(12px, env(safe-area-inset-bottom, 0px));">
       <div data-act="noop" role="dialog" aria-modal="true" tabindex="-1" aria-label="${esc(s.name)}" class="outline-none relative w-full max-w-2xl rounded-3xl bg-white dark:bg-slate-900 shadow-2xl overflow-hidden flex flex-col" style="max-height:100%">
-        <button data-act="close" aria-label="닫기" class="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white text-lg flex items-center justify-center shadow-lg">✕</button>
+        <button data-act="close" aria-label="Close" class="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white text-lg flex items-center justify-center shadow-lg">✕</button>
         <div data-keep-scroll="modal" class="overflow-y-auto">
         <div class="relative">
           ${this.cover(s, 'h-56')}
           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
         </div>
         <div class="px-6 pt-5">
-          <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.icon} ${c.label}${rank ? `, ${tf.label} ${rank}위` : ''}</p>
+          <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.icon} ${c.label}${rank ? `, #${rank} ${tf.label.toLowerCase()}` : ''}</p>
           <h2 class="mt-1 text-3xl font-bold leading-tight pr-2">${esc(s.name)}</h2>
-          <p class="mt-1 text-slate-600 dark:text-slate-300">📍 ${esc(s.area)}${cur && cur.dist != null ? `, ${cur.dist.toFixed(1)}km` : ''}</p>
+          <p class="mt-1 text-slate-600 dark:text-slate-300">📍 ${esc(s.area)}${cur && cur.dist != null ? `, ${cur.dist.toFixed(1)} km` : ''}</p>
         </div>
 
         <div class="p-6 space-y-6">
           <div class="grid grid-cols-3 gap-3">
             <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/20 hover:ring-amber-400">
-              <p class="text-2xl">⭐</p><p class="font-bold">Google 지도</p><p class="text-xs text-slate-500 dark:text-slate-400">평점·리뷰 보기</p>
+              <p class="text-2xl">⭐</p><p class="font-bold">Google Maps</p><p class="text-xs text-slate-500 dark:text-slate-400">Ratings & reviews</p>
             </a>
             ${hasTrend(s) ? `
             <button data-act="trendinfo" aria-expanded="${st.trendInfo}" class="rounded-xl p-3 text-center bg-violet-50 dark:bg-violet-500/10 ring-1 ring-violet-200 dark:ring-violet-500/20 hover:ring-violet-400">
-              <p class="text-2xl">🔥</p><p class="font-bold">${s.trend[tf.i]}</p><p class="text-xs text-slate-500 dark:text-slate-400">트렌드 기준</p>
+              <p class="text-2xl">🔥</p><p class="font-bold">${s.trend[tf.i]}</p><p class="text-xs text-slate-500 dark:text-slate-400">How it's scored</p>
             </button>` : `
             <div class="rounded-xl p-3 text-center bg-violet-50 dark:bg-violet-500/10 ring-1 ring-violet-200 dark:ring-violet-500/20">
-              <p class="text-2xl">${c.icon}</p><p class="font-bold">리뷰 추천</p><p class="text-xs text-slate-500 dark:text-slate-400">${c.label}</p>
+              <p class="text-2xl">${c.icon}</p><p class="font-bold">Review pick</p><p class="text-xs text-slate-500 dark:text-slate-400">${c.label}</p>
             </div>`}
             <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-emerald-50 dark:bg-emerald-500/10 ring-1 ring-emerald-200 dark:ring-emerald-500/20 hover:ring-emerald-400">
-              <p class="text-2xl">💰</p><p class="font-bold">${esc(s.price)}</p><p class="text-xs text-slate-500 dark:text-slate-400">요금/예약 찾기</p>
+              <p class="text-2xl">💰</p><p class="font-bold">${esc(s.price)}</p><p class="text-xs text-slate-500 dark:text-slate-400">Prices & booking</p>
             </a>
           </div>
 
           ${st.trendInfo && hasTrend(s) ? `
           <div class="rounded-xl p-4 bg-violet-50 dark:bg-violet-500/10 text-sm text-slate-700 dark:text-slate-300">
-            <p class="font-bold text-slate-900 dark:text-white">트렌드 지수는 이렇게 매겨요</p>
+            <p class="font-bold text-slate-900 dark:text-white">How the trend index works</p>
             <p class="mt-2">${esc(DATA_META.trendNote)}</p>
-            <p class="mt-2">이 장소: 오늘 ${s.trend[0]}, 이번 주 ${s.trend[1]}, 이번 달 ${s.trend[2]}.</p>
-            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">장소 이름 그대로의 검색량이라, 동네 이름과 겹치거나 뉴스가 있으면 관광 관심과 다르게 나올 수 있어요.</p>
+            <p class="mt-2">This place: today ${s.trend[0]}, this week ${s.trend[1]}, this month ${s.trend[2]}.</p>
+            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">It counts searches for the place name itself, so neighborhood names or news stories can make it differ from actual visitor interest.</p>
           </div>` : ''}
 
           ${hasTrend(s) ? `
           <section class="rounded-2xl p-5 bg-gradient-to-br from-violet-50 to-fuchsia-50 dark:from-violet-500/10 dark:to-fuchsia-500/10 ring-1 ring-violet-200 dark:ring-violet-500/20">
-            <h3 class="font-bold text-violet-800 dark:text-violet-300">✨ 왜 지금 뜨고 있나</h3>
+            <h3 class="font-bold text-violet-800 dark:text-violet-300">✨ Why it's hot right now</h3>
             ${s.why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(s.why)}</p>` : ''}
             ${s.signals.length ? `
-            <p class="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">Google Trends 급상승 관련 검색어</p>
+            <p class="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">Rising related searches on Google Trends</p>
             <div class="mt-1.5 flex flex-wrap gap-1.5">${s.signals.map(x => `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/80 dark:bg-slate-800 text-violet-700 dark:text-violet-300">📈 ${esc(x)}</span>`).join('')}</div>` : ''}
             ${aiBlock}
           </section>` : `
           <section class="rounded-2xl p-5 bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/20">
-            <h3 class="font-bold text-amber-800 dark:text-amber-300">⭐ 이렇게 골랐어요</h3>
+            <h3 class="font-bold text-amber-800 dark:text-amber-300">⭐ How we picked it</h3>
             <p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(c.criteria || '')}</p>
             <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">${esc(s.summary)}</p>
-            <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="mt-3 inline-block text-sm font-semibold text-amber-800 dark:text-amber-300">Google 지도에서 최신 평점과 리뷰 보기 →</a>
+            <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="mt-3 inline-block text-sm font-semibold text-amber-800 dark:text-amber-300">See the latest ratings and reviews on Google Maps →</a>
           </section>`}
 
           <section>
             <div class="flex items-center justify-between">
-              <h3 class="font-bold">오늘 시간대별 예상 혼잡도</h3>
-              <span class="text-xs font-semibold px-2 py-1 rounded-full ${crowd.c}">지금 ${crowd.t}</span>
+              <h3 class="font-bold">Expected crowds today</h3>
+              <span class="text-xs font-semibold px-2 py-1 rounded-full ${crowd.c}">Now: ${crowd.t}</span>
             </div>
             <div class="mt-3 flex items-end gap-1 h-16">${bars}</div>
-            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">밴쿠버 시간 기준 요일, 시간대, 선택한 날씨로 계산한 예상치예요. 실시간 혼잡도는 아니에요.</p>
+            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Estimated from the day of week, time of day (Vancouver time), and the selected weather. Not live crowd data.</p>
           </section>
 
           ${s.tips.length ? `
           <section>
-            <h3 class="font-bold">방문 팁</h3>
+            <h3 class="font-bold">Tips</h3>
             <ul class="mt-2 space-y-1.5">${s.tips.map(t => `<li class="text-sm text-slate-700 dark:text-slate-300 flex gap-2"><span class="text-violet-600 dark:text-violet-400 font-bold">✓</span>${esc(t)}</li>`).join('')}</ul>
           </section>` : ''}
 
           <div class="grid grid-cols-2 gap-3">
-            <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="py-3 rounded-xl font-semibold text-center text-white bg-indigo-600 hover:bg-indigo-700">🗺️ 길찾기</a>
-            <button data-act="save" data-val="${s.id}" class="py-3 rounded-xl font-semibold border ${saved ? 'bg-amber-100 border-amber-300 text-amber-800 dark:bg-amber-500/15 dark:border-amber-500/40 dark:text-amber-300' : 'border-slate-200 dark:border-slate-700'}">${saved ? '★ 플랜에 담김' : '☆ 플랜에 담기'}</button>
+            <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="py-3 rounded-xl font-semibold text-center text-white bg-indigo-600 hover:bg-indigo-700">🗺️ Directions</a>
+            <button data-act="save" data-val="${s.id}" class="py-3 rounded-xl font-semibold border ${saved ? 'bg-amber-100 border-amber-300 text-amber-800 dark:bg-amber-500/15 dark:border-amber-500/40 dark:text-amber-300' : 'border-slate-200 dark:border-slate-700'}">${saved ? '★ In my plan' : '☆ Add to plan'}</button>
           </div>
         </div>
         </div>
