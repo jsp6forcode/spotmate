@@ -16,6 +16,7 @@
     {
       "id": "aquarium", "cat": "kids", "name": "Vancouver Aquarium", "area": "Stanley Park",
       "lat": 49.3005, "lng": -123.1312, "emoji": "🦦", "placeId": "ChIJp2zKeo1xhlQRWOMOmCcWJV8",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Vancouver_Aquarium_entrance_%282026%29.jpg/960px-Vancouver_Aquarium_entrance_%282026%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Iiii I I I","license":"CC BY 4.0","licenseUrl":"https://creativecommons.org/licenses/by/4.0","source":"https://commons.wikimedia.org/wiki/File:Vancouver_Aquarium_entrance_(2026).jpg"},
       "trend": [45, 35, 44], "env": "indoor", "price": "$$$", "time": "2–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy"],
       "summary": "Aquarium inside Stanley Park",
       "signals": ["vancouver aquarium discount", "vancouver museums", "botanical garden vancouver"],
@@ -25,6 +26,7 @@
     {
       "id": "scienceworld", "cat": "kids", "name": "Science World", "area": "False Creek",
       "lat": 49.2735, "lng": -123.1037, "emoji": "🔬", "placeId": "ChIJnZHwi2NxhlQRN3CYHzc3giE",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Science_World_at_TELUS_World_of_Science.jpg/960px-Science_World_at_TELUS_World_of_Science.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Differense","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Science_World_at_TELUS_World_of_Science.jpg"},
       "trend": [33, 28, 37], "env": "indoor", "price": "$$", "time": "2–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy"],
       "summary": "Hands-on, interactive science centre",
       "signals": ["things to do near me", "telus world of science vancouver", "pne"],
@@ -34,6 +36,7 @@
     {
       "id": "capilano", "cat": "kids", "name": "Capilano Suspension Bridge", "area": "North Vancouver",
       "lat": 49.3427, "lng": -123.116, "emoji": "🌉", "placeId": "ChIJSd7cANJvhlQRXg8TheyzUPM",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Capilano_Suspension_Bridge%2C_Vancouver%2C_Canada_%28July_2016%29_1.jpg/960px-Capilano_Suspension_Bridge%2C_Vancouver%2C_Canada_%28July_2016%29_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Markus Säynevirta","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Capilano_Suspension_Bridge,_Vancouver,_Canada_(July_2016)_1.jpg"},
       "trend": [13, 22, 27], "env": "outdoor", "price": "$$$", "time": "2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Suspension bridge over a canyon, plus treetop walkways",
       "signals": ["canyon frights at capilano suspension bridge", "capilano suspension bridge lights", "capilano suspension bridge christmas"],
@@ -44,6 +47,7 @@
     {
       "id": "stanley", "cat": "nature", "name": "Stanley Park", "area": "West End",
       "lat": 49.3021, "lng": -123.1413, "emoji": "🌲", "placeId": "ChIJo-QmrYxxhlQRFuIJtJ1jSjY",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Stanley_Park_%40_Vancouver_%287718461178%29.jpg/960px-Stanley_Park_%40_Vancouver_%287718461178%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Guilhem Vellut","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Stanley_Park_@_Vancouver_(7718461178).jpg"},
       "trend": [45, 72, 100], "env": "outdoor", "price": "Free", "time": "2–3 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Huge downtown park ringed by the oceanside Seawall",
       "signals": ["astra lumina stanley park", "malkin bowl", "vancouver map"],
@@ -53,6 +57,7 @@
     {
       "id": "grouse", "cat": "nature", "name": "Grouse Mountain", "area": "North Vancouver",
       "lat": 49.3795, "lng": -123.0768, "emoji": "🚡", "placeId": "ChIJPYvlUnZlhlQRAr1xzquQE14",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Grouse_Mountain_Gondola.JPG/960px-Grouse_Mountain_Gondola.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Pburka at English Wikipedia","license":"Public domain","licenseUrl":null,"source":"https://commons.wikimedia.org/wiki/File:Grouse_Mountain_Gondola.JPG"},
       "trend": [30, 52, 64], "env": "outdoor", "price": "$$$", "time": "Half day", "crowd": "attraction", "weather": ["sunny"],
       "summary": "Mountain with city views, reached by gondola",
       "signals": ["crown mountain hike", "north vancouver weather", "grouse mountain customer service"],
@@ -62,6 +67,7 @@
     {
       "id": "deepcove", "cat": "nature", "kids": true, "name": "Deep Cove", "area": "North Vancouver",
       "lat": 49.3252, "lng": -122.9466, "emoji": "🛶", "placeId": "ChIJMTAoTEx6hlQRIhYukN2ggBE",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Deep_cove2560.jpg/960px-Deep_cove2560.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"LilDice","license":"CC BY-SA 2.5","licenseUrl":"https://creativecommons.org/licenses/by-sa/2.5","source":"https://commons.wikimedia.org/wiki/File:Deep_cove2560.jpg"},
       "trend": [18, 34, 45], "env": "outdoor", "price": "Free", "time": "2–3 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Seaside village and jumping-off point for kayaking and hikes",
       "signals": ["fire in deep cove", "deep cove theatre", "north shore news"],
@@ -71,6 +77,7 @@
     {
       "id": "englishbay", "cat": "nature", "name": "English Bay", "area": "West End",
       "lat": 49.2865, "lng": -123.1437, "emoji": "🌅", "placeId": "ChIJ86zkaC9yhlQR4GhBA8iTiy4",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/English_Bay%2C_Vancouver%2C_BC.jpg/960px-English_Bay%2C_Vancouver%2C_BC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Unnamed photographer","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:English_Bay,_Vancouver,_BC.jpg"},
       "trend": [11, 20, 20], "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Downtown beach known for its sunsets",
       "signals": ["english bay water temperature (+400%)", "sunset beach", "sylvia hotel"],
@@ -80,6 +87,7 @@
     {
       "id": "seatosky", "cat": "nature", "name": "Sea to Sky Gondola", "area": "Squamish",
       "lat": 49.6751, "lng": -123.157, "emoji": "🏔️", "placeId": "ChIJZ2GCywdYhlQRB8ip3H65t6c",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Sea_to_Sky_Gondola_02.jpg/960px-Sea_to_Sky_Gondola_02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"DarkNight0917","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Sea_to_Sky_Gondola_02.jpg"},
       "trend": [11, 17, 20], "env": "outdoor", "price": "$$$", "time": "Half day", "crowd": "attraction", "weather": ["sunny"],
       "summary": "Gondola overlooking the Howe Sound fjord",
       "signals": ["sea to sky gondola shuttle", "sea to sky highway", "britannia mine museum"],
@@ -89,6 +97,7 @@
     {
       "id": "cypress", "cat": "nature", "name": "Cypress Mountain", "area": "West Vancouver",
       "lat": 49.3977, "lng": -123.2011, "emoji": "⛷️", "placeId": "ChIJdZb1mNZghlQR8y_TxqYSF4I",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Cypress-foggy.jpg/960px-Cypress-foggy.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Arnold C","license":"Attribution","licenseUrl":null,"source":"https://commons.wikimedia.org/wiki/File:Cypress-foggy.jpg"},
       "trend": [9, 13, 15], "env": "outdoor", "price": "Free–$$$", "time": "1–3 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Ski hill in winter, with a city lookout on the way up",
       "signals": ["cypress mountain season pass", "cypress mountain shuttle", "cypress lookout"],
@@ -98,6 +107,7 @@
     {
       "id": "lynn", "cat": "nature", "name": "Lynn Canyon", "area": "North Vancouver",
       "lat": 49.3437, "lng": -123.0198, "emoji": "🌿", "placeId": "ChIJo6mwbbx6hlQRfy2H6pWyz-k",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Parque_del_ca%C3%B1%C3%B3n_Lynn%2C_Vancouver%2C_Canad%C3%A1%2C_2017-08-14%2C_DD_11.jpg/960px-Parque_del_ca%C3%B1%C3%B3n_Lynn%2C_Vancouver%2C_Canad%C3%A1%2C_2017-08-14%2C_DD_11.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Diego Delso","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Parque_del_ca%C3%B1%C3%B3n_Lynn,_Vancouver,_Canad%C3%A1,_2017-08-14,_DD_11.jpg"},
       "trend": [6, 10, 14], "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Free suspension bridge and canyon trails",
       "signals": ["lynn valley hike", "lynn canyon ecology centre", "grouse grind"],
@@ -107,6 +117,7 @@
     {
       "id": "buntzen", "cat": "nature", "kids": true, "name": "Buntzen Lake", "area": "Anmore",
       "lat": 49.3475, "lng": -122.8601, "emoji": "🏞️", "placeId": "ChIJ9cJaIxJ8hlQRoga86Y6X3Nc",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bb/BuntzenLakePL280507.jpg/960px-BuntzenLakePL280507.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Patrick Leahy (Patleahy)","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:BuntzenLakePL280507.jpg"},
       "trend": [4, 8, 13], "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Mountain lake with lakeside trails, a floating bridge, and paddling",
       "signals": ["buntzen lake camping (+350%)", "buntzen lake kayak rental", "diez vistas trail"],
@@ -117,6 +128,7 @@
     {
       "id": "granville", "cat": "city", "name": "Granville Island", "area": "False Creek",
       "lat": 49.2708, "lng": -123.1343, "emoji": "🥖", "placeId": "ChIJG3q8d85zhlQRIH1pyAsVpEc",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Granville_Island_view_from_Granville_Bridge_in_2010.jpg/960px-Granville_Island_view_from_Granville_Bridge_in_2010.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Joe Mabel","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Granville_Island_view_from_Granville_Bridge_in_2010.jpg"},
       "trend": [59, 74, 84], "env": "both", "price": "Free", "time": "2–3 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Island home to the Public Market and artisan studios",
       "signals": ["granville island donuts", "granville island tea company", "dockside restaurant vancouver", "kitsilano beach"],
@@ -126,6 +138,7 @@
     {
       "id": "canadaplace", "cat": "city", "name": "Canada Place", "area": "Waterfront",
       "lat": 49.2876, "lng": -123.1136, "emoji": "⛵", "placeId": "ChIJIeDiJJ1xhlQRCWHIheB_Bbc",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Canada_Place_Landing.jpg/960px-Canada_Place_Landing.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Nicolas Untz","license":"CC BY-SA 2.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/2.0","source":"https://commons.wikimedia.org/wiki/File:Canada_Place_Landing.jpg"},
       "trend": [53, 63, 81], "env": "both", "price": "Free", "time": "1 hr", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Harbourfront landmark with a sail-shaped roof",
       "signals": ["canada place webcam", "canada place camera"],
@@ -135,6 +148,7 @@
     {
       "id": "steveston", "cat": "city", "name": "Steveston", "area": "Richmond",
       "lat": 49.1231, "lng": -123.184, "emoji": "🎣", "placeId": "ChIJ170JiUThhVQR2uY6eymTnoA",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/Steveston_Fisherman_Wharf_signage_2018.jpg/960px-Steveston_Fisherman_Wharf_signage_2018.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Wpcpey","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Steveston_Fisherman_Wharf_signage_2018.jpg"},
       "trend": [42, 58, 62], "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Fishing village with a working wharf",
       "signals": ["save on foods steveston", "shoppers drug mart steveston"],
@@ -144,6 +158,7 @@
     {
       "id": "gastown", "cat": "city", "name": "Gastown", "area": "Downtown",
       "lat": 49.2844, "lng": -123.1089, "emoji": "🕰️", "placeId": "ChIJ36zlvedzhlQRAFUUd93cPgg",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Vancouver_2018-20180422-2108_%2842138196834%29.jpg/960px-Vancouver_2018-20180422-2108_%2842138196834%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Lee Coursey from Decatur, GA","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Vancouver_2018-20180422-2108_(42138196834).jpg"},
       "trend": [42, 50, 57], "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["cloudy", "sunny"],
       "summary": "Vancouver's historic old town, home of the steam clock",
       "signals": ["bars in gastown", "guu gastown", "pourhouse vancouver"],
@@ -153,6 +168,7 @@
     {
       "id": "nightmarket", "cat": "city", "kids": true, "name": "Richmond Night Market", "area": "Richmond",
       "lat": 49.1938, "lng": -123.1336, "emoji": "🏮", "placeId": "ChIJQ7wAFCR1hlQRL7RB8W3XeOU",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Richmond_Night_Market_2019_%2833946171228%29.jpg/960px-Richmond_Night_Market_2019_%2833946171228%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"GoToVan","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Richmond_Night_Market_2019_(33946171228).jpg"},
       "trend": [9, 51, 52], "env": "outdoor", "price": "$", "time": "2 hrs", "crowd": "meal", "weather": ["sunny", "cloudy"],
       "summary": "Summer-season night market open on weekends",
       "signals": ["richmond night market closing date", "why is the richmond night market closing", "richmond night market entrance fee"],
@@ -162,6 +178,7 @@
     {
       "id": "vag", "cat": "city", "name": "Vancouver Art Gallery", "area": "Downtown",
       "lat": 49.2828, "lng": -123.1206, "emoji": "🖼️", "placeId": "ChIJwXz9f39xhlQRT3qxXAPDlbU",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/Vancouver_Art_Gallery_%2829787380987%29.jpg/960px-Vancouver_Art_Gallery_%2829787380987%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"dronepicr","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Vancouver_Art_Gallery_(29787380987).jpg"},
       "trend": [20, 17, 15], "env": "indoor", "price": "$$", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy"],
       "summary": "The city's art museum, right in the middle of downtown",
       "signals": ["vancouver art gallery free fridays", "vancouver art gallery north plaza"],
@@ -171,6 +188,7 @@
     {
       "id": "fortlangley", "cat": "city", "name": "Fort Langley", "area": "Langley",
       "lat": 49.1691, "lng": -122.5794, "emoji": "🏘️", "placeId": "ChIJfbeoY1nShVQRgczQebI7Kog",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Fort_Langley_Community_Hall.jpg/960px-Fort_Langley_Community_Hall.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Sunray","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Fort_Langley_Community_Hall.jpg"},
       "trend": [46, 58, 56], "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Historic riverside village with cafés, antique shops, and a national historic site",
       "signals": ["grave tales fort langley", "fort langley antique mall", "saba cafe", "tap fort langley"],
@@ -342,6 +360,7 @@
     {
       "id": "qepark", "cat": "nature", "gem": true, "name": "Queen Elizabeth Park", "area": "Little Mountain",
       "lat": 49.241, "lng": -123.112, "emoji": "🌷", "placeId": "ChIJIcZrTvVzhlQRiKTnD03vt7Q",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/Queen_Elizabeth_Park.jpg/960px-Queen_Elizabeth_Park.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Craig Nagy from Vancouver, Canada","license":"CC BY-SA 2.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/2.0","source":"https://commons.wikimedia.org/wiki/File:Queen_Elizabeth_Park.jpg"},
       "trend": null, "env": "both", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy", "rain"],
       "summary": "Garden park on the highest point in the city",
       "signals": [], "why": "", "tips": ["The Bloedel Conservatory at the top is a good stop even on rainy days"]
@@ -349,18 +368,21 @@
     {
       "id": "vandusen", "cat": "nature", "gem": true, "name": "VanDusen Botanical Garden", "area": "Shaughnessy",
       "lat": 49.2396, "lng": -123.1326, "emoji": "🌺", "placeId": "ChIJwW3HeIZzhlQRVxJgWI8VjAg",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/VanDusen_Botanical_Garden_1.jpg/960px-VanDusen_Botanical_Garden_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Stan Shebs","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:VanDusen_Botanical_Garden_1.jpg"},
       "trend": null, "env": "outdoor", "price": "$$", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Large botanical garden that changes with every season", "signals": [], "why": "", "tips": []
     },
     {
       "id": "moa", "cat": "city", "gem": true, "name": "Museum of Anthropology", "area": "UBC",
       "lat": 49.2695, "lng": -123.2594, "emoji": "🏛️", "placeId": "ChIJrf8w27NyhlQR44St4PQccfY",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Museum_of_Anthropology_UBC_01.jpg/960px-Museum_of_Anthropology_UBC_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Xicotencatl","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Museum_of_Anthropology_UBC_01.jpg"},
       "trend": null, "env": "indoor", "price": "$$", "time": "2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "UBC museum famous for its Indigenous art and totem pole collection", "signals": [], "why": "", "tips": []
     },
     {
       "id": "lighthouse", "cat": "nature", "kids": true, "gem": true, "name": "Lighthouse Park", "area": "West Vancouver",
       "lat": 49.3343, "lng": -123.2614, "emoji": "🗼", "placeId": "ChIJIUj0JVRshlQRhB-coT_zlFE",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Point_Atkinson_Lighthouse_in_2022.jpg/960px-Point_Atkinson_Lighthouse_in_2022.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Richard N Horne","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Point_Atkinson_Lighthouse_in_2022.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Old-growth forest trails that end at a lighthouse and the sea",
       "signals": [], "why": "", "tips": ["There are rocky sections, so wear sneakers"]
@@ -368,12 +390,14 @@
     {
       "id": "bvm", "cat": "kids", "gem": true, "name": "Burnaby Village Museum", "area": "Burnaby",
       "lat": 49.2399, "lng": -122.9669, "emoji": "🎠", "placeId": "ChIJA288NqZ3hlQRdrlOknfGAMk",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/Vorce_Station%2C_Burnaby%2C_BC_01.jpg/960px-Vorce_Station%2C_Burnaby%2C_BC_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Xiao23","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Vorce_Station,_Burnaby,_BC_01.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Open-air museum recreating a 1920s village, with a vintage carousel", "signals": [], "why": "", "tips": []
     },
     {
       "id": "whytecliff", "cat": "nature", "kids": true, "gem": true, "name": "Whytecliff Park", "area": "Horseshoe Bay",
       "lat": 49.374, "lng": -123.2874, "emoji": "🏝️", "placeId": "ChIJMSLx3oxrhlQRPo56WANJmPM",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Whytecliff_Park%2C_West_Vancouver.jpg/960px-Whytecliff_Park%2C_West_Vancouver.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Northwest","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Whytecliff_Park,_West_Vancouver.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Coastal park with a rocky islet you can walk to at low tide",
       "signals": [], "why": "", "tips": ["Depending on the tide, you can't always cross to the islet"]
@@ -381,6 +405,7 @@
     {
       "id": "nitobe", "cat": "nature", "gem": true, "name": "Nitobe Memorial Garden", "area": "UBC",
       "lat": 49.2662, "lng": -123.2596, "emoji": "⛩️", "placeId": "ChIJDzRjfrRyhlQR8SRHq2eOtwk",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Nitobe_Garden_Pond.jpg/960px-Nitobe_Garden_Pond.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"AirplaneMood","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Nitobe_Garden_Pond.jpg"},
       "trend": null, "env": "outdoor", "price": "$", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy", "rain"],
       "summary": "Traditional Japanese garden on the UBC campus", "signals": [], "why": "", "tips": []
     },
@@ -394,12 +419,14 @@
     {
       "id": "rockypoint", "cat": "nature", "kids": true, "gem": true, "name": "Rocky Point Park", "area": "Port Moody",
       "lat": 49.2804, "lng": -122.8495, "emoji": "🌊", "placeId": "ChIJP6T4Jh55hlQRlIjDgGzwVOY",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/Rocky_Point_Park_16.JPG/960px-Rocky_Point_Park_16.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Eviatar Bach","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Rocky_Point_Park_16.JPG"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Waterfront park at the end of Burrard Inlet, with a pier and trails", "signals": [], "why": "", "tips": []
     },
     {
       "id": "goldenears", "cat": "nature", "kids": true, "gem": true, "name": "Golden Ears Park", "area": "Maple Ridge",
       "lat": 49.2781, "lng": -122.515, "emoji": "⛰️", "placeId": "ChIJLfu9PdebhlQRgp71o2-R60c",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Golden_ears_summit.jpg/960px-Golden_ears_summit.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Joel Diakow","license":"CC BY 2.5","licenseUrl":"https://creativecommons.org/licenses/by/2.5","source":"https://commons.wikimedia.org/wiki/File:Golden_ears_summit.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Large provincial park with Alouette Lake, waterfalls, and hikes",
       "signals": [], "why": "", "tips": ["In peak season BC Parks may require a free day-use pass, so check before you go"]
@@ -431,6 +458,7 @@
     {
       "id": "garrypoint", "cat": "nature", "kids": true, "gem": true, "name": "Garry Point Park", "area": "Steveston, Richmond",
       "lat": 49.1256, "lng": -123.1961, "emoji": "🪁", "placeId": "ChIJff6cB3UKhlQRWAvA83ex7-k",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Beach_at_Garry_Point_Park_-_panoramio.jpg/960px-Beach_at_Garry_Point_Park_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"SpiderRider3","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Beach_at_Garry_Point_Park_-_panoramio.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Oceanfront park at the mouth of the Fraser, popular for kites and sunsets", "signals": [], "why": "", "tips": []
     },
@@ -462,6 +490,7 @@
     {
       "id": "campbellvalley", "cat": "nature", "kids": true, "gem": true, "name": "Campbell Valley Park", "area": "Langley",
       "lat": 49.0209, "lng": -122.658, "emoji": "🐴", "placeId": "ChIJLXl-KwbGhVQRtoVk1IRBH9U",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Annand_Rowlatt_Farmstead.JPG/960px-Annand_Rowlatt_Farmstead.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Colin Stepney","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Annand_Rowlatt_Farmstead.JPG"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Rural regional park with meadow and forest trails, including horse trails", "signals": [], "why": "", "tips": []
     },
@@ -480,6 +509,7 @@
     {
       "id": "comolake", "cat": "nature", "kids": true, "gem": true, "name": "Como Lake Park", "area": "Coquitlam",
       "lat": 49.2603, "lng": -122.8586, "emoji": "🦆", "placeId": "ChIJCf0FFl94hlQRS8EyW2PfAMA",
+      "photo": {"url":"https://upload.wikimedia.org/wikipedia/commons/3/39/Como_Lake_in_Coquitlam.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled","credit":"P Guildfordsry","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Como_Lake_in_Coquitlam.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Small neighbourhood lake with an easy loop trail", "signals": [], "why": "", "tips": []
     },
@@ -492,6 +522,7 @@
     {
       "id": "minnekhada", "cat": "nature", "kids": true, "gem": true, "name": "Minnekhada Regional Park", "area": "Coquitlam",
       "lat": 49.3019, "lng": -122.6977, "emoji": "🌾", "placeId": "ChIJ4SJUzut_hlQRVzM0aFprXOs",
+      "photo": {"url":"https://upload.wikimedia.org/wikipedia/commons/3/36/Minnekhada_Regional_Park.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled","credit":"Greg Salter","license":"CC BY-SA 3.0","licenseUrl":"http://creativecommons.org/licenses/by-sa/3.0/","source":"https://commons.wikimedia.org/wiki/File:Minnekhada_Regional_Park.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Quiet marshes and forest trails with lookouts over the Pitt River area", "signals": [], "why": "", "tips": []
     },
@@ -516,12 +547,14 @@
     {
       "id": "deerlakepark", "cat": "nature", "kids": true, "gem": true, "name": "Deer Lake Park", "area": "Burnaby",
       "lat": 49.2353, "lng": -122.9764, "emoji": "🛶", "placeId": "ChIJVVqTPlV2hlQRWALqiYz6Zn4",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Deer_Lake.jpg/960px-Deer_Lake.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Northwest","license":"CC BY 4.0","licenseUrl":"https://creativecommons.org/licenses/by/4.0","source":"https://commons.wikimedia.org/wiki/File:Deer_Lake.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Lake with boardwalk trails, next to the Burnaby Village Museum", "signals": [], "why": "", "tips": []
     },
     {
       "id": "centralpark", "cat": "nature", "kids": true, "gem": true, "name": "Central Park", "area": "Burnaby",
       "lat": 49.2276, "lng": -123.0181, "emoji": "🌲", "placeId": "ChIJc6RIWYp2hlQRn1enR_bqb2A",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Central_Park_Gate_3.JPG/960px-Central_Park_Gate_3.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Xiao23","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Central_Park_Gate_3.JPG"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Tall forest park near Metrotown with trails, a pond, and pitch and putt", "signals": [], "why": "", "tips": []
     },
@@ -534,6 +567,7 @@
     {
       "id": "capilanoriver", "cat": "nature", "gem": true, "name": "Capilano River Regional Park", "area": "North Vancouver",
       "lat": 49.3484, "lng": -123.1154, "emoji": "🐟", "placeId": "ChIJuUaFeMdvhlQRRNL_qzhUnSI",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/CapilanoRiverRegPark-river.jpg/960px-CapilanoRiverRegPark-river.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Arnold C","license":"Attribution","licenseUrl":null,"source":"https://commons.wikimedia.org/wiki/File:CapilanoRiverRegPark-river.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Canyon trails below Cleveland Dam, next to a salmon hatchery", "signals": [], "why": "", "tips": []
     },
@@ -552,6 +586,7 @@
     {
       "id": "deasisland", "cat": "nature", "gem": true, "name": "Deas Island Regional Park", "area": "Delta",
       "lat": 49.1214, "lng": -123.0649, "emoji": "🦅", "placeId": "ChIJAYnYN8zfhVQRves7o5BO21s",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Burrvilla-spring.jpg/960px-Burrvilla-spring.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Tony Fox","license":"CC BY-SA 3.0","licenseUrl":"http://creativecommons.org/licenses/by-sa/3.0/","source":"https://commons.wikimedia.org/wiki/File:Burrvilla-spring.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Fraser River island park with trails and heritage buildings", "signals": [], "why": "", "tips": []
     },
@@ -564,6 +599,7 @@
     {
       "id": "kanaka", "cat": "nature", "kids": true, "gem": true, "name": "Kanaka Creek Regional Park", "area": "Maple Ridge",
       "lat": 49.2107, "lng": -122.5208, "emoji": "🌊", "placeId": "ChIJb7rlDNoshFQR6OrSwkjdyVM",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Kanaka_Creek_Oxbow_-_panoramio.jpg/960px-Kanaka_Creek_Oxbow_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Kiwibirdman","license":"CC BY 3.0","licenseUrl":"https://creativecommons.org/licenses/by/3.0","source":"https://commons.wikimedia.org/wiki/File:Kanaka_Creek_Oxbow_-_panoramio.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Creekside trails with waterfalls, including Cliff Falls", "signals": [], "why": "", "tips": []
     },
@@ -576,6 +612,7 @@
     {
       "id": "greentimbers", "cat": "nature", "kids": true, "gem": true, "name": "Green Timbers Urban Forest", "area": "Surrey",
       "lat": 49.1803, "lng": -122.8187, "emoji": "🌲", "placeId": "ChIJk-ZrqmXXhVQRdLzdHqRwRTQ",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Green_Timbers_131208-09_%2811693375103%29.jpg/960px-Green_Timbers_131208-09_%2811693375103%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"waferboard","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Green_Timbers_131208-09_(11693375103).jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Urban forest with a lake and walking trails in the middle of Surrey", "signals": [], "why": "", "tips": []
     },
@@ -606,6 +643,7 @@
     {
       "id": "spanishbanks", "cat": "nature", "gem": true, "name": "Spanish Banks", "area": "West Point Grey",
       "lat": 49.2776, "lng": -123.2209, "emoji": "🌅", "placeId": "ChIJLQnMgZJyhlQRnRaqpqnAhgg",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Spanish_Banks_Vancouver_BC.jpg/960px-Spanish_Banks_Vancouver_BC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Jester7777","license":"Public domain","licenseUrl":null,"source":"https://commons.wikimedia.org/wiki/File:Spanish_Banks_Vancouver_BC.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Wide, calm beach with huge tidal flats at low tide", "signals": [], "why": "", "tips": []
     },
@@ -649,6 +687,7 @@
     {
       "id": "richmondcentre", "cat": "kids", "family": true, "name": "CF Richmond Centre", "area": "Richmond",
       "lat": 49.1672, "lng": -123.1385, "emoji": "🛍️", "placeId": "ChIJDz5vqMsKhlQRDr0Xeb-CLjY",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/CF_Richmond_Centre_Park_Plaza_Entrance_%28July_2026%29.jpg/960px-CF_Richmond_Centre_Park_Plaza_Entrance_%28July_2026%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Bcnerds","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:CF_Richmond_Centre_Park_Plaza_Entrance_(July_2026).jpg"},
       "trend": null, "env": "indoor", "price": "Free", "time": "1–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Big indoor mall on No. 3 Road, handy with kids on a rainy day", "signals": [], "why": "", "tips": []
     },
@@ -673,12 +712,14 @@
     {
       "id": "holland", "cat": "kids", "family": true, "name": "Holland Park", "area": "Surrey (City Centre)",
       "lat": 49.1843, "lng": -122.8496, "emoji": "🌷", "placeId": "ChIJoRJSv9PZhVQRqGfWi8tRT8s",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Holland_Park%2C_Surrey_BC.jpg/960px-Holland_Park%2C_Surrey_BC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Clee7903","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Holland_Park,_Surrey_BC.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Central Surrey park that hosts many family festivals", "signals": [], "why": "", "tips": []
     },
     {
       "id": "guildford", "cat": "kids", "family": true, "name": "Guildford Town Centre", "area": "Surrey",
       "lat": 49.1897, "lng": -122.8037, "emoji": "🛍️", "placeId": "ChIJWyuvLW3XhVQRUMoTTmy2WMw",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Guildford_town_centre_mall_exterior.jpeg/960px-Guildford_town_centre_mall_exterior.jpeg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Clee7903","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Guildford_town_centre_mall_exterior.jpeg"},
       "trend": null, "env": "indoor", "price": "Free", "time": "1–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Large indoor mall, a go-to rainy-day stop with kids", "signals": [], "why": "", "tips": []
     },
@@ -727,12 +768,14 @@
     {
       "id": "lonsdalequay", "cat": "kids", "family": true, "name": "Lonsdale Quay", "area": "North Vancouver",
       "lat": 49.3104, "lng": -123.082, "emoji": "⛴️", "placeId": "ChIJK4VAHLNxhlQRpEnAmoodLxM",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/Seabus-departure.jpg/960px-Seabus-departure.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Arnold C","license":"Attribution","licenseUrl":null,"source":"https://commons.wikimedia.org/wiki/File:Seabus-departure.jpg"},
       "trend": null, "env": "both", "price": "Free", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Public market at the SeaBus terminal, a fun trip across the harbour with kids", "signals": [], "why": "", "tips": []
     },
     {
       "id": "parkroyal", "cat": "kids", "family": true, "name": "Park Royal", "area": "West Vancouver",
       "lat": 49.3266, "lng": -123.1377, "emoji": "🛍️", "placeId": "ChIJXbDlqSFuhlQR6a0op9wG_R4",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/Park_Royal_Shopping_Centre_Atrium_2025.jpg/960px-Park_Royal_Shopping_Centre_Atrium_2025.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Canmenwalker","license":"CC BY 4.0","licenseUrl":"https://creativecommons.org/licenses/by/4.0","source":"https://commons.wikimedia.org/wiki/File:Park_Royal_Shopping_Centre_Atrium_2025.jpg"},
       "trend": null, "env": "both", "price": "Free", "time": "1–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "North Shore shopping centre that families use for rainy-day outings", "signals": [], "why": "", "tips": []
     },

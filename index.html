@@ -397,7 +397,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           `}
         </main>
         <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-10 text-xs text-slate-500 dark:text-slate-400">
-          Trend index: based on Google Trends search interest · Weather: Open-Meteo · Coordinates: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors
+          Trend index: based on Google Trends search interest · Weather: Open-Meteo · Coordinates: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
         </footer>
       </div>
       ${modal ? this.modal(byId(modal), items) : ''}
@@ -558,8 +558,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
   // 대표 이미지: 데이터에 사진이 있으면 사진, 없으면 스팟별 일러스트 커버
   cover(s, h) {
-    if (s.photo) return `<img src="${esc(s.photo)}" alt="${esc(s.name)}" loading="lazy" class="w-full ${h} object-cover">`;
     const c = CATS[s.cat];
+    // 위키미디어 공용 사진: 라이선스상 사진마다 촬영자와 라이선스를 표시해요 (링크 클릭은 카드 열기와 분리)
+    if (s.photo) return `<div class="w-full ${h} relative overflow-hidden bg-slate-200 dark:bg-slate-800">
+        <img src="${esc(s.photo.url)}" alt="${esc(s.name)}" loading="lazy" class="w-full h-full object-cover">
+        <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+        <span class="absolute left-4 bottom-3 text-sm font-semibold text-white/95 drop-shadow">📍 ${esc(s.area)}</span>
+        <a data-act="noop" href="${esc(s.photo.source)}" target="_blank" rel="noopener" title="Photo: ${esc(s.photo.credit)} (${esc(s.photo.license)}), via Wikimedia Commons"
+          class="absolute right-2 bottom-2 max-w-[45%] truncate text-[10px] leading-tight px-1.5 py-0.5 rounded bg-black/45 text-white/85 hover:text-white">📷 ${esc(s.photo.credit)} · ${esc(s.photo.license)}</a>
+      </div>`;
     return `<div class="w-full ${h} relative overflow-hidden" role="img" aria-label="${esc(s.name)}"
         style="background:
           radial-gradient(circle at 18% 120%, rgba(255,255,255,.35) 0 22%, transparent 23%),
