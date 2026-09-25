@@ -7,7 +7,8 @@
 # 사용법: powershell -ExecutionPolicy Bypass -File tools\places-discover.ps1 [-MinRating 4.5] [-MinReviews 500]
 # -Only 'ramen in Vancouver','parks in Vancouver' 처럼 일부 검색어만 다시 조회할 수 있어요.
 # -Set metro 로 메트로 밴쿠버 교외 지역 검색어 세트를 써요.
-param([double]$MinRating = 4.5, [int]$MinReviews = 500, [string[]]$Only = @(), [string]$Set = 'vancouver')
+# -SkipExisting 을 주면 data/spots.json에 이미 있는 장소는 빼고 보여줘요.
+param([double]$MinRating = 4.5, [int]$MinReviews = 500, [string[]]$Only = @(), [string]$Set = 'vancouver', [switch]$SkipExisting)
 
 $root = Split-Path $PSScriptRoot -Parent
 $envFile = Join-Path $root '.env.local'
@@ -47,6 +48,22 @@ if ($Set -eq 'food500') {
              'best restaurants in Delta BC', 'best restaurants in Maple Ridge', 'best restaurants in West Vancouver', 'best restaurants in North Vancouver',
              'best restaurants in Richmond BC', 'best restaurants in Surrey BC', 'best restaurants in New Westminster', 'best restaurants in Langley BC',
              'best cafe in Coquitlam', 'best bakery in Burnaby')
+  }
+}
+if ($Set -eq 'dessert') {
+  # 디저트 카페, 베이커리, 젤라토, 카페
+  $queries = [ordered]@{
+    dessert = @('dessert cafe Vancouver', 'dessert cafe Richmond BC', 'dessert cafe Burnaby', 'dessert cafe Coquitlam', 'dessert cafe Surrey BC',
+                'patisserie Vancouver', 'gelato Vancouver', 'ice cream North Vancouver', 'bakery cafe New Westminster', 'bakery Port Moody',
+                'bakery cafe Langley BC', 'cafe Maple Ridge', 'dessert Delta BC', 'cafe West Vancouver')
+  }
+}
+if ($Set -eq 'food300') {
+  $queries = [ordered]@{
+    food = @('best restaurants in Coquitlam', 'best restaurants in Port Coquitlam', 'best restaurants in Port Moody', 'best restaurants in Burnaby',
+             'best restaurants in Delta BC', 'best restaurants in Maple Ridge', 'best restaurants in West Vancouver', 'best restaurants in North Vancouver',
+             'best restaurants in Richmond BC', 'best restaurants in Surrey BC', 'best restaurants in New Westminster', 'best restaurants in Langley BC',
+             'family restaurant Coquitlam', 'korean restaurant Coquitlam', 'sushi Burnaby', 'pho Surrey BC')
   }
 }
 $fields = 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.primaryTypeDisplayName,places.location'
@@ -92,6 +109,7 @@ $rows = :outer foreach ($cat in $queries.Keys) {
   }
 }
 
+if ($SkipExisting) { $have = @{}; (Get-Content (Join-Path $root 'data/spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots | ForEach-Object { $have[$_.placeId] = $true }; $rows = @($rows | Where-Object { -not $have.ContainsKey($_.placeId) }) }
 "API 호출 $calls 회 (Text Search Enterprise, 월 1,000회 무료)"
 $rows | Where-Object { $_.rating -ge $MinRating -and $_.reviews -ge $MinReviews } |
   Sort-Object cat, @{ e = { $_.rating * [math]::Log10($_.reviews + 1) }; Descending = $true } |

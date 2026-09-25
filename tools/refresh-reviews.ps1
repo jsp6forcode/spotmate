@@ -1,5 +1,5 @@
 ﻿# 월 1회 리뷰 기준 스팟 점검 (GitHub Actions에서 실행, 로컬에서도 실행 가능)
-# 대상: 히든젬(gem), Family pick(family), 먹거리(food)
+# 대상: 히든젬(gem), Family pick(family), 먹거리(food), 디저트·카페(dessert)
 # Places API로 영업 여부와 평점/리뷰 수 기준 충족 여부만 확인하고,
 # 결과는 data/review-status.json 에 "통과 못 한 스팟 id + 이유"만 기록해요.
 # (Google 약관상 평점·리뷰 수 값 자체는 저장하지 않아요)
@@ -18,7 +18,8 @@ if (-not $key) { throw 'GOOGLE_PLACES_API_KEY가 없어요.' }
 $rules = @(
   @{ name = 'gem';    test = { param($s) $s.gem };             minRating = 4.6; minReviews = 500 },
   @{ name = 'family'; test = { param($s) $s.family };          minRating = 4.2; minReviews = 500 },
-  @{ name = 'food';   test = { param($s) $s.cat -eq 'food' };  minRating = 4.5; minReviews = 500 }
+  @{ name = 'food';   test = { param($s) $s.cat -eq 'food' };  minRating = 4.5; minReviews = 300 },
+  @{ name = 'dessert'; test = { param($s) $s.cat -eq 'dessert' }; minRating = 4.5; minReviews = 300 }
 )
 
 $spots = (Get-Content (Join-Path $root 'data/spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots
