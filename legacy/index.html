@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vancouver Kids-Friendly Places</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="app"></div>
+
+    <script>
+        // Mock Data with Coordinates
+        const mockPlaces = [
+            {
+                id: '1',
+                name: 'Science World',
+                category: '박물관/과학 체험',
+                location: 'False Creek, Downtown Vancouver',
+                lat: 49.2727,
+                lng: -123.1019,
+                rating: 4.6,
+                reviews: 3200,
+                environment: 'indoor',
+                ageGroups: ['0-4', '5-12', 'all'],
+                summary: '아이가 손으로 직접 만지며 배우는 인터랙티브 과학 체험',
+                tags: ['#체험형', '#실내', '#모든연령'],
+                badges: ['🔥 이번 주 검색 급증'],
+                rank: 1,
+                hotspotType: 'trending',
+                popularity: 95,
+                popularityExplanation: '실시간 검색량 + 구글 방문객 수 + 소셜미디어 언급',
+                description: 'Science World는 어린이들이 과학, 기술, 자연을 손으로 직접 경험할 수 있는 최고의 실내 명소입니다.',
+                tips: ['아이 나이별 추천: 영유아(18개월+)', '베스트 방문 시간: 평일 10:00-12:00', '유모차 팁: 대부분의 전시 공간에서 이용 가능', '주차: 250개 주차 공간 (유료)', '예상 소요시간: 2-3시간'],
+                googleMapsUrl: 'https://maps.google.com/?q=Science+World+Vancouver',
+                ticketUrl: 'https://www.scienceworld.ca/tickets/',
+                cost: '성인 $35, 아이 $27 (온라인 예약 할인 10%)',
+                userReviews: [
+                    { name: '김민지', rating: 5, text: '4살 아이랑 갔는데 정말 좋아했어요. 화학, 물리, 생물 등 다양한 주제를 손으로 직접 경험할 수 있어서 아이의 호기심을 자극하기 좋습니다!', date: '2026-09-20' },
+                    { name: '박준호', rating: 4, text: '주말이라 정말 많이 붐볐어요. 평일에 가시는 걸 추천합니다. 아이들 교육적으로 매우 우수한 시설입니다.', date: '2026-09-18' },
+                    { name: '이수진', rating: 5, text: '영유아 구역도 따로 있어서 1살 아기도 즐길 수 있어요. 엄마표 외출의 정답!', date: '2026-09-15' },
+                    { name: '최재훈', rating: 4, text: '입장료가 좀 비싼 감이 있지만 충분히 값어치를 하는 곳입니다. 예약하고 가세요!', date: '2026-09-12' }
+                ]
+            },
+            {
+                id: '2',
+                name: 'Kids Market @ Granville Island',
+                category: '아동 용품점/체험',
+                location: 'Granville Island',
+                lat: 49.2724,
+                lng: -123.1371,
+                rating: 4.5,
+                reviews: 2100,
+                environment: 'indoor',
+                ageGroups: ['0-4', '5-12'],
+                summary: '아이들 전용 마켓! 장난감, 의류, 예술용품 한 곳에서',
+                tags: ['#쇼핑', '#실내', '#영유아친화'],
+                badges: ['☔ 비 오는 날 추천'],
+                rank: 2,
+                hotspotType: 'monthly',
+                popularity: 78,
+                popularityExplanation: '월간 방문객 수 + 커뮤니티 언급도 + 계절성 고려',
+                description: 'Granville Island의 Kids Market은 0-12세 아이들을 위한 전문 마켓입니다.',
+                tips: ['아이 나이별 추천: 영유아(신생아+)', '베스트 방문 시간: 오전 9:00-11:00', '유모차 팁: 실내 시설로 완벽', '주차: Granville Island 주차장 (유료)', '카페 있음: 휴식 공간 완비'],
+                googleMapsUrl: 'https://maps.google.com/?q=Kids+Market+Granville+Island',
+                ticketUrl: 'https://www.granvilleisland.com/kids-market',
+                cost: '무료 입장',
+                userReviews: [
+                    { name: '이은별', rating: 5, text: '신생아부터 12세까지 모든 연령대의 아이를 위한 상품들이 다 있어요. 가격도 합리적이고 품질도 좋습니다.', date: '2026-09-19' },
+                    { name: '정다은', rating: 5, text: '비오는 날씨에 최고의 실내 활동지! 아이들이 정말 좋아하고 부모들도 쉬어갈 수 있는 카페가 있어서 완벽합니다.', date: '2026-09-17' },
+                    { name: '이종우', rating: 4, text: '주말엔 사람이 많지만 평일은 한산해서 좋아요. 유모차도 완벽하게 다닐 수 있습니다.', date: '2026-09-14' },
+                    { name: '오지현', rating: 5, text: '장난감 선택지가 정말 많고, 할인 상품도 자주 있어요. 자주 방문하게 됩니다!', date: '2026-09-11' }
+                ]
+            },
+            {
+                id: '3',
+                name: 'Burnaby Village Museum',
+                category: '박물관/역사 체험',
+                location: 'Burnaby',
+                lat: 49.2169,
+                lng: -122.9721,
+                rating: 4.7,
+                reviews: 1800,
+                environment: 'both',
+                ageGroups: ['5-12', 'all'],
+                summary: '1920년대 마을 재현! 시간 여행하며 배우는 역사 공간',
+                tags: ['#체험형', '#야외', '#실내'],
+                badges: ['⭐ 실시간 인기'],
+                rank: 3,
+                hotspotType: 'weekly',
+                popularity: 88,
+                popularityExplanation: '주간 검색 트렌드 + 학교 단체 방문 + SNS 해시태그',
+                description: '1920년대 캐나다 마을을 재현한 야외 박물관입니다.',
+                tips: ['아이 나이별 추천: 초등학생(5세+)', '베스트 방문 시간: 주말 오전', '유모차 팁: 야외이므로 제한적 (자갈길)', '주차: 무료 주차 공간', '시즌: 계절별 이벤트 많음'],
+                googleMapsUrl: 'https://maps.google.com/?q=Burnaby+Village+Museum',
+                ticketUrl: 'https://www.burnabyvillagemuseum.ca/plan-your-visit/admission',
+                cost: '성인 $17, 아이 $12',
+                userReviews: [
+                    { name: '황보민', rating: 5, text: '1920년대 마을 체험이 정말 신기해요! 아이가 역사 공부를 하면서 즐거워합니다. 여름엔 특별 이벤트도 많아요.', date: '2026-09-21' },
+                    { name: '신지훈', rating: 5, text: '교육적으로 정말 좋은 곳입니다. 우리 아이들이 타임슬립을 경험한 것 같았어요!', date: '2026-09-16' },
+                    { name: '함수희', rating: 4, text: '자갈길이라 유모차는 불편하지만, 걷는 것이 가능한 아이들은 정말 좋아해요. 무료 주차가 있어서 좋습니다.', date: '2026-09-13' },
+                    { name: '곽진호', rating: 5, text: '계절별로 다양한 프로그램이 있어요. 가을 축제에 가봤는데 정말 좋았습니다!', date: '2026-09-10' }
+                ]
+            },
+            {
+                id: '4',
+                name: 'Capilano Suspension Bridge',
+                category: '자연/어드벤처',
+                location: 'North Vancouver',
+                lat: 49.3263,
+                lng: -123.1633,
+                rating: 4.6,
+                reviews: 2900,
+                environment: 'outdoor',
+                ageGroups: ['5-12'],
+                summary: '짜릿한 현수교 경험! 숲 속 모험과 자연학 동시에',
+                tags: ['#야외', '#모험', '#아드벤처'],
+                badges: ['🔥 이번 주 검색 급증'],
+                rank: 4,
+                hotspotType: 'trending',
+                popularity: 92,
+                popularityExplanation: '이번 주 검색 폭발 + 구글 트렌드 급상승 + 가족 여행객 증가',
+                description: 'Capilano Canyon을 가로지르는 유명한 현수교입니다.',
+                tips: ['아이 나이별 추천: 초등학생(5세+), 8세 이상 추천', '베스트 방문 시간: 평일', '유모차 팁: 불가, 캐리어 필수', '주차: 유료 주차 ($5)', '안전장비: 무료 제공'],
+                googleMapsUrl: 'https://maps.google.com/?q=Capilano+Suspension+Bridge',
+                ticketUrl: 'https://www.capilanobridge.com/buy-tickets/',
+                cost: '성인 $39.95, 아이 $20',
+                userReviews: [
+                    { name: '이혜미', rating: 5, text: '현수교 위에서 보는 경치가 정말 멋있어요! 첫번째 가는 아이들은 좀 무서워하지만 금방 신나합니다. 9살 아이가 완전 좋아했어요.', date: '2026-09-22' },
+                    { name: '조준석', rating: 5, text: '아이에게 자연의 위대함을 느껴주는 정말 좋은 경험이었습니다. 안전장비도 완벽하게 제공되고 스태프도 친절해요.', date: '2026-09-19' },
+                    { name: '장미영', rating: 4, text: '입장료가 좀 비싼 편이지만 한 번쯤은 꼭 가봐야 할 명소입니다. 평일이 사람이 훨씬 적어요!', date: '2026-09-16' },
+                    { name: '성준호', rating: 5, text: '7살 아이가 처음에 무서워했지만 끝나고는 "다시 가고 싶다"고 하네요. 정말 기억에 남을 경험입니다!', date: '2026-09-13' }
+                ]
+            },
+            {
+                id: '5',
+                name: 'Central Park Playground',
+                category: '공원/놀이터',
+                location: 'Burnaby',
+                lat: 49.2175,
+                lng: -122.9493,
+                rating: 4.6,
+                reviews: 2400,
+                environment: 'outdoor',
+                ageGroups: ['0-4', '5-12', 'all'],
+                summary: '광활한 공원에서 뛰놀고 피크닉까지!',
+                tags: ['#야외', '#놀이터', '#피크닉'],
+                badges: ['☀️ 날씨 좋은 날 강추'],
+                rank: 5,
+                hotspotType: 'monthly',
+                popularity: 85,
+                popularityExplanation: '월간 방문객 수 + 유아동 부모 커뮤니티 평가 + 계절 날씨 영향',
+                description: 'Burnaby의 가장 큰 공원으로, 넓은 잔디밭과 놀이터가 있습니다.',
+                tips: ['아이 나이별 추천: 영유아(1세+)', '베스트 방문 시간: 평일 오전', '유모차 팁: 유모차 이용 가능', '주차: 무료 주차', '시설: 화장실, 음수대, 피크닉 테이블'],
+                googleMapsUrl: 'https://maps.google.com/?q=Central+Park+Burnaby',
+                ticketUrl: 'https://www.burnabyparks.ca/parks-trails/central-park',
+                cost: '무료',
+                userReviews: [
+                    { name: '최영미', rating: 5, text: '무료인데도 이렇게 좋을 수가! 아이 나이별로 다양한 놀이터가 있어서 영유아부터 초등학생까지 모두 즐길 수 있습니다.', date: '2026-09-21' },
+                    { name: '박혜진', rating: 5, text: '날씨 좋은 날 피크닉 가기 정말 좋아요. 넓은 잔디밭에서 뛰어놀 수 있고 화장실도 깨끗해요.', date: '2026-09-18' },
+                    { name: '정현민', rating: 4, text: '평일에 가면 한산하고 좋습니다. 주말은 좀 붐비지만 아이들이 친구를 사귀기 좋아요!', date: '2026-09-15' },
+                    { name: '이예린', rating: 5, text: '1살 아기부터 갈 수 있는 진짜 좋은 장소예요. 무료 주차도 있고 엄마들끼리 쉬어갈 수 있는 벤치도 많아요!', date: '2026-09-12' }
+                ]
+            },
+        ];
+
+        class App {
+            constructor() {
+                this.state = {
+                    timeframe: 'trending',
+                    environment: 'all',
+                    ageGroup: 'all',
+                    selectedPlace: null,
+                    isModalOpen: false,
+                    viewMode: 'list', // 'list' or 'map'
+                    hoveredPlaceId: null,
+                    reviewsOpen: false,
+                    showPopularityInfo: false,
+                    darkMode: localStorage.getItem('darkMode') === 'true'
+                };
+                this.init();
+            }
+
+            init() {
+                this.render();
+                this.attachEventListeners();
+            }
+
+            attachEventListeners() {
+                // Dark Mode Toggle
+                const darkModeBtn = document.getElementById('darkModeBtn');
+                if (darkModeBtn) {
+                    darkModeBtn.addEventListener('click', () => {
+                        this.state.darkMode = !this.state.darkMode;
+                        localStorage.setItem('darkMode', this.state.darkMode);
+                        this.render();
+                    });
+                }
+
+                // View Mode Toggle
+                const listViewBtn = document.getElementById('listViewBtn');
+                const mapViewBtn = document.getElementById('mapViewBtn');
+                
+                if (listViewBtn) {
+                    listViewBtn.addEventListener('click', () => {
+                        this.state.viewMode = 'list';
+                        this.render();
+                    });
+                }
+                
+                if (mapViewBtn) {
+                    mapViewBtn.addEventListener('click', () => {
+                        this.state.viewMode = 'map';
+                        this.render();
+                    });
+                }
+
+                document.getElementById('timeframe').addEventListener('change', (e) => {
+                    this.state.timeframe = e.target.value;
+                    this.render();
+                });
+
+                document.getElementById('environment').addEventListener('change', (e) => {
+                    this.state.environment = e.target.value;
+                    this.render();
+                });
+
+                document.getElementById('ageGroup').addEventListener('change', (e) => {
+                    this.state.ageGroup = e.target.value;
+                    this.render();
+                });
+            }
+
+            getFilteredPlaces() {
+                return mockPlaces.filter(place => {
+                    const timeframeMatch = place.hotspotType === this.state.timeframe;
+                    const environmentMatch = this.state.environment === 'all' || place.environment === this.state.environment || place.environment === 'both';
+                    const ageMatch = this.state.ageGroup === 'all' || place.ageGroups.includes(this.state.ageGroup);
+                    return timeframeMatch && environmentMatch && ageMatch;
+                });
+            }
+
+            getAIInsight() {
+                const filtered = this.getFilteredPlaces();
+                const ageLabel = this.state.ageGroup === '0-4' ? '영유아' : this.state.ageGroup === '5-12' ? '초등학생' : '모든 나이';
+                const envLabel = this.state.environment === 'indoor' ? '실내' : this.state.environment === 'outdoor' ? '야외' : '전체 환경';
+                
+                if (filtered.length === 0) return '선택하신 조건에 맞는 장소가 없습니다. 필터를 다시 조정해 보세요.';
+                
+                return `이번 주 ${ageLabel} 친화 ${envLabel} 장소 중 가장 인기 있는 곳은 "${filtered[0].name}"입니다. 지금 바로 방문해 보세요! ⭐`;
+            }
+
+            openModal(place) {
+                this.state.selectedPlace = place;
+                this.state.isModalOpen = true;
+                this.render();
+            }
+
+            closeModal() {
+                this.state.isModalOpen = false;
+                this.state.selectedPlace = null;
+                this.state.reviewsOpen = false;
+                this.state.showPopularityInfo = false;
+                this.render();
+            }
+
+            render() {
+                const filteredPlaces = this.getFilteredPlaces();
+                const darkModeClass = this.state.darkMode ? 'dark' : '';
+                const html = `
+                    <div class="${darkModeClass}">
+                        <!-- Header -->
+                        <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 text-white py-8 px-4 sticky top-0 z-30 shadow-xl">
+                            <div class="max-w-7xl mx-auto">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div>
+                                        <h1 class="text-4xl md:text-5xl font-bold mb-2 tracking-tight">SpotMate</h1>
+                                        <p class="text-indigo-100 text-lg">모든 도시의 숨은 명소를 발견하세요</p>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button id="darkModeBtn" class="px-4 py-2 rounded-lg font-semibold transition-all bg-white/10 hover:bg-white/20 border border-white/20 text-white flex items-center gap-2">
+                                            <span id="darkModeIcon">${this.state.darkMode ? '☀️' : '🌙'}</span>
+                                            <span class="hidden sm:inline">${this.state.darkMode ? 'Light' : 'Dark'}</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-2 bg-white/10 rounded-xl p-1 w-fit backdrop-blur-sm border border-white/20">
+                                    <button id="listViewBtn" class="px-4 py-2 rounded-lg font-semibold transition-all ${this.state.viewMode === 'list' ? 'bg-white text-indigo-600 shadow-lg' : 'text-white hover:bg-white/10'}">
+                                        📋 List
+                                    </button>
+                                    <button id="mapViewBtn" class="px-4 py-2 rounded-lg font-semibold transition-all ${this.state.viewMode === 'map' ? 'bg-white text-indigo-600 shadow-lg' : 'text-white hover:bg-white/10'}">
+                                        🗺️ Map
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Filter Bar -->
+                        <div class="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 p-4 md:p-6 sticky top-20 z-20 shadow-md">
+                            <div class="max-w-7xl mx-auto">
+                                <div class="flex items-center gap-2 mb-4">
+                                    <span class="text-xl">⚙️</span>
+                                    <h2 class="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase">Filters</h2>
+                                    <span class="ml-auto text-xs text-gray-500 dark:text-gray-400 font-medium">${filteredPlaces.length} Results</span>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">🏆 Trending</label>
+                                        <select id="timeframe" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-purple-500">
+                                            <option value="trending">⭐ 실시간 인기</option>
+                                            <option value="weekly">🔥 이번 주 핫플</option>
+                                            <option value="monthly">📅 이번 달 추천</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">🏠 Environment</label>
+                                        <select id="environment" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-purple-500">
+                                            <option value="all">전체</option>
+                                            <option value="indoor">🏠 실내만</option>
+                                            <option value="outdoor">🌳 야외만</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">👶 Age Group</label>
+                                        <select id="ageGroup" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-purple-500">
+                                            <option value="all">전체</option>
+                                            <option value="0-4">👶 영유아 (0-4세)</option>
+                                            <option value="5-12">🎒 초등학생 (5-12세)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-lg p-3 border border-purple-200 dark:border-purple-800">
+                                        <p class="text-xs font-semibold text-purple-900 dark:text-purple-300 mb-1">💡 AI Tip</p>
+                                        <p class="text-xs text-purple-700 dark:text-purple-200">${this.getAIInsight()}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content Area -->
+                        <div class="min-h-screen bg-gray-50 dark:bg-slate-900">
+                            <div class="max-w-7xl mx-auto p-4 md:p-6">
+                                ${this.state.viewMode === 'list' ? this.renderListView(filteredPlaces) : this.renderMapView(filteredPlaces)}
+                            </div>
+                        </div>
+
+                        <!-- Modal -->
+                        ${this.state.isModalOpen && this.state.selectedPlace ? this.renderModal() : ''}
+                    </div>
+                `;
+
+                document.getElementById('app').innerHTML = html;
+                this.attachEventListeners();
+            }
+
+            renderListView(places) {
+                return `
+                    ${places.length > 0 ? `
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${places.map(place => `
+                                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden hover:scale-105 transition-all group cursor-pointer border-l-4 ${this.getBorderColor(place.hotspotType)}">
+                                    <!-- Header -->
+                                    <div class="bg-gradient-to-r ${this.getGradient(place.rank)} text-white p-4 flex items-start justify-between">
+                                        <div class="flex items-start gap-2">
+                                            <div class="w-8 h-8 bg-white/20 text-white rounded-full flex items-center justify-center font-bold text-sm">#${place.rank}</div>
+                                            <div>
+                                                <p class="text-xs font-semibold opacity-90">${place.category}</p>
+                                                <h3 class="font-bold text-lg">${place.name}</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Badge & Rating -->
+                                    <div class="p-4 pb-0">
+                                        <div class="flex items-center justify-between mb-3">
+                                            <div class="flex flex-wrap gap-1">
+                                                ${place.badges.map(badge => `<span class="inline-block text-xs font-semibold px-2 py-1 rounded-full ${this.getBadgeStyle(badge)}">${badge}</span>`).join('')}
+                                            </div>
+                                            <div class="flex items-center gap-1 bg-yellow-100 dark:bg-yellow-900/30 px-2 py-1 rounded-lg">
+                                                <span>⭐</span>
+                                                <span class="font-bold text-yellow-900 dark:text-yellow-200">${place.rating}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">리뷰 ${place.reviews.toLocaleString()}개</p>
+
+                                        <p class="text-sm text-gray-700 dark:text-gray-300 mb-3 leading-relaxed border-l-4 border-indigo-400 pl-3 bg-indigo-50 dark:bg-indigo-900/20 py-2 px-3 rounded">
+                                            <span>✨</span> ${place.summary}
+                                        </p>
+
+                                        <!-- Popularity Bar -->
+                                        <div class="mb-3">
+                                            <div class="flex justify-between items-center mb-1">
+                                                <span class="text-xs font-semibold text-gray-600 dark:text-gray-400">인기도</span>
+                                                <span class="text-xs font-bold text-red-500">${place.popularity}%</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
+                                                <div class="bg-gradient-to-r from-red-400 to-red-600 h-2 rounded-full" style="width: ${place.popularity}%"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex flex-wrap gap-2 mb-4">
+                                            ${place.tags.map(tag => `<span class="inline-block bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-2 py-1 rounded-full">${tag}</span>`).join('')}
+                                        </div>
+
+                                        <div class="grid grid-cols-2 gap-2 mb-4 text-xs">
+                                            <div class="bg-green-50 dark:bg-green-900/20 p-2 rounded">
+                                                <p class="text-gray-600 dark:text-gray-400 font-semibold">💰 요금</p>
+                                                <p class="text-green-900 dark:text-green-300 font-bold">${place.cost.split('$')[1]}</p>
+                                            </div>
+                                            <div class="bg-purple-50 dark:bg-purple-900/20 p-2 rounded">
+                                                <p class="text-gray-600 dark:text-gray-400 font-semibold">⏱️ 소요시간</p>
+                                                <p class="text-purple-900 dark:text-purple-300 font-bold">${place.tips[4] || '1-2시간'}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-4 pt-0">
+                                        <button onclick="app.openModal(mockPlaces[${place.id - 1}])" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 dark:from-indigo-700 dark:to-purple-700 text-white font-semibold py-2 px-4 rounded-xl transition-all flex items-center justify-center gap-2">
+                                            <span>📍</span> 상세보기
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : `
+                        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-12 text-center">
+                            <div class="text-5xl mx-auto text-gray-300 dark:text-slate-600 mb-4">✨</div>
+                            <p class="text-gray-600 dark:text-gray-300 font-bold text-lg">No results found</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Try adjusting your filters</p>
+                        </div>
+                    `}
+                `;
+            }
+
+            renderMapView(places) {
+                return `
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Map Section -->
+                        <div class="lg:col-span-2">
+                            <div class="bg-white rounded-xl shadow-md overflow-hidden border-2 border-gray-200">
+                                <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4">
+                                    <h3 class="font-bold text-lg flex items-center gap-2">🗺️ 밴쿠버 지도</h3>
+                                </div>
+                                
+                                <div class="relative bg-gray-100 h-96 md:h-96 flex items-center justify-center overflow-hidden">
+                                    <!-- Map Grid -->
+                                    <div class="w-full h-full bg-gradient-to-br from-blue-50 to-blue-100 relative">
+                                        <!-- Simple grid representation -->
+                                        <svg class="w-full h-full" style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)">
+                                            <!-- 격자선 -->
+                                            ${Array.from({length: 6}).map((_, i) => `<line x1="${i * 100}" y1="0" x2="${i * 100}" y2="400" stroke="#94a3b8" stroke-width="1" opacity="0.2"/>`).join('')}
+                                            ${Array.from({length: 5}).map((_, i) => `<line x1="0" y1="${i * 80}" x2="600" y2="${i * 80}" stroke="#94a3b8" stroke-width="1" opacity="0.2"/>`).join('')}
+                                            
+                                            <!-- Markers -->
+                                            ${places.map((place, idx) => `
+                                                <g class="place-marker cursor-pointer" onclick="app.openModal(mockPlaces[${place.id - 1}])">
+                                                    <circle cx="${50 + (place.lng + 123.15) * 50}" cy="${200 + (49.3 - place.lat) * 50}" r="8" fill="#dc2626" opacity="0.8" class="hover:opacity-100 transition-all"/>
+                                                    <circle cx="${50 + (place.lng + 123.15) * 50}" cy="${200 + (49.3 - place.lat) * 50}" r="5" fill="white"/>
+                                                    <text x="${50 + (place.lng + 123.15) * 50}" y="${205 + (49.3 - place.lat) * 50}" text-anchor="middle" font-size="12" font-weight="bold" fill="white">${place.rank}</text>
+                                                </g>
+                                            `).join('')}
+                                        </svg>
+                                        
+                                        <div class="absolute bottom-4 right-4 bg-white/90 rounded-lg p-3 text-xs text-gray-600 shadow-lg">
+                                            <p class="font-semibold mb-1">🔴 마커를 클릭하면 상세정보를 볼 수 있습니다</p>
+                                            <p>${places.length}개 장소 표시 중</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar List -->
+                        <div class="space-y-4 max-h-96 overflow-y-auto">
+                            ${places.map(place => `
+                                <div onclick="app.openModal(mockPlaces[${place.id - 1}])" class="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg hover:scale-105 transition-all border-l-4 ${this.getBorderColor(place.hotspotType)}">
+                                    <div class="flex items-start gap-2 mb-2">
+                                        <div class="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-xs">${place.rank}</div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-sm text-gray-900">${place.name}</h4>
+                                            <p class="text-xs text-gray-500">${place.category}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-1">
+                                            <span class="text-yellow-500">⭐</span>
+                                            <span class="text-sm font-bold">${place.rating}</span>
+                                        </div>
+                                        <span class="text-xs bg-red-100 text-red-700 font-bold px-2 py-1 rounded">${place.popularity}%</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderModal() {
+                const place = this.state.selectedPlace;
+                return `
+                    <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto" onclick="if(event.target === this) app.closeModal()">
+                        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full my-8" onclick="event.stopPropagation()">
+                            <div class="bg-gradient-to-r ${this.getGradient(place.rank)} text-white p-6 flex items-start justify-between">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-8 h-8 bg-white/20 text-white rounded-full flex items-center justify-center font-bold text-sm">#${place.rank}</div>
+                                        <span class="text-sm font-semibold opacity-90">${place.category}</span>
+                                    </div>
+                                    <h2 class="text-2xl font-bold">${place.name}</h2>
+                                    <p class="text-blue-100 text-sm mt-1">📍 ${place.location}</p>
+                                </div>
+                                <button onclick="app.closeModal()" class="p-2 hover:bg-white/20 rounded-lg transition-colors text-2xl">✕</button>
+                            </div>
+
+                            <div class="p-6 space-y-6">
+                                <!-- Quick Stats -->
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div onclick="app.state.reviewsOpen = !app.state.reviewsOpen; app.render();" class="bg-yellow-50 rounded-lg p-4 text-center border border-yellow-200 cursor-pointer hover:bg-yellow-100 hover:scale-105 transition-all">
+                                        <div class="text-2xl mb-1">⭐</div>
+                                        <p class="font-bold text-yellow-900">${place.rating}</p>
+                                        <p class="text-xs text-yellow-700">${place.reviews.toLocaleString()}개 리뷰</p>
+                                        <p class="text-xs text-yellow-600 mt-2 font-semibold">👆 클릭해서 리뷰 보기</p>
+                                    </div>
+                                    <div onclick="app.state.showPopularityInfo = !app.state.showPopularityInfo; app.render();" class="bg-red-50 rounded-lg p-4 text-center border border-red-200 cursor-pointer hover:bg-red-100 hover:scale-105 transition-all">
+                                        <div class="text-2xl mb-1">🔥</div>
+                                        <p class="font-bold text-red-900">${place.popularity}%</p>
+                                        <p class="text-xs text-red-700">인기도</p>
+                                        <p class="text-xs text-red-600 mt-2 font-semibold">👆 인기도 기준 보기</p>
+                                    </div>
+                                    <div onclick="window.open('${place.ticketUrl}', '_blank');" class="bg-green-50 rounded-lg p-4 text-center border border-green-200 cursor-pointer hover:bg-green-100 hover:scale-105 transition-all">
+                                        <div class="text-2xl mb-1">💰</div>
+                                        <p class="font-bold text-green-900">${place.cost.split('(')[0].trim()}</p>
+                                        <p class="text-xs text-green-700">요금</p>
+                                        <p class="text-xs text-green-600 mt-2 font-semibold">👆 티켓 예매하기</p>
+                                    </div>
+                                </div>
+
+                                <!-- Description -->
+                                <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 rounded-r-lg">
+                                    <p class="text-sm font-semibold text-indigo-900 mb-2">💡 AI 추천 이유</p>
+                                    <p class="text-gray-800 text-sm leading-relaxed">${place.description}</p>
+                                </div>
+
+                                <!-- Popularity Info -->
+                                ${this.state.showPopularityInfo ? `
+                                    <div class="bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                                        <p class="text-sm font-semibold text-red-900 mb-3 flex items-center gap-2">
+                                            <span>📊 인기도 ${place.popularity}% 어떻게 정해지나요?</span>
+                                            <button onclick="app.state.showPopularityInfo = false; app.render();" class="text-red-600 hover:text-red-800">✕</button>
+                                        </p>
+                                        <div class="space-y-2 text-sm text-gray-700">
+                                            <div class="flex gap-2">
+                                                <span class="font-bold text-red-600 min-w-fit">🔍 검색량:</span>
+                                                <span>실시간 Google 검색 트렌드와 밴쿠버 지역 검색 빈도</span>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <span class="font-bold text-red-600 min-w-fit">👥 방문객:</span>
+                                                <span>Google Maps 방문객 수, 구글 리뷰 업데이트 빈도</span>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <span class="font-bold text-red-600 min-w-fit">📱 SNS:</span>
+                                                <span>인스타그램, 틱톡 해시태그 언급도, 트렌딩 콘텐츠</span>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <span class="font-bold text-red-600 min-w-fit">📅 계절성:</span>
+                                                <span>날씨, 휴일, 학기 중/방학 시즌 반영</span>
+                                            </div>
+                                            <div class="bg-red-100 border border-red-300 rounded p-2 mt-2">
+                                                <p class="text-xs text-red-900 font-semibold">💡 팁: 인기도가 높을수록 지금 가장 많은 사람들이 방문하는 장소라는 뜻입니다!</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ` : ''}
+
+                                <!-- User Reviews Section -->
+                                ${this.state.reviewsOpen ? `
+                                    <div class="bg-gradient-to-r from-yellow-50 to-amber-50 border-l-4 border-yellow-500 p-4 rounded-r-lg">
+                                        <p class="text-sm font-semibold text-yellow-900 mb-4 flex items-center gap-2">
+                                            <span>⭐ 실제 방문객 리뷰 (${place.reviews.toLocaleString()}개 중 최고 평가)</span>
+                                            <button onclick="app.state.reviewsOpen = false; app.render();" class="text-yellow-600 hover:text-yellow-800 ml-auto">✕</button>
+                                        </p>
+                                        <div class="space-y-3">
+                                            ${place.userReviews.map(review => `
+                                                <div class="bg-white rounded-lg p-3 border border-yellow-200">
+                                                    <div class="flex items-center justify-between mb-2">
+                                                        <div class="flex items-center gap-2">
+                                                            <span class="font-semibold text-gray-900">${review.name}</span>
+                                                            <div class="flex gap-0.5">
+                                                                ${Array.from({length: review.rating}).map(() => '⭐').join('')}
+                                                            </div>
+                                                        </div>
+                                                        <span class="text-xs text-gray-500">${review.date}</span>
+                                                    </div>
+                                                    <p class="text-sm text-gray-700 leading-relaxed">"${review.text}"</p>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                ` : ''}
+
+
+                                <!-- Age Groups -->
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-900 mb-3">👨‍👩‍👧 추천 연령대</p>
+                                    <div class="flex gap-2">
+                                        ${place.ageGroups.map(age => {
+                                            const ageLabel = age === '0-4' ? '👶 영유아 (0-4세)' : age === '5-12' ? '🎒 초등학생 (5-12세)' : '👨‍👩‍👧‍👦 모든 연령';
+                                            return `<span class="inline-block px-3 py-1 rounded-full text-sm font-semibold ${age === '0-4' ? 'bg-pink-100 text-pink-700' : age === '5-12' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}">${ageLabel}</span>`;
+                                        }).join('')}
+                                    </div>
+                                </div>
+
+                                <!-- Tips -->
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-900 mb-3">✨ 아이 동반 방문 팁</p>
+                                    <ul class="space-y-2">
+                                        ${place.tips.map(tip => `<li class="text-sm text-gray-700 flex gap-2"><span class="text-indigo-600 font-bold">✓</span><span>${tip}</span></li>`).join('')}
+                                    </ul>
+                                </div>
+
+                                <!-- Tags -->
+                                <div class="flex flex-wrap gap-2">
+                                    ${place.tags.map(tag => `<span class="inline-block bg-gray-200 text-gray-800 text-xs font-medium px-3 py-1 rounded-full">${tag}</span>`).join('')}
+                                </div>
+
+                                <!-- CTA Button -->
+                                <a href="${place.googleMapsUrl}" target="_blank" class="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                                    <span>🗺️</span> Google Maps에서 길찾기
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            getGradient(rank) {
+                if (rank === 1) return 'from-red-500 to-red-600';
+                if (rank === 2) return 'from-orange-500 to-orange-600';
+                if (rank === 3) return 'from-amber-500 to-amber-600';
+                if (rank === 4) return 'from-purple-500 to-purple-600';
+                return 'from-blue-500 to-blue-600';
+            }
+
+            getBorderColor(hotspotType) {
+                if (hotspotType === 'trending') return 'border-red-500';
+                if (hotspotType === 'weekly') return 'border-orange-500';
+                return 'border-blue-500';
+            }
+
+            getBadgeStyle(badge) {
+                if (badge.includes('🔥')) return 'bg-red-100 text-red-700';
+                if (badge.includes('⭐')) return 'bg-yellow-100 text-yellow-700';
+                return 'bg-blue-100 text-blue-700';
+            }
+        }
+
+        const app = new App();
+    </script>
+</body>
+</html>
