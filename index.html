@@ -128,8 +128,9 @@ class App {
     const prefersDark = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches;
     const savedRadius = load('spotmate-radius');
     this.state = {
-      cat: 'all', tf: 'today', env: 'all', sort: 'trend',
-      weather: 'cloudy', weatherAuto: true, live: null,
+      cat: 'all', tf: 'today', sort: 'trend',
+      // 날씨는 직접 고르지 않고 Open-Meteo 실제 날씨를 자동으로 써요 (못 가져오면 'cloudy' 기준)
+      weather: 'cloudy', live: null,
       view: 'list', dark: savedDark === null ? prefersDark : savedDark === '1',
       // nearKey: '' = 위치 필터 없음, 'here' = GPS 현재 위치(origin), 그 외 = ORIGINS의 지역
       nearKey: '', origin: null, geoMsg: '', geoBusy: false,
@@ -176,7 +177,7 @@ class App {
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const { current } = await res.json();
       const live = { kind: weatherKind(current.weather_code), desc: weatherDesc(current.weather_code), temp: Math.round(current.temperature_2m) };
-      this.set(this.state.weatherAuto ? { live, weather: live.kind } : { live });
+      this.set({ live, weather: live.kind });
     } catch (e) {
       // 날씨를 못 가져와도 앱은 그대로 쓸 수 있어요. 직접 고른 날씨로 동작해요.
     }
@@ -186,12 +187,11 @@ class App {
 
   // ── 데이터 ──
   list() {
-    const { cat, env, tf, sort, radius } = this.state;
+    const { cat, tf, sort, radius } = this.state;
     const ti = TF[tf].i;
     const origin = this.origin();
     let items = SPOTS.filter(s =>
-      (cat === 'all' || s.cat === cat || (cat === 'kids' && s.kids)) &&
-      (env === 'all' || s.env === env || s.env === 'both'))
+      cat === 'all' || s.cat === cat || (cat === 'kids' && s.kids))
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
     // 위치 필터가 켜져 있으면 반경 안의 스팟만 남기고, 순위도 그 안에서 다시 매겨요
     if (this.nearActive() && radius !== 'any') items = items.filter(s => s.dist <= radius);
@@ -264,9 +264,6 @@ class App {
       case 'noop': return;
       case 'cat': return this.set({ cat: val });
       case 'tf': return this.set({ tf: val });
-      case 'env': return this.set({ env: val });
-      case 'weather': return this.set({ weather: val, weatherAuto: false });
-      case 'weatherlive': return this.set({ weather: this.state.live.kind, weatherAuto: true });
       case 'retry': return this.loadData();
       case 'view': return this.set({ view: val, copyMsg: '', copyText: '' });
       case 'dark': {
@@ -482,15 +479,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Trend period">
             ${Object.entries(TF).map(([k, t]) => seg('tf', k, (k === 'today' ? '📈 ' : k === 'week' ? '🔥 ' : '📅 ') + t.label, s.tf === k)).join('')}
           </div>` : ''}
-          <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Indoor or outdoor">
-            ${seg('env', 'all', 'All', s.env === 'all')}${seg('env', 'indoor', '🏠 Indoor', s.env === 'indoor')}${seg('env', 'outdoor', '🌳 Outdoor', s.env === 'outdoor')}
-          </div>
-          <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Today's weather">
-            ${Object.entries(WEATHER).map(([k, w]) => seg('weather', k, `${w.icon} ${w.label}`, s.weather === k)).join('')}
-          </div>
-          ${s.live ? `<span class="text-xs font-semibold text-slate-600 dark:text-slate-300">📡 Vancouver now: ${esc(s.live.desc)}, ${s.live.temp}°C${s.weatherAuto
-            ? ' · applied automatically'
-            : ` · <button data-act="weatherlive" class="underline text-violet-700 dark:text-violet-300">use live weather</button>`}</span>` : ''}
           <label class="ml-auto flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Sort
             <select data-act="sort" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm">
               <option value="trend" ${s.sort === 'trend' ? 'selected' : ''}>Trending</option>
@@ -562,7 +550,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const w = WEATHER[this.state.weather];
     return `
     <button data-act="open" data-val="${wp.pick.id}" class="mt-6 w-full text-left rounded-2xl p-5 bg-gradient-to-r from-amber-100 to-rose-100 dark:from-amber-500/10 dark:to-rose-500/10 border border-amber-200 dark:border-amber-500/20 hover:border-amber-300 dark:hover:border-amber-400/40 transition-colors">
-      <p class="text-sm font-semibold text-amber-800 dark:text-amber-300">${w.icon} ${this.state.weatherAuto && this.state.live ? `Vancouver right now: ${esc(this.state.live.desc)}, ${this.state.live.temp}°C` : `If it's ${w.label.toLowerCase()} today`}</p>
+      <p class="text-sm font-semibold text-amber-800 dark:text-amber-300">${w.icon} ${this.state.live ? `Vancouver right now: ${esc(this.state.live.desc)}, ${this.state.live.temp}°C` : `If it's ${w.label.toLowerCase()} today`}</p>
       <p class="mt-1 text-xl font-bold text-slate-900 dark:text-white">Your best bet: ${esc(wp.pick.name)}</p>
       <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${wp.reason} ${CATS[wp.pick.cat].icon} ${CATS[wp.pick.cat].label}, ${esc(wp.pick.area)}</p>
     </button>`;
@@ -628,15 +616,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       return `
       <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
         <p class="text-lg font-bold">No spots within ${radius} km of ${esc(this.originLabel())}</p>
-        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Try a wider radius${this.state.cat !== 'all' || this.state.env !== 'all' ? ' or loosen the filters' : ''}.</p>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Try a wider radius${this.state.cat !== 'all' ? ' or another category' : ''}.</p>
         <button data-act="radius" data-val="${wider}" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">${wider === 'any' ? 'Show any distance' : `Widen to ${wider} km`}</button>
       </div>`;
     }
     if (!items.length) return `
       <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
-        <p class="text-lg font-bold">No spots match these filters</p>
-        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Set indoor/outdoor to "All" or try another category.</p>
-        <button data-act="env" data-val="all" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show indoor and outdoor</button>
+        <p class="text-lg font-bold">No spots here yet</p>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Try another category.</p>
+        <button data-act="cat" data-val="all" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all spots</button>
       </div>`;
     return `<div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">${items.map(s => this.card(s)).join('')}</div>`;
   }
@@ -832,7 +820,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               <span class="text-xs font-semibold px-2 py-1 rounded-full ${crowd.c}">Now: ${crowd.t}</span>
             </div>
             <div class="mt-3 flex items-end gap-1 h-16">${bars}</div>
-            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Estimated from the day of week, time of day (Vancouver time), and the selected weather. Not live crowd data.</p>
+            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Estimated from the day of week, time of day (Vancouver time), and the current weather. Not live crowd data.</p>
           </section>
 
           ${s.tips.length ? `
