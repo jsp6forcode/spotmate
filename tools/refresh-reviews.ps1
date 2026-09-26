@@ -18,7 +18,7 @@ if (-not $key) { throw 'GOOGLE_PLACES_API_KEY가 없어요.' }
 $rules = @(
   @{ name = 'gem';    test = { param($s) $s.gem };             minRating = 4.6; minReviews = 500 },
   @{ name = 'family'; test = { param($s) $s.family };          minRating = 4.2; minReviews = 500 },
-  @{ name = 'food';   test = { param($s) $s.cat -eq 'food' };  minRating = 4.5; minReviews = 300 },
+  @{ name = 'food';   test = { param($s) $s.cat -eq 'food' };  minRating = 4.0; minReviews = 300 },
   @{ name = 'dessert'; test = { param($s) $s.cat -eq 'dessert' }; minRating = 4.5; minReviews = 300 }
 )
 

@@ -39,9 +39,13 @@ tailwind.config = {
 const CATS = {
   nature: { label: 'Nature & Views', icon: '🏔️', basis: 'trend',   dot: '#10b981' },
   city:   { label: 'City Sights',    icon: '🏙️', basis: 'trend',   dot: '#0ea5e9' },
-  food:   { label: 'Food',           icon: '🍜', basis: 'reviews', dot: '#f59e0b', criteria: 'Picked from places with a Google rating of 4.5+ and 300+ reviews, spread across Metro Vancouver and across cuisines (no chains).' },
+  food:   { label: 'Food',           icon: '🍜', basis: 'reviews', dot: '#f59e0b', criteria: 'Places with a Google rating of 4.0+ and 300+ reviews across Metro Vancouver, from local favourites to popular chains.' },
   dessert: { label: 'Desserts & Cafés', icon: '🍰', basis: 'reviews', dot: '#ec4899', criteria: 'Bakeries, patisseries, ice cream and gelato shops, and cafés with a Google rating of 4.5+ and 300+ reviews, spread across Metro Vancouver (no chains).' }
 };
+// 목록 페이지: Explore(view 'list') = 장소, Eats(view 'eats') = 음식점·카페. 지도는 모든 카테고리를 그대로 보여줘요
+const PAGES = { list: ['nature', 'city'], eats: ['food', 'dessert'] };
+// 페이지별 카테고리 드롭다운 항목 ('all' 제외). 행사는 Explore와 지도에서만
+const catOptions = view => PAGES[view] ? [...PAGES[view], ...(view === 'list' ? ['events'] : [])] : [...Object.keys(CATS), 'events'];
 // 히든젬은 별도 카테고리가 아니라 각 카테고리 안의 스팟에 붙는 표시(gem: true)예요
 const GEM = { label: 'Hidden gem', icon: '💎', criteria: 'A Google rating of 4.6+ with 500+ reviews, but low search volume (Google Trends score under 15). Visitors love it, yet it is still under the radar.' };
 // 🧸 Kids 필터: 아이 동반 장소(family: true, 놀이터·수영장·몰·농장 등)와 아이랑 가기 좋은 곳(kids: true)만 남겨요
@@ -277,6 +281,8 @@ class App {
       openNow: load('spotmate-opennow') !== '0',
       indoor: load('spotmate-indoor') === '1',
       kidsOnly: load('spotmate-kids') === '1',
+      // cuisine: Food 카테고리에서 고른 음식 종류 ('' = 전체)
+      cuisine: '',
       radius: RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
       plan: [], copyMsg: '', copyText: '',
@@ -400,9 +406,13 @@ class App {
     if (cat === 'events') return [];
     const ti = TF[tf].i;
     const origin = this.origin();
-    // "Indoor": 비 오는 날용. 실내와 실내+야외(both) 장소만 남겨요
+    // "Indoor": 비 오는 날용. 실내와 실내+야외(both) 장소만 남겨요.
+    // Indoor·Kids 필터는 장소용이라 Eats 페이지에서는 적용하지 않아요
+    const eats = this.state.view === 'eats';
     let items = SPOTS.filter(s =>
-      (cat === 'all' || s.cat === cat) && (!this.state.indoor || s.env !== 'outdoor') && (!this.state.kidsOnly || isKid(s)))
+      (cat === 'all' ? !PAGES[this.state.view] || PAGES[this.state.view].includes(s.cat) : s.cat === cat)
+      && (eats || !this.state.indoor || s.env !== 'outdoor') && (eats || !this.state.kidsOnly || isKid(s))
+      && (cat !== 'food' || !this.state.cuisine || s.cuisine === this.state.cuisine))
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
     // 위치 필터가 켜져 있으면 반경 안의 스팟만 남기고, 순위도 그 안에서 다시 매겨요
     if (this.nearActive() && radius !== 'any') items = items.filter(s => s.dist <= radius);
@@ -528,7 +538,11 @@ class App {
       case 'noop': return;
       case 'cat': if (el.tagName === 'SELECT') return; return this.set({ cat: val });
       case 'retry': return this.loadData();
-      case 'view': return this.set({ view: val, copyMsg: '', copyText: '' });
+      case 'view': {
+        // 새 페이지에 없는 카테고리를 보고 있었다면 All로 돌려요
+        const cat = this.state.cat === 'all' || catOptions(val).includes(this.state.cat) ? this.state.cat : 'all';
+        return this.set({ view: val, cat, copyMsg: '', copyText: '' });
+      }
       case 'dark': {
         const dark = !this.state.dark; store('spotmate-dark', dark ? '1' : '0'); return this.set({ dark });
       }
@@ -561,7 +575,8 @@ class App {
   onChange(e) {
     const el = e.target;
     if (el.dataset.act === 'sort') this.set({ sort: el.value });
-    if (el.dataset.act === 'cat') this.set({ cat: el.value });
+    if (el.dataset.act === 'cat') this.set({ cat: el.value, cuisine: '' });
+    if (el.dataset.act === 'cuisine') this.set({ cuisine: el.value });
     if (el.dataset.act === 'near') {
       // 진행 중인 위치 요청이 나중에 도착해도 사용자가 고른 지역을 덮어쓰지 않도록 토큰을 올려요
       this.geoToken = (this.geoToken || 0) + 1;
@@ -603,10 +618,10 @@ class App {
   }
   async copyPlan() {
     const spots = this.state.plan.map(byId);
-    const text = 'My SpotMate plan\n\n' + spots.map((s, i) => `${i + 1}. ${s.name} (${s.area})\n   ${mapsUrl(s)}`).join('\n');
+    const text = 'My saved spots on SpotMate\n\n' + spots.map((s, i) => `${i + 1}. ${s.name} (${s.area})\n   ${mapsUrl(s)}`).join('\n');
     try {
       await navigator.clipboard.writeText(text);
-      this.set({ copyMsg: 'Plan copied. Paste it into a chat to share.', copyText: '' });
+      this.set({ copyMsg: 'List copied. Paste it into a chat to share.', copyText: '' });
     } catch (e) {
       this.set({ copyMsg: "Auto-copy is blocked here. Copy the text below instead.", copyText: text });
     }
@@ -668,9 +683,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
           ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : this.state.cat === 'events' ? this.eventsView() : `
             ${this.criteriaBanner(items)}
-            ${this.state.cat === 'all' ? this.eventsStrip() : ''}
-            ${this.weatherBanner(items)}
-            ${view === 'list' ? this.listView(items) : this.mapView(items)}
+            ${this.state.cat === 'all' && view !== 'eats' ? this.eventsStrip() : ''}
+            ${view !== 'eats' ? this.weatherBanner(items) : ''}
+            ${view === 'map' ? this.mapView(items) : this.listView(items)}
           `}
         </main>
         <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-10 text-xs text-slate-500 dark:text-slate-400">
@@ -735,7 +750,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </div>
         </div>
         <nav class="mt-6 inline-flex gap-1 p-1 rounded-full bg-white/10 border border-white/25 backdrop-blur">
-          ${tab('list', '📋 List')}${tab('map', '🗺️ Map')}${tab('plan', `💾 My plan${plan.length ? ` (${plan.length})` : ''}`)}
+          ${tab('list', '🧭 Explore')}${tab('eats', '🍜 Eats')}${tab('map', '🗺️ Map')}${tab('plan', `♥ Saved${plan.length ? ` (${plan.length})` : ''}`)}
         </nav>
       </div>
     </header>`;
@@ -750,13 +765,23 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
           <label class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Category
             <select data-act="cat" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold">
-              ${[['all', 'All'], ...Object.entries(CATS).map(([k, c]) => [k, `${c.icon} ${c.label}`]), ['events', '🎪 Events']]
+              ${[['all', 'All'], ...catOptions(s.view).map(k => [k, k === 'events' ? '🎪 Events' : `${CATS[k].icon} ${CATS[k].label}`])]
                 .map(([k, label]) => `<option value="${k}" ${s.cat === k ? 'selected' : ''}>${label}</option>`).join('')}
             </select>
           </label>
+          ${s.cat === 'food' ? (() => {
+            // 음식 종류: 데이터에 있는 종류만, 스팟 수와 함께 알파벳 순으로
+            const counts = {}; SPOTS.forEach(x => { if (x.cat === 'food' && x.cuisine) counts[x.cuisine] = (counts[x.cuisine] || 0) + 1; });
+            return `
+          <label class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Cuisine
+            <select data-act="cuisine" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold">
+              <option value="">All cuisines</option>
+              ${Object.keys(counts).sort().map(k => `<option value="${esc(k)}" ${s.cuisine === k ? 'selected' : ''}>${esc(k)} (${counts[k]})</option>`).join('')}
+            </select>
+          </label>`; })() : ''}
           ${s.cat === 'events' || !HOURS_READY ? '' : `
           <button data-act="opennow" aria-pressed="${s.openNow}" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.openNow ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">${s.openNow ? '🟢 Open now' : '⚪ Open now'}</button>`}
-          ${s.cat === 'events' ? '' : `
+          ${s.cat === 'events' || s.view === 'eats' ? '' : `
           <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.indoor ? 'bg-sky-600 border-sky-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">🏠 Indoor</button>
           <button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.kidsOnly ? 'bg-rose-600 border-rose-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">🧸 Kids</button>`}
           ${s.cat === 'events' ? '' : `
@@ -769,7 +794,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </label>`}
         </div>
         ${this.locationBar(items)}
-        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, [s.kidsOnly && 'kid-friendly', s.indoor && 'indoor', 'spot'].filter(Boolean).join(' '))}${s.openNow && HOURS_READY ? ' open now' : ''} · Trend index from Google Trends (BC) as of ${esc(DATA_META.updatedAt)} · Crowd levels are estimates.`}</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, [s.view !== 'eats' && s.kidsOnly && 'kid-friendly', s.view !== 'eats' && s.indoor && 'indoor', 'spot'].filter(Boolean).join(' '))}${s.openNow && HOURS_READY ? ' open now' : ''} · Trend index from Google Trends (BC) as of ${esc(DATA_META.updatedAt)} · Crowd levels are estimates.`}</p>
         ${s.cat !== 'events' && s.openNow && HOURS_READY && (this._hidden.closed + this._hidden.unknown) ? `
         <p class="text-xs text-slate-600 dark:text-slate-300">Hidden: ${this._hidden.closed} closed right now${this._hidden.unknown ? `, ${this._hidden.unknown} with unknown hours` : ''}. <button data-act="opennow" class="font-semibold underline text-violet-700 dark:text-violet-300">Show all</button></p>` : ''}
         ${s.cat !== 'events' && (this._knownHidden || (s.showKnown && s.known.length)) ? `
@@ -929,7 +954,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-2 hover:ring-violet-400 dark:hover:ring-violet-600 hover:shadow-lg transition overflow-hidden">
       <div class="relative">
         ${this.cover(s, 'h-40')}
-        <span class="absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full bg-white/90 text-slate-900 shadow-sm">${c.icon} ${c.label}</span>
+        <span class="absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full bg-white/90 text-slate-900 shadow-sm">${c.icon} ${esc(s.cuisine || c.label)}</span>
         ${badge ? `<span class="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full ${this.isNew(s) ? 'bg-fuchsia-600 text-white' : 'bg-slate-900/75 text-white'}">${badge}</span>` : ''}
       </div>
       <div class="p-5 flex flex-col flex-1">
@@ -942,7 +967,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ? `<p class="mt-2 text-xs font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}">${oi.open ? '🟢' : '🔴'} ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'public' ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
           : HOURS_READY ? '<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
         <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-600 dark:text-slate-300">
-          <span>💰 ${esc(s.price)}</span><span>⏱️ ${esc(s.time)}</span><span>${ENV_ICON[s.env]} ${ENV[s.env]}</span>
+          ${s.price ? `<span>💰 ${esc(s.price)}</span>` : ''}<span>⏱️ ${esc(s.time)}</span><span>${ENV_ICON[s.env]} ${ENV[s.env]}</span>
           ${isKid(s) ? '<span class="font-semibold text-rose-600 dark:text-rose-300">🧸 Kid-friendly</span>' : ''}
         </div>
         ${s.score != null ? `
@@ -960,7 +985,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         </div>` : ''}
         ${level >= 0 ? `<p class="mt-3 text-xs"><span class="font-semibold px-2 py-1 rounded-full ${crowd.c}">Expected crowd now: ${crowd.t}</span></p>` : ''}
         <div class="mt-auto pt-4 grid grid-cols-[1fr_auto] gap-2">
-          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="py-2.5 rounded-xl font-semibold text-sm border ${saved ? 'bg-amber-100 border-amber-300 text-amber-800 dark:bg-amber-500/15 dark:border-amber-500/40 dark:text-amber-300' : 'border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200'}">${saved ? '★ In my plan' : '☆ Add to plan'}</button>
+          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="py-2.5 rounded-xl font-semibold text-sm border ${saved ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-300' : 'border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200'}">${saved ? '♥ Saved' : '♡ Save'}</button>
           ${this.knownButton(s, 'px-3 py-2.5 text-sm')}
         </div>
       </div>
@@ -989,7 +1014,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.state.openNow && this._hidden && (this._hidden.closed + this._hidden.unknown) ? `
         <p class="text-lg font-bold">Nothing here is open right now</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">${this._hidden.closed} closed and ${this._hidden.unknown} with unknown hours are hidden.</p>
-        <button data-act="opennow" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all, open or not</button>` : this.state.indoor || this.state.kidsOnly ? `
+        <button data-act="opennow" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all, open or not</button>` : this.state.view !== 'eats' && (this.state.indoor || this.state.kidsOnly) ? `
         <p class="text-lg font-bold">No ${[this.state.kidsOnly && 'kid-friendly', this.state.indoor && 'indoor'].filter(Boolean).join(' ')} spots here</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Try another category, or loosen the filters.</p>
         <div class="mt-4 flex flex-wrap justify-center gap-2">
@@ -1080,8 +1105,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const spots = this.state.plan.map(byId);
     if (!spots.length) return `
       <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
-        <p class="text-lg font-bold">Your plan is empty</p>
-        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Tap ☆ Add to plan on any card to collect spots here. Your plan is saved in this browser.</p>
+        <p class="text-lg font-bold">Nothing saved yet</p>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Tap ♡ Save on any card to keep it here. Saved spots stay in this browser.</p>
         <button data-act="view" data-val="list" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Browse spots</button>
       </div>`;
     let total = 0;
@@ -1103,8 +1128,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     <div class="mt-8 max-w-2xl">
       <div class="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 class="text-2xl font-bold">My plan</h2>
-          <p class="text-sm text-slate-500 dark:text-slate-400">${plural(spots.length, 'spot')}${spots.length > 1 ? `, about ${total.toFixed(1)} km straight-line in the order you added them` : ''}</p>
+          <h2 class="text-2xl font-bold">Saved</h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400">${plural(spots.length, 'spot')}${spots.length > 1 ? `, about ${total.toFixed(1)} km straight-line in the order you saved them` : ''}</p>
         </div>
         <div class="flex gap-2">
           <button data-act="copyplan" class="px-4 py-2 rounded-lg font-semibold bg-violet-600 hover:bg-violet-700 text-white">🔗 Copy to share</button>
@@ -1161,7 +1186,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
         </div>
         <div class="px-6 pt-5">
-          <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.icon} ${c.label}${rank ? `, ${st.sort === 'fresh' ? `#${rank} for rising searches` : `#${rank} ${tf.label.toLowerCase()}`}` : ''}</p>
+          <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.icon} ${c.label}${s.cuisine ? ` · ${esc(s.cuisine)}` : ''}${rank ? `, ${st.sort === 'fresh' ? `#${rank} for rising searches` : `#${rank} ${tf.label.toLowerCase()}`}` : ''}</p>
           <h2 class="mt-1 text-3xl font-bold leading-tight pr-2">${esc(s.name)}</h2>
           <p class="mt-1 text-slate-600 dark:text-slate-300">📍 ${esc(s.area)}${cur && cur.dist != null ? `, ${cur.dist.toFixed(1)} km` : ''}</p>
           ${(() => { const oi = openInfo(s); return oi ? `
@@ -1186,7 +1211,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               <p class="text-2xl">${pickInfo(s) ? pickInfo(s).icon : c.icon}</p><p class="font-bold">${pickInfo(s) ? pickInfo(s).label : s.family ? 'Kid-friendly' : 'Review pick'}</p><p class="text-xs text-slate-500 dark:text-slate-400">${c.label}</p>
             </div>`}
             <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-emerald-50 dark:bg-emerald-500/10 ring-1 ring-emerald-200 dark:ring-emerald-500/20 hover:ring-emerald-400">
-              <p class="text-2xl">💰</p><p class="font-bold">${esc(s.price)}</p><p class="text-xs text-slate-500 dark:text-slate-400">Prices & booking</p>
+              <p class="text-2xl">💰</p><p class="font-bold">${s.price ? esc(s.price) : 'Prices'}</p><p class="text-xs text-slate-500 dark:text-slate-400">Prices & booking</p>
             </a>
           </div>
 
@@ -1263,7 +1288,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
           <div class="grid grid-cols-2 gap-3">
             <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="py-3 rounded-xl font-semibold text-center text-white bg-indigo-600 hover:bg-indigo-700">🗺️ Directions</a>
-            <button data-act="save" data-val="${s.id}" class="py-3 rounded-xl font-semibold border ${saved ? 'bg-amber-100 border-amber-300 text-amber-800 dark:bg-amber-500/15 dark:border-amber-500/40 dark:text-amber-300' : 'border-slate-200 dark:border-slate-700'}">${saved ? '★ In my plan' : '☆ Add to plan'}</button>
+            <button data-act="save" data-val="${s.id}" class="py-3 rounded-xl font-semibold border ${saved ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-300' : 'border-slate-200 dark:border-slate-700'}">${saved ? '♥ Saved' : '♡ Save'}</button>
           </div>
           <div class="text-center -mt-3">${this.knownButton(s, 'px-4 py-2 text-sm')}</div>
         </div>
