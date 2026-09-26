@@ -157,6 +157,12 @@ function openInfo(s) {
     return { open, text: open ? (next ? `Open · closes ${when}` : 'Open') : (next ? `Closed · opens ${when}` : 'Closed') };
   } catch (e) { return null; }
 }
+// 오늘(밴쿠버) h시 30분에 열려 있는지: true/false, 영업시간을 모르면 null
+function openAt(s, h) {
+  if (!s._oh) return null;
+  if (s.hoursSource === 'public') return true;
+  try { const d = vanWallClock(); d.setHours(h, 30, 0, 0); return s._oh.getState(d) || s._oh.getUnknown(d); } catch (e) { return null; }
+}
 // ───────── 사진이 없는 스팟용 일러스트 커버 (SVG) ─────────
 // 장소 종류에 맞는 풍경을 그리고, 스팟 id로 시드를 만들어 모양과 색이 조금씩 달라지게 해요.
 function seeded(str) {
@@ -229,6 +235,7 @@ class App {
       // nearKey: '' = 위치 필터 없음, 'here' = GPS 현재 위치(origin), 그 외 = ORIGINS의 지역
       nearKey: '', origin: null, geoMsg: '', geoBusy: false,
       openNow: load('spotmate-opennow') !== '0',
+      indoor: load('spotmate-indoor') === '1',
       radius: RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
       plan: [], copyMsg: '', copyText: '',
@@ -304,8 +311,9 @@ class App {
     if (cat === 'events') return [];
     const ti = TF[tf].i;
     const origin = this.origin();
+    // "Indoor": 비 오는 날용. 실내와 실내+야외(both) 장소만 남겨요
     let items = SPOTS.filter(s =>
-      cat === 'all' || s.cat === cat || (cat === 'kids' && s.kids))
+      (cat === 'all' || s.cat === cat || (cat === 'kids' && s.kids)) && (!this.state.indoor || s.env !== 'outdoor'))
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
     // 위치 필터가 켜져 있으면 반경 안의 스팟만 남기고, 순위도 그 안에서 다시 매겨요
     if (this.nearActive() && radius !== 'any') items = items.filter(s => s.dist <= radius);
@@ -370,7 +378,9 @@ class App {
     if (ti === 2 && s.trend[2] >= 88) return 'Top pick';
     return '';
   }
-  crowdAt(s, { h, weekend }) {
+  // 혼잡도 0~2, 영업시간상 닫혀 있으면 -1. now=true면 지금 이 순간의 영업 상태로 판단해요
+  crowdAt(s, { h, weekend }, now = false) {
+    if (now ? openInfo(s)?.open === false : openAt(s, h) === false) return -1;
     let v;
     if (s.crowd === 'meal') v = (h >= 11 && h < 14) || (h >= 17 && h < 20) ? 1.6 : (h >= 10 && h < 22 ? 0.7 : 0);
     else if (s.crowd === 'attraction') v = h >= 10 && h < 16 ? 1 : (h >= 9 && h < 18 ? 0.5 : 0);
@@ -382,6 +392,7 @@ class App {
     return v >= 1.8 ? 2 : v >= 0.9 ? 1 : 0;
   }
   crowdBadge(level) {
+    if (level < 0) return { t: 'Closed', c: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300' };
     return [
       { t: 'Quiet', c: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300' },
       { t: 'Moderate', c: 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300' },
@@ -390,10 +401,17 @@ class App {
   }
   weatherPick(items) {
     const w = this.state.weather;
-    const pick = [...items].filter(s => s.weather.includes(w)).sort((a, b) => (b.score ?? -1) - (a.score ?? -1))[0];
+    // 지금 닫힌 곳은 추천하지 않아요. 어두운 시간(저녁 8시~아침 7시)에는 야외 장소를 빼고,
+    // 영업시간으로 지금 열려 있다고 확인된 곳만 추천해요
+    const { h } = vanClock(), dark = h < 7 || h >= 20;
+    const pick = [...items].filter(s => {
+      const o = openInfo(s);
+      return s.weather.includes(w) && (dark ? o?.open === true && s.env !== 'outdoor' : o?.open !== false);
+    }).sort((a, b) => (b.score ?? -1) - (a.score ?? -1))[0];
     if (!pick) return null;
     let reason;
-    if (w === 'rain') reason = pick.env === 'outdoor' ? 'It actually gets moodier and more atmospheric in the rain.' : "It's indoors, so the rain won't get in the way.";
+    if (dark) reason = `${h < 7 ? 'Open right now' : 'Still open this evening'} (${openInfo(pick).text.replace(/^Open · /, '')}).`;
+    else if (w === 'rain') reason = pick.env === 'outdoor' ? 'It actually gets moodier and more atmospheric in the rain.' : "It's indoors, so the rain won't get in the way.";
     else if (w === 'sunny') reason = pick.env === 'indoor' ? 'An easy stop on a sunny day.' : 'This is where a clear day really shines.';
     else reason = "Still a great visit when it's overcast.";
     return { pick, reason };
@@ -406,7 +424,7 @@ class App {
     const { act, val } = el.dataset;
     switch (act) {
       case 'noop': return;
-      case 'cat': return this.set({ cat: val });
+      case 'cat': if (el.tagName === 'SELECT') return; return this.set({ cat: val });
       case 'tf': return this.set({ tf: val });
       case 'retry': return this.loadData();
       case 'view': return this.set({ view: val, copyMsg: '', copyText: '' });
@@ -421,6 +439,7 @@ class App {
       case 'aistop': if (this.aiCtl) this.aiCtl.abort(); return;
       case 'geo': return this.locate();
       case 'opennow': { const openNow = !this.state.openNow; store('spotmate-opennow', openNow ? '1' : '0'); return this.set({ openNow }); }
+      case 'indoor': { const indoor = !this.state.indoor; store('spotmate-indoor', indoor ? '1' : '0'); return this.set({ indoor }); }
       case 'radius': {
         const radius = val === 'any' ? 'any' : +val; store('spotmate-radius', String(radius)); return this.set({ radius });
       }
@@ -432,6 +451,7 @@ class App {
   onChange(e) {
     const el = e.target;
     if (el.dataset.act === 'sort') this.set({ sort: el.value });
+    if (el.dataset.act === 'cat') this.set({ cat: el.value });
     if (el.dataset.act === 'near') {
       // 진행 중인 위치 요청이 나중에 도착해도 사용자가 고른 지역을 덮어쓰지 않도록 토큰을 올려요
       this.geoToken = (this.geoToken || 0) + 1;
@@ -614,23 +634,25 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   controls(items) {
     const s = this.state;
     if (s.view === 'plan') return '';
-    const chip = (act, val, label, on) => `<button data-act="${act}" data-val="${val}" aria-pressed="${on}" class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full text-[13px] sm:text-sm font-semibold border transition-colors ${on ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white' : 'bg-white/70 text-slate-700 border-slate-200 hover:border-slate-400 dark:bg-slate-800/70 dark:text-slate-200 dark:border-slate-700 dark:hover:border-slate-500'}">${label}</button>`;
     const seg = (act, val, label, on) => `<button data-act="${act}" data-val="${val}" aria-pressed="${on}" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
     return `
     <section class="md:sticky md:top-0 z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800">
       <div class="max-w-6xl mx-auto px-4 md:px-6 py-4 space-y-3">
-        <div class="flex flex-wrap gap-1.5 sm:gap-2" role="group" aria-label="Category">
-          ${chip('cat', 'all', 'All', s.cat === 'all')}
-          ${Object.entries(CATS).map(([k, c]) => chip('cat', k, `${c.icon} ${c.label}`, s.cat === k)).join('')}
-          ${chip('cat', 'events', '🎪 Events', s.cat === 'events')}
-        </div>
         <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
+          <label class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Category
+            <select data-act="cat" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold">
+              ${[['all', 'All'], ...Object.entries(CATS).map(([k, c]) => [k, `${c.icon} ${c.label}`]), ['events', '🎪 Events']]
+                .map(([k, label]) => `<option value="${k}" ${s.cat === k ? 'selected' : ''}>${label}</option>`).join('')}
+            </select>
+          </label>
           ${s.cat === 'all' || (CATS[s.cat] && CATS[s.cat].basis === 'trend') ? `
           <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Trend period">
             ${Object.entries(TF).map(([k, t]) => seg('tf', k, (k === 'today' ? '📈 ' : k === 'week' ? '🔥 ' : '📅 ') + t.label, s.tf === k)).join('')}
           </div>` : ''}
           ${s.cat === 'events' || !HOURS_READY ? '' : `
           <button data-act="opennow" aria-pressed="${s.openNow}" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.openNow ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">${s.openNow ? '🟢 Open now' : '⚪ Open now'}</button>`}
+          ${s.cat === 'events' ? '' : `
+          <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.indoor ? 'bg-sky-600 border-sky-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">🏠 Indoor</button>`}
           ${s.cat === 'events' ? '' : `
           <label class="ml-auto flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Sort
             <select data-act="sort" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm">
@@ -640,7 +662,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </label>`}
         </div>
         ${this.locationBar(items)}
-        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, 'spot')}${s.openNow && HOURS_READY ? ' open now' : ''} · Trend index from Google Trends (BC) as of ${esc(DATA_META.updatedAt)} · Crowd levels are estimates.`}</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, s.indoor ? 'indoor spot' : 'spot')}${s.openNow && HOURS_READY ? ' open now' : ''} · Trend index from Google Trends (BC) as of ${esc(DATA_META.updatedAt)} · Crowd levels are estimates.`}</p>
         ${s.cat !== 'events' && s.openNow && HOURS_READY && (this._hidden.closed + this._hidden.unknown) ? `
         <p class="text-xs text-slate-600 dark:text-slate-300">Hidden: ${this._hidden.closed} closed right now${this._hidden.unknown ? `, ${this._hidden.unknown} with unknown hours` : ''}. <button data-act="opennow" class="font-semibold underline text-violet-700 dark:text-violet-300">Show all</button></p>` : ''}
       </div>
@@ -785,7 +807,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
   card(s) {
     const c = CATS[s.cat], tf = TF[this.state.tf], saved = this.state.plan.includes(s.id);
-    const crowd = this.crowdBadge(this.crowdAt(s, vanClock())), rise = this.rising(s);
+    const level = this.crowdAt(s, vanClock(), true), crowd = this.crowdBadge(level), rise = this.rising(s);
     const evHere = this._spotEvents && this._spotEvents[s.id];
     return `
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-2 hover:ring-violet-400 dark:hover:ring-violet-600 hover:shadow-lg transition overflow-hidden">
@@ -819,7 +841,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="text-xs font-bold text-violet-700 dark:text-violet-300">✨ Why it's hot</p>
           <p class="mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(s.why)}</p>
         </div>` : ''}
-        <p class="mt-3 text-xs"><span class="font-semibold px-2 py-1 rounded-full ${crowd.c}">Expected crowd now: ${crowd.t}</span></p>
+        ${level >= 0 ? `<p class="mt-3 text-xs"><span class="font-semibold px-2 py-1 rounded-full ${crowd.c}">Expected crowd now: ${crowd.t}</span></p>` : ''}
         <div class="mt-auto pt-4 grid">
           <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="py-2.5 rounded-xl font-semibold text-sm border ${saved ? 'bg-amber-100 border-amber-300 text-amber-800 dark:bg-amber-500/15 dark:border-amber-500/40 dark:text-amber-300' : 'border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200'}">${saved ? '★ In my plan' : '☆ Add to plan'}</button>
         </div>
@@ -843,7 +865,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.state.openNow && this._hidden && (this._hidden.closed + this._hidden.unknown) ? `
         <p class="text-lg font-bold">Nothing here is open right now</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">${this._hidden.closed} closed and ${this._hidden.unknown} with unknown hours are hidden.</p>
-        <button data-act="opennow" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all, open or not</button>` : `
+        <button data-act="opennow" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all, open or not</button>` : this.state.indoor ? `
+        <p class="text-lg font-bold">No indoor spots here</p>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Try another category, or include outdoor places.</p>
+        <button data-act="indoor" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Include outdoor places</button>` : `
         <p class="text-lg font-bold">No spots here yet</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Try another category.</p>
         <button data-act="cat" data-val="all" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all spots</button>`}
@@ -958,11 +983,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const hours = Array.from({ length: 13 }, (_, i) => 9 + i);
     const bars = hours.map(h => {
       const lv = this.crowdAt(s, { h, weekend: now.weekend }), isNow = now.h === h;
-      return `<div class="flex flex-col items-center gap-1 flex-1">
-        <div class="w-full rounded-t ${isNow ? 'bg-violet-600' : 'bg-violet-300 dark:bg-violet-500/50'}" style="height:${[10, 26, 44][lv]}px"></div>
+      return `<div class="flex flex-col items-center gap-1 flex-1" ${lv < 0 ? 'title="Closed"' : ''}>
+        ${lv < 0
+          ? `<div class="w-full rounded-t border-t-2 border-dashed ${isNow ? 'border-slate-500' : 'border-slate-300 dark:border-slate-600'}" style="height:4px"></div>`
+          : `<div class="w-full rounded-t ${isNow ? 'bg-violet-600' : 'bg-violet-300 dark:bg-violet-500/50'}" style="height:${[10, 26, 44][lv]}px"></div>`}
         <span class="text-[10px] ${isNow ? 'font-bold text-violet-700 dark:text-violet-300' : 'text-slate-500 dark:text-slate-400'}">${hourLabel(h)}</span></div>`;
     }).join('');
-    const crowd = this.crowdBadge(this.crowdAt(s, now));
+    const crowd = this.crowdBadge(this.crowdAt(s, now, true));
 
     let aiBlock = '';
     if (this.sample) {
@@ -1061,7 +1088,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               <span class="text-xs font-semibold px-2 py-1 rounded-full ${crowd.c}">Now: ${crowd.t}</span>
             </div>
             <div class="mt-3 flex items-end gap-1 h-16">${bars}</div>
-            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Estimated from the day of week, time of day (Vancouver time), and the current weather. Not live crowd data.</p>
+            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Estimated from the day of week, time of day (Vancouver time), and the current weather. Not live crowd data.${bars.includes('title="Closed"') ? ' Dashed lines mark hours when it is closed.' : ''}</p>
           </section>
 
           ${s.tips.length ? `
