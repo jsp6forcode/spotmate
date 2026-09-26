@@ -15,7 +15,7 @@
     },
     {
       "id": "aquarium", "cat": "kids", "name": "Vancouver Aquarium", "area": "Stanley Park",
-      "lat": 49.3005, "lng": -123.1312, "emoji": "🦦", "placeId": "ChIJp2zKeo1xhlQRWOMOmCcWJV8",
+      "lat": 49.3005, "lng": -123.1312, "emoji": "🦦", "placeId": "ChIJp2zKeo1xhlQRWOMOmCcWJV8", "hours": "10:00-17:00", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Vancouver_Aquarium_entrance_%282026%29.jpg/960px-Vancouver_Aquarium_entrance_%282026%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Iiii I I I","license":"CC BY 4.0","licenseUrl":"https://creativecommons.org/licenses/by/4.0","source":"https://commons.wikimedia.org/wiki/File:Vancouver_Aquarium_entrance_(2026).jpg"},
       "trend": [45, 35, 44], "env": "indoor", "price": "$$$", "time": "2–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy"],
       "summary": "Aquarium inside Stanley Park",
@@ -25,7 +25,7 @@
     },
     {
       "id": "scienceworld", "cat": "kids", "name": "Science World", "area": "False Creek",
-      "lat": 49.2735, "lng": -123.1037, "emoji": "🔬", "placeId": "ChIJnZHwi2NxhlQRN3CYHzc3giE",
+      "lat": 49.2735, "lng": -123.1037, "emoji": "🔬", "placeId": "ChIJnZHwi2NxhlQRN3CYHzc3giE", "hours": "Mo-Su,PH 10:00-17:00; Jul 5 - Aug 30 Tu 10:00-20:00", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Science_World_at_TELUS_World_of_Science.jpg/960px-Science_World_at_TELUS_World_of_Science.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Differense","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Science_World_at_TELUS_World_of_Science.jpg"},
       "trend": [33, 28, 37], "env": "indoor", "price": "$$", "time": "2–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy"],
       "summary": "Hands-on, interactive science centre",
@@ -35,7 +35,7 @@
     },
     {
       "id": "capilano", "cat": "kids", "name": "Capilano Suspension Bridge", "area": "North Vancouver",
-      "lat": 49.3427, "lng": -123.116, "emoji": "🌉", "placeId": "ChIJSd7cANJvhlQRXg8TheyzUPM",
+      "lat": 49.3427, "lng": -123.116, "emoji": "🌉", "placeId": "ChIJSd7cANJvhlQRXg8TheyzUPM", "hours": "Jan 09-Mar 10 09:00-17:00; Mar 11-Apr 21 09:00-18:00; Apr 22-May 26 09:00-19:00; May 27-Sep 04 08:30-20:00; Sep 05-Oct 09 09:00-18:00; Oct 10-Nov 23 09:00-17:00; Nov 24-Jan 08 11:00-21:00; Dec 25 off", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Capilano_Suspension_Bridge%2C_Vancouver%2C_Canada_%28July_2016%29_1.jpg/960px-Capilano_Suspension_Bridge%2C_Vancouver%2C_Canada_%28July_2016%29_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Markus Säynevirta","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Capilano_Suspension_Bridge,_Vancouver,_Canada_(July_2016)_1.jpg"},
       "trend": [13, 22, 27], "env": "outdoor", "price": "$$$", "time": "2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Suspension bridge over a canyon, plus treetop walkways",
@@ -46,7 +46,7 @@
 
     {
       "id": "stanley", "cat": "nature", "name": "Stanley Park", "area": "West End",
-      "lat": 49.3021, "lng": -123.1413, "emoji": "🌲", "placeId": "ChIJo-QmrYxxhlQRFuIJtJ1jSjY",
+      "lat": 49.3021, "lng": -123.1413, "emoji": "🌲", "placeId": "ChIJo-QmrYxxhlQRFuIJtJ1jSjY", "hours": "06:00-22:00", "hoursSource": "citypark",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Stanley_Park_%40_Vancouver_%287718461178%29.jpg/960px-Stanley_Park_%40_Vancouver_%287718461178%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Guilhem Vellut","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Stanley_Park_@_Vancouver_(7718461178).jpg"},
       "trend": [45, 72, 100], "env": "outdoor", "price": "Free", "time": "2–3 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Huge downtown park ringed by the oceanside Seawall",
@@ -66,7 +66,7 @@
     },
     {
       "id": "deepcove", "cat": "nature", "kids": true, "name": "Deep Cove", "area": "North Vancouver",
-      "lat": 49.3252, "lng": -122.9466, "emoji": "🛶", "placeId": "ChIJMTAoTEx6hlQRIhYukN2ggBE",
+      "lat": 49.3252, "lng": -122.9466, "emoji": "🛶", "placeId": "ChIJMTAoTEx6hlQRIhYukN2ggBE", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Deep_cove2560.jpg/960px-Deep_cove2560.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"LilDice","license":"CC BY-SA 2.5","licenseUrl":"https://creativecommons.org/licenses/by-sa/2.5","source":"https://commons.wikimedia.org/wiki/File:Deep_cove2560.jpg"},
       "trend": [18, 34, 45], "env": "outdoor", "price": "Free", "time": "2–3 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Seaside village and jumping-off point for kayaking and hikes",
@@ -76,7 +76,7 @@
     },
     {
       "id": "englishbay", "cat": "nature", "name": "English Bay", "area": "West End",
-      "lat": 49.2865, "lng": -123.1437, "emoji": "🌅", "placeId": "ChIJ86zkaC9yhlQR4GhBA8iTiy4",
+      "lat": 49.2865, "lng": -123.1437, "emoji": "🌅", "placeId": "ChIJ86zkaC9yhlQR4GhBA8iTiy4", "hours": "06:00-22:00", "hoursSource": "citypark",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/English_Bay%2C_Vancouver%2C_BC.jpg/960px-English_Bay%2C_Vancouver%2C_BC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Unnamed photographer","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:English_Bay,_Vancouver,_BC.jpg"},
       "trend": [11, 20, 20], "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Downtown beach known for its sunsets",
@@ -106,7 +106,7 @@
     },
     {
       "id": "lynn", "cat": "nature", "name": "Lynn Canyon", "area": "North Vancouver",
-      "lat": 49.3437, "lng": -123.0198, "emoji": "🌿", "placeId": "ChIJo6mwbbx6hlQRfy2H6pWyz-k",
+      "lat": 49.3437, "lng": -123.0198, "emoji": "🌿", "placeId": "ChIJo6mwbbx6hlQRfy2H6pWyz-k", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Parque_del_ca%C3%B1%C3%B3n_Lynn%2C_Vancouver%2C_Canad%C3%A1%2C_2017-08-14%2C_DD_11.jpg/960px-Parque_del_ca%C3%B1%C3%B3n_Lynn%2C_Vancouver%2C_Canad%C3%A1%2C_2017-08-14%2C_DD_11.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Diego Delso","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Parque_del_ca%C3%B1%C3%B3n_Lynn,_Vancouver,_Canad%C3%A1,_2017-08-14,_DD_11.jpg"},
       "trend": [6, 10, 14], "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Free suspension bridge and canyon trails",
@@ -116,7 +116,7 @@
     },
     {
       "id": "buntzen", "cat": "nature", "kids": true, "name": "Buntzen Lake", "area": "Anmore",
-      "lat": 49.3475, "lng": -122.8601, "emoji": "🏞️", "placeId": "ChIJ9cJaIxJ8hlQRoga86Y6X3Nc",
+      "lat": 49.3475, "lng": -122.8601, "emoji": "🏞️", "placeId": "ChIJ9cJaIxJ8hlQRoga86Y6X3Nc", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bb/BuntzenLakePL280507.jpg/960px-BuntzenLakePL280507.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Patrick Leahy (Patleahy)","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:BuntzenLakePL280507.jpg"},
       "trend": [4, 8, 13], "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Mountain lake with lakeside trails, a floating bridge, and paddling",
@@ -127,7 +127,7 @@
 
     {
       "id": "granville", "cat": "city", "name": "Granville Island", "area": "False Creek",
-      "lat": 49.2708, "lng": -123.1343, "emoji": "🥖", "placeId": "ChIJG3q8d85zhlQRIH1pyAsVpEc",
+      "lat": 49.2708, "lng": -123.1343, "emoji": "🥖", "placeId": "ChIJG3q8d85zhlQRIH1pyAsVpEc", "hours": "24/7", "hoursSource": "public",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Granville_Island_view_from_Granville_Bridge_in_2010.jpg/960px-Granville_Island_view_from_Granville_Bridge_in_2010.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Joe Mabel","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Granville_Island_view_from_Granville_Bridge_in_2010.jpg"},
       "trend": [59, 74, 84], "env": "both", "price": "Free", "time": "2–3 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Island home to the Public Market and artisan studios",
@@ -137,7 +137,7 @@
     },
     {
       "id": "canadaplace", "cat": "city", "name": "Canada Place", "area": "Waterfront",
-      "lat": 49.2876, "lng": -123.1136, "emoji": "⛵", "placeId": "ChIJIeDiJJ1xhlQRCWHIheB_Bbc",
+      "lat": 49.2876, "lng": -123.1136, "emoji": "⛵", "placeId": "ChIJIeDiJJ1xhlQRCWHIheB_Bbc", "hours": "24/7", "hoursSource": "public",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Canada_Place_Landing.jpg/960px-Canada_Place_Landing.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Nicolas Untz","license":"CC BY-SA 2.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/2.0","source":"https://commons.wikimedia.org/wiki/File:Canada_Place_Landing.jpg"},
       "trend": [53, 63, 81], "env": "both", "price": "Free", "time": "1 hr", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Harbourfront landmark with a sail-shaped roof",
@@ -147,7 +147,7 @@
     },
     {
       "id": "steveston", "cat": "city", "name": "Steveston", "area": "Richmond",
-      "lat": 49.1231, "lng": -123.184, "emoji": "🎣", "placeId": "ChIJ170JiUThhVQR2uY6eymTnoA",
+      "lat": 49.1231, "lng": -123.184, "emoji": "🎣", "placeId": "ChIJ170JiUThhVQR2uY6eymTnoA", "hours": "24/7", "hoursSource": "public",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/Steveston_Fisherman_Wharf_signage_2018.jpg/960px-Steveston_Fisherman_Wharf_signage_2018.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Wpcpey","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Steveston_Fisherman_Wharf_signage_2018.jpg"},
       "trend": [42, 58, 62], "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Fishing village with a working wharf",
@@ -157,7 +157,7 @@
     },
     {
       "id": "gastown", "cat": "city", "name": "Gastown", "area": "Downtown",
-      "lat": 49.2844, "lng": -123.1089, "emoji": "🕰️", "placeId": "ChIJ36zlvedzhlQRAFUUd93cPgg",
+      "lat": 49.2844, "lng": -123.1089, "emoji": "🕰️", "placeId": "ChIJ36zlvedzhlQRAFUUd93cPgg", "hours": "24/7", "hoursSource": "public",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Vancouver_2018-20180422-2108_%2842138196834%29.jpg/960px-Vancouver_2018-20180422-2108_%2842138196834%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Lee Coursey from Decatur, GA","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Vancouver_2018-20180422-2108_(42138196834).jpg"},
       "trend": [42, 50, 57], "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["cloudy", "sunny"],
       "summary": "Vancouver's historic old town, home of the steam clock",
@@ -177,7 +177,7 @@
     },
     {
       "id": "vag", "cat": "city", "name": "Vancouver Art Gallery", "area": "Downtown",
-      "lat": 49.2828, "lng": -123.1206, "emoji": "🖼️", "placeId": "ChIJwXz9f39xhlQRT3qxXAPDlbU",
+      "lat": 49.2828, "lng": -123.1206, "emoji": "🖼️", "placeId": "ChIJwXz9f39xhlQRT3qxXAPDlbU", "hours": "Sa-Th 10:00-17:00; Fr 10:00-20:00", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/Vancouver_Art_Gallery_%2829787380987%29.jpg/960px-Vancouver_Art_Gallery_%2829787380987%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"dronepicr","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Vancouver_Art_Gallery_(29787380987).jpg"},
       "trend": [20, 17, 15], "env": "indoor", "price": "$$", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy"],
       "summary": "The city's art museum, right in the middle of downtown",
@@ -187,7 +187,7 @@
     },
     {
       "id": "fortlangley", "cat": "city", "name": "Fort Langley", "area": "Langley",
-      "lat": 49.1691, "lng": -122.5794, "emoji": "🏘️", "placeId": "ChIJfbeoY1nShVQRgczQebI7Kog",
+      "lat": 49.1691, "lng": -122.5794, "emoji": "🏘️", "placeId": "ChIJfbeoY1nShVQRgczQebI7Kog", "hours": "24/7", "hoursSource": "public",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Fort_Langley_Community_Hall.jpg/960px-Fort_Langley_Community_Hall.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Sunray","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Fort_Langley_Community_Hall.jpg"},
       "trend": [46, 58, 56], "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Historic riverside village with cafés, antique shops, and a national historic site",
@@ -204,31 +204,31 @@
     },
     {
       "id": "miku", "cat": "food", "name": "Miku", "area": "Waterfront",
-      "lat": 49.2868, "lng": -123.1123, "emoji": "🍣", "placeId": "ChIJlyu4u4NxhlQRkUpN_iFwl8Q",
+      "lat": 49.2868, "lng": -123.1123, "emoji": "🍣", "placeId": "ChIJlyu4u4NxhlQRkUpN_iFwl8Q", "hours": "Mo-Fr 11:30-22:00; Sa-Su 12:00-22:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Waterfront sushi spot famous for torch-seared aburi sushi", "signals": [], "why": "", "tips": []
     },
     {
       "id": "danbo", "cat": "food", "name": "Ramen Danbo Robson", "area": "Robson Street",
-      "lat": 49.2875, "lng": -123.1289, "emoji": "🍜", "placeId": "ChIJtwgTP4dxhlQRo5wIHcln0es",
+      "lat": 49.2875, "lng": -123.1289, "emoji": "🍜", "placeId": "ChIJtwgTP4dxhlQRo5wIHcln0es", "hours": "Mo-Su,PH 11:00-23:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Fukuoka-style tonkotsu ramen shop", "signals": [], "why": "", "tips": []
     },
     {
       "id": "medina", "cat": "food", "name": "Cafe Medina", "area": "Downtown",
-      "lat": 49.2806, "lng": -123.1169, "emoji": "🧇", "placeId": "ChIJEa8g6HtxhlQRa_lcrLrlVQw",
+      "lat": 49.2806, "lng": -123.1169, "emoji": "🧇", "placeId": "ChIJEa8g6HtxhlQRa_lcrLrlVQw", "hours": "Mo-Fr 08:00-15:00; Sa-Su 09:00-15:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Brunch cafe known for waffles and Mediterranean dishes", "signals": [], "why": "", "tips": []
     },
     {
       "id": "bluewater", "cat": "food", "name": "Blue Water Cafe", "area": "Yaletown",
-      "lat": 49.2761, "lng": -123.1211, "emoji": "🦪", "placeId": "ChIJZ04tZ9ZzhlQRDsJZp_cOS4U",
+      "lat": 49.2761, "lng": -123.1211, "emoji": "🦪", "placeId": "ChIJZ04tZ9ZzhlQRDsJZp_cOS4U", "hours": "Mo-Su 16:30+", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Yaletown restaurant known for seafood and its raw bar", "signals": [], "why": "", "tips": []
     },
     {
       "id": "savio", "cat": "food", "name": "Osteria Savio Volpe", "area": "Mount Pleasant",
-      "lat": 49.2575, "lng": -123.0909, "emoji": "🍝", "placeId": "ChIJ71LS51dxhlQRfq2bLYvY8gY",
+      "lat": 49.2575, "lng": -123.0909, "emoji": "🍝", "placeId": "ChIJ71LS51dxhlQRfq2bLYvY8gY", "hours": "17:00-22:30", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Italian osteria serving pasta and wood-fired dishes", "signals": [], "why": "", "tips": []
     },
@@ -258,7 +258,7 @@
     },
     {
       "id": "tenen", "cat": "food", "name": "Tenen Restaurant", "area": "Burnaby",
-      "lat": 49.2154, "lng": -122.989, "emoji": "🥟", "placeId": "ChIJQ94YI0F2hlQRThl4MaBwzO0",
+      "lat": 49.2154, "lng": -122.989, "emoji": "🥟", "placeId": "ChIJQ94YI0F2hlQRThl4MaBwzO0", "hours": "10:30-22:30", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Eastern European home-style cooking", "signals": [], "why": "", "tips": []
     },
@@ -270,25 +270,25 @@
     },
     {
       "id": "lamajoun", "cat": "food", "name": "Lamajoun", "area": "Richmond",
-      "lat": 49.1958, "lng": -123.0952, "emoji": "🥙", "placeId": "ChIJvypt7AB1hlQRAHHd5nfljSQ",
+      "lat": 49.1958, "lng": -123.0952, "emoji": "🥙", "placeId": "ChIJvypt7AB1hlQRAHHd5nfljSQ", "hours": "Tu-Fr 11:00-18:30; Sa 11:00-19:00; Su 11:00-18:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Casual restaurant named after lahmajoun, the thin Armenian flatbread", "signals": [], "why": "", "tips": []
     },
     {
       "id": "flyingbeaver", "cat": "food", "name": "Flying Beaver Bar & Grill", "area": "Richmond (Sea Island)",
-      "lat": 49.1773, "lng": -123.1683, "emoji": "🛩️", "placeId": "ChIJGfIH_CcLhlQRXUIWNqgCxw8",
+      "lat": 49.1773, "lng": -123.1683, "emoji": "🛩️", "placeId": "ChIJGfIH_CcLhlQRXUIWNqgCxw8", "hours": "Su-Th 09:00-00:00; Fr-Sa 09:00-01:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Riverside pub by the Fraser River float plane dock", "signals": [], "why": "", "tips": []
     },
     {
       "id": "wildthyme", "cat": "food", "name": "Wild Thyme", "area": "New Westminster",
-      "lat": 49.2092, "lng": -122.9322, "emoji": "🧆", "placeId": "ChIJq6reudd3hlQReZKZ57G15ms",
+      "lat": 49.2092, "lng": -122.9322, "emoji": "🧆", "placeId": "ChIJq6reudd3hlQReZKZ57G15ms", "hours": "Tu 17:00-22:30; We, Th 11:30-14:30, 17:00-22:30; Fr, Sa 10:30-23:00; Su 10:30-22:30", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Lebanese restaurant on 12th Street", "signals": [], "why": "", "tips": []
     },
     {
       "id": "brodeurs", "cat": "food", "name": "Brodeur's Bistro", "area": "Langley",
-      "lat": 49.1589, "lng": -122.6579, "emoji": "🦐", "placeId": "ChIJHQUqeADRhVQR1E4Q5w0AE0w",
+      "lat": 49.1589, "lng": -122.6579, "emoji": "🦐", "placeId": "ChIJHQUqeADRhVQR1E4Q5w0AE0w", "hours": "Su-Th 11:00-23:00; Fr-Sa 11:00-00:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Cajun bistro", "signals": [], "why": "", "tips": []
     },
@@ -300,7 +300,7 @@
     },
     {
       "id": "singaporehawker", "cat": "food", "name": "Singapore Hawker", "area": "Coquitlam",
-      "lat": 49.282, "lng": -122.7986, "emoji": "🍤", "placeId": "ChIJn2qjAFd_hlQR9-BKj8ElcLw",
+      "lat": 49.282, "lng": -122.7986, "emoji": "🍤", "placeId": "ChIJn2qjAFd_hlQR9-BKj8ElcLw", "hours": "Mo-Su 11:30-20:30", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Singaporean hawker-style dishes", "signals": [], "why": "", "tips": []
     },
@@ -316,13 +316,13 @@
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Mexican restaurant on St Johns Street", "signals": [], "why": "", "tips": [] },
     { "id": "fiordilatte", "cat": "dessert", "name": "Fior Di Latte", "area": "Burnaby Heights", "lat": 49.2814, "lng": -123.0101, "emoji": "🍨", "placeId": "ChIJqX7hi-xxhlQR-837u9VFmlI",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Cafe, bakery, and gelato shop on Hastings Street", "signals": [], "why": "", "tips": [] },
-    { "id": "cayenne", "cat": "food", "name": "Cayenne Bistro and Grill", "area": "Burnaby", "lat": 49.2214, "lng": -122.931, "emoji": "🍲", "placeId": "ChIJS88fJA93hlQR54O6h6wLueA",
+    { "id": "cayenne", "cat": "food", "name": "Cayenne Bistro and Grill", "area": "Burnaby", "lat": 49.2214, "lng": -122.931, "emoji": "🍲", "placeId": "ChIJS88fJA93hlQR54O6h6wLueA", "hours": "Mo 11:30-20:00; We-Th 11:30-20:00; Fr-Sa 11:30-22:00; Su 11:30-20:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Indian restaurant", "signals": [], "why": "", "tips": [] },
-    { "id": "nanas", "cat": "dessert", "name": "Nana's Bakery", "area": "Burnaby", "lat": 49.2177, "lng": -122.9713, "emoji": "🍞", "placeId": "ChIJ05RW90l2hlQRZRqH_tHKAK8",
+    { "id": "nanas", "cat": "dessert", "name": "Nana's Bakery", "area": "Burnaby", "lat": 49.2177, "lng": -122.9713, "emoji": "🍞", "placeId": "ChIJ05RW90l2hlQRZRqH_tHKAK8", "hours": "Mo-Su 06:00-18:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Neighbourhood bakery near Highgate", "signals": [], "why": "", "tips": [] },
     { "id": "ilposto", "cat": "food", "name": "Il Posto", "area": "Ladner, Delta", "lat": 49.0914, "lng": -123.0858, "emoji": "🍕", "placeId": "ChIJRcdM6unghVQRx6bWk2_jUrI",
       "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Italian restaurant in Ladner Village", "signals": [], "why": "", "tips": [] },
-    { "id": "marios", "cat": "food", "name": "Mario's Kitchen", "area": "Tsawwassen, Delta", "lat": 49.0229, "lng": -123.0692, "emoji": "🍽️", "placeId": "ChIJ7TWYJmHmhVQR8_oYkWnsJUo",
+    { "id": "marios", "cat": "food", "name": "Mario's Kitchen", "area": "Tsawwassen, Delta", "lat": 49.0229, "lng": -123.0692, "emoji": "🍽️", "placeId": "ChIJ7TWYJmHmhVQR8_oYkWnsJUo", "hours": "Su-Th 11:45-20:30; Fr-Sa 11:45-21:30", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Neighbourhood restaurant in Tsawwassen", "signals": [], "why": "", "tips": [] },
     { "id": "momofactory", "cat": "food", "name": "Momo Factory", "area": "North Delta", "lat": 49.1627, "lng": -122.8918, "emoji": "🥟", "placeId": "ChIJWdxaBwvZhVQROum5xdY7IKA",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Restaurant and bar known for momos (dumplings)", "signals": [], "why": "", "tips": [] },
@@ -336,30 +336,30 @@
       "trend": null, "env": "indoor", "price": "$$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Waterfront restaurant by Dundarave Pier", "signals": [], "why": "", "tips": [] },
     { "id": "miraas", "cat": "food", "name": "Miraas Restaurant & Bar", "area": "Ambleside, West Vancouver", "lat": 49.3277, "lng": -123.1583, "emoji": "🍢", "placeId": "ChIJlb7tIFJvhlQRbvWsjztCwsI",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Restaurant and bar in Ambleside", "signals": [], "why": "", "tips": [] },
-    { "id": "gull", "cat": "food", "name": "The Gull Bar and Kitchen", "area": "Lower Lonsdale", "lat": 49.3105, "lng": -123.0761, "emoji": "🍺", "placeId": "ChIJWWYp5cRxhlQR6xMiqQMC-_Y",
+    { "id": "gull", "cat": "food", "name": "The Gull Bar and Kitchen", "area": "Lower Lonsdale", "lat": 49.3105, "lng": -123.0761, "emoji": "🍺", "placeId": "ChIJWWYp5cRxhlQR6xMiqQMC-_Y", "hours": "Tu-Th 12:00-22:00; Fr,Sa 12:00-23:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Bar and kitchen near The Shipyards", "signals": [], "why": "", "tips": [] },
-    { "id": "carpe", "cat": "food", "name": "Carpe Grill & Diner", "area": "Lower Lonsdale", "lat": 49.3096, "lng": -123.0788, "emoji": "🥞", "placeId": "ChIJux27otpxhlQR0jt36UcspnM",
+    { "id": "carpe", "cat": "food", "name": "Carpe Grill & Diner", "area": "Lower Lonsdale", "lat": 49.3096, "lng": -123.0788, "emoji": "🥞", "placeId": "ChIJux27otpxhlQR0jt36UcspnM", "hours": "Mo-Th, Su 11:00-23:00; Fr, Sa 11:00-00:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Grill and diner at The Shipyards", "signals": [], "why": "", "tips": [] },
     { "id": "kioku", "cat": "food", "name": "Kioku Kitchen", "area": "New Westminster", "lat": 49.2015, "lng": -122.9135, "emoji": "🍱", "placeId": "ChIJo-UNiZPZhVQRmIBgEKDgIWU",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Japanese restaurant near New Westminster Station", "signals": [], "why": "", "tips": [] },
-    { "id": "banette", "cat": "food", "name": "Banette", "area": "New Westminster", "lat": 49.2127, "lng": -122.92, "emoji": "🥐", "placeId": "ChIJU0PyaQB3hlQRQ1PsWDM3DCM",
+    { "id": "banette", "cat": "food", "name": "Banette", "area": "New Westminster", "lat": 49.2127, "lng": -122.92, "emoji": "🥐", "placeId": "ChIJU0PyaQB3hlQRQ1PsWDM3DCM", "hours": "Mo-Su 08:00-17:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Brunch restaurant on Sixth Street", "signals": [], "why": "", "tips": [] },
     { "id": "spark", "cat": "food", "name": "Spark Kitchen and Bar", "area": "Richmond", "lat": 49.1788, "lng": -123.1318, "emoji": "🥂", "placeId": "ChIJHa9CHPt1hlQRO06TfBHC1OM",
       "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Kitchen and bar on Alexandra Road", "signals": [], "why": "", "tips": [] },
-    { "id": "oldsurrey", "cat": "food", "name": "Old Surrey Restaurant", "area": "Surrey (Newton)", "lat": 49.1338, "lng": -122.8489, "emoji": "🥖", "placeId": "ChIJ52qpNy3ahVQRiJye7cYlJng",
+    { "id": "oldsurrey", "cat": "food", "name": "Old Surrey Restaurant", "area": "Surrey (Newton)", "lat": 49.1338, "lng": -122.8489, "emoji": "🥖", "placeId": "ChIJ52qpNy3ahVQRiJye7cYlJng", "hours": "Tu-Th,Su 17:30-21:00; Fr-Sa 17:00-21:00; ", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "French restaurant", "signals": [], "why": "", "tips": [] },
     { "id": "panorama", "cat": "food", "name": "Panorama Indian Lounge", "area": "Surrey (Panorama)", "lat": 49.1048, "lng": -122.8035, "emoji": "🍛", "placeId": "ChIJUazK9l_bhVQR2_p8qlfVBq4",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Indian restaurant, also known as Dosa Lounge", "signals": [], "why": "", "tips": [] },
     { "id": "beatniks", "cat": "food", "name": "Beatniks Bistro", "area": "Fort Langley", "lat": 49.1696, "lng": -122.5783, "emoji": "🥗", "placeId": "ChIJW2fwKfbShVQRuc1Fn-mrQ_4",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Bistro on Glover Road in Fort Langley village", "signals": [], "why": "", "tips": [] },
-    { "id": "bahar", "cat": "dessert", "name": "Bahar Bakery & Cafe", "area": "Downtown", "lat": 49.2807, "lng": -123.1186, "emoji": "🥯", "placeId": "ChIJncvl1O1xhlQRTTuGBdE9IoY",
+    { "id": "bahar", "cat": "dessert", "name": "Bahar Bakery & Cafe", "area": "Downtown", "lat": 49.2807, "lng": -123.1186, "emoji": "🥯", "placeId": "ChIJncvl1O1xhlQRTTuGBdE9IoY", "hours": "Mo-Fr 07:30-18:00; Sa,Su,PH 08:30-17:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Bakery and cafe on Robson Street", "signals": [], "why": "", "tips": [] },
     { "id": "tolivefor", "cat": "dessert", "name": "To Live For Bakery & Cafe", "area": "East Vancouver", "lat": 49.2712, "lng": -123.0563, "emoji": "🧁", "placeId": "ChIJmXFCUDRxhlQRt55tTmRfC4s",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Bakery and cafe on Nanaimo Street", "signals": [], "why": "", "tips": [] },
 
     {
       "id": "qepark", "cat": "nature", "gem": true, "name": "Queen Elizabeth Park", "area": "Little Mountain",
-      "lat": 49.241, "lng": -123.112, "emoji": "🌷", "placeId": "ChIJIcZrTvVzhlQRiKTnD03vt7Q",
+      "lat": 49.241, "lng": -123.112, "emoji": "🌷", "placeId": "ChIJIcZrTvVzhlQRiKTnD03vt7Q", "hours": "06:00-22:00", "hoursSource": "citypark",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/Queen_Elizabeth_Park.jpg/960px-Queen_Elizabeth_Park.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Craig Nagy from Vancouver, Canada","license":"CC BY-SA 2.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/2.0","source":"https://commons.wikimedia.org/wiki/File:Queen_Elizabeth_Park.jpg"},
       "trend": null, "env": "both", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy", "rain"],
       "summary": "Garden park on the highest point in the city",
@@ -374,14 +374,14 @@
     },
     {
       "id": "moa", "cat": "city", "gem": true, "name": "Museum of Anthropology", "area": "UBC",
-      "lat": 49.2695, "lng": -123.2594, "emoji": "🏛️", "placeId": "ChIJrf8w27NyhlQR44St4PQccfY",
+      "lat": 49.2695, "lng": -123.2594, "emoji": "🏛️", "placeId": "ChIJrf8w27NyhlQR44St4PQccfY", "hours": "Su-Sa 10:00-17:00; Th 10:00-21:00; Oct 15-May 15: Mo off; Dec 25 off", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Museum_of_Anthropology_UBC_01.jpg/960px-Museum_of_Anthropology_UBC_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Xicotencatl","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Museum_of_Anthropology_UBC_01.jpg"},
       "trend": null, "env": "indoor", "price": "$$", "time": "2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "UBC museum famous for its Indigenous art and totem pole collection", "signals": [], "why": "", "tips": []
     },
     {
       "id": "lighthouse", "cat": "nature", "kids": true, "gem": true, "name": "Lighthouse Park", "area": "West Vancouver",
-      "lat": 49.3343, "lng": -123.2614, "emoji": "🗼", "placeId": "ChIJIUj0JVRshlQRhB-coT_zlFE",
+      "lat": 49.3343, "lng": -123.2614, "emoji": "🗼", "placeId": "ChIJIUj0JVRshlQRhB-coT_zlFE", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Point_Atkinson_Lighthouse_in_2022.jpg/960px-Point_Atkinson_Lighthouse_in_2022.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Richard N Horne","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Point_Atkinson_Lighthouse_in_2022.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Old-growth forest trails that end at a lighthouse and the sea",
@@ -396,7 +396,7 @@
     },
     {
       "id": "whytecliff", "cat": "nature", "kids": true, "gem": true, "name": "Whytecliff Park", "area": "Horseshoe Bay",
-      "lat": 49.374, "lng": -123.2874, "emoji": "🏝️", "placeId": "ChIJMSLx3oxrhlQRPo56WANJmPM",
+      "lat": 49.374, "lng": -123.2874, "emoji": "🏝️", "placeId": "ChIJMSLx3oxrhlQRPo56WANJmPM", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Whytecliff_Park%2C_West_Vancouver.jpg/960px-Whytecliff_Park%2C_West_Vancouver.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Northwest","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Whytecliff_Park,_West_Vancouver.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Coastal park with a rocky islet you can walk to at low tide",
@@ -404,28 +404,28 @@
     },
     {
       "id": "nitobe", "cat": "nature", "gem": true, "name": "Nitobe Memorial Garden", "area": "UBC",
-      "lat": 49.2662, "lng": -123.2596, "emoji": "⛩️", "placeId": "ChIJDzRjfrRyhlQR8SRHq2eOtwk",
+      "lat": 49.2662, "lng": -123.2596, "emoji": "⛩️", "placeId": "ChIJDzRjfrRyhlQR8SRHq2eOtwk", "hours": "Su-Sa 11:00-16:30; Nov-Mar: Sa-Su off; Nov-Mar: Mo-Fr 11:00-14:00", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Nitobe_Garden_Pond.jpg/960px-Nitobe_Garden_Pond.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"AirplaneMood","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Nitobe_Garden_Pond.jpg"},
       "trend": null, "env": "outdoor", "price": "$", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy", "rain"],
       "summary": "Traditional Japanese garden on the UBC campus", "signals": [], "why": "", "tips": []
     },
     {
       "id": "quarry", "cat": "nature", "gem": true, "name": "Quarry Rock", "area": "Deep Cove",
-      "lat": 49.3344, "lng": -122.9378, "emoji": "🥾", "placeId": "ChIJ9-boVK57hlQREBFD4OyKc0s",
+      "lat": 49.3344, "lng": -122.9378, "emoji": "🥾", "placeId": "ChIJ9-boVK57hlQREBFD4OyKc0s", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "2 hrs", "crowd": "park", "weather": ["sunny"],
       "summary": "Rocky lookout over Indian Arm at the end of a short hike",
       "signals": [], "why": "", "tips": ["Parking in Deep Cove is tough on weekends, so start early"]
     },
     {
       "id": "rockypoint", "cat": "nature", "kids": true, "gem": true, "name": "Rocky Point Park", "area": "Port Moody",
-      "lat": 49.2804, "lng": -122.8495, "emoji": "🌊", "placeId": "ChIJP6T4Jh55hlQRlIjDgGzwVOY",
+      "lat": 49.2804, "lng": -122.8495, "emoji": "🌊", "placeId": "ChIJP6T4Jh55hlQRlIjDgGzwVOY", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/Rocky_Point_Park_16.JPG/960px-Rocky_Point_Park_16.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Eviatar Bach","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Rocky_Point_Park_16.JPG"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Waterfront park at the end of Burrard Inlet, with a pier and trails", "signals": [], "why": "", "tips": []
     },
     {
       "id": "goldenears", "cat": "nature", "kids": true, "gem": true, "name": "Golden Ears Park", "area": "Maple Ridge",
-      "lat": 49.2781, "lng": -122.515, "emoji": "⛰️", "placeId": "ChIJLfu9PdebhlQRgp71o2-R60c",
+      "lat": 49.2781, "lng": -122.515, "emoji": "⛰️", "placeId": "ChIJLfu9PdebhlQRgp71o2-R60c", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Golden_ears_summit.jpg/960px-Golden_ears_summit.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Joel Diakow","license":"CC BY 2.5","licenseUrl":"https://creativecommons.org/licenses/by/2.5","source":"https://commons.wikimedia.org/wiki/File:Golden_ears_summit.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Large provincial park with Alouette Lake, waterfalls, and hikes",
@@ -433,216 +433,216 @@
     },
     {
       "id": "bearcreek", "cat": "kids", "gem": true, "name": "Bear Creek Park", "area": "Surrey",
-      "lat": 49.1591, "lng": -122.8401, "emoji": "🚂", "placeId": "ChIJPebCQezZhVQRhg3zZ6bQeRo",
+      "lat": 49.1591, "lng": -122.8401, "emoji": "🚂", "placeId": "ChIJPebCQezZhVQRhg3zZ6bQeRo", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Big city park with gardens and a miniature train", "signals": [], "why": "", "tips": []
     },
     {
       "id": "blackiespit", "cat": "nature", "kids": true, "gem": true, "name": "Blackie Spit", "area": "Crescent Beach, Surrey",
-      "lat": 49.061, "lng": -122.8791, "emoji": "🐦", "placeId": "ChIJk0fX7cbchVQRcaa9vj9ntME",
+      "lat": 49.061, "lng": -122.8791, "emoji": "🐦", "placeId": "ChIJk0fX7cbchVQRcaa9vj9ntME", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Sand spit at Crescent Beach, known for birdwatching", "signals": [], "why": "", "tips": []
     },
     {
       "id": "redwood", "cat": "nature", "kids": true, "gem": true, "name": "Redwood Park", "area": "South Surrey",
-      "lat": 49.0348, "lng": -122.7288, "emoji": "🌳", "placeId": "ChIJ3eCihU3EhVQR5kJzlsXavys",
+      "lat": 49.0348, "lng": -122.7288, "emoji": "🌳", "placeId": "ChIJ3eCihU3EhVQR5kJzlsXavys", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Forest park with towering redwood trees", "signals": [], "why": "", "tips": []
     },
     {
       "id": "mundy", "cat": "nature", "kids": true, "gem": true, "name": "Mundy Park", "area": "Coquitlam",
-      "lat": 49.2565, "lng": -122.8256, "emoji": "🍂", "placeId": "ChIJycv27JB4hlQRw58p1LpogL8",
+      "lat": 49.2565, "lng": -122.8256, "emoji": "🍂", "placeId": "ChIJycv27JB4hlQRw58p1LpogL8", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Coquitlam's biggest park, with forest loops around two small lakes", "signals": [], "why": "", "tips": []
     },
     {
       "id": "garrypoint", "cat": "nature", "kids": true, "gem": true, "name": "Garry Point Park", "area": "Steveston, Richmond",
-      "lat": 49.1256, "lng": -123.1961, "emoji": "🪁", "placeId": "ChIJff6cB3UKhlQRWAvA83ex7-k",
+      "lat": 49.1256, "lng": -123.1961, "emoji": "🪁", "placeId": "ChIJff6cB3UKhlQRWAvA83ex7-k", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Beach_at_Garry_Point_Park_-_panoramio.jpg/960px-Beach_at_Garry_Point_Park_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"SpiderRider3","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Beach_at_Garry_Point_Park_-_panoramio.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Oceanfront park at the mouth of the Fraser, popular for kites and sunsets", "signals": [], "why": "", "tips": []
     },
     {
       "id": "terranova", "cat": "kids", "gem": true, "name": "Terra Nova Adventure Play", "area": "Richmond",
-      "lat": 49.1735, "lng": -123.1993, "emoji": "🧗", "placeId": "ChIJZbpCCxsLhlQRrLu7A-1SfPY",
+      "lat": 49.1735, "lng": -123.1993, "emoji": "🧗", "placeId": "ChIJZbpCCxsLhlQRrLu7A-1SfPY", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Adventure playground with climbing structures and big slides", "signals": [], "why": "", "tips": []
     },
     {
       "id": "centennial", "cat": "nature", "kids": true, "gem": true, "name": "Centennial Beach", "area": "Tsawwassen, Delta",
-      "lat": 49.0187, "lng": -123.0413, "emoji": "🏖️", "placeId": "ChIJ67YBQ0fmhVQRBhMCVCTofi8",
+      "lat": 49.0187, "lng": -123.0413, "emoji": "🏖️", "placeId": "ChIJ67YBQ0fmhVQRBhMCVCTofi8", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny"],
       "summary": "Shallow, sandy beach on Boundary Bay",
       "signals": [], "why": "", "tips": ["At low tide the water pulls back a long way"]
     },
     {
       "id": "queenspark", "cat": "kids", "gem": true, "name": "Queen's Park", "area": "New Westminster",
-      "lat": 49.2151, "lng": -122.9059, "emoji": "🐑", "placeId": "ChIJHTtJAgrYhVQR1fxvihZ0PyA",
+      "lat": 49.2151, "lng": -122.9059, "emoji": "🐑", "placeId": "ChIJHTtJAgrYhVQR1fxvihZ0PyA", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Historic park with gardens, playgrounds, and a seasonal petting farm", "signals": [], "why": "", "tips": []
     },
     {
       "id": "barnet", "cat": "nature", "gem": true, "name": "Barnet Marine Park", "area": "Burnaby",
-      "lat": 49.2887, "lng": -122.9506, "emoji": "⚓", "placeId": "ChIJcx2i4415hlQREW0hnDPgkCc",
+      "lat": 49.2887, "lng": -122.9506, "emoji": "⚓", "placeId": "ChIJcx2i4415hlQREW0hnDPgkCc", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Waterfront park on Burrard Inlet with a pier and a small beach", "signals": [], "why": "", "tips": []
     },
     {
       "id": "campbellvalley", "cat": "nature", "kids": true, "gem": true, "name": "Campbell Valley Park", "area": "Langley",
-      "lat": 49.0209, "lng": -122.658, "emoji": "🐴", "placeId": "ChIJLXl-KwbGhVQRtoVk1IRBH9U",
+      "lat": 49.0209, "lng": -122.658, "emoji": "🐴", "placeId": "ChIJLXl-KwbGhVQRtoVk1IRBH9U", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Annand_Rowlatt_Farmstead.JPG/960px-Annand_Rowlatt_Farmstead.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Colin Stepney","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Annand_Rowlatt_Farmstead.JPG"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Rural regional park with meadow and forest trails, including horse trails", "signals": [], "why": "", "tips": []
     },
     {
       "id": "derbyreach", "cat": "nature", "kids": true, "gem": true, "name": "Derby Reach Park", "area": "Langley",
-      "lat": 49.1975, "lng": -122.6051, "emoji": "🏕️", "placeId": "ChIJdaixrQzThVQRaMUqZLQflZg",
+      "lat": 49.1975, "lng": -122.6051, "emoji": "🏕️", "placeId": "ChIJdaixrQzThVQRaMUqZLQflZg", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Fraser River park with riverside trails and a campground", "signals": [], "why": "", "tips": []
     },
     {
       "id": "towncentre", "cat": "nature", "kids": true, "gem": true, "name": "Town Centre Park & Lafarge Lake", "area": "Coquitlam",
-      "lat": 49.2868, "lng": -122.7887, "emoji": "🦢", "placeId": "ChIJZ39GJCV_hlQRRvKeSkLWrm4",
+      "lat": 49.2868, "lng": -122.7887, "emoji": "🦢", "placeId": "ChIJZ39GJCV_hlQRRvKeSkLWrm4", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Big park around Lafarge Lake, with a walking loop that circles the water", "signals": [], "why": "", "tips": []
     },
     {
       "id": "comolake", "cat": "nature", "kids": true, "gem": true, "name": "Como Lake Park", "area": "Coquitlam",
-      "lat": 49.2603, "lng": -122.8586, "emoji": "🦆", "placeId": "ChIJCf0FFl94hlQRS8EyW2PfAMA",
+      "lat": 49.2603, "lng": -122.8586, "emoji": "🦆", "placeId": "ChIJCf0FFl94hlQRS8EyW2PfAMA", "hours": "sunrise-sunset", "hoursSource": "osm",
       "photo": {"url":"https://upload.wikimedia.org/wikipedia/commons/3/39/Como_Lake_in_Coquitlam.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled","credit":"P Guildfordsry","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Como_Lake_in_Coquitlam.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Small neighbourhood lake with an easy loop trail", "signals": [], "why": "", "tips": []
     },
     {
       "id": "crunch", "cat": "nature", "gem": true, "name": "Coquitlam Crunch", "area": "Coquitlam",
-      "lat": 49.2813, "lng": -122.8146, "emoji": "🥾", "placeId": "ChIJdX9IK854hlQRSxV3OYCCrcg",
+      "lat": 49.2813, "lng": -122.8146, "emoji": "🥾", "placeId": "ChIJdX9IK854hlQRSxV3OYCCrcg", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Steep uphill trail and stair workout with views at the top", "signals": [], "why": "", "tips": []
     },
     {
       "id": "minnekhada", "cat": "nature", "kids": true, "gem": true, "name": "Minnekhada Regional Park", "area": "Coquitlam",
-      "lat": 49.3019, "lng": -122.6977, "emoji": "🌾", "placeId": "ChIJ4SJUzut_hlQRVzM0aFprXOs",
+      "lat": 49.3019, "lng": -122.6977, "emoji": "🌾", "placeId": "ChIJ4SJUzut_hlQRVzM0aFprXOs", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://upload.wikimedia.org/wikipedia/commons/3/36/Minnekhada_Regional_Park.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled","credit":"Greg Salter","license":"CC BY-SA 3.0","licenseUrl":"http://creativecommons.org/licenses/by-sa/3.0/","source":"https://commons.wikimedia.org/wiki/File:Minnekhada_Regional_Park.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Quiet marshes and forest trails with lookouts over the Pitt River area", "signals": [], "why": "", "tips": []
     },
     {
       "id": "lionspark", "cat": "kids", "gem": true, "name": "Lions Park", "area": "Port Coquitlam",
-      "lat": 49.267, "lng": -122.7796, "emoji": "🦁", "placeId": "ChIJjT6uklJ_hlQRGDSNP2-qizI",
+      "lat": 49.267, "lng": -122.7796, "emoji": "🦁", "placeId": "ChIJjT6uklJ_hlQRGDSNP2-qizI", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Riverside park in Port Coquitlam with play areas and trails", "signals": [], "why": "", "tips": []
     },
     {
       "id": "sasamat", "cat": "nature", "gem": true, "name": "Sasamat Lake", "area": "Port Moody / Belcarra",
-      "lat": 49.3199, "lng": -122.8891, "emoji": "🏊", "placeId": "ChIJ-4seBed7hlQRLYE4V5cwhn0",
+      "lat": 49.3199, "lng": -122.8891, "emoji": "🏊", "placeId": "ChIJ-4seBed7hlQRLYE4V5cwhn0", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny"],
       "summary": "Forest lake known for its warm water in summer and a floating dock", "signals": [], "why": "", "tips": []
     },
     {
       "id": "coquitlamriver", "cat": "nature", "kids": true, "gem": true, "name": "Coquitlam River Park", "area": "Coquitlam",
-      "lat": 49.2866, "lng": -122.7721, "emoji": "🎣", "placeId": "ChIJd9qQsjh_hlQRSuv6e7aDXBY",
+      "lat": 49.2866, "lng": -122.7721, "emoji": "🎣", "placeId": "ChIJd9qQsjh_hlQRSuv6e7aDXBY", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Riverside trails along the Coquitlam River", "signals": [], "why": "", "tips": []
     },
     {
       "id": "deerlakepark", "cat": "nature", "kids": true, "gem": true, "name": "Deer Lake Park", "area": "Burnaby",
-      "lat": 49.2353, "lng": -122.9764, "emoji": "🛶", "placeId": "ChIJVVqTPlV2hlQRWALqiYz6Zn4",
+      "lat": 49.2353, "lng": -122.9764, "emoji": "🛶", "placeId": "ChIJVVqTPlV2hlQRWALqiYz6Zn4", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Deer_Lake.jpg/960px-Deer_Lake.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Northwest","license":"CC BY 4.0","licenseUrl":"https://creativecommons.org/licenses/by/4.0","source":"https://commons.wikimedia.org/wiki/File:Deer_Lake.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Lake with boardwalk trails, next to the Burnaby Village Museum", "signals": [], "why": "", "tips": []
     },
     {
       "id": "centralpark", "cat": "nature", "kids": true, "gem": true, "name": "Central Park", "area": "Burnaby",
-      "lat": 49.2276, "lng": -123.0181, "emoji": "🌲", "placeId": "ChIJc6RIWYp2hlQRn1enR_bqb2A",
+      "lat": 49.2276, "lng": -123.0181, "emoji": "🌲", "placeId": "ChIJc6RIWYp2hlQRn1enR_bqb2A", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Central_Park_Gate_3.JPG/960px-Central_Park_Gate_3.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Xiao23","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Central_Park_Gate_3.JPG"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Tall forest park near Metrotown with trails, a pond, and pitch and putt", "signals": [], "why": "", "tips": []
     },
     {
       "id": "cates", "cat": "nature", "kids": true, "gem": true, "name": "Cates Park (Whey-ah-Wichen)", "area": "North Vancouver",
-      "lat": 49.3031, "lng": -122.9572, "emoji": "🏝️", "placeId": "ChIJHQxQhRd6hlQRZRH5W-FuRuw",
+      "lat": 49.3031, "lng": -122.9572, "emoji": "🏝️", "placeId": "ChIJHQxQhRd6hlQRZRH5W-FuRuw", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Waterfront park where Indian Arm meets Burrard Inlet", "signals": [], "why": "", "tips": []
     },
     {
       "id": "capilanoriver", "cat": "nature", "gem": true, "name": "Capilano River Regional Park", "area": "North Vancouver",
-      "lat": 49.3484, "lng": -123.1154, "emoji": "🐟", "placeId": "ChIJuUaFeMdvhlQRRNL_qzhUnSI",
+      "lat": 49.3484, "lng": -123.1154, "emoji": "🐟", "placeId": "ChIJuUaFeMdvhlQRRNL_qzhUnSI", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/CapilanoRiverRegPark-river.jpg/960px-CapilanoRiverRegPark-river.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Arnold C","license":"Attribution","licenseUrl":null,"source":"https://commons.wikimedia.org/wiki/File:CapilanoRiverRegPark-river.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Canyon trails below Cleveland Dam, next to a salmon hatchery", "signals": [], "why": "", "tips": []
     },
     {
       "id": "lynnheadwaters", "cat": "nature", "gem": true, "name": "Lynn Headwaters Regional Park", "area": "North Vancouver",
-      "lat": 49.4041, "lng": -123.0481, "emoji": "🏔️", "placeId": "ChIJU1fiu0plhlQROS-YfXoTeRc",
+      "lat": 49.4041, "lng": -123.0481, "emoji": "🏔️", "placeId": "ChIJU1fiu0plhlQROS-YfXoTeRc", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Backcountry-feeling trails up the Lynn Creek valley, including Norvan Falls", "signals": [], "why": "", "tips": []
     },
     {
       "id": "cypressfalls", "cat": "nature", "gem": true, "name": "Cypress Falls Park", "area": "West Vancouver",
-      "lat": 49.3542, "lng": -123.2384, "emoji": "💧", "placeId": "ChIJqTarZTtshlQRNazojLTn650",
+      "lat": 49.3542, "lng": -123.2384, "emoji": "💧", "placeId": "ChIJqTarZTtshlQRNazojLTn650", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy", "rain"],
       "summary": "Short forest hike to a pair of waterfalls", "signals": [], "why": "", "tips": []
     },
     {
       "id": "deasisland", "cat": "nature", "gem": true, "name": "Deas Island Regional Park", "area": "Delta",
-      "lat": 49.1214, "lng": -123.0649, "emoji": "🦅", "placeId": "ChIJAYnYN8zfhVQRves7o5BO21s",
+      "lat": 49.1214, "lng": -123.0649, "emoji": "🦅", "placeId": "ChIJAYnYN8zfhVQRves7o5BO21s", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Burrvilla-spring.jpg/960px-Burrvilla-spring.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Tony Fox","license":"CC BY-SA 3.0","licenseUrl":"http://creativecommons.org/licenses/by-sa/3.0/","source":"https://commons.wikimedia.org/wiki/File:Burrvilla-spring.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Fraser River island park with trails and heritage buildings", "signals": [], "why": "", "tips": []
     },
     {
       "id": "watershed", "cat": "nature", "kids": true, "gem": true, "name": "Watershed Park", "area": "North Delta",
-      "lat": 49.112, "lng": -122.9017, "emoji": "🌿", "placeId": "ChIJNU5IgQfchVQR1i3a6VAW824",
+      "lat": 49.112, "lng": -122.9017, "emoji": "🌿", "placeId": "ChIJNU5IgQfchVQR1i3a6VAW824", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Forest trails through a quiet wooded park", "signals": [], "why": "", "tips": []
     },
     {
       "id": "kanaka", "cat": "nature", "kids": true, "gem": true, "name": "Kanaka Creek Regional Park", "area": "Maple Ridge",
-      "lat": 49.2107, "lng": -122.5208, "emoji": "🌊", "placeId": "ChIJb7rlDNoshFQR6OrSwkjdyVM",
+      "lat": 49.2107, "lng": -122.5208, "emoji": "🌊", "placeId": "ChIJb7rlDNoshFQR6OrSwkjdyVM", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Kanaka_Creek_Oxbow_-_panoramio.jpg/960px-Kanaka_Creek_Oxbow_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Kiwibirdman","license":"CC BY 3.0","licenseUrl":"https://creativecommons.org/licenses/by/3.0","source":"https://commons.wikimedia.org/wiki/File:Kanaka_Creek_Oxbow_-_panoramio.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Creekside trails with waterfalls, including Cliff Falls", "signals": [], "why": "", "tips": []
     },
     {
       "id": "tynehead", "cat": "nature", "gem": true, "name": "Tynehead Regional Park", "area": "Surrey",
-      "lat": 49.1825, "lng": -122.7587, "emoji": "🦋", "placeId": "ChIJNx2AIijXhVQRnbuNUiandwY",
+      "lat": 49.1825, "lng": -122.7587, "emoji": "🦋", "placeId": "ChIJNx2AIijXhVQRnbuNUiandwY", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Meadows and forest along the Serpentine River", "signals": [], "why": "", "tips": []
     },
     {
       "id": "greentimbers", "cat": "nature", "kids": true, "gem": true, "name": "Green Timbers Urban Forest", "area": "Surrey",
-      "lat": 49.1803, "lng": -122.8187, "emoji": "🌲", "placeId": "ChIJk-ZrqmXXhVQRdLzdHqRwRTQ",
+      "lat": 49.1803, "lng": -122.8187, "emoji": "🌲", "placeId": "ChIJk-ZrqmXXhVQRdLzdHqRwRTQ", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Green_Timbers_131208-09_%2811693375103%29.jpg/960px-Green_Timbers_131208-09_%2811693375103%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"waferboard","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Green_Timbers_131208-09_(11693375103).jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Urban forest with a lake and walking trails in the middle of Surrey", "signals": [], "why": "", "tips": []
     },
     {
       "id": "iona", "cat": "nature", "gem": true, "name": "Iona Beach Regional Park", "area": "Richmond",
-      "lat": 49.2142, "lng": -123.1873, "emoji": "✈️", "placeId": "ChIJ5ad3Hq4MhlQRusrBIIY-U6U",
+      "lat": 49.2142, "lng": -123.1873, "emoji": "✈️", "placeId": "ChIJ5ad3Hq4MhlQRusrBIIY-U6U", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Long jetty walk out into the Strait of Georgia, next to the airport", "signals": [], "why": "", "tips": []
     },
     {
       "id": "esplanade", "cat": "city", "kids": true, "gem": true, "name": "Waterfront Esplanade", "area": "New Westminster",
-      "lat": 49.2011, "lng": -122.9094, "emoji": "🚢", "placeId": "ChIJj9a14mTYhVQRg0l5D73BomY",
+      "lat": 49.2011, "lng": -122.9094, "emoji": "🚢", "placeId": "ChIJj9a14mTYhVQRg0l5D73BomY", "hours": "24/7", "hoursSource": "public",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Boardwalk along the Fraser River at the New Westminster Quay", "signals": [], "why": "", "tips": []
     },
     {
       "id": "sendall", "cat": "nature", "gem": true, "name": "Sendall Gardens", "area": "Langley",
-      "lat": 49.0921, "lng": -122.6637, "emoji": "🌸", "placeId": "ChIJ_0VC-8bPhVQRratoFOJjxq8",
+      "lat": 49.0921, "lng": -122.6637, "emoji": "🌸", "placeId": "ChIJ_0VC-8bPhVQRratoFOJjxq8", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Small garden park with ponds and a greenhouse", "signals": [], "why": "", "tips": []
     },
     {
       "id": "kits", "cat": "nature", "kids": true, "gem": true, "name": "Kitsilano Beach", "area": "Kitsilano",
-      "lat": 49.2757, "lng": -123.1537, "emoji": "🏐", "placeId": "ChIJnVFsezVyhlQRf5O-Pe5uQ04",
+      "lat": 49.2757, "lng": -123.1537, "emoji": "🏐", "placeId": "ChIJnVFsezVyhlQRf5O-Pe5uQ04", "hours": "06:00-22:00", "hoursSource": "citypark",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny"],
       "summary": "Busy city beach with volleyball courts and mountain views", "signals": [], "why": "", "tips": []
     },
     {
       "id": "spanishbanks", "cat": "nature", "gem": true, "name": "Spanish Banks", "area": "West Point Grey",
-      "lat": 49.2776, "lng": -123.2209, "emoji": "🌅", "placeId": "ChIJLQnMgZJyhlQRnRaqpqnAhgg",
+      "lat": 49.2776, "lng": -123.2209, "emoji": "🌅", "placeId": "ChIJLQnMgZJyhlQRnRaqpqnAhgg", "hours": "06:00-22:00", "hoursSource": "citypark",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Spanish_Banks_Vancouver_BC.jpg/960px-Spanish_Banks_Vancouver_BC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Jester7777","license":"Public domain","licenseUrl":null,"source":"https://commons.wikimedia.org/wiki/File:Spanish_Banks_Vancouver_BC.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Wide, calm beach with huge tidal flats at low tide", "signals": [], "why": "", "tips": []
@@ -656,7 +656,7 @@
 
     {
       "id": "coquitlamcentre", "cat": "kids", "family": true, "name": "Coquitlam Centre", "area": "Coquitlam",
-      "lat": 49.2798, "lng": -122.7986, "emoji": "🛍️", "placeId": "ChIJu5lRajN_hlQR16nLLnvtk4U",
+      "lat": 49.2798, "lng": -122.7986, "emoji": "🛍️", "placeId": "ChIJu5lRajN_hlQR16nLLnvtk4U", "hours": "Mo-We 10:00-19:00; Th-Fr 10:00-21:00; Sa 10:00-19:00; Su 10:00-18:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "Free", "time": "1–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Indoor mall with a kids' play area, an easy rainy-day outing with little ones", "signals": [], "why": "", "tips": []
     },
@@ -668,7 +668,7 @@
     },
     {
       "id": "edmondspark", "cat": "kids", "family": true, "name": "Edmonds Park", "area": "Burnaby",
-      "lat": 49.2217, "lng": -122.9492, "emoji": "🤸", "placeId": "ChIJazNFVsh3hlQRNmlLNkh1NtU",
+      "lat": 49.2217, "lng": -122.9492, "emoji": "🤸", "placeId": "ChIJazNFVsh3hlQRNmlLNkh1NtU", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Neighbourhood park with a playground, next to Edmonds Community Centre", "signals": [], "why": "", "tips": []
     },
@@ -686,32 +686,32 @@
     },
     {
       "id": "richmondcentre", "cat": "kids", "family": true, "name": "CF Richmond Centre", "area": "Richmond",
-      "lat": 49.1672, "lng": -123.1385, "emoji": "🛍️", "placeId": "ChIJDz5vqMsKhlQRDr0Xeb-CLjY",
+      "lat": 49.1672, "lng": -123.1385, "emoji": "🛍️", "placeId": "ChIJDz5vqMsKhlQRDr0Xeb-CLjY", "hours": "Mo-Sa 10:00-21:00; Su 11:00-19:00", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/CF_Richmond_Centre_Park_Plaza_Entrance_%28July_2026%29.jpg/960px-CF_Richmond_Centre_Park_Plaza_Entrance_%28July_2026%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Bcnerds","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:CF_Richmond_Centre_Park_Plaza_Entrance_(July_2026).jpg"},
       "trend": null, "env": "indoor", "price": "Free", "time": "1–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Big indoor mall on No. 3 Road, handy with kids on a rainy day", "signals": [], "why": "", "tips": []
     },
     {
       "id": "centralcity", "cat": "kids", "family": true, "name": "Central City Fun Park", "area": "Surrey",
-      "lat": 49.205, "lng": -122.8824, "emoji": "🏎️", "placeId": "ChIJ-drd1BnZhVQRrQIeuUyMmFI",
+      "lat": 49.205, "lng": -122.8824, "emoji": "🏎️", "placeId": "ChIJ-drd1BnZhVQRrQIeuUyMmFI", "hours": "We, Th 16:00-22:00; Fr 16:00-00:00; Sa 11:00-00:00; Su 11:00-22:00", "hoursSource": "osm",
       "trend": null, "env": "both", "price": "$$", "time": "2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy", "rain"],
       "summary": "Family fun centre with arcade games and activities", "signals": [], "why": "", "tips": []
     },
     {
       "id": "museumsurrey", "cat": "kids", "family": true, "name": "Museum of Surrey", "area": "Surrey",
-      "lat": 49.1046, "lng": -122.7322, "emoji": "🏺", "placeId": "ChIJAaLgLAjQhVQRBAq1YXF0erg",
+      "lat": 49.1046, "lng": -122.7322, "emoji": "🏺", "placeId": "ChIJAaLgLAjQhVQRBAq1YXF0erg", "hours": "We-Sa 09:30-16:30; Su-Mo off; PH off", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Local history museum with hands-on exhibits for kids", "signals": [], "why": "", "tips": []
     },
     {
       "id": "unwin", "cat": "kids", "family": true, "name": "Unwin Park", "area": "Surrey (Newton)",
-      "lat": 49.1282, "lng": -122.8539, "emoji": "🤸", "placeId": "ChIJI9ZP6M7bhVQROIur2CLM5ZU",
+      "lat": 49.1282, "lng": -122.8539, "emoji": "🤸", "placeId": "ChIJI9ZP6M7bhVQROIur2CLM5ZU", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Neighbourhood park with a playground that families rate highly", "signals": [], "why": "", "tips": []
     },
     {
       "id": "holland", "cat": "kids", "family": true, "name": "Holland Park", "area": "Surrey (City Centre)",
-      "lat": 49.1843, "lng": -122.8496, "emoji": "🌷", "placeId": "ChIJoRJSv9PZhVQRqGfWi8tRT8s",
+      "lat": 49.1843, "lng": -122.8496, "emoji": "🌷", "placeId": "ChIJoRJSv9PZhVQRqGfWi8tRT8s", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Holland_Park%2C_Surrey_BC.jpg/960px-Holland_Park%2C_Surrey_BC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Clee7903","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Holland_Park,_Surrey_BC.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Central Surrey park that hosts many family festivals", "signals": [], "why": "", "tips": []
@@ -743,7 +743,7 @@
     },
     {
       "id": "penzer", "cat": "kids", "family": true, "name": "Penzer Action Park", "area": "Langley",
-      "lat": 49.0883, "lng": -122.6702, "emoji": "🛹", "placeId": "ChIJ2y6KHcDPhVQRLEAD16_7Z-c",
+      "lat": 49.0883, "lng": -122.6702, "emoji": "🛹", "placeId": "ChIJ2y6KHcDPhVQRLEAD16_7Z-c", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Action park with playgrounds, a skate park, and a bike park", "signals": [], "why": "", "tips": []
     },
@@ -761,13 +761,13 @@
     },
     {
       "id": "shipyards", "cat": "kids", "family": true, "name": "The Shipyards", "area": "North Vancouver",
-      "lat": 49.3098, "lng": -123.0795, "emoji": "⛲", "placeId": "ChIJtbuSI01whlQR_OK5YhRz1x8",
+      "lat": 49.3098, "lng": -123.0795, "emoji": "⛲", "placeId": "ChIJtbuSI01whlQR_OK5YhRz1x8", "hours": "24/7", "hoursSource": "public",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Waterfront plaza with a splash area, markets, and harbour views", "signals": [], "why": "", "tips": []
     },
     {
       "id": "lonsdalequay", "cat": "kids", "family": true, "name": "Lonsdale Quay", "area": "North Vancouver",
-      "lat": 49.3104, "lng": -123.082, "emoji": "⛴️", "placeId": "ChIJK4VAHLNxhlQRpEnAmoodLxM",
+      "lat": 49.3104, "lng": -123.082, "emoji": "⛴️", "placeId": "ChIJK4VAHLNxhlQRpEnAmoodLxM", "hours": "Mo-Su 9:00-17:00", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/Seabus-departure.jpg/960px-Seabus-departure.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Arnold C","license":"Attribution","licenseUrl":null,"source":"https://commons.wikimedia.org/wiki/File:Seabus-departure.jpg"},
       "trend": null, "env": "both", "price": "Free", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Public market at the SeaBus terminal, a fun trip across the harbour with kids", "signals": [], "why": "", "tips": []
@@ -781,7 +781,7 @@
     },
     {
       "id": "johnlawson", "cat": "kids", "family": true, "name": "John Lawson Park", "area": "West Vancouver",
-      "lat": 49.327, "lng": -123.1603, "emoji": "⚓", "placeId": "ChIJ8zdThRpuhlQRCYF5lkjJTG4",
+      "lat": 49.327, "lng": -123.1603, "emoji": "⚓", "placeId": "ChIJ8zdThRpuhlQRCYF5lkjJTG4", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Seaside park with a playground and a pier on the Ambleside waterfront", "signals": [], "why": "", "tips": []
     },
@@ -799,13 +799,13 @@
     },
     {
       "id": "hillcrest", "cat": "kids", "family": true, "name": "Hillcrest Aquatic Centre", "area": "Riley Park",
-      "lat": 49.2438, "lng": -123.1071, "emoji": "🏊", "placeId": "ChIJ9WR6-fVzhlQRkK4b5y0VowQ",
+      "lat": 49.2438, "lng": -123.1071, "emoji": "🏊", "placeId": "ChIJ9WR6-fVzhlQRkK4b5y0VowQ", "hours": "Mo-Fr 06:00-21:00; Sa-Su 06:00-19:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Indoor and outdoor pools next to Queen Elizabeth Park", "signals": [], "why": "", "tips": ["Check the public swim schedule before you go"]
     },
-    { "id": "earnest", "cat": "dessert", "name": "Earnest Ice Cream", "area": "Mount Pleasant", "lat": 49.2688, "lng": -123.1029, "emoji": "🍦", "placeId": "ChIJv1NxVGBxhlQRT1bpKNwx78A",
+    { "id": "earnest", "cat": "dessert", "name": "Earnest Ice Cream", "area": "Mount Pleasant", "lat": 49.2688, "lng": -123.1029, "emoji": "🍦", "placeId": "ChIJv1NxVGBxhlQRT1bpKNwx78A", "hours": "Mo-Su 12:00-22:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Small-batch ice cream shop on Quebec Street", "signals": [], "why": "", "tips": [] },
-    { "id": "rainorshine", "cat": "dessert", "name": "Rain or Shine Ice Cream", "area": "Cambie Village", "lat": 49.2551, "lng": -123.1149, "emoji": "🍦", "placeId": "ChIJMxkX5-5zhlQRFSDpR51HYTY",
+    { "id": "rainorshine", "cat": "dessert", "name": "Rain or Shine Ice Cream", "area": "Cambie Village", "lat": 49.2551, "lng": -123.1149, "emoji": "🍦", "placeId": "ChIJMxkX5-5zhlQRFSDpR51HYTY", "hours": "Th-Mo 12:00-22:00; Tu 00:00-17:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Ice cream shop on Cambie Street", "signals": [], "why": "", "tips": [] },
     { "id": "leparfait", "cat": "dessert", "name": "Le Parfait", "area": "Downtown", "lat": 49.2791, "lng": -123.1172, "emoji": "🍨", "placeId": "ChIJoTjZcH5xhlQRQBx63ku5-yE",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Ice cream and dessert shop on Homer Street", "signals": [], "why": "", "tips": [] },
@@ -813,27 +813,27 @@
       "trend": null, "env": "indoor", "price": "$$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Patisserie and bakery on East 8th Avenue", "signals": [], "why": "", "tips": [] },
     { "id": "latelier", "cat": "dessert", "name": "L'Atelier Patisserie", "area": "Mount Pleasant", "lat": 49.2627, "lng": -123.0913, "emoji": "🥐", "placeId": "ChIJG-6eyV9xhlQRaE2TyhUSANo",
       "trend": null, "env": "indoor", "price": "$$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "French-style patisserie on East Broadway", "signals": [], "why": "", "tips": [] },
-    { "id": "passione", "cat": "dessert", "name": "Passione Gelato", "area": "Yaletown", "lat": 49.2757, "lng": -123.1141, "emoji": "🍨", "placeId": "ChIJn-kbs_RxhlQRcK6Rs07VOIQ",
+    { "id": "passione", "cat": "dessert", "name": "Passione Gelato", "area": "Yaletown", "lat": 49.2757, "lng": -123.1141, "emoji": "🍨", "placeId": "ChIJn-kbs_RxhlQRcK6Rs07VOIQ", "hours": "Su-Th 12:00-22:00; Fr,Sa 12:00-23:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Gelato shop in Yaletown", "signals": [], "why": "", "tips": [] },
-    { "id": "gateau", "cat": "dessert", "name": "Gateau de Henry", "area": "Fairview", "lat": 49.2659, "lng": -123.1459, "emoji": "🎂", "placeId": "ChIJfyqEUUpzhlQRi59NeE7KVeQ",
+    { "id": "gateau", "cat": "dessert", "name": "Gateau de Henry", "area": "Fairview", "lat": 49.2659, "lng": -123.1459, "emoji": "🎂", "placeId": "ChIJfyqEUUpzhlQRi59NeE7KVeQ", "hours": "Tu,We 10:00-18:00; Th-Sa 10:00-19:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Cake and dessert cafe on Burrard Street", "signals": [], "why": "", "tips": [] },
-    { "id": "krave", "cat": "dessert", "name": "Krave Kulture", "area": "Edgemont, North Vancouver", "lat": 49.3381, "lng": -123.103, "emoji": "🍧", "placeId": "ChIJUcDTMwtvhlQRgohHNwdtoxo",
+    { "id": "krave", "cat": "dessert", "name": "Krave Kulture", "area": "Edgemont, North Vancouver", "lat": 49.3381, "lng": -123.103, "emoji": "🍧", "placeId": "ChIJUcDTMwtvhlQRgohHNwdtoxo", "hours": "10:00-18:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Frozen yogurt and dessert shop in Edgemont Village", "signals": [], "why": "", "tips": [] },
     { "id": "dolceamore", "cat": "dessert", "name": "Dolce Amore", "area": "Lower Lonsdale", "lat": 49.314, "lng": -123.0809, "emoji": "🍨", "placeId": "ChIJnd9Y1k5xhlQRUPq9WygFK6k",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Gelato shop in Lower Lonsdale", "signals": [], "why": "", "tips": [] },
     { "id": "webake", "cat": "dessert", "name": "WeBake Dessert Cafe", "area": "Burnaby (Lougheed)", "lat": 49.2534, "lng": -122.8935, "emoji": "🧁", "placeId": "ChIJxV7HJzJ5hlQR1kdjeyHE7ws",
       "trend": null, "env": "indoor", "price": "$", "time": "45 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Dessert cafe near Lougheed Town Centre", "signals": [], "why": "", "tips": [] },
-    { "id": "littlepisces", "cat": "dessert", "name": "Little Pisces Taiyaki & Soft Serve", "area": "Burnaby (Lougheed)", "lat": 49.2437, "lng": -122.8935, "emoji": "🐟", "placeId": "ChIJI-iLTdJ5hlQR9KgPtNYP68k",
+    { "id": "littlepisces", "cat": "dessert", "name": "Little Pisces Taiyaki & Soft Serve", "area": "Burnaby (Lougheed)", "lat": 49.2437, "lng": -122.8935, "emoji": "🐟", "placeId": "ChIJI-iLTdJ5hlQR9KgPtNYP68k", "hours": "Mo-Th 12:00-22:00; Fr-Su 12:00-00:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Taiyaki (fish-shaped waffles) and soft serve", "signals": [], "why": "", "tips": [] },
     { "id": "pourquoipas", "cat": "dessert", "name": "Pourquoi Pas Patisserie", "area": "Coquitlam", "lat": 49.2833, "lng": -122.8099, "emoji": "🍰", "placeId": "ChIJ3wW8pyh5hlQR17syQyqJNUs",
       "trend": null, "env": "indoor", "price": "$$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Patisserie on Lansdowne Drive", "signals": [], "why": "", "tips": [] },
     { "id": "cassandra", "cat": "dessert", "name": "Cassandra Cake Co", "area": "Port Coquitlam", "lat": 49.2619, "lng": -122.7836, "emoji": "🎂", "placeId": "ChIJI-2RnAl5hlQRhYGuyWPU21I",
       "trend": null, "env": "indoor", "price": "$$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Cake shop and bakery", "signals": [], "why": "", "tips": [] },
-    { "id": "gabijules", "cat": "dessert", "name": "Gabi & Jules", "area": "Port Moody", "lat": 49.278, "lng": -122.8612, "emoji": "🥧", "placeId": "ChIJRWeH3QJ5hlQRVXs0H8MCpgU",
+    { "id": "gabijules", "cat": "dessert", "name": "Gabi & Jules", "area": "Port Moody", "lat": 49.278, "lng": -122.8612, "emoji": "🥧", "placeId": "ChIJRWeH3QJ5hlQRVXs0H8MCpgU", "hours": "Tu-Fr 10:00-16:00; Sa 09:00-16:00; Su 10:00-16:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Handmade pies and baked goods", "signals": [], "why": "", "tips": [] },
     { "id": "wonderlandyogurt", "cat": "dessert", "name": "Wonderland Yogurt", "area": "Coquitlam", "lat": 49.2837, "lng": -122.81, "emoji": "🍧", "placeId": "ChIJe6zRtGd5hlQRgILN7DLcHno",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Yogurt and tea dessert shop", "signals": [], "why": "", "tips": [] },
-    { "id": "bakd", "cat": "dessert", "name": "BAK'D Cookies", "area": "New Westminster (Sapperton)", "lat": 49.2247, "lng": -122.8915, "emoji": "🍪", "placeId": "ChIJF2xmdxN5hlQR108ZuMRf_VM",
+    { "id": "bakd", "cat": "dessert", "name": "BAK'D Cookies", "area": "New Westminster (Sapperton)", "lat": 49.2247, "lng": -122.8915, "emoji": "🍪", "placeId": "ChIJF2xmdxN5hlQR108ZuMRf_VM", "hours": "Mo-Th 08:00-20:00; Fr 08:00-22:00; Sa 10:00-22:00; Su 10:00-20:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Cookie bakery and cafe", "signals": [], "why": "", "tips": [] },
     { "id": "moodswing", "cat": "dessert", "name": "Moodswing Coffee + Bar", "area": "New Westminster", "lat": 49.2022, "lng": -122.9086, "emoji": "☕", "placeId": "ChIJGxOj3W3YhVQRQf_AGocldoo",
       "trend": null, "env": "indoor", "price": "$", "time": "45 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Coffee bar on Front Street", "signals": [], "why": "", "tips": [] },
@@ -849,17 +849,17 @@
       "trend": null, "env": "indoor", "price": "$", "time": "45 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Coffee shop and bakery", "signals": [], "why": "", "tips": [] },
     { "id": "jjbakes", "cat": "dessert", "name": "JJ Bakes Company", "area": "Langley (Walnut Grove)", "lat": 49.1634, "lng": -122.6581, "emoji": "🍪", "placeId": "ChIJU-oV2f3RhVQRuY3oYpCAOMc",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Neighbourhood bakery", "signals": [], "why": "", "tips": [] },
-    { "id": "gratia", "cat": "dessert", "name": "Gratia Bakery & Cafe", "area": "Maple Ridge", "lat": 49.2206, "lng": -122.6063, "emoji": "🥖", "placeId": "ChIJ586uHWDThVQRLQ74hGqeAfY",
+    { "id": "gratia", "cat": "dessert", "name": "Gratia Bakery & Cafe", "area": "Maple Ridge", "lat": 49.2206, "lng": -122.6063, "emoji": "🥖", "placeId": "ChIJ586uHWDThVQRLQ74hGqeAfY", "hours": "Mo-Su 08:00-18:30", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "45 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Bakery and cafe on Dewdney Trunk Road", "signals": [], "why": "", "tips": [] },
     { "id": "kanakacoffee", "cat": "dessert", "name": "Kanaka Creek Coffee", "area": "Maple Ridge (Albion)", "lat": 49.1877, "lng": -122.5521, "emoji": "☕", "placeId": "ChIJ1272ud7ShVQRGKe7nBPVSwU",
       "trend": null, "env": "indoor", "price": "$", "time": "45 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Neighbourhood coffee shop", "signals": [], "why": "", "tips": [] },
-    { "id": "coffeepitt", "cat": "dessert", "name": "The Coffee Pitt", "area": "Pitt Meadows", "lat": 49.2301, "lng": -122.6888, "emoji": "☕", "placeId": "ChIJTRofHyDVhVQRXk6-3pVGjiU",
+    { "id": "coffeepitt", "cat": "dessert", "name": "The Coffee Pitt", "area": "Pitt Meadows", "lat": 49.2301, "lng": -122.6888, "emoji": "☕", "placeId": "ChIJTRofHyDVhVQRXk6-3pVGjiU", "hours": "Mo-Fr 07:00-17:00; Sa-Su 08:00-17:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "45 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Coffee shop on Harris Road", "signals": [], "why": "", "tips": [] },
     { "id": "kimsbbq", "cat": "food", "name": "Kim's BBQ House", "area": "Coquitlam", "lat": 49.237, "lng": -122.8533, "emoji": "🥩", "placeId": "ChIJMyBYFRB5hlQRFEv43BaeKlw",
       "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Korean BBQ restaurant", "signals": [], "why": "", "tips": [] },
     { "id": "toedam", "cat": "food", "name": "Toedam Korean Fusion BBQ", "area": "Coquitlam (Lougheed)", "lat": 49.2435, "lng": -122.8912, "emoji": "🥩", "placeId": "ChIJtfZFRT14hlQRC7x5RB8DkRA",
       "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Korean fusion BBQ near Lougheed", "signals": [], "why": "", "tips": [] },
-    { "id": "mygreektaverna", "cat": "food", "name": "My Greek Taverna", "area": "Coquitlam (Maillardville)", "lat": 49.2371, "lng": -122.8693, "emoji": "🥗", "placeId": "ChIJD4ThDQ14hlQRAWMsBCMzgwk",
+    { "id": "mygreektaverna", "cat": "food", "name": "My Greek Taverna", "area": "Coquitlam (Maillardville)", "lat": 49.2371, "lng": -122.8693, "emoji": "🥗", "placeId": "ChIJD4ThDQ14hlQRAWMsBCMzgwk", "hours": "Tu-Sa 16:00-20:30; PH off", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Greek restaurant on Brunette Avenue", "signals": [], "why": "", "tips": [] },
     { "id": "nonnas", "cat": "food", "name": "Nonna's Cucina", "area": "Coquitlam (Maillardville)", "lat": 49.237, "lng": -122.8704, "emoji": "🍝", "placeId": "ChIJQVg5oQ14hlQR6Usni-5ZYYo",
       "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Italian restaurant on Brunette Avenue", "signals": [], "why": "", "tips": [] },
@@ -873,7 +873,7 @@
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Japanese restaurant on Edmonds Street", "signals": [], "why": "", "tips": [] },
     { "id": "burntorange", "cat": "food", "name": "Burnt Orange Cafe + Bistro", "area": "Burnaby Heights", "lat": 49.2809, "lng": -123.0076, "emoji": "🍳", "placeId": "ChIJ_3dVD5hxhlQRRskwfGvFqwo",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Cafe and bistro on Hastings Street", "signals": [], "why": "", "tips": [] },
-    { "id": "tavernagreka", "cat": "food", "name": "Taverna Greka", "area": "New Westminster", "lat": 49.205, "lng": -122.904, "emoji": "🥗", "placeId": "ChIJ-79FVm3YhVQRmMMMQeSkXT4",
+    { "id": "tavernagreka", "cat": "food", "name": "Taverna Greka", "area": "New Westminster", "lat": 49.205, "lng": -122.904, "emoji": "🥗", "placeId": "ChIJ-79FVm3YhVQRmMMMQeSkXT4", "hours": "Su,We-Th 16:30-20:30; Fr-Sa 16:30-21:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Greek restaurant on Columbia Street", "signals": [], "why": "", "tips": [] },
     { "id": "lasshilas", "cat": "food", "name": "Las Shilas Mexican Street Food", "area": "New Westminster (Quay)", "lat": 49.1998, "lng": -122.9131, "emoji": "🌮", "placeId": "ChIJBXUkdeJxhlQR6KBGQYyEilE",
       "trend": null, "env": "indoor", "price": "$", "time": "45 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Mexican street food at the Quay", "signals": [], "why": "", "tips": [] },
@@ -887,7 +887,7 @@
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Brewery taproom with a taco shop", "signals": [], "why": "", "tips": [] },
     { "id": "ramies", "cat": "food", "name": "Ramie's Greek Restaurant", "area": "Ladner, Delta", "lat": 49.1118, "lng": -123.0525, "emoji": "🥙", "placeId": "ChIJVT_cGCbehVQREYrfKh7iX6c",
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Greek restaurant", "signals": [], "why": "", "tips": [] },
-    { "id": "pho68", "cat": "food", "name": "Pho 68", "area": "Surrey (City Centre)", "lat": 49.1819, "lng": -122.8434, "emoji": "🍜", "placeId": "ChIJm7dsi4bZhVQRElVaC-bS9Go",
+    { "id": "pho68", "cat": "food", "name": "Pho 68", "area": "Surrey (City Centre)", "lat": 49.1819, "lng": -122.8434, "emoji": "🍜", "placeId": "ChIJm7dsi4bZhVQRElVaC-bS9Go", "hours": "11:00-22:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "45 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Vietnamese pho restaurant", "signals": [], "why": "", "tips": [] },
     { "id": "tapsurrey", "cat": "food", "name": "Tap Restaurant", "area": "South Surrey", "lat": 49.0636, "lng": -122.797, "emoji": "🍽️", "placeId": "ChIJi7F598nEhVQRdpGGlmKseaE",
       "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Restaurant in South Surrey", "signals": [], "why": "", "tips": [] },

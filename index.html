@@ -131,6 +131,32 @@ function eventWhen(ev) {
   if (s.weekdays) return `${s.weekdays.slice().sort((a, b) => ((a + 6) % 7) - ((b + 6) % 7)).map(d => DOW[d]).join(', ')} until ${shortDate(s.to)}`;
   return s.from === s.to ? shortDate(s.from) : `${shortDate(s.from)} – ${shortDate(s.to)}`;
 }
+// ───────── 영업시간 (OpenStreetMap opening_hours 형식, opening_hours.js로 해석) ─────────
+const OH_LIB = 'https://cdn.jsdelivr.net/npm/opening_hours@3.15.0/build/opening_hours.min.js';
+const OH_NOMINATIM = { lat: 49.25, lon: -123.1, address: { country_code: 'ca', state: 'British Columbia' } };
+const HOURS_NOTE = { osm: 'Hours from OpenStreetMap', citypark: 'Vancouver park hours, 6am–10pm', park: 'Typical park hours, sunrise to sunset', public: 'Public area' };
+let HOURS_READY = false;
+function loadScript(src) { return new Promise((ok, bad) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = bad; document.head.appendChild(s); }); }
+// 라이브러리는 브라우저 로컬 시각으로 계산하므로, 밴쿠버 벽시계 시각을 로컬 Date로 만들어 넘겨요
+const VAN_WALL = new Intl.DateTimeFormat('en-US', { timeZone: TZ, year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' });
+function vanWallClock(date = new Date()) {
+  const p = {}; VAN_WALL.formatToParts(date).forEach(x => p[x.type] = x.value);
+  return new Date(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute);
+}
+const fmtClock = d => `${d.getHours() % 12 || 12}${d.getMinutes() ? ':' + String(d.getMinutes()).padStart(2, '0') : ''}${d.getHours() >= 12 ? 'pm' : 'am'}`;
+// 지금 영업 상태: { open, text } 또는 null(영업시간 모름)
+function openInfo(s) {
+  if (!s._oh) return null;
+  try {
+    const now = vanWallClock(), open = s._oh.getState(now);
+    if (s.hoursSource === 'public') return { open: true, text: 'Open all day' };
+    // "16:30+"처럼 마감 시간이 없는 경우: 라이브러리는 '알 수 없음' 상태로 돌려줘요
+    if (!open && s._oh.getUnknown(now)) return { open: true, text: 'Open · closing time not listed' };
+    const next = s._oh.getNextChange(now);
+    const when = !next ? '' : next.toDateString() === now.toDateString() ? fmtClock(next) : `${DOW[next.getDay()]} ${fmtClock(next)}`;
+    return { open, text: open ? (next ? `Open · closes ${when}` : 'Open') : (next ? `Closed · opens ${when}` : 'Closed') };
+  } catch (e) { return null; }
+}
 const eventMapsUrl = ev => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(ev.venue.replace(/\s*\(.*?\)\s*/g, ' ') + ' ' + ev.area + ' BC');
 // 밴쿠버 현재 날씨 (Open-Meteo, 키 없이 무료). WMO 날씨 코드를 앱의 3가지 날씨로 묶어요.
 const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=49.2827&longitude=-123.1207&current=temperature_2m,weather_code&timezone=America%2FVancouver';
@@ -168,6 +194,7 @@ class App {
       view: 'list', dark: savedDark === null ? prefersDark : savedDark === '1',
       // nearKey: '' = 위치 필터 없음, 'here' = GPS 현재 위치(origin), 그 외 = ORIGINS의 지역
       nearKey: '', origin: null, geoMsg: '', geoBusy: false,
+      openNow: load('spotmate-opennow') !== '0',
       radius: RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
       plan: [], copyMsg: '', copyText: '',
@@ -185,6 +212,8 @@ class App {
     this.render();
     this.loadData();
     this.loadWeather();
+    // "Open now"와 오늘 행사는 시간이 지나면 바뀌어서 5분마다 다시 그려요
+    setInterval(() => { if (!this.state.loading) this.render(); }, 5 * 60 * 1000);
     if (window.claude && typeof window.claude.use === 'function') {
       window.claude.use('sample').then(s => { this.sample = s; if (s) this.render(); }).catch(() => {});
     }
@@ -207,6 +236,12 @@ class App {
         const st = await fetch('data/review-status.json', { cache: 'no-cache' });
         if (st.ok) { const { inactive = {} } = await st.json(); SPOTS = SPOTS.filter(s => !inactive[s.id]); }
       } catch (e) {}
+      // 영업시간 해석 라이브러리: 못 불러오면 "Open now" 필터 없이 동작해요
+      try {
+        if (!window.opening_hours) await loadScript(OH_LIB);
+        SPOTS.forEach(s => { if (s.hours) { try { s._oh = new opening_hours(s.hours, OH_NOMINATIM); } catch (e) { s._oh = null; } } });
+        HOURS_READY = true;
+      } catch (e) { HOURS_READY = false; }
       DATA_META = { source: data.source, updatedAt: data.updatedAt, trendNote: data.trendNote || '', coordsNote: data.coordsNote || '' };
       let plan = [];
       try { plan = JSON.parse(load('spotmate-plan') || '[]').filter(id => byId(id)); } catch (e) {}
@@ -240,6 +275,16 @@ class App {
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
     // 위치 필터가 켜져 있으면 반경 안의 스팟만 남기고, 순위도 그 안에서 다시 매겨요
     if (this.nearActive() && radius !== 'any') items = items.filter(s => s.dist <= radius);
+    // "Open now": 지금 열려 있는 곳만. 닫혔거나 영업시간을 모르는 곳은 개수만 세어 둬요
+    this._hidden = { closed: 0, unknown: 0 };
+    if (this.state.openNow && HOURS_READY) {
+      items = items.filter(s => {
+        const o = openInfo(s);
+        if (!o) { this._hidden.unknown++; return false; }
+        if (!o.open) { this._hidden.closed++; return false; }
+        return true;
+      });
+    }
     // 순위는 트렌드 데이터가 있는 스팟끼리만 매겨요. 리뷰 기준 스팟은 순위 없이 뒤에 데이터 순서대로.
     const byTrend = items.filter(hasTrend).sort((a, b) => b.trend[ti] - a.trend[ti]);
     const rank = {}; byTrend.forEach((s, i) => rank[s.id] = i + 1);
@@ -341,6 +386,7 @@ class App {
       case 'ai': return this.runAI(val);
       case 'aistop': if (this.aiCtl) this.aiCtl.abort(); return;
       case 'geo': return this.locate();
+      case 'opennow': { const openNow = !this.state.openNow; store('spotmate-opennow', openNow ? '1' : '0'); return this.set({ openNow }); }
       case 'radius': {
         const radius = val === 'any' ? 'any' : +val; store('spotmate-radius', String(radius)); return this.set({ radius });
       }
@@ -458,13 +504,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
           ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : this.state.cat === 'events' ? this.eventsView() : `
             ${this.criteriaBanner(items)}
-            ${this.eventsStrip()}
+            ${this.state.cat === 'all' ? this.eventsStrip() : ''}
             ${this.weatherBanner(items)}
             ${view === 'list' ? this.listView(items) : this.mapView(items)}
           `}
         </main>
         <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-10 text-xs text-slate-500 dark:text-slate-400">
-          Trend index: based on Google Trends search interest · Weather: Open-Meteo · Coordinates: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Events: compiled from official market and organizer pages (check before you go) · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
+          Trend index: based on Google Trends search interest · Weather: Open-Meteo · Coordinates: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Opening hours: OpenStreetMap where available, otherwise typical park hours · Events: compiled from official market and organizer pages (check before you go) · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
         </footer>
       </div>
       ${modal ? this.modal(byId(modal), items) : ''}
@@ -532,12 +578,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   controls(items) {
     const s = this.state;
     if (s.view === 'plan') return '';
-    const chip = (act, val, label, on) => `<button data-act="${act}" data-val="${val}" aria-pressed="${on}" class="shrink-0 px-3.5 py-2 rounded-full text-sm font-semibold border transition-colors ${on ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white' : 'bg-white/70 text-slate-700 border-slate-200 hover:border-slate-400 dark:bg-slate-800/70 dark:text-slate-200 dark:border-slate-700 dark:hover:border-slate-500'}">${label}</button>`;
+    const chip = (act, val, label, on) => `<button data-act="${act}" data-val="${val}" aria-pressed="${on}" class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full text-[13px] sm:text-sm font-semibold border transition-colors ${on ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white' : 'bg-white/70 text-slate-700 border-slate-200 hover:border-slate-400 dark:bg-slate-800/70 dark:text-slate-200 dark:border-slate-700 dark:hover:border-slate-500'}">${label}</button>`;
     const seg = (act, val, label, on) => `<button data-act="${act}" data-val="${val}" aria-pressed="${on}" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
     return `
-    <section class="sticky-bar z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800">
+    <section class="md:sticky md:top-0 z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800">
       <div class="max-w-6xl mx-auto px-4 md:px-6 py-4 space-y-3">
-        <div data-keep-scroll="cats" class="flex gap-2 overflow-x-auto no-scrollbar" role="group" aria-label="Category">
+        <div class="flex flex-wrap gap-1.5 sm:gap-2" role="group" aria-label="Category">
           ${chip('cat', 'all', 'All', s.cat === 'all')}
           ${Object.entries(CATS).map(([k, c]) => chip('cat', k, `${c.icon} ${c.label}`, s.cat === k)).join('')}
           ${chip('cat', 'events', '🎪 Events', s.cat === 'events')}
@@ -547,6 +593,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Trend period">
             ${Object.entries(TF).map(([k, t]) => seg('tf', k, (k === 'today' ? '📈 ' : k === 'week' ? '🔥 ' : '📅 ') + t.label, s.tf === k)).join('')}
           </div>` : ''}
+          ${s.cat === 'events' || !HOURS_READY ? '' : `
+          <button data-act="opennow" aria-pressed="${s.openNow}" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.openNow ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">${s.openNow ? '🟢 Open now' : '⚪ Open now'}</button>`}
           ${s.cat === 'events' ? '' : `
           <label class="ml-auto flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Sort
             <select data-act="sort" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm">
@@ -556,7 +604,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </label>`}
         </div>
         ${this.locationBar(items)}
-        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, 'spot')} · Trend index from Google Trends (BC) as of ${esc(DATA_META.updatedAt)} · Crowd levels are estimates.`}</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, 'spot')}${s.openNow && HOURS_READY ? ' open now' : ''} · Trend index from Google Trends (BC) as of ${esc(DATA_META.updatedAt)} · Crowd levels are estimates.`}</p>
+        ${s.cat !== 'events' && s.openNow && HOURS_READY && (this._hidden.closed + this._hidden.unknown) ? `
+        <p class="text-xs text-slate-600 dark:text-slate-300">Hidden: ${this._hidden.closed} closed right now${this._hidden.unknown ? `, ${this._hidden.unknown} with unknown hours` : ''}. <button data-act="opennow" class="font-semibold underline text-violet-700 dark:text-violet-300">Show all</button></p>` : ''}
       </div>
     </section>`;
   }
@@ -713,6 +763,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <p class="text-sm text-slate-500 dark:text-slate-400">${esc(s.area)}${s.dist != null ? `, ${s.dist.toFixed(1)} km` : ''}</p>
         <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">${esc(s.summary)}</p>
         ${evHere ? `<p class="mt-2 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${esc(evHere.ev.icon || '🎪')} ${esc(dayLabel(evHere.next))}: ${esc(evHere.ev.name)}</p>` : ''}
+        ${(() => { const oi = openInfo(s); return oi
+          ? `<p class="mt-2 text-xs font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}">${oi.open ? '🟢' : '🔴'} ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'public' ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
+          : HOURS_READY ? '<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
         <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-600 dark:text-slate-300">
           <span>💰 ${esc(s.price)}</span><span>⏱️ ${esc(s.time)}</span><span>${ENV_ICON[s.env]} ${ENV[s.env]}</span>
           ${s.kids ? '<span class="font-semibold text-rose-600 dark:text-rose-300">🧸 Kid-friendly</span>' : ''}
@@ -751,9 +804,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     }
     if (!items.length) return `
       <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
+        ${this.state.openNow && this._hidden && (this._hidden.closed + this._hidden.unknown) ? `
+        <p class="text-lg font-bold">Nothing here is open right now</p>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">${this._hidden.closed} closed and ${this._hidden.unknown} with unknown hours are hidden.</p>
+        <button data-act="opennow" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all, open or not</button>` : `
         <p class="text-lg font-bold">No spots here yet</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Try another category.</p>
-        <button data-act="cat" data-val="all" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all spots</button>
+        <button data-act="cat" data-val="all" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all spots</button>`}
       </div>`;
     return `<div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">${items.map(s => this.card(s)).join('')}</div>`;
   }
@@ -900,6 +957,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.icon} ${c.label}${rank ? `, #${rank} ${tf.label.toLowerCase()}` : ''}</p>
           <h2 class="mt-1 text-3xl font-bold leading-tight pr-2">${esc(s.name)}</h2>
           <p class="mt-1 text-slate-600 dark:text-slate-300">📍 ${esc(s.area)}${cur && cur.dist != null ? `, ${cur.dist.toFixed(1)} km` : ''}</p>
+          ${(() => { const oi = openInfo(s); return oi ? `
+          <p class="mt-1 text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}">${oi.open ? '🟢' : '🔴'} ${esc(oi.text)}</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">${s.hoursSource === 'osm' ? `Hours: ${esc(s.hours)} · from OpenStreetMap, check Google Maps before you go` : esc(HOURS_NOTE[s.hoursSource] || '')}</p>`
+            : '<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Opening hours unknown. Check Google Maps.</p>'; })()}
         </div>
 
         <div class="p-6 space-y-6">
