@@ -556,9 +556,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     });
 
     const dialog = this.root.querySelector('[role="dialog"]');
-    if (modal && modal !== prevModal) dialog.querySelector('button[data-act="close"]').focus();
+    // preventScroll: 처음 여는 순간엔 Tailwind CDN이 모달 클래스 CSS를 아직 안 만들어서
+    // 모달이 페이지 맨 아래에 붙어 있어요. 그대로 focus하면 배경이 맨 아래로 스크롤돼요.
+    if (modal && modal !== prevModal) dialog.querySelector('button[data-act="close"]').focus({ preventScroll: true });
     else if (!modal && prevModal) { this.refocus(this.opener); this.opener = null; }
-    else if (keepFocus && !this.refocus(keepFocus) && dialog) dialog.focus();
+    else if (keepFocus && !this.refocus(keepFocus) && dialog) dialog.focus({ preventScroll: true });
   }
 
   statusView() {
@@ -979,7 +981,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     }
 
     return `
-    <div data-act="close" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center" style="padding-top:max(12px, env(safe-area-inset-top, 0px)); padding-bottom:max(12px, env(safe-area-inset-bottom, 0px));">
+    <div data-act="close" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center" style="position:fixed; inset:0; z-index:50; padding-top:max(12px, env(safe-area-inset-top, 0px)); padding-bottom:max(12px, env(safe-area-inset-bottom, 0px));">
       <div data-act="noop" role="dialog" aria-modal="true" tabindex="-1" aria-label="${esc(s.name)}" class="outline-none relative w-full max-w-2xl rounded-3xl bg-white dark:bg-slate-900 shadow-2xl overflow-hidden flex flex-col" style="max-height:100%">
         <button data-act="close" aria-label="Close" class="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white text-lg flex items-center justify-center shadow-lg">✕</button>
         <div data-keep-scroll="modal" class="overflow-y-auto">
