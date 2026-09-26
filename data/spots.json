@@ -7,6 +7,7 @@
     {
       "id": "playland", "cat": "kids", "name": "Playland", "area": "Hastings Park",
       "lat": 49.2827, "lng": -123.0364, "emoji": "🎢", "placeId": "ChIJm1iznN5whlQRaE-axeldswo",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/Playland_from_way_above.jpg/960px-Playland_from_way_above.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Sébastien Launay","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Playland_from_way_above.jpg"},
       "trend": [7, 11, 50], "env": "outdoor", "price": "$$$", "time": "Half day", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Amusement park on the PNE grounds",
       "signals": ["fright nights at playland", "thrill seeker pass playland", "playland expansion"],
@@ -276,7 +277,8 @@
     },
     {
       "id": "flyingbeaver", "cat": "food", "name": "Flying Beaver Bar & Grill", "area": "Richmond (Sea Island)",
-      "lat": 49.1773, "lng": -123.1683, "emoji": "🛩️", "placeId": "ChIJGfIH_CcLhlQRXUIWNqgCxw8", "hours": "Su-Th 09:00-00:00; Fr-Sa 09:00-01:00", "hoursSource": "osm",
+      "lat": 49.1773, "lng": -123.1683, "emoji": "🛩️", "placeId": "ChIJGfIH_CcLhlQRXUIWNqgCxw8",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/Harbour_Air_C-FFHA_Beaver_YVR_20240221.jpg/960px-Harbour_Air_C-FFHA_Beaver_YVR_20240221.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"King Hui","license":"CC BY-SA 2.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/2.0","source":"https://commons.wikimedia.org/wiki/File:Harbour_Air_C-FFHA_Beaver_YVR_20240221.jpg"}, "hours": "Su-Th 09:00-00:00; Fr-Sa 09:00-01:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$$", "time": "1.5 hrs", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Riverside pub by the Fraser River float plane dock", "signals": [], "why": "", "tips": []
     },
@@ -411,7 +413,8 @@
     },
     {
       "id": "quarry", "cat": "nature", "gem": true, "name": "Quarry Rock", "area": "Deep Cove",
-      "lat": 49.3344, "lng": -122.9378, "emoji": "🥾", "placeId": "ChIJ9-boVK57hlQREBFD4OyKc0s", "hours": "sunrise-sunset", "hoursSource": "park",
+      "lat": 49.3344, "lng": -122.9378, "emoji": "🥾", "placeId": "ChIJ9-boVK57hlQREBFD4OyKc0s",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/Deep-Cove-8.jpg/960px-Deep-Cove-8.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Xicotencatl","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Deep-Cove-8.jpg"}, "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "2 hrs", "crowd": "park", "weather": ["sunny"],
       "summary": "Rocky lookout over Indian Arm at the end of a short hike",
       "signals": [], "why": "", "tips": ["Parking in Deep Cove is tough on weekends, so start early"]
@@ -439,19 +442,22 @@
     },
     {
       "id": "blackiespit", "cat": "nature", "kids": true, "gem": true, "name": "Blackie Spit", "area": "Crescent Beach, Surrey",
-      "lat": 49.061, "lng": -122.8791, "emoji": "🐦", "placeId": "ChIJk0fX7cbchVQRcaa9vj9ntME", "hours": "sunrise-sunset", "hoursSource": "park",
+      "lat": 49.061, "lng": -122.8791, "emoji": "🐦", "placeId": "ChIJk0fX7cbchVQRcaa9vj9ntME",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Blackie%27s_Spit_%286136401687%29.jpg/960px-Blackie%27s_Spit_%286136401687%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"waferboard","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Blackie%27s_Spit_(6136401687).jpg"}, "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Sand spit at Crescent Beach, known for birdwatching", "signals": [], "why": "", "tips": []
     },
     {
       "id": "redwood", "cat": "nature", "kids": true, "gem": true, "name": "Redwood Park", "area": "South Surrey",
-      "lat": 49.0348, "lng": -122.7288, "emoji": "🌳", "placeId": "ChIJ3eCihU3EhVQR5kJzlsXavys", "hours": "sunrise-sunset", "hoursSource": "park",
+      "lat": 49.0348, "lng": -122.7288, "emoji": "🌳", "placeId": "ChIJ3eCihU3EhVQR5kJzlsXavys",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/Redwood_Park_IMG_0136_%282755418917%29.jpg/960px-Redwood_Park_IMG_0136_%282755418917%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Dave O","license":"CC BY-SA 2.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/2.0","source":"https://commons.wikimedia.org/wiki/File:Redwood_Park_IMG_0136_(2755418917).jpg"}, "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Forest park with towering redwood trees", "signals": [], "why": "", "tips": []
     },
     {
       "id": "mundy", "cat": "nature", "kids": true, "gem": true, "name": "Mundy Park", "area": "Coquitlam",
-      "lat": 49.2565, "lng": -122.8256, "emoji": "🍂", "placeId": "ChIJycv27JB4hlQRw58p1LpogL8", "hours": "sunrise-sunset", "hoursSource": "park",
+      "lat": 49.2565, "lng": -122.8256, "emoji": "🍂", "placeId": "ChIJycv27JB4hlQRw58p1LpogL8",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d3/Owl_In_Mundy_Park_%28119325987%29.jpeg/960px-Owl_In_Mundy_Park_%28119325987%29.jpeg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Jeff Macleod","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Owl_In_Mundy_Park_(119325987).jpeg"}, "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Coquitlam's biggest park, with forest loops around two small lakes", "signals": [], "why": "", "tips": []
     },
@@ -477,7 +483,8 @@
     },
     {
       "id": "queenspark", "cat": "kids", "gem": true, "name": "Queen's Park", "area": "New Westminster",
-      "lat": 49.2151, "lng": -122.9059, "emoji": "🐑", "placeId": "ChIJHTtJAgrYhVQR1fxvihZ0PyA", "hours": "sunrise-sunset", "hoursSource": "park",
+      "lat": 49.2151, "lng": -122.9059, "emoji": "🐑", "placeId": "ChIJHTtJAgrYhVQR1fxvihZ0PyA",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Queen%27s_Park_Rose_Garden%2C_New_Westminster%2C_BC.jpg/960px-Queen%27s_Park_Rose_Garden%2C_New_Westminster%2C_BC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Dennis Sylvester Hurd","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Queen%27s_Park_Rose_Garden,_New_Westminster,_BC.jpg"}, "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Historic park with gardens, playgrounds, and a seasonal petting farm", "signals": [], "why": "", "tips": []
     },
@@ -502,7 +509,8 @@
     },
     {
       "id": "towncentre", "cat": "nature", "kids": true, "gem": true, "name": "Town Centre Park & Lafarge Lake", "area": "Coquitlam",
-      "lat": 49.2868, "lng": -122.7887, "emoji": "🦢", "placeId": "ChIJZ39GJCV_hlQRRvKeSkLWrm4", "hours": "sunrise-sunset", "hoursSource": "park",
+      "lat": 49.2868, "lng": -122.7887, "emoji": "🦢", "placeId": "ChIJZ39GJCV_hlQRRvKeSkLWrm4",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/LaFarge_Lake_%2827448207204%29.jpg/960px-LaFarge_Lake_%2827448207204%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Niall Williams","license":"CC BY-SA 2.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/2.0","source":"https://commons.wikimedia.org/wiki/File:LaFarge_Lake_(27448207204).jpg"}, "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Big park around Lafarge Lake, with a walking loop that circles the water", "signals": [], "why": "", "tips": []
     },
@@ -534,7 +542,8 @@
     },
     {
       "id": "sasamat", "cat": "nature", "gem": true, "name": "Sasamat Lake", "area": "Port Moody / Belcarra",
-      "lat": 49.3199, "lng": -122.8891, "emoji": "🏊", "placeId": "ChIJ-4seBed7hlQRLYE4V5cwhn0", "hours": "sunrise-sunset", "hoursSource": "park",
+      "lat": 49.3199, "lng": -122.8891, "emoji": "🏊", "placeId": "ChIJ-4seBed7hlQRLYE4V5cwhn0",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Sasamat_Lake_Bridge_%28121423825%29.jpeg/960px-Sasamat_Lake_Bridge_%28121423825%29.jpeg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Jeff Macleod","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Sasamat_Lake_Bridge_(121423825).jpeg"}, "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "Half day", "crowd": "park", "weather": ["sunny"],
       "summary": "Forest lake known for its warm water in summer and a floating dock", "signals": [], "why": "", "tips": []
     },
@@ -605,7 +614,8 @@
     },
     {
       "id": "tynehead", "cat": "nature", "gem": true, "name": "Tynehead Regional Park", "area": "Surrey",
-      "lat": 49.1825, "lng": -122.7587, "emoji": "🦋", "placeId": "ChIJNx2AIijXhVQRnbuNUiandwY", "hours": "sunrise-sunset", "hoursSource": "park",
+      "lat": 49.1825, "lng": -122.7587, "emoji": "🦋", "placeId": "ChIJNx2AIijXhVQRnbuNUiandwY",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Tynehead_131221-085_%2811695035125%29.jpg/960px-Tynehead_131221-085_%2811695035125%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"waferboard","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Tynehead_131221-085_(11695035125).jpg"}, "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Meadows and forest along the Serpentine River", "signals": [], "why": "", "tips": []
     },
@@ -636,7 +646,8 @@
     },
     {
       "id": "kits", "cat": "nature", "kids": true, "gem": true, "name": "Kitsilano Beach", "area": "Kitsilano",
-      "lat": 49.2757, "lng": -123.1537, "emoji": "🏐", "placeId": "ChIJnVFsezVyhlQRf5O-Pe5uQ04", "hours": "06:00-22:00", "hoursSource": "citypark",
+      "lat": 49.2757, "lng": -123.1537, "emoji": "🏐", "placeId": "ChIJnVFsezVyhlQRf5O-Pe5uQ04",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3b/Kitsilano_beach_%28349732958%29.jpg/960px-Kitsilano_beach_%28349732958%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Andrea Schaffer","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Kitsilano_beach_(349732958).jpg"}, "hours": "06:00-22:00", "hoursSource": "citypark",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny"],
       "summary": "Busy city beach with volleyball courts and mountain views", "signals": [], "why": "", "tips": []
     },
@@ -650,6 +661,7 @@
     {
       "id": "billreid", "cat": "city", "gem": true, "name": "Bill Reid Gallery", "area": "Downtown",
       "lat": 49.2846, "lng": -123.1194, "emoji": "🖌️", "placeId": "ChIJ09HC74FxhlQRHyXyCAa8AJQ",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/Bill_Reid_Gallery_detail_%288051415368%29.jpg/960px-Bill_Reid_Gallery_detail_%288051415368%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Tony Hisgett","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Bill_Reid_Gallery_detail_(8051415368).jpg"},
       "trend": null, "env": "indoor", "price": "$", "time": "1 hr", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Gallery of Northwest Coast Indigenous art", "signals": [], "why": "", "tips": []
     },
@@ -699,7 +711,8 @@
     },
     {
       "id": "museumsurrey", "cat": "kids", "family": true, "name": "Museum of Surrey", "area": "Surrey",
-      "lat": 49.1046, "lng": -122.7322, "emoji": "🏺", "placeId": "ChIJAaLgLAjQhVQRBAq1YXF0erg", "hours": "We-Sa 09:30-16:30; Su-Mo off; PH off", "hoursSource": "osm",
+      "lat": 49.1046, "lng": -122.7322, "emoji": "🏺", "placeId": "ChIJAaLgLAjQhVQRBAq1YXF0erg",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Surrey_Museum_%289593995767%29.jpg/960px-Surrey_Museum_%289593995767%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"David Stanley","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Surrey_Museum_(9593995767).jpg"}, "hours": "We-Sa 09:30-16:30; Su-Mo off; PH off", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Local history museum with hands-on exhibits for kids", "signals": [], "why": "", "tips": []
     },
@@ -726,12 +739,14 @@
     {
       "id": "stewartfarm", "cat": "kids", "family": true, "name": "Historic Stewart Farm", "area": "South Surrey",
       "lat": 49.0656, "lng": -122.8423, "emoji": "🐓", "placeId": "ChIJmURORKjchVQRxhGwzQzdkfo",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/Stuart_Farm_house.jpg/960px-Stuart_Farm_house.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Irena12345","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Stuart_Farm_house.jpg"},
       "trend": null, "env": "both", "price": "Free", "time": "1 hr", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Heritage farmhouse and gardens by the Nicomekl River", "signals": [], "why": "", "tips": []
     },
     {
       "id": "activate", "cat": "kids", "family": true, "name": "Activate Langley", "area": "Langley",
       "lat": 49.1145, "lng": -122.6748, "emoji": "🎮", "placeId": "ChIJ7dlZGjTRhVQRR1OfjKVyoIA",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Willowbrook_Shopping_Centre.jpg/960px-Willowbrook_Shopping_Centre.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Clee7903","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Willowbrook_Shopping_Centre.jpg"},
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Interactive game rooms, fun for older kids and families", "signals": [], "why": "", "tips": []
     },
@@ -761,7 +776,8 @@
     },
     {
       "id": "shipyards", "cat": "kids", "family": true, "name": "The Shipyards", "area": "North Vancouver",
-      "lat": 49.3098, "lng": -123.0795, "emoji": "⛲", "placeId": "ChIJtbuSI01whlQR_OK5YhRz1x8", "hours": "24/7", "hoursSource": "public",
+      "lat": 49.3098, "lng": -123.0795, "emoji": "⛲", "placeId": "ChIJtbuSI01whlQR_OK5YhRz1x8",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Shipyards_as_seen_from_Lonsdale_Quay_-_May_2018.jpg/960px-Shipyards_as_seen_from_Lonsdale_Quay_-_May_2018.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Shaundd","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Shipyards_as_seen_from_Lonsdale_Quay_-_May_2018.jpg"}, "hours": "24/7", "hoursSource": "public",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Waterfront plaza with a splash area, markets, and harbour views", "signals": [], "why": "", "tips": []
     },
@@ -788,12 +804,14 @@
     {
       "id": "kidsmarket", "cat": "kids", "family": true, "name": "Kids Market", "area": "Granville Island",
       "lat": 49.2703, "lng": -123.136, "emoji": "🧸", "placeId": "ChIJzfhG5M5zhlQRvzj0UOkElDY",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Kids_Market_Rainbow_%28699652918%29.jpg/960px-Kids_Market_Rainbow_%28699652918%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Ruth Hartnup","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Kids_Market_Rainbow_(699652918).jpg"},
       "trend": null, "env": "indoor", "price": "Free", "time": "1 hr", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Two floors of toy shops and an indoor play area, all for kids", "signals": [], "why": "", "tips": []
     },
     {
       "id": "giwaterpark", "cat": "kids", "family": true, "name": "Granville Island Water Park", "area": "Granville Island",
       "lat": 49.2695, "lng": -123.135, "emoji": "💦", "placeId": "ChIJ38kXhc1zhlQRSwgjFzVBDgE",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Granville_Island_water_park_%286093774760%29.jpg/960px-Granville_Island_water_park_%286093774760%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Ruth Hartnup","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Granville_Island_water_park_(6093774760).jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny"],
       "summary": "Free outdoor water park for kids", "signals": [], "why": "", "tips": ["It is a summer-season water park, so check that it's open"]
     },
@@ -803,9 +821,11 @@
       "trend": null, "env": "indoor", "price": "$", "time": "2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Indoor and outdoor pools next to Queen Elizabeth Park", "signals": [], "why": "", "tips": ["Check the public swim schedule before you go"]
     },
-    { "id": "earnest", "cat": "dessert", "name": "Earnest Ice Cream", "area": "Mount Pleasant", "lat": 49.2688, "lng": -123.1029, "emoji": "🍦", "placeId": "ChIJv1NxVGBxhlQRT1bpKNwx78A", "hours": "Mo-Su 12:00-22:00", "hoursSource": "osm",
+    { "id": "earnest", "cat": "dessert", "name": "Earnest Ice Cream", "area": "Mount Pleasant", "lat": 49.2688, "lng": -123.1029, "emoji": "🍦", "placeId": "ChIJv1NxVGBxhlQRT1bpKNwx78A",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Earnest_Ice_Cream_%2835712755052%29.jpg/960px-Earnest_Ice_Cream_%2835712755052%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Jason Thibault","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Earnest_Ice_Cream_(35712755052).jpg"}, "hours": "Mo-Su 12:00-22:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Small-batch ice cream shop on Quebec Street", "signals": [], "why": "", "tips": [] },
-    { "id": "rainorshine", "cat": "dessert", "name": "Rain or Shine Ice Cream", "area": "Cambie Village", "lat": 49.2551, "lng": -123.1149, "emoji": "🍦", "placeId": "ChIJMxkX5-5zhlQRFSDpR51HYTY", "hours": "Th-Mo 12:00-22:00; Tu 00:00-17:00", "hoursSource": "osm",
+    { "id": "rainorshine", "cat": "dessert", "name": "Rain or Shine Ice Cream", "area": "Cambie Village", "lat": 49.2551, "lng": -123.1149, "emoji": "🍦", "placeId": "ChIJMxkX5-5zhlQRFSDpR51HYTY",
+      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Rhubarb_and_ginger_streusel_ice_cream_from_Rain_or_Shine_%2818444997826%29.jpg/960px-Rhubarb_and_ginger_streusel_ice_cream_from_Rain_or_Shine_%2818444997826%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Ruth Hartnup","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Rhubarb_and_ginger_streusel_ice_cream_from_Rain_or_Shine_(18444997826).jpg"}, "hours": "Th-Mo 12:00-22:00; Tu 00:00-17:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Ice cream shop on Cambie Street", "signals": [], "why": "", "tips": [] },
     { "id": "leparfait", "cat": "dessert", "name": "Le Parfait", "area": "Downtown", "lat": 49.2791, "lng": -123.1172, "emoji": "🍨", "placeId": "ChIJoTjZcH5xhlQRQBx63ku5-yE",
       "trend": null, "env": "indoor", "price": "$", "time": "30 min", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"], "summary": "Ice cream and dessert shop on Homer Street", "signals": [], "why": "", "tips": [] },

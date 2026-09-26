@@ -157,6 +157,40 @@ function openInfo(s) {
     return { open, text: open ? (next ? `Open · closes ${when}` : 'Open') : (next ? `Closed · opens ${when}` : 'Closed') };
   } catch (e) { return null; }
 }
+// ───────── 사진이 없는 스팟용 일러스트 커버 (SVG) ─────────
+// 장소 종류에 맞는 풍경을 그리고, 스팟 id로 시드를 만들어 모양과 색이 조금씩 달라지게 해요.
+function seeded(str) {
+  let h = 2166136261; for (const ch of str) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 10000) / 10000; };
+}
+function sceneOf(s) {
+  const n = `${s.name} ${s.summary}`.toLowerCase();
+  if (s.cat === 'food') return 'food';
+  if (s.cat === 'dessert') return 'dessert';
+  if (/beach|banks|spit|sunset/.test(n)) return 'beach';
+  if (/lake|cove|river|creek|inlet|marine|waterfront|harbour|quay|pier|wharf|fjord|esplanade|pool|aquatic|water/.test(n)) return 'water';
+  if (/mountain|hike|trail|falls|crunch|peak|lookout|canyon|gondola|summit|rock/.test(n)) return 'mountain';
+  if (s.cat === 'city' || /mall|shopping|centre|gallery|museum/.test(n)) return 'city';
+  if (s.env === 'indoor') return 'play';
+  return 'park';
+}
+function sceneSvg(s) {
+  const r = seeded(s.id), R = (a, b) => a + (b - a) * r(), W = 400, H = 200, kind = sceneOf(s);
+  const hills = (base, amp, fill) => { let d = `M0 ${H} L0 ${base}`; for (let x = 0; x <= W; x += 50) d += ` Q${x + 25} ${base - R(0, amp)} ${x + 50} ${base + R(-amp / 3, amp / 3)}`; return `<path d="${d} L${W} ${H} Z" fill="${fill}"/>`; };
+  const peaks = (base, h, fill, snow) => { let d = `M0 ${base}`, caps = ''; let x = 0; while (x < W) { const w = R(70, 130), top = base - R(h * .6, h); d += ` L${x + w / 2} ${top} L${x + w} ${base}`; if (snow) caps += `<path d="M${x + w / 2 - 12} ${top + 14} L${x + w / 2} ${top} L${x + w / 2 + 12} ${top + 14} Z" fill="#f8fafc" opacity=".9"/>`; x += w * .8; } return `<path d="${d} L${W} ${base} L${W} ${H} L0 ${H} Z" fill="${fill}"/>${caps}`; };
+  const trees = (n, y0, y1, c) => Array.from({ length: n }, () => { const x = R(10, W - 10), y = R(y0, y1), t = R(10, 18); return `<path d="M${x} ${y - t * 2} L${x - t * .7} ${y} L${x + t * .7} ${y} Z" fill="${c}"/>`; }).join('');
+  const sky = (a, b) => `<defs><linearGradient id="sk-${s.id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#sk-${s.id})"/>`;
+  let body = '';
+  if (kind === 'park') body = sky('#9fd3ff', '#e0f2fe') + `<circle cx="${R(40, 360)}" cy="${R(30, 55)}" r="18" fill="#fde68a"/>` + hills(120, 40, '#86efac') + hills(150, 30, '#4ade80') + trees(9, 130, 190, '#15803d') + hills(185, 12, '#22c55e');
+  else if (kind === 'mountain') body = sky('#7dd3fc', '#e0f2fe') + peaks(130, 90, '#94a3b8', true) + peaks(160, 60, '#64748b', false) + hills(175, 20, '#166534') + trees(14, 170, 200, '#14532d');
+  else if (kind === 'water') body = sky('#93c5fd', '#dbeafe') + peaks(110, 55, '#7c8fb0', true) + `<rect y="110" width="${W}" height="90" fill="#3b82f6"/>` + Array.from({ length: 8 }, () => { const x = R(0, W), y = R(125, 190); return `<path d="M${x} ${y} q10 -6 20 0 t20 0" stroke="#bfdbfe" stroke-width="2" fill="none" opacity=".8"/>`; }).join('') + hills(200, 10, '#1d4ed8');
+  else if (kind === 'beach') body = sky('#fdba74', '#fde68a') + `<circle cx="${R(80, 320)}" cy="104" r="26" fill="#fb923c"/>` + `<rect y="104" width="${W}" height="46" fill="#0ea5e9"/><rect y="104" width="${W}" height="4" fill="#fed7aa" opacity=".7"/>` + hills(165, 15, '#fcd34d') + `<rect y="175" width="${W}" height="25" fill="#fbbf24"/>`;
+  else if (kind === 'city') body = sky('#6366f1', '#f0abfc') + Array.from({ length: 14 }, (_, i) => { const w = R(22, 40), x = i * 30 - 10, h = R(50, 130), win = Array.from({ length: Math.floor(h / 16) }, (_, j) => `<rect x="${x + 6}" y="${H - h + 8 + j * 16}" width="${w - 12}" height="5" fill="#fde68a" opacity="${R(.2, .9).toFixed(2)}"/>`).join(''); return `<rect x="${x}" y="${H - h}" width="${w}" height="${h}" fill="${i % 2 ? '#312e81' : '#4338ca'}"/>${win}`; }).join('');
+  else if (kind === 'food') body = `<rect width="${W}" height="${H}" fill="#fde7c7"/>` + Array.from({ length: 10 }, (_, i) => `<rect x="${i * 40}" y="0" width="20" height="${H}" fill="#fbd6a3" opacity=".6"/>`).join('') + Array.from({ length: 5 }, () => { const x = R(30, 370), y = R(30, 170), rr = R(20, 34); return `<circle cx="${x}" cy="${y}" r="${rr}" fill="#fff" opacity=".85"/><circle cx="${x}" cy="${y}" r="${rr * .7}" fill="none" stroke="#f3c38b" stroke-width="3"/>`; }).join('');
+  else if (kind === 'dessert') body = `<rect width="${W}" height="${H}" fill="#fce7f3"/>` + Array.from({ length: 36 }, () => `<circle cx="${R(0, W)}" cy="${R(0, H)}" r="${R(3, 8)}" fill="${['#f9a8d4', '#c4b5fd', '#fde68a', '#a7f3d0'][Math.floor(r() * 4)]}" opacity=".8"/>`).join('') + Array.from({ length: 20 }, () => { const x = R(0, W), y = R(0, H), a = R(0, 180); return `<rect x="${x}" y="${y}" width="12" height="3" rx="1.5" fill="${['#f472b6', '#60a5fa', '#34d399', '#fbbf24'][Math.floor(r() * 4)]}" transform="rotate(${a} ${x} ${y})"/>`; }).join('');
+  else body = `<rect width="${W}" height="${H}" fill="#ede9fe"/>` + Array.from({ length: 22 }, () => { const x = R(0, W), y = R(0, H), c = ['#f472b6', '#60a5fa', '#34d399', '#fbbf24', '#a78bfa'][Math.floor(r() * 5)]; return r() < .5 ? `<circle cx="${x}" cy="${y}" r="${R(6, 16)}" fill="${c}" opacity=".75"/>` : `<path d="M${x} ${y} l${R(10, 20)} ${R(14, 26)} l${-R(20, 30)} 0 Z" fill="${c}" opacity=".75"/>`; }).join('');
+  return { kind, svg: `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" class="absolute inset-0 w-full h-full" aria-hidden="true">${body}</svg>` };
+}
 const eventMapsUrl = ev => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(ev.venue.replace(/\s*\(.*?\)\s*/g, ' ') + ' ' + ev.area + ' BC');
 // 밴쿠버 현재 날씨 (Open-Meteo, 키 없이 무료). WMO 날씨 코드를 앱의 3가지 날씨로 묶어요.
 const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=49.2827&longitude=-123.1207&current=temperature_2m,weather_code&timezone=America%2FVancouver';
@@ -736,13 +770,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <a data-act="noop" href="${esc(s.photo.source)}" target="_blank" rel="noopener" title="Photo: ${esc(s.photo.credit)} (${esc(s.photo.license)}), via Wikimedia Commons"
           class="absolute right-2 bottom-2 max-w-[45%] truncate text-[10px] leading-tight px-1.5 py-0.5 rounded bg-black/45 text-white/85 hover:text-white">📷 ${esc(s.photo.credit)} · ${esc(s.photo.license)}</a>
       </div>`;
-    return `<div class="w-full ${h} relative overflow-hidden" role="img" aria-label="${esc(s.name)}"
-        style="background:
-          radial-gradient(circle at 18% 120%, rgba(255,255,255,.35) 0 22%, transparent 23%),
-          radial-gradient(circle at 85% -10%, rgba(255,255,255,.22) 0 28%, transparent 29%),
-          linear-gradient(135deg, ${c.dot}, #4c1d95)">
-        <span class="absolute right-5 bottom-2 text-7xl drop-shadow-lg select-none" aria-hidden="true">${esc(s.emoji || c.icon)}</span>
-        <span class="absolute left-4 bottom-3 text-sm font-semibold text-white/90">📍 ${esc(s.area)}</span>
+    // 실제 사진이 없으면 장소 종류에 맞는 일러스트 (사진처럼 보이지 않게 "Illustration" 표시)
+    const sc = sceneSvg(s), center = sc.kind === 'food' || sc.kind === 'dessert';
+    return `<div class="w-full ${h} relative overflow-hidden" role="img" aria-label="${esc(s.name)} (illustration)">
+        ${sc.svg}
+        <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/45 to-transparent pointer-events-none"></div>
+        <span class="absolute ${center ? 'left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-7xl' : 'right-6 top-1/2 -translate-y-1/2 text-5xl'} drop-shadow-lg select-none" aria-hidden="true">${esc(s.emoji || c.icon)}</span>
+        <span class="absolute left-4 bottom-3 text-sm font-semibold text-white/95 drop-shadow">📍 ${esc(s.area)}</span>
+        <span class="absolute right-2 bottom-2 text-[10px] px-1.5 py-0.5 rounded bg-black/35 text-white/85">Illustration</span>
       </div>`;
   }
 
