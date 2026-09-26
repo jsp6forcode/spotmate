@@ -5,7 +5,7 @@
   "coordsNote": "Coordinates © OpenStreetMap contributors",
   "spots": [
     {
-      "id": "playland", "cat": "kids", "name": "Playland", "area": "Hastings Park",
+      "id": "playland", "cat": "city", "kids": true, "name": "Playland", "area": "Hastings Park",
       "lat": 49.2827, "lng": -123.0364, "emoji": "🎢", "placeId": "ChIJm1iznN5whlQRaE-axeldswo",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/Playland_from_way_above.jpg/960px-Playland_from_way_above.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Sébastien Launay","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Playland_from_way_above.jpg"},
       "trend": [7, 11, 50], "env": "outdoor", "price": "$$$", "time": "Half day", "crowd": "attraction", "weather": ["sunny", "cloudy"],
@@ -15,7 +15,7 @@
       "tips": ["Opening days change by season, so check the official schedule before you go"]
     },
     {
-      "id": "aquarium", "cat": "kids", "name": "Vancouver Aquarium", "area": "Stanley Park",
+      "id": "aquarium", "cat": "city", "kids": true, "name": "Vancouver Aquarium", "area": "Stanley Park",
       "lat": 49.3005, "lng": -123.1312, "emoji": "🦦", "placeId": "ChIJp2zKeo1xhlQRWOMOmCcWJV8", "hours": "10:00-17:00", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Vancouver_Aquarium_entrance_%282026%29.jpg/960px-Vancouver_Aquarium_entrance_%282026%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Iiii I I I","license":"CC BY 4.0","licenseUrl":"https://creativecommons.org/licenses/by/4.0","source":"https://commons.wikimedia.org/wiki/File:Vancouver_Aquarium_entrance_(2026).jpg"},
       "trend": [45, 35, 44], "env": "indoor", "price": "$$$", "time": "2–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy"],
@@ -25,7 +25,7 @@
       "tips": ["Parking in Stanley Park is paid"]
     },
     {
-      "id": "scienceworld", "cat": "kids", "name": "Science World", "area": "False Creek",
+      "id": "scienceworld", "cat": "city", "kids": true, "name": "Science World", "area": "False Creek",
       "lat": 49.2735, "lng": -123.1037, "emoji": "🔬", "placeId": "ChIJnZHwi2NxhlQRN3CYHzc3giE", "hours": "Mo-Su,PH 10:00-17:00; Jul 5 - Aug 30 Tu 10:00-20:00", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Science_World_at_TELUS_World_of_Science.jpg/960px-Science_World_at_TELUS_World_of_Science.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Differense","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Science_World_at_TELUS_World_of_Science.jpg"},
       "trend": [33, 28, 37], "env": "indoor", "price": "$$", "time": "2–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy"],
@@ -35,7 +35,7 @@
       "tips": []
     },
     {
-      "id": "capilano", "cat": "kids", "name": "Capilano Suspension Bridge", "area": "North Vancouver",
+      "id": "capilano", "cat": "nature", "kids": true, "name": "Capilano Suspension Bridge", "area": "North Vancouver",
       "lat": 49.3427, "lng": -123.116, "emoji": "🌉", "placeId": "ChIJSd7cANJvhlQRXg8TheyzUPM", "hours": "Jan 09-Mar 10 09:00-17:00; Mar 11-Apr 21 09:00-18:00; Apr 22-May 26 09:00-19:00; May 27-Sep 04 08:30-20:00; Sep 05-Oct 09 09:00-18:00; Oct 10-Nov 23 09:00-17:00; Nov 24-Jan 08 11:00-21:00; Dec 25 off", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Capilano_Suspension_Bridge%2C_Vancouver%2C_Canada_%28July_2016%29_1.jpg/960px-Capilano_Suspension_Bridge%2C_Vancouver%2C_Canada_%28July_2016%29_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Markus Säynevirta","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Capilano_Suspension_Bridge,_Vancouver,_Canada_(July_2016)_1.jpg"},
       "trend": [13, 22, 27], "env": "outdoor", "price": "$$$", "time": "2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
@@ -390,7 +390,7 @@
       "signals": [], "why": "", "tips": ["There are rocky sections, so wear sneakers"]
     },
     {
-      "id": "bvm", "cat": "kids", "gem": true, "name": "Burnaby Village Museum", "area": "Burnaby",
+      "id": "bvm", "cat": "city", "kids": true, "gem": true, "name": "Burnaby Village Museum", "area": "Burnaby",
       "lat": 49.2399, "lng": -122.9669, "emoji": "🎠", "placeId": "ChIJA288NqZ3hlQRdrlOknfGAMk",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/Vorce_Station%2C_Burnaby%2C_BC_01.jpg/960px-Vorce_Station%2C_Burnaby%2C_BC_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Xiao23","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Vorce_Station,_Burnaby,_BC_01.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
@@ -435,7 +435,7 @@
       "signals": [], "why": "", "tips": ["In peak season BC Parks may require a free day-use pass, so check before you go"]
     },
     {
-      "id": "bearcreek", "cat": "kids", "gem": true, "name": "Bear Creek Park", "area": "Surrey",
+      "id": "bearcreek", "cat": "nature", "kids": true, "gem": true, "name": "Bear Creek Park", "area": "Surrey",
       "lat": 49.1591, "lng": -122.8401, "emoji": "🚂", "placeId": "ChIJPebCQezZhVQRhg3zZ6bQeRo", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Big city park with gardens and a miniature train", "signals": [], "why": "", "tips": []
@@ -469,7 +469,7 @@
       "summary": "Oceanfront park at the mouth of the Fraser, popular for kites and sunsets", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "terranova", "cat": "kids", "gem": true, "name": "Terra Nova Adventure Play", "area": "Richmond",
+      "id": "terranova", "cat": "nature", "kids": true, "gem": true, "name": "Terra Nova Adventure Play", "area": "Richmond",
       "lat": 49.1735, "lng": -123.1993, "emoji": "🧗", "placeId": "ChIJZbpCCxsLhlQRrLu7A-1SfPY", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Adventure playground with climbing structures and big slides", "signals": [], "why": "", "tips": []
@@ -482,7 +482,7 @@
       "signals": [], "why": "", "tips": ["At low tide the water pulls back a long way"]
     },
     {
-      "id": "queenspark", "cat": "kids", "gem": true, "name": "Queen's Park", "area": "New Westminster",
+      "id": "queenspark", "cat": "nature", "kids": true, "gem": true, "name": "Queen's Park", "area": "New Westminster",
       "lat": 49.2151, "lng": -122.9059, "emoji": "🐑", "placeId": "ChIJHTtJAgrYhVQR1fxvihZ0PyA",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Queen%27s_Park_Rose_Garden%2C_New_Westminster%2C_BC.jpg/960px-Queen%27s_Park_Rose_Garden%2C_New_Westminster%2C_BC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Dennis Sylvester Hurd","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Queen%27s_Park_Rose_Garden,_New_Westminster,_BC.jpg"}, "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
@@ -535,7 +535,7 @@
       "summary": "Quiet marshes and forest trails with lookouts over the Pitt River area", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "lionspark", "cat": "kids", "gem": true, "name": "Lions Park", "area": "Port Coquitlam",
+      "id": "lionspark", "cat": "nature", "kids": true, "gem": true, "name": "Lions Park", "area": "Port Coquitlam",
       "lat": 49.267, "lng": -122.7796, "emoji": "🦁", "placeId": "ChIJjT6uklJ_hlQRGDSNP2-qizI", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Riverside park in Port Coquitlam with play areas and trails", "signals": [], "why": "", "tips": []
@@ -667,156 +667,156 @@
     },
 
     {
-      "id": "coquitlamcentre", "cat": "kids", "family": true, "name": "Coquitlam Centre", "area": "Coquitlam",
+      "id": "coquitlamcentre", "cat": "city", "family": true, "name": "Coquitlam Centre", "area": "Coquitlam",
       "lat": 49.2798, "lng": -122.7986, "emoji": "🛍️", "placeId": "ChIJu5lRajN_hlQR16nLLnvtk4U", "hours": "Mo-We 10:00-19:00; Th-Fr 10:00-21:00; Sa 10:00-19:00; Su 10:00-18:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "Free", "time": "1–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Indoor mall with a kids' play area, an easy rainy-day outing with little ones", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "ohmyland", "cat": "kids", "family": true, "name": "Oh My Land Club", "area": "Port Coquitlam",
+      "id": "ohmyland", "cat": "city", "family": true, "name": "Oh My Land Club", "area": "Port Coquitlam",
       "lat": 49.2716, "lng": -122.7896, "emoji": "🧸", "placeId": "ChIJ828XH05_hlQRXVzOKFFYX70",
       "trend": null, "env": "indoor", "price": "$$", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Indoor playground for young kids", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "edmondspark", "cat": "kids", "family": true, "name": "Edmonds Park", "area": "Burnaby",
+      "id": "edmondspark", "cat": "nature", "family": true, "name": "Edmonds Park", "area": "Burnaby",
       "lat": 49.2217, "lng": -122.9492, "emoji": "🤸", "placeId": "ChIJazNFVsh3hlQRNmlLNkh1NtU", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Neighbourhood park with a playground, next to Edmonds Community Centre", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "sumodino", "cat": "kids", "family": true, "name": "Sumo Dino", "area": "Richmond",
+      "id": "sumodino", "cat": "city", "family": true, "name": "Sumo Dino", "area": "Richmond",
       "lat": 49.1755, "lng": -123.1325, "emoji": "🦖", "placeId": "ChIJq-b2hnp1hlQRzRqZ-W1yhCE",
       "trend": null, "env": "indoor", "price": "$$", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Indoor play centre at Lansdowne Centre", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "watermania", "cat": "kids", "family": true, "name": "Watermania", "area": "Richmond",
+      "id": "watermania", "cat": "city", "family": true, "name": "Watermania", "area": "Richmond",
       "lat": 49.136, "lng": -123.0632, "emoji": "🌊", "placeId": "ChIJT7b3FsTfhVQRaaMfpShqtNE",
       "trend": null, "env": "indoor", "price": "$", "time": "2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Indoor aquatic centre with a wave pool and water slides", "signals": [], "why": "", "tips": ["Check the public swim schedule before you go"]
     },
     {
-      "id": "richmondcentre", "cat": "kids", "family": true, "name": "CF Richmond Centre", "area": "Richmond",
+      "id": "richmondcentre", "cat": "city", "family": true, "name": "CF Richmond Centre", "area": "Richmond",
       "lat": 49.1672, "lng": -123.1385, "emoji": "🛍️", "placeId": "ChIJDz5vqMsKhlQRDr0Xeb-CLjY", "hours": "Mo-Sa 10:00-21:00; Su 11:00-19:00", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/CF_Richmond_Centre_Park_Plaza_Entrance_%28July_2026%29.jpg/960px-CF_Richmond_Centre_Park_Plaza_Entrance_%28July_2026%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Bcnerds","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:CF_Richmond_Centre_Park_Plaza_Entrance_(July_2026).jpg"},
       "trend": null, "env": "indoor", "price": "Free", "time": "1–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Big indoor mall on No. 3 Road, handy with kids on a rainy day", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "centralcity", "cat": "kids", "family": true, "name": "Central City Fun Park", "area": "Surrey",
+      "id": "centralcity", "cat": "city", "family": true, "name": "Central City Fun Park", "area": "Surrey",
       "lat": 49.205, "lng": -122.8824, "emoji": "🏎️", "placeId": "ChIJ-drd1BnZhVQRrQIeuUyMmFI", "hours": "We, Th 16:00-22:00; Fr 16:00-00:00; Sa 11:00-00:00; Su 11:00-22:00", "hoursSource": "osm",
       "trend": null, "env": "both", "price": "$$", "time": "2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy", "rain"],
       "summary": "Family fun centre with arcade games and activities", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "museumsurrey", "cat": "kids", "family": true, "name": "Museum of Surrey", "area": "Surrey",
+      "id": "museumsurrey", "cat": "city", "family": true, "name": "Museum of Surrey", "area": "Surrey",
       "lat": 49.1046, "lng": -122.7322, "emoji": "🏺", "placeId": "ChIJAaLgLAjQhVQRBAq1YXF0erg",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Surrey_Museum_%289593995767%29.jpg/960px-Surrey_Museum_%289593995767%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"David Stanley","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Surrey_Museum_(9593995767).jpg"}, "hours": "We-Sa 09:30-16:30; Su-Mo off; PH off", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Local history museum with hands-on exhibits for kids", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "unwin", "cat": "kids", "family": true, "name": "Unwin Park", "area": "Surrey (Newton)",
+      "id": "unwin", "cat": "nature", "family": true, "name": "Unwin Park", "area": "Surrey (Newton)",
       "lat": 49.1282, "lng": -122.8539, "emoji": "🤸", "placeId": "ChIJI9ZP6M7bhVQROIur2CLM5ZU", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Neighbourhood park with a playground that families rate highly", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "holland", "cat": "kids", "family": true, "name": "Holland Park", "area": "Surrey (City Centre)",
+      "id": "holland", "cat": "nature", "family": true, "name": "Holland Park", "area": "Surrey (City Centre)",
       "lat": 49.1843, "lng": -122.8496, "emoji": "🌷", "placeId": "ChIJoRJSv9PZhVQRqGfWi8tRT8s", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Holland_Park%2C_Surrey_BC.jpg/960px-Holland_Park%2C_Surrey_BC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Clee7903","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Holland_Park,_Surrey_BC.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Central Surrey park that hosts many family festivals", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "guildford", "cat": "kids", "family": true, "name": "Guildford Town Centre", "area": "Surrey",
+      "id": "guildford", "cat": "city", "family": true, "name": "Guildford Town Centre", "area": "Surrey",
       "lat": 49.1897, "lng": -122.8037, "emoji": "🛍️", "placeId": "ChIJWyuvLW3XhVQRUMoTTmy2WMw",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Guildford_town_centre_mall_exterior.jpeg/960px-Guildford_town_centre_mall_exterior.jpeg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Clee7903","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Guildford_town_centre_mall_exterior.jpeg"},
       "trend": null, "env": "indoor", "price": "Free", "time": "1–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Large indoor mall, a go-to rainy-day stop with kids", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "stewartfarm", "cat": "kids", "family": true, "name": "Historic Stewart Farm", "area": "South Surrey",
+      "id": "stewartfarm", "cat": "nature", "family": true, "name": "Historic Stewart Farm", "area": "South Surrey",
       "lat": 49.0656, "lng": -122.8423, "emoji": "🐓", "placeId": "ChIJmURORKjchVQRxhGwzQzdkfo",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/Stuart_Farm_house.jpg/960px-Stuart_Farm_house.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Irena12345","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Stuart_Farm_house.jpg"},
       "trend": null, "env": "both", "price": "Free", "time": "1 hr", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Heritage farmhouse and gardens by the Nicomekl River", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "activate", "cat": "kids", "family": true, "name": "Activate Langley", "area": "Langley",
+      "id": "activate", "cat": "city", "family": true, "name": "Activate Langley", "area": "Langley",
       "lat": 49.1145, "lng": -122.6748, "emoji": "🎮", "placeId": "ChIJ7dlZGjTRhVQRR1OfjKVyoIA",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Willowbrook_Shopping_Centre.jpg/960px-Willowbrook_Shopping_Centre.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Clee7903","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Willowbrook_Shopping_Centre.jpg"},
       "trend": null, "env": "indoor", "price": "$$", "time": "1 hr", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Interactive game rooms, fun for older kids and families", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "aldor", "cat": "kids", "family": true, "name": "Aldor Acres Family Farm", "area": "Langley",
+      "id": "aldor", "cat": "nature", "family": true, "name": "Aldor Acres Family Farm", "area": "Langley",
       "lat": 49.1531, "lng": -122.5302, "emoji": "🎃", "placeId": "ChIJ8W09TmPThVQRm7vtKzhS4U4",
       "trend": null, "env": "outdoor", "price": "$", "time": "2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Family farm with animals and seasonal activities", "signals": [], "why": "", "tips": ["Seasonal hours, so check before you go"]
     },
     {
-      "id": "penzer", "cat": "kids", "family": true, "name": "Penzer Action Park", "area": "Langley",
+      "id": "penzer", "cat": "nature", "family": true, "name": "Penzer Action Park", "area": "Langley",
       "lat": 49.0883, "lng": -122.6702, "emoji": "🛹", "placeId": "ChIJ2y6KHcDPhVQRLEAD16_7Z-c", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Action park with playgrounds, a skate park, and a bike park", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "wonderland", "cat": "kids", "family": true, "name": "Wonderland Kids Indoor Play Center", "area": "Tsawwassen",
+      "id": "wonderland", "cat": "city", "family": true, "name": "Wonderland Kids Indoor Play Center", "area": "Tsawwassen",
       "lat": 49.0376, "lng": -123.0866, "emoji": "🎈", "placeId": "ChIJp4bYv0LnhVQR9mPoF5GSyR4",
       "trend": null, "env": "indoor", "price": "$$", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Indoor playground at Tsawwassen Mills", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "tamesew", "cat": "kids", "family": true, "name": "təməsew̓txʷ Aquatic and Community Centre", "area": "New Westminster",
+      "id": "tamesew", "cat": "city", "family": true, "name": "təməsew̓txʷ Aquatic and Community Centre", "area": "New Westminster",
       "lat": 49.2214, "lng": -122.9077, "emoji": "🏊", "placeId": "ChIJe-2wqSN3hlQRlxmbu8_o7rY",
       "trend": null, "env": "indoor", "price": "$", "time": "2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "New Westminster's aquatic centre with pools for kids", "signals": [], "why": "", "tips": ["Check the public swim schedule before you go"]
     },
     {
-      "id": "shipyards", "cat": "kids", "family": true, "name": "The Shipyards", "area": "North Vancouver",
+      "id": "shipyards", "cat": "city", "family": true, "name": "The Shipyards", "area": "North Vancouver",
       "lat": 49.3098, "lng": -123.0795, "emoji": "⛲", "placeId": "ChIJtbuSI01whlQR_OK5YhRz1x8",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Shipyards_as_seen_from_Lonsdale_Quay_-_May_2018.jpg/960px-Shipyards_as_seen_from_Lonsdale_Quay_-_May_2018.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Shaundd","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Shipyards_as_seen_from_Lonsdale_Quay_-_May_2018.jpg"}, "hours": "24/7", "hoursSource": "public",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],
       "summary": "Waterfront plaza with a splash area, markets, and harbour views", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "lonsdalequay", "cat": "kids", "family": true, "name": "Lonsdale Quay", "area": "North Vancouver",
+      "id": "lonsdalequay", "cat": "city", "family": true, "name": "Lonsdale Quay", "area": "North Vancouver",
       "lat": 49.3104, "lng": -123.082, "emoji": "⛴️", "placeId": "ChIJK4VAHLNxhlQRpEnAmoodLxM", "hours": "Mo-Su 9:00-17:00", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/Seabus-departure.jpg/960px-Seabus-departure.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Arnold C","license":"Attribution","licenseUrl":null,"source":"https://commons.wikimedia.org/wiki/File:Seabus-departure.jpg"},
       "trend": null, "env": "both", "price": "Free", "time": "1 hr", "crowd": "meal", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Public market at the SeaBus terminal, a fun trip across the harbour with kids", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "parkroyal", "cat": "kids", "family": true, "name": "Park Royal", "area": "West Vancouver",
+      "id": "parkroyal", "cat": "city", "family": true, "name": "Park Royal", "area": "West Vancouver",
       "lat": 49.3266, "lng": -123.1377, "emoji": "🛍️", "placeId": "ChIJXbDlqSFuhlQR6a0op9wG_R4",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/Park_Royal_Shopping_Centre_Atrium_2025.jpg/960px-Park_Royal_Shopping_Centre_Atrium_2025.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Canmenwalker","license":"CC BY 4.0","licenseUrl":"https://creativecommons.org/licenses/by/4.0","source":"https://commons.wikimedia.org/wiki/File:Park_Royal_Shopping_Centre_Atrium_2025.jpg"},
       "trend": null, "env": "both", "price": "Free", "time": "1–3 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "North Shore shopping centre that families use for rainy-day outings", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "johnlawson", "cat": "kids", "family": true, "name": "John Lawson Park", "area": "West Vancouver",
+      "id": "johnlawson", "cat": "nature", "family": true, "name": "John Lawson Park", "area": "West Vancouver",
       "lat": 49.327, "lng": -123.1603, "emoji": "⚓", "placeId": "ChIJ8zdThRpuhlQRCYF5lkjJTG4", "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Seaside park with a playground and a pier on the Ambleside waterfront", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "kidsmarket", "cat": "kids", "family": true, "name": "Kids Market", "area": "Granville Island",
+      "id": "kidsmarket", "cat": "city", "family": true, "name": "Kids Market", "area": "Granville Island",
       "lat": 49.2703, "lng": -123.136, "emoji": "🧸", "placeId": "ChIJzfhG5M5zhlQRvzj0UOkElDY",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Kids_Market_Rainbow_%28699652918%29.jpg/960px-Kids_Market_Rainbow_%28699652918%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Ruth Hartnup","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Kids_Market_Rainbow_(699652918).jpg"},
       "trend": null, "env": "indoor", "price": "Free", "time": "1 hr", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Two floors of toy shops and an indoor play area, all for kids", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "giwaterpark", "cat": "kids", "family": true, "name": "Granville Island Water Park", "area": "Granville Island",
+      "id": "giwaterpark", "cat": "city", "family": true, "name": "Granville Island Water Park", "area": "Granville Island",
       "lat": 49.2695, "lng": -123.135, "emoji": "💦", "placeId": "ChIJ38kXhc1zhlQRSwgjFzVBDgE",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Granville_Island_water_park_%286093774760%29.jpg/960px-Granville_Island_water_park_%286093774760%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Ruth Hartnup","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Granville_Island_water_park_(6093774760).jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1 hr", "crowd": "park", "weather": ["sunny"],
       "summary": "Free outdoor water park for kids", "signals": [], "why": "", "tips": ["It is a summer-season water park, so check that it's open"]
     },
     {
-      "id": "hillcrest", "cat": "kids", "family": true, "name": "Hillcrest Aquatic Centre", "area": "Riley Park",
+      "id": "hillcrest", "cat": "city", "family": true, "name": "Hillcrest Aquatic Centre", "area": "Riley Park",
       "lat": 49.2438, "lng": -123.1071, "emoji": "🏊", "placeId": "ChIJ9WR6-fVzhlQRkK4b5y0VowQ", "hours": "Mo-Fr 06:00-21:00; Sa-Su 06:00-19:00", "hoursSource": "osm",
       "trend": null, "env": "indoor", "price": "$", "time": "2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Indoor and outdoor pools next to Queen Elizabeth Park", "signals": [], "why": "", "tips": ["Check the public swim schedule before you go"]
