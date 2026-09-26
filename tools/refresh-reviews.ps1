@@ -25,6 +25,7 @@ $rules = @(
 $spots = (Get-Content (Join-Path $root 'data/spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots
 $inactive = [ordered]@{}
 $checked = 0; $calls = 0; $errors = 0
+$failed = New-Object System.Collections.Generic.List[string]
 
 foreach ($s in $spots) {
   $rule = $rules | Where-Object { & $_.test $s } | Select-Object -First 1
@@ -38,8 +39,16 @@ foreach ($s in $spots) {
     $status = 0; try { $status = [int]$_.Exception.Response.StatusCode } catch {}
     if ($status -eq 404) { $inactive[$s.id] = 'not found on Google Maps'; continue }
     if ($status -in 401, 403) { throw "API 키 권한 오류($status). 키와 API 제한사항을 확인하세요." }
+    # 잘못된 키·API 미사용·결제 꺼짐은 400으로 와요 (잘못된 placeId도 400이라 이유로 구분)
+    $body = "$($_.ErrorDetails.Message)"
+    if (-not $body) {   # PS 5.1은 ErrorDetails가 비어 있을 때가 있어 응답 본문을 직접 읽어요
+      try { $body = (New-Object IO.StreamReader($_.Exception.Response.GetResponseStream())).ReadToEnd() } catch {}
+    }
+    if ($status -eq 400 -and $body -match 'API_KEY_\w+|SERVICE_DISABLED|BILLING_DISABLED') {
+      throw "API 키/프로젝트 설정 오류($status): $($Matches[0])"
+    }
     Write-Warning "$($s.id): 확인 실패 ($status) - 이번 달은 기존 상태 유지"
-    $errors++; continue
+    $errors++; $failed.Add($s.id); continue
   }
   if ($p.businessStatus -eq 'CLOSED_PERMANENTLY') { $inactive[$s.id] = 'permanently closed'; continue }
   if ($p.businessStatus -eq 'CLOSED_TEMPORARILY') { $inactive[$s.id] = 'temporarily closed'; continue }
@@ -48,11 +57,16 @@ foreach ($s in $spots) {
   }
 }
 
-# 확인에 실패한 스팟이 있으면 지난달 결과를 그대로 이어받아요
+# 절반 넘게 실패했으면 점검 자체가 잘못된 것이라 파일을 건드리지 않고 실패로 끝내요
+if ($errors * 2 -gt $checked) { throw "확인 실패가 너무 많아요 ($errors / $checked 곳). review-status.json은 그대로 둬요." }
+
+# 확인에 실패한 스팟만 지난달 결과를 이어받아요 (이번 달 통과한 스팟은 다시 보여줘요)
 $statusPath = Join-Path $root 'data/review-status.json'
-if ($errors -gt 0 -and (Test-Path $statusPath)) {
+if ($failed.Count -gt 0 -and (Test-Path $statusPath)) {
   $prev = Get-Content $statusPath -Raw -Encoding UTF8 | ConvertFrom-Json
-  foreach ($prop in $prev.inactive.PSObject.Properties) { if (-not $inactive.Contains($prop.Name)) { $inactive[$prop.Name] = $prop.Value } }
+  foreach ($prop in $prev.inactive.PSObject.Properties) {
+    if ($failed.Contains($prop.Name) -and -not $inactive.Contains($prop.Name)) { $inactive[$prop.Name] = $prop.Value }
+  }
 }
 
 $result = [ordered]@{
