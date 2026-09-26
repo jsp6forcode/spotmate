@@ -962,6 +962,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <p class="text-sm text-slate-500 dark:text-slate-400">${esc(s.area)}${s.dist != null ? `, ${s.dist.toFixed(1)} km` : ''}</p>
         <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">${esc(s.summary)}</p>
         ${s.rise != null ? `<p class="mt-2 text-sm ${s.rise >= RISING_MIN ? 'font-semibold text-rose-600 dark:text-rose-300' : 'text-slate-500 dark:text-slate-400'}" title="Google searches in BC over the last 2 weeks, compared with its 12-month average">${riseText(s.rise, 'searches')}</p>` : ''}
+        ${(() => { const m = GUIDES[s.id] && GUIDES[s.id].menu; return m && m.length ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold">🍴 Popular:</span> ${m.slice(0, 3).map(esc).join(' · ')}</p>` : ''; })()}
         ${evHere ? `<p class="mt-2 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${esc(evHere.ev.icon || '🎪')} ${esc(dayLabel(evHere.next))}: ${esc(evHere.ev.name)}</p>` : ''}
         ${(() => { const oi = openInfo(s); return oi
           ? `<p class="mt-2 text-xs font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}">${oi.open ? '🟢' : '🔴'} ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'public' ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
@@ -1248,11 +1249,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               <h3 class="font-bold">${title}</h3>
               <ul class="mt-2 space-y-1.5">${items.map(t => `<li class="text-sm text-slate-700 dark:text-slate-300 flex gap-2"><span class="shrink-0" aria-hidden="true">${mark}</span>${esc(t)}</li>`).join('')}</ul>
             </div>` : '';
-            const body = list('Things to do', g.do, '👉') + list(s.cat === 'food' || s.cat === 'dessert' ? 'What to order' : 'What to eat', g.eat, '🍴') + list('What to bring', bring, '🎒');
+            // 음식점·카페는 조사한 인기 메뉴(menu)를 우선 보여주고, 없으면 기존 메모(eat)
+            const eats = s.cat === 'food' || s.cat === 'dessert';
+            const body = list('Things to do', g.do, '👉') + list(eats ? 'Popular menu' : 'What to eat', eats ? (g.menu || g.eat) : g.eat, '🍴') + list('What to bring', bring, '🎒');
+            const src = eats && g.menu && /^https:\/\//i.test(g.menuSource || '') ? g.menuSource : '';
             return body ? `
           <section class="space-y-5">
             ${body}
-            ${g.do || g.eat ? `<p class="text-xs text-slate-500 dark:text-slate-400">${esc(GUIDES_NOTE || 'Check the official site before you go.')}</p>` : ''}
+            ${g.do || g.eat || g.menu ? `<p class="text-xs text-slate-500 dark:text-slate-400">${esc(GUIDES_NOTE || 'Check the official site before you go.')}${src ? ` <a href="${esc(src)}" target="_blank" rel="noopener" class="underline">Menu source ↗</a>` : ''}</p>` : ''}
           </section>` : '';
           })()}
 
