@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-25",
+  "updatedAt": "2026-09-26",
   "note": "Compiled by hand from official market/organizer pages (see each source). Times can change, so check the source before you go.",
   "events": [
     { "id": "troutlake-market", "type": "market", "icon": "🥕", "name": "Trout Lake Farmers Market", "area": "East Vancouver",
@@ -82,6 +82,18 @@
     { "id": "aldor-pumpkins", "type": "seasonal", "icon": "🎃", "name": "Pumpkin season at Aldor Acres", "area": "Langley",
       "venue": "Aldor Acres Family Farm (24990 84 Ave)", "lat": 49.1531, "lng": -122.5302, "spotId": "aldor",
       "schedule": { "from": "2026-09-19", "to": "2026-10-31", "start": "09:00", "end": "17:00" },
-      "summary": "Pumpkins and farm animals, open daily", "source": "https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026" }
+      "summary": "Pumpkins and farm animals, open daily", "source": "https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026" },
+    { "id": "zwilling-sale-2026-09", "type": "sale", "icon": "🔪", "name": "ZWILLING Factory Direct Sale", "area": "Hastings Park",
+      "venue": "Pacific Coliseum, PNE (100 N Renfrew St)", "lat": 49.2858, "lng": -123.0427, "spotId": null,
+      "schedule": { "start": "10:00", "end": "19:00", "from": "2026-09-24", "to": "2026-09-27" },
+      "summary": "Discounted ZWILLING, Henckels and Staub knives and cookware", "source": "https://www.zwilling.com/ca/zwilling-factory-direct-sale.html" },
+    { "id": "vancity-card-show-2026-10", "type": "popup", "icon": "🃏", "name": "Vancity Card Show", "area": "Downtown",
+      "venue": "Vancouver Convention Centre West, Halls A & B", "lat": 49.2889, "lng": -123.1161, "spotId": null,
+      "schedule": { "hoursText": "See site for hours", "from": "2026-10-02", "to": "2026-10-04" },
+      "summary": "Big trading card show: sports, Pokémon and more. Tickets required", "source": "https://www.vancityshow.com/" },
+    { "id": "oddities-expo-2026-10", "type": "popup", "icon": "💀", "name": "Oddities & Curiosities Expo", "area": "Downtown",
+      "venue": "Vancouver Convention Centre", "lat": 49.2889, "lng": -123.1161, "spotId": null,
+      "schedule": { "start": "10:00", "end": "17:00", "from": "2026-10-10", "to": "2026-10-11" },
+      "summary": "Vendors and artists selling all things weird, plus sideshow acts. Tickets required", "source": "https://odditiesandcuriositiesexpo.com/" }
   ]
 }

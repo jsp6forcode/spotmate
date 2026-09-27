@@ -1,0 +1,39 @@
+{
+  "updatedAt": "2026-09-26",
+  "note": "Seasonal reasons to go now, checked against official or organizer pages. Dates can change, so check the source before you go.",
+  "tags": [
+    {
+      "id": "fallcolours", "label": "FallColours", "emoji": "🍁", "from": "2026-09-20", "to": "2026-11-10",
+      "about": "Maples and ginkgos usually peak mid-to-late October.",
+      "spots": {
+        "vandusen": { "why": "Harvest Days runs on weekends Sept 26 to Oct 18 (plus Thanksgiving Monday, Oct 12), included with admission. Sugar maples, ginkgos and Japanese maples usually peak mid-to-late October.", "source": "https://vancouver.ca/parks-recreation-culture/harvest-days.aspx" },
+        "qepark": { "start": "2026-10-10", "why": "One of the city's go-to fall colour walks. Maples around the quarry garden usually peak mid-to-late October.", "source": "https://vandusengarden.org/bloom-calendar/fall-bloom/" },
+        "nitobe": { "start": "2026-10-10", "why": "The Japanese maples turn red and orange in October, usually at their best mid-to-late month.", "source": "https://vandusengarden.org/bloom-calendar/fall-bloom/" }
+      }
+    },
+    {
+      "id": "salmonrun", "label": "SalmonRun", "emoji": "🐟", "from": "2026-09-20", "to": "2026-11-30",
+      "about": "Salmon return to local rivers and hatcheries in fall.",
+      "spots": {
+        "capilanoriver": { "why": "Coho are returning now and Chinook come back in October and November. The Capilano River Hatchery has free underwater viewing windows (open 8am to 6pm in October).", "source": "https://www.pac.dfo-mpo.gc.ca/sep-pmvs/hatcheries-ecloseries/capilano-eng.html" },
+        "tynehead": { "start": "2026-10-01", "why": "Adult coho, chum and Chinook return to the Serpentine River here from October to December.", "source": "https://psf.ca/blog/salmon-spotting-metro-vancouver/" }
+      }
+    },
+    {
+      "id": "halloween", "label": "Halloween", "emoji": "🎃", "from": "2026-09-19", "to": "2026-10-31",
+      "about": "Pumpkin patches and haunted nights through October.",
+      "spots": {
+        "playland": { "start": "2026-10-07", "why": "The summer ride season is over, which is why searches are down. It reopens for Fright Nights from Oct 7 to 31 (Wednesday to Sunday, from 6pm).", "source": "https://frightnights.ca/" },
+        "aldor": { "why": "The pumpkin patch is open daily Sept 19 to Oct 31, 9am to 5pm, with hayrides and farm animals.", "source": "https://aldoracresfamilyfarm.ca/pumpkin-patch/" }
+      }
+    },
+    {
+      "id": "skiseasonsoon", "label": "SkiSeasonSoon", "emoji": "⛷️", "from": "2026-09-20", "to": "2026-12-20",
+      "about": "Local ski hills open when the snow arrives.",
+      "spots": {
+        "cypress": { "start": "2026-11-28", "why": "Summer hiking is winding down and ski season is next. Projected opening is Nov 28, depending on snow. 2026/27 season passes are on sale.", "source": "https://www.onthesnow.com/vancouver/projected-openings" },
+        "grouse": { "start": "2026-12-18", "why": "Ski season is next. Projected opening is mid-December, depending on snow, and 2026/27 passes are on sale now.", "source": "https://www.onthesnow.com/vancouver/projected-openings" }
+      }
+    }
+  ]
+}

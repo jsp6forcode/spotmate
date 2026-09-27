@@ -88,6 +88,7 @@
 "watermania":{"d0":"2026-06-27","partial":true,"v":[0,0,0,0,81,0,0,0,0,0,0,0,0,0,0,0,0,0,91,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,83,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,12,6,7,9,0,0,0,0,0,6,5,8,10,0]}
 },
 "notes":{
-"fortlangley":{"rising":["weather fort langley (+90%)","trading post fort langley (+50%)","fort langley stores (+50%)","fort langley market (+50%)","fort pub (+40%)"],"source":"https://www.tourism-langley.ca/event/fort-langley-cranberry-festival/","why":"Searches for Fort Langley weather, shops, the Trading Post and the market are up this week, a sign people are planning fall visits. The Cranberry Festival is next, on Oct 10."},
-"moa":{"rising":[],"source":"https://moa.ubc.ca/events/","why":"Google shows no single search driving it, but it is timely: the Haida robe exhibition \"I Use My Haida Eyes\" closes Oct 12, and National Day for Truth and Reconciliation is Sept 30."}
+"bluewater":{"rising":[],"source":"","why":"No single search or news item explains it. Search volume for this restaurant is small, so this is likely ordinary week-to-week variation."},
+"moa":{"rising":[],"source":"https://moa.ubc.ca/events/","why":"Google shows no single search driving it, but it is timely: the Haida robe exhibition \"I Use My Haida Eyes\" closes Oct 12, and National Day for Truth and Reconciliation is Sept 30."},
+"vag":{"rising":["vancouver art gallery hours (+120%)","polygon gallery (+110%)","vancouver art gallery north plaza (+90%)","vancouver art gallery tickets (+70%)","vancouver art gallery free (+60%)"],"source":"https://www.vanartgallery.bc.ca/free/","why":"Searches for the gallery's hours, tickets and free admission are up this week. The next free evening is First Free Friday on Oct 2 (4-8 pm), and the Jim Lambie rotunda installation closes Oct 12."}
 }}

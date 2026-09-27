@@ -9,11 +9,12 @@
 //
 // 결과: series[스팟 id] = { q: 검색어, partial: 마지막 주가 진행 중인지, v: 최근 12개월 주간 값(0~100, 검색어마다 따로 스케일) }
 //       daily[스팟 id]  = { d0: 첫날, partial: 마지막 날이 진행 중인지, v: 최근 3개월 일간 값 }
-// 앱(index.html의 riseOf)이 "최근 완결된 3일 검색량 ÷ 12개월 주간 평균"으로 증가율을 계산해요.
+// 앱(index.html의 riseOf)이 "최근 완결된 3일 검색량 ÷ 직전 4주 주간 중앙값"으로 증가율을 계산해요.
 // 주간·일간은 척도가 달라서, 겹치는 주들로 일간 값을 주간 척도로 바꿔요.
 // 평소보다 많이 검색되는 곳(1.05× 이상)의 이유는 notes[스팟 id] = { why, rising, source }에 따로 적어요.
 // rising은 Google Trends 최근 7일 "급상승 연관 검색어", why는 지금 유효한 이유(이미 지난 행사는 X)로 사람이 쓴 한두 문장이에요.
 // 이 스크립트는 notes를 만들지 않으니, 새 파일로 덮어쓸 때 새로 써 주세요.
+// 정기 갱신: Claude 앱 예약 작업 "spotmate-data-refresh"(월·목 아침)가 이 과정을 대신하고, 끝나면 tools/validate-data.ps1로 점검해요.
 (async () => {
   const SPOTS_URL = 'https://jsp6forcode.github.io/spotmate/data/spots.json';
   // 이름만으로는 다른 것과 섞이는 스팟은 지역명 등을 붙여 검색해요 (예: Miku → 가수 하츠네 미쿠)
