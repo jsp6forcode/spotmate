@@ -52,8 +52,24 @@ const defaultCat = view => hasAll(view) ? 'all' : PAGES[view][0];
 // 히든젬은 별도 카테고리가 아니라 각 카테고리 안의 스팟에 붙는 표시(gem: true)예요
 const GEM = { label: 'Hidden gem', icon: '💎', criteria: 'A Google rating of 4.6+ with 500+ reviews, but searched far less than the famous spots. Visitors love it, yet it is still under the radar.' };
 // 🧸 Kids 필터: 아이 동반 장소(family: true, 놀이터·수영장·몰·농장 등)와 아이랑 가기 좋은 곳(kids: true)만 남겨요
-const KIDS_TAG = "Playgrounds, museums, malls with play areas, pools, farms, and parks where Google reviews say it's great for kids and families (4.2+ rating, 500+ reviews), plus other spots that Google marks as good for children.";
+const KIDS_TAG = "Playgrounds, museums, malls with play areas, pools, farms, and parks where Google reviews say it's great for kids and families (4.2+ rating, 300+ reviews), plus other spots that Google marks as good for children.";
 const pickInfo = s => s.gem ? GEM : null;
+// 모달의 "왜 골랐나" 정보: 히든젬 > 리뷰 기준(음식점·디저트) > 아이 동반. 해당 없으면 null
+const REVIEW_MIN = { food: 'Google 4.0+ · 300+ reviews', dessert: 'Google 4.5+ · 300+ reviews' };
+// 새로 연 곳: opened('YYYY-MM') 달부터 6개월 동안(그 달 포함 7번째 달 전까지). 평점 4.9+·리뷰 30+ 는 매달 tools/refresh-reviews.ps1 이 확인해요
+const JUST_OPENED = { label: 'New Rising Spot', short: 'Google 4.9+ · 30+ reviews', criteria: 'Opened in the last 6 months and already rated 4.9+ on Google from 30+ reviews, so it is new and people love it. Checked every month.' };
+const openedDate = s => s.opened ? new Date(s.opened + '-01T12:00:00Z') : null;
+const isJustOpened = s => { const d = openedDate(s); if (!d) return false; const end = new Date(d); end.setUTCMonth(end.getUTCMonth() + 7); return Date.now() < end.getTime(); };
+const openedLabel = s => `${MON[+s.opened.slice(5, 7) - 1]} ${s.opened.slice(0, 4)}`;
+function pickOf(s) {
+  const c = CATS[s.cat];
+  if (isJustOpened(s)) return { label: JUST_OPENED.label, short: JUST_OPENED.short, heading: `New rising spot · opened ${openedLabel(s)}`, criteria: JUST_OPENED.criteria, source: s.openedSource };
+  if (s.gem) return { label: GEM.label, short: 'Google 4.6+ · 500+ reviews', heading: "Why it's a hidden gem", criteria: GEM.criteria };
+  if (c.basis === 'reviews') return { label: 'Review pick', short: REVIEW_MIN[s.cat] || 'Google reviews', heading: "Why it's a review pick", criteria: c.criteria };
+  if (s.family) return { label: 'Kid-friendly', short: 'Google 4.2+ · 300+ reviews', heading: "Why it's kid-friendly", criteria: KIDS_TAG };
+  if (s.kids) return { label: 'Kid-friendly', short: 'Good for children', heading: "Why it's kid-friendly", criteria: KIDS_TAG };
+  return null;
+}
 const isKid = s => !!s.kids || !!s.family;
 const hasTrend = s => Array.isArray(s.trend);
 // 이번 달 검색량이 이 이상이면 누구나 아는 명소(Classic)로 보고, 배지를 달아요 (목록에선 다른 곳과 함께 보여줘요)
@@ -147,6 +163,12 @@ const spotTags = s => activeTags().filter(t => t.spots[s.id]);
 // data/reddit.json: 최근 2주 Reddit 글 중 제목에 스팟 이름이 들어간 글 (배율 계산 없이 "근거 링크"로만 보여줘요)
 let REDDIT = { mentions: {}, from: '', to: '' };
 // 데이터 기준일 → "today", "yesterday", "3 days ago"
+// data/parking.json: 스팟 근처 400m 안 주차장 (OpenStreetMap). { id: [{ m, fee?, kind?, name?, customers? }] }
+let PARKING = { spots: {}, radius: 400 };
+const PARK_KIND = { surface: 'Surface lot', 'multi-storey': 'Parkade', underground: 'Underground', rooftop: 'Rooftop', street_side: 'Street parking', lane: 'Street parking', layby: 'Pull-out' };
+const parkingOf = s => PARKING.spots[s.id];
+// 카드용 한 줄: 가장 가까운 주차장 거리와 유료 여부
+const parkShort = s => { const p = parkingOf(s); if (!p || !p.length) return ''; const x = p[0]; return `Parking ${x.m} m${x.fee === 'no' ? ', free' : x.fee === 'yes' ? ', paid' : ''}`; };
 const ago = iso => { if (!iso) return ''; const d = Math.round((Date.parse(vanDate(0)) - Date.parse(iso)) / 864e5); return d <= 0 ? 'today' : d === 1 ? 'yesterday' : `${d} days ago`; };
 // 장소 종류에서 자동으로 뽑는 준비물 (이름·설명의 단어와 실내/야외로 판단)
 function autoBring(s) {
@@ -391,6 +413,11 @@ class App {
         const gr = await fetch('data/spot-guides.json', { cache: 'no-cache' });
         if (gr.ok) { const gd = await gr.json(); GUIDES = gd.guides || {}; GUIDES_NOTE = gd.note || ''; }
       } catch (e) {}
+      // 주차장: 없어도 괜찮아요
+      try {
+        const pr = await fetch('data/parking.json', { cache: 'no-cache' });
+        if (pr.ok) { const pd = await pr.json(); PARKING = { spots: pd.spots || {}, radius: pd.radius || 400 }; }
+      } catch (e) {}
       // Reddit 언급: 없어도 괜찮아요
       try {
         const rr = await fetch('data/reddit.json', { cache: 'no-cache' });
@@ -455,6 +482,11 @@ class App {
       out.push({ score: e.ev.type === 'market' ? 0.5 : 4 - Math.min(days, 3) * 0.3, icon: e.ev.icon || '🎪', text: `${dayLabel(e.next)}: ${e.ev.name}` });
     }
     // 시즌: 스팟별 start(단풍 절정·첫 연어·개막일)가 지났으면 "지금" 2.5, 2주 안이면 1.2, 더 뒤면 예고라 0.5 (그것만으로는 순위 X)
+    // 새로 연 곳: 연 지 1개월 안이면 2.5, 3개월 안이면 2, 그 뒤 6개월까지 1.2
+    if (isJustOpened(s)) {
+      const months = (Date.now() - openedDate(s).getTime()) / (30.4 * 864e5);
+      out.push({ score: months <= 1.5 ? 2.5 : months <= 3.5 ? 2 : 1.2, icon: '🆕', text: `New rising spot: opened in ${openedLabel(s)} and already rated 4.9+ on Google (30+ reviews).` });
+    }
     spotTags(s).forEach(t => {
       const x = t.spots[s.id], wait = x.start ? Math.round((Date.parse(x.start) - Date.parse(vanDate(0))) / 864e5) : 0;
       out.push({ score: wait <= 0 ? 2.5 : wait <= 14 ? 1.2 : 0.5, icon: t.emoji, text: x.why });
@@ -488,16 +520,25 @@ class App {
     let items = SPOTS.filter(s =>
       (cat === 'all' ? !PAGES[this.state.view] || PAGES[this.state.view].includes(s.cat) : s.cat === cat)
       && (eats || !this.state.indoor || s.env !== 'outdoor') && (eats || !this.state.kidsOnly || isKid(s))
-      && (cat !== 'food' || !this.state.cuisine || s.cuisine === this.state.cuisine)
       // 행사 장소(Pacific Coliseum, 컨벤션센터, 마켓이 열리는 공원 등)는 7일 안에 그곳 행사가 있을 때만
       && (!s.venue || !!(this._spotEvents && this._spotEvents[s.id])))
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
     // 위치 필터가 켜져 있으면 반경 안의 스팟만 남기고, 순위도 그 안에서 다시 매겨요
     if (this.nearActive() && radius !== 'any') items = items.filter(s => s.dist <= radius);
+    // 음식 종류: 드롭다운 개수는 위치·Know it·Open now 필터를 먼저 적용한 뒤, 음식 종류를 고르기 전 기준으로 세요
+    this._cuisineCounts = {};
+    if (cat === 'food') {
+      const known0 = this.state.showKnown ? [] : this.state.known;
+      const openOk = s => !(this.state.openNow && HOURS_READY) || (openInfo(s) || {}).open === true;
+      items.forEach(s => { if (s.cuisine && !known0.includes(s.id) && openOk(s)) this._cuisineCounts[s.cuisine] = (this._cuisineCounts[s.cuisine] || 0) + 1; });
+      if (this.state.cuisine) items = items.filter(s => s.cuisine === this.state.cuisine);
+    }
     // 시즌 태그 필터: 칩에 보여줄 개수는 태그를 고르기 전 목록 기준
     this._tagCounts = Object.fromEntries(activeTags().map(t => [t.id, items.filter(s => t.spots[s.id]).length]));
+    this._tagCounts.justopened = items.filter(isJustOpened).length;
     const tag = activeTags().find(t => t.id === this.state.tag);
     if (tag) items = items.filter(s => tag.spots[s.id]);
+    if (this.state.tag === 'justopened') items = items.filter(isJustOpened);
     // "Know it"으로 숨긴 곳은 빼고 개수만 세어 둬요
     const known = this.state.showKnown ? [] : this.state.known;
     this._knownHidden = items.filter(s => known.includes(s.id)).length;
@@ -740,7 +781,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           `}
         </main>
         <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-10 text-xs text-slate-500 dark:text-slate-400">
-          Search trends: Google Trends (BC), each place's last 3 days of searches vs the 4 weeks before · Weather: Open-Meteo · Coordinates: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Opening hours: OpenStreetMap where available, otherwise typical park hours · Events: compiled from official market and organizer pages (check before you go) · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
+          Search trends: Google Trends (BC), each place's last 3 days of searches vs the 4 weeks before · Weather: Open-Meteo · Coordinates and parking: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Opening hours: OpenStreetMap where available, otherwise typical park hours · Events: compiled from official market and organizer pages (check before you go) · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
         </footer>
       </div>
       ${modal ? this.modal(byId(modal), items) : ''}
@@ -821,12 +862,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             </select>
           </label>
           ${s.cat === 'food' ? (() => {
-            // 음식 종류: 데이터에 있는 종류만, 스팟 수와 함께 알파벳 순으로
-            const counts = {}; SPOTS.forEach(x => { if (x.cat === 'food' && x.cuisine) counts[x.cuisine] = (counts[x.cuisine] || 0) + 1; });
+            // 음식 종류: 지금 필터(위치 등)에 걸리는 곳이 있는 종류만, 개수와 함께 알파벳 순으로. 고른 종류는 0곳이어도 남겨요
+            const counts = { ...(this._cuisineCounts || {}) };
+            if (s.cuisine && !(s.cuisine in counts)) counts[s.cuisine] = 0;
+            const total = Object.values(counts).reduce((a, b) => a + b, 0);
             return `
           <label class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Cuisine
             <select data-act="cuisine" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold">
-              <option value="">All cuisines</option>
+              <option value="">All cuisines (${total})</option>
               ${Object.keys(counts).sort().map(k => `<option value="${esc(k)}" ${s.cuisine === k ? 'selected' : ''}>${esc(k)} (${counts[k]})</option>`).join('')}
             </select>
           </label>`; })() : ''}
@@ -909,12 +952,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   // 목록 맨 위: 지금 시즌 태그 칩 (누르면 그 태그의 장소만). 순위와 이유는 카드에서 보여줘요
   seasonChips() {
     const tags = activeTags().filter(t => this._tagCounts && this._tagCounts[t.id]);
-    if (!tags.length) return '';
+    const fresh = this._tagCounts && this._tagCounts.justopened, freshOn = this.state.tag === 'justopened';
+    if (!tags.length && !fresh) return '';
     const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-sm font-semibold px-3 py-1 rounded-full border ${on ? 'bg-orange-500 border-orange-500 text-white' : 'border-orange-200 text-orange-800 hover:border-orange-400 dark:border-orange-500/30 dark:text-orange-300'}">#${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
     return `
     <div class="mt-6 flex flex-wrap items-center gap-2">
-      <span class="text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>
-      ${tags.map(chip).join('')}
+      ${fresh ? `<button data-act="tag" data-val="justopened" aria-pressed="${freshOn}" title="${esc(JUST_OPENED.criteria)}" class="text-sm font-semibold px-3 py-1 rounded-full border ${freshOn ? 'bg-violet-600 border-violet-600 text-white' : 'border-violet-200 text-violet-800 hover:border-violet-400 dark:border-violet-500/30 dark:text-violet-300'}">New Rising Spots <span class="font-normal opacity-75">${fresh}</span></button>` : ''}
+      ${tags.length ? `<span class="${fresh ? 'ml-2 ' : ''}text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>${tags.map(chip).join('')}` : ''}
     </div>`;
   }
   // 목록 위: 이번 주(7일) 행사 미리보기
@@ -970,8 +1014,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     }
     return `
     <section class="mt-6 rounded-2xl p-5 bg-white dark:bg-slate-900 ring-1 ring-amber-200 dark:ring-amber-500/30">
-      <p class="text-sm font-bold text-amber-800 dark:text-amber-300">${c.icon} How we picked ${c.label}</p>
-      <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(c.criteria)} Places searched more than usual right now come first with a # rank; the rest are in no particular order.</p>
+      <p class="text-sm font-bold text-amber-800 dark:text-amber-300">How we picked ${c.label}</p>
+      <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(c.criteria)} Places with a reason to go now (a new rising spot, an event, or more searches than usual) come first with a # rank; the rest are in no particular order.</p>
+      ${items.some(isJustOpened) ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold text-violet-700 dark:text-violet-300">${JUST_OPENED.label}</span>: ${esc(JUST_OPENED.criteria)} These newcomers are the exception to the review count above.</p>` : ''}
       <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Check each place on Google Maps for the latest ratings and reviews.</p>
     </section>`;
   }
@@ -1003,14 +1048,19 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const level = this.crowdAt(s, vanClock(), true), crowd = this.crowdBadge(level);
     const evHere = this._spotEvents && this._spotEvents[s.id];
     // 오른쪽 위 배지: New → 순위 → Classic → 숨은 명소 → 리뷰 추천 → 아이 동반 (해당 없으면 배지 없음)
-    const badge = this.isNew(s) ? 'New' : this.rankOf(s) ? this.rankLabel(s) : this.state.sort === 'fresh' && isClassic(s) ? 'Classic'
+    // 새로 생겨 뜨는 곳은 순위 배지 밑에 "New Rising Spot" 배지를 하나 더 달아요
+    const rising = isJustOpened(s);
+    const badge = this.isNew(s) && !rising ? 'New' : this.rankOf(s) ? this.rankLabel(s) : rising ? '' : this.state.sort === 'fresh' && isClassic(s) ? 'Classic'
       : pickInfo(s) ? pickInfo(s).label : c.basis === 'reviews' ? 'Review pick' : isKid(s) ? 'Kid-friendly' : '';
     return `
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-2 hover:ring-violet-400 dark:hover:ring-violet-600 hover:shadow-lg transition overflow-hidden">
       <div class="relative">
         ${this.cover(s, 'h-40')}
         <span class="absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full bg-white/90 text-slate-900 shadow-sm">${esc(s.cuisine || c.label)}</span>
-        ${badge ? `<span class="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full ${this.isNew(s) ? 'bg-fuchsia-600 text-white' : 'bg-slate-900/75 text-white'}">${badge}</span>` : ''}
+        ${badge || rising ? `<div class="absolute top-3 right-3 flex flex-col items-end gap-1">
+          ${badge ? `<span class="text-xs font-bold px-2.5 py-1 rounded-full ${badge === 'New' ? 'bg-fuchsia-600 text-white' : 'bg-slate-900/75 text-white'}">${badge}</span>` : ''}
+          ${rising ? `<span class="text-xs font-bold px-2.5 py-1 rounded-full bg-violet-600 text-white">${JUST_OPENED.label}</span>` : ''}
+        </div>` : ''}
       </div>
       <div class="p-5 flex flex-col flex-1">
         <h3 class="text-lg font-bold leading-snug group-hover:text-violet-700 dark:group-hover:text-violet-300">${esc(s.name)}</h3>
@@ -1025,7 +1075,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ? `<p class="mt-2 text-xs font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'public' ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
           : HOURS_READY ? '<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
         <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-600 dark:text-slate-300">
-          ${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>
+          ${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>${parkShort(s) ? `<span>${esc(parkShort(s))}</span>` : ''}
           ${isKid(s) ? '<span class="font-semibold text-rose-600 dark:text-rose-300">Kid-friendly</span>' : ''}
         </div>
         ${(() => {
@@ -1256,7 +1306,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               <p class="font-bold">${fmtRise(s.rise)}</p><p class="text-xs text-slate-500 dark:text-slate-400">vs usual searches</p>
             </div>` : `
             <div class="rounded-xl p-3 text-center bg-violet-50 dark:bg-violet-500/10 ring-1 ring-violet-200 dark:ring-violet-500/20">
-              <p class="font-bold">${pickInfo(s) ? pickInfo(s).label : s.family ? 'Kid-friendly' : 'Review pick'}</p><p class="text-xs text-slate-500 dark:text-slate-400">${c.label}</p>
+              ${(() => { const p = pickOf(s); return p
+                ? `<p class="font-bold">${esc(p.label)}</p><p class="text-xs text-slate-500 dark:text-slate-400">${esc(p.short)}</p>`
+                : isClassic(s) ? '<p class="font-bold">Vancouver classic</p><p class="text-xs text-slate-500 dark:text-slate-400">Among the most searched</p>'
+                : `<p class="font-bold">${esc(ENV[s.env])}</p><p class="text-xs text-slate-500 dark:text-slate-400">About ${esc(s.time)}</p>`; })()}
             </div>`}
             <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-emerald-50 dark:bg-emerald-500/10 ring-1 ring-emerald-200 dark:ring-emerald-500/20 hover:ring-emerald-400">
               <p class="font-bold">${s.price ? esc(s.price) : 'Prices'}</p><p class="text-xs text-slate-500 dark:text-slate-400">Prices & booking</p>
@@ -1275,13 +1328,18 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             <p class="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">Searches that rose alongside it in the past 7 days (Google Trends, BC)</p>
             <div class="mt-1.5 flex flex-wrap gap-1.5">${n.rising.map(x => `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/80 dark:bg-slate-800 text-rose-700 dark:text-rose-300">${esc(x)}</span>`).join('')}</div>` : ''}
             ${aiBlock}
-          </section>`; })() : `
+          </section>`; })() : ''}
+          ${(() => {
+            // 왜 골랐나(히든젬·리뷰 기준·아이 동반). 검색이 늘어난 곳도 같이 보여줘요. 해당 없으면 검색 섹션이 없을 때만 "About this place"
+            const p = pickOf(s);
+            if (!p && isRising(s)) return '';
+            return `
           <section class="rounded-2xl p-5 bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/20">
-            <h3 class="font-bold text-amber-800 dark:text-amber-300">${s.gem ? "Why it's a hidden gem" : s.family ? "Why it's kid-friendly" : c.criteria ? 'How we picked it' : 'About this place'}</h3>
-            ${(() => { const why = pickInfo(s) ? pickInfo(s).criteria : s.family ? KIDS_TAG : c.criteria || ''; return why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(why)}</p>` : ''; })()}
+            <h3 class="font-bold text-amber-800 dark:text-amber-300">${p ? p.heading : 'About this place'}</h3>
+            ${p ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(p.criteria)}${/^https:\/\//i.test(p.source || '') ? ` <a href="${esc(p.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Opening news ↗</a>` : ''}</p>` : ''}
             <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">${esc(s.summary)}</p>
             <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="mt-3 inline-block text-sm font-semibold text-amber-800 dark:text-amber-300">See the latest ratings and reviews on Google Maps →</a>
-          </section>`}
+          </section>`; })()}
 
           ${spotTags(s).length ? `
           <section class="rounded-2xl p-5 bg-orange-50 dark:bg-orange-500/10 ring-1 ring-orange-200 dark:ring-orange-500/20">
@@ -1289,6 +1347,20 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             ${spotTags(s).map(t => { const x = t.spots[s.id]; return `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200"><span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('')}
             <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">${esc(SEASON_NOTE)}</p>
           </section>` : ''}
+
+          ${(() => {
+            // 주차: 400m 안의 주차장 최대 2곳 (OpenStreetMap). 큰 공원은 좌표가 한가운데라 입구 주차장이 멀게 나올 수 있어요
+            const p = parkingOf(s);
+            if (!p) return '';
+            const row = x => `<li class="text-sm text-slate-700 dark:text-slate-300 flex gap-2"><span class="shrink-0 w-14 font-semibold">${x.m} m</span><span>${[x.name && esc(x.name), PARK_KIND[x.kind], x.fee === 'no' ? 'Free' : x.fee === 'yes' ? 'Paid' : '', x.customers ? 'Customers only' : ''].filter(Boolean).join(' · ') || 'Parking lot'}</span></li>`;
+            return `
+          <section>
+            <h3 class="font-bold">Parking</h3>
+            ${p.length ? `<ul class="mt-2 space-y-1.5">${p.map(row).join('')}</ul>`
+              : `<p class="mt-2 text-sm text-slate-700 dark:text-slate-300">No parking lot mapped within ${PARKING.radius} m${s.cat === 'nature' ? '. Big parks usually have lots at their entrances, so check the map.' : '. Street parking or transit may be your best bet.'}</p>`}
+            <p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">Straight-line distance from © OpenStreetMap contributors. Rates, hours and time limits vary, so check the signs.</p>
+          </section>`;
+          })()}
 
           ${(() => {
             // Reddit: 제목에 이 장소가 나온 최근 글 (최대 3개). 사람들이 지금 무슨 얘기를 하는지 보는 근거 링크

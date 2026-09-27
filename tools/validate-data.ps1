@@ -34,6 +34,11 @@ function CheckAge($name, $updated) {
 $spots = (Load 'spots.json').spots
 $ids = @{}; foreach ($s in $spots) { $ids[$s.id] = $s }
 Ok "spots.json: $($spots.Count)곳"
+foreach ($s in @($spots | Where-Object { $_.opened })) {
+  if ((S $s.opened) -notmatch '^\d{4}-\d{2}$') { Err "$($s.id).opened 는 YYYY-MM 이어야 해요" }
+  if ($s.openedSource -notmatch '^https://') { Err "$($s.id).openedSource 는 개업 기사·공식 SNS https 링크여야 해요" }
+  if (-not $s.placeId) { Err "$($s.id) 는 새로 연 곳이라 매달 평점을 확인하도록 placeId가 있어야 해요" }
+}
 
 # ── 검색 추세 ──
 $t = Load 'trends-weekly.json'
@@ -102,6 +107,16 @@ if ($ev) {
     if ((D $sc.to) -lt $today -and @('sale','meet','popup') -contains $e.type) { Warn "events.$($e.id) 는 $(S $sc.to)에 끝났어요. 지워 주세요." }
   }
   Ok "events $(@($ev.events).Count)개"
+}
+
+# ── 주차 (OpenStreetMap) ──
+$pk = Load 'parking.json'
+if ($pk) {
+  $n = 0
+  foreach ($x in (Props $pk.spots)) { $n++; if (-not $ids[$x.Name]) { Err "parking 에 없는 스팟 id: $($x.Name)" } }
+  $missing = @($spots | Where-Object { -not ($pk.spots.PSObject.Properties.Name -contains $_.id) } | ForEach-Object { $_.id })
+  if ($missing.Count) { Warn "주차 정보가 없는 스팟 $($missing.Count)곳: $($missing[0..4] -join ', '). tools/parking-osm.ps1 -Ids 로 채워 주세요." }
+  Ok "parking $n곳"
 }
 
 # ── Reddit 언급 ──

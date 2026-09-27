@@ -308,6 +308,13 @@
     "whitespotcoquitlam": { "menu": ["Legendary burger with Triple-O sauce","Milkshakes","Dippin' chicken","White Spot club"], "menuSource": "https://www.whitespot.ca/?menu_item=legendary-burger" },
     "whytecliff": { "do": ["Walk out to Whyte Islet at low tide","A popular spot for scuba diving","Watch the ferries head out of Horseshoe Bay"], "bring": ["Check the tide times before you go"] },
     "wildthyme": { "menu": ["Kafta with rice","Lamb shank","Chicken tawouk","Za'atar flatbread"], "menuSource": "https://wildthymedining.com/menu.php" },
-    "wonderlandyogurt": { "menu": ["Frozen yogurt rolls","Egg waffles","Brown sugar milk tea","Croffle"], "menuSource": "https://wonderlandyogurt.ca/" }
+    "wonderlandyogurt": { "menu": ["Frozen yogurt rolls","Egg waffles","Brown sugar milk tea","Croffle"], "menuSource": "https://wonderlandyogurt.ca/" },
+    "meros": { "menu": ["Build-your-own Greek yogurt bowl","High-protein yogurt bowl","House granola"], "menuSource": "https://nomsmagazine.com/new-meros-yogurt-yaletown-open/" },
+    "menyatsuzuki": { "menu": ["Tonkotsu ramen","Abura soba","Mazesoba"], "menuSource": "https://nomsmagazine.com/new-menya-tsuzuki-robson-public-market/" },
+    "magpiecoffee": { "menu": ["Orange americano","Pineapple americano","Green grape jasmine americano"], "menuSource": "https://www.richmond-news.com/food-and-drink/new-richmond-shop-magpie-fruit-flavoured-coffee-12300241" },
+    "forecastesplanade": { "menu": ["Fried chicken sando","Hot honey BLT","Mushroom toast on sourdough"], "menuSource": "https://nomsmagazine.com/new-forecast-coffee-north-vancouver-open" },
+    "g3kitchen": { "menu": ["Paneer tikka","Tandoori tacos","Chicken parmesan"], "menuSource": "https://nomsmagazine.com/new-g3-kitchen-yaletown-open" },
+    "daydreamers": { "menu": ["Gelato","Matcha latte","Vietnamese coffee"], "menuSource": "https://nomsmagazine.com/new-daydreamers-cafe33-richmond/" },
+    "popculture": { "menu": ["Short and Sweet (Dr Pepper, raspberry, cheesecake cream)","Peaches","Fruity Pebble"], "menuSource": "https://dailyhive.com/vancouver/pop-culture-dirty-soda-storefront" }
   }
 }

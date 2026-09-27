@@ -1,11 +1,15 @@
 ﻿# 사진이 없는 스팟에 대해 위키미디어 공용의 "위치 기반 검색"(geosearch)으로 근처에서 찍힌 무료 사진 후보를 찾아요.
 # 파일 이름에 스팟 이름 단어가 들어간 사진을 우선하고, 없으면 가장 가까운 사진을 후보로 둬요.
 # 결과는 검토용 JSON(-Out)으로 저장해요. 사람이 눈으로 확인한 뒤에만 data/spots.json에 넣어요.
-param([string]$Out = "$env:TEMP\spotmate-photo-geo.json")
+# -Ids a,b 를 주면 그 스팟만 찾아요 (새로 더한 곳 점검용)
+param([string]$Out = "$env:TEMP\spotmate-photo-geo.json", [string[]]$Ids)
+# powershell -File 로 부르면 "a,b,c"가 한 덩어리로 와서 쉼표로 나눠요
+if ($Ids) { $Ids = @($Ids | ForEach-Object { $_ -split ',' } | Where-Object { $_ }) }
 
 $root = Split-Path $PSScriptRoot -Parent
 $ua = @{ 'User-Agent' = 'SpotMate/0.1 (https://github.com/jsp6forcode/spotmate)' }
 $spots = (Get-Content (Join-Path $root 'data/spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots | Where-Object { -not $_.photo }
+if ($Ids) { $spots = @($spots | Where-Object { $_.id -in $Ids }) }
 function Strip-Html($h) { (($h -replace '<[^>]+>', '') -replace '&amp;', '&' -replace '\s+', ' ').Trim() }
 $stop = 'the','and','park','regional','restaurant','cafe','bar','kitchen','co','bakery','house','centre','center','of'
 

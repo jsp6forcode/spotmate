@@ -2,11 +2,15 @@
 # - 이름이 맞는 문서 + 스팟 좌표와 1.5km 이내인 문서만 후보로 봐요
 # - 지도/로고/SVG는 제외
 # 결과는 tools/photos-candidates.json 에 저장해요 (사람이 검토한 뒤 data/spots.json에 반영)
-param([double]$MaxKm = 1.5)
+# -Ids a,b 를 주면 그 스팟만 찾아요 (새로 더한 곳 점검용)
+param([double]$MaxKm = 1.5, [string[]]$Ids)
+# powershell -File 로 부르면 "a,b,c"가 한 덩어리로 와서 쉼표로 나눠요
+if ($Ids) { $Ids = @($Ids | ForEach-Object { $_ -split ',' } | Where-Object { $_ }) }
 
 $root = Split-Path $PSScriptRoot -Parent
 $ua = @{ 'User-Agent' = 'SpotMate/0.1 (https://github.com/jsp6forcode/spotmate)' }
 $spots = (Get-Content (Join-Path $root 'data\spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots
+if ($Ids) { $spots = @($spots | Where-Object { $_.id -in $Ids }) }
 $norm = { param($x) (($x -replace '\(.*?\)', '' -replace "[^a-z0-9 ]", '' ).ToLower() -replace '\b(the|park|regional|provincial|restaurant|and|bar|cafe)\b', '' -replace '\s+', ' ').Trim() }
 function Strip-Html($h) { (($h -replace '<[^>]+>', '') -replace '&amp;', '&' -replace '\s+', ' ').Trim() }
 

@@ -6,7 +6,12 @@
 # 사용법:
 #   기존 스팟 확인:  powershell -ExecutionPolicy Bypass -File tools\kids-check.ps1 -Mode existing
 #   새 후보 찾기:    powershell -ExecutionPolicy Bypass -File tools\kids-check.ps1 -Mode discover
-param([ValidateSet('existing', 'discover')][string]$Mode = 'existing', [double]$MinRating = 4.3, [int]$MinReviews = 500)
+#   새로 더한 곳만:  powershell -ExecutionPolicy Bypass -File tools\kids-check.ps1 -Ids a,b,c
+#     placeId가 없는 스팟은 이름+좌표로 찾아서 placeId를 같이 보여줘요 (Place ID는 저장해도 돼요)
+#   판단: goodForChildren=True 이면 "kids": true, 여기에 평점 4.2+·리뷰 300+ 이고 아이 언급 리뷰가 2개 이상이면 "family": true
+param([ValidateSet('existing', 'discover')][string]$Mode = 'existing', [double]$MinRating = 4.3, [int]$MinReviews = 300, [string[]]$Ids)
+# powershell -File 로 부르면 "a,b,c"가 한 덩어리로 와서 쉼표로 나눠요
+if ($Ids) { $Ids = @($Ids | ForEach-Object { $_ -split ',' } | Where-Object { $_ }) }
 
 $root = Split-Path $PSScriptRoot -Parent
 $key = ((Get-Content (Join-Path $root '.env.local') | Where-Object { $_ -match '^\s*GOOGLE_PLACES_API_KEY\s*=' } | Select-Object -First 1) -replace '^\s*GOOGLE_PLACES_API_KEY\s*=\s*', '').Trim()
@@ -24,11 +29,23 @@ function Read-Error($err) {
 $calls = 0
 if ($Mode -eq 'existing') {
   $spots = (Get-Content (Join-Path $root 'data\spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots
+  if ($Ids) { $spots = @($spots | Where-Object { $_.id -in $Ids }) }
   $rows = foreach ($s in $spots) {
     try {
-      $p = Invoke-RestMethod -Uri "https://places.googleapis.com/v1/places/$($s.placeId)" -Headers @{ 'X-Goog-Api-Key' = $key; 'X-Goog-FieldMask' = 'goodForChildren,reviews' }
+      $found = ''
+      if ($s.placeId) {
+        $p = Invoke-RestMethod -Uri "https://places.googleapis.com/v1/places/$($s.placeId)" -Headers @{ 'X-Goog-Api-Key' = $key; 'X-Goog-FieldMask' = 'goodForChildren,reviews,rating,userRatingCount' }
+      } else {
+        # placeId가 없으면 이름으로 검색 (스팟 좌표 300m 안)
+        $body = @{ textQuery = "$($s.name) $($s.area)"; pageSize = 1; languageCode = 'en'; locationBias = @{ circle = @{ center = @{ latitude = $s.lat; longitude = $s.lng }; radius = 300.0 } } } | ConvertTo-Json -Depth 5
+        $res = Invoke-RestMethod -Method Post -Uri 'https://places.googleapis.com/v1/places:searchText' -Headers @{ 'X-Goog-Api-Key' = $key; 'X-Goog-FieldMask' = 'places.id,places.displayName,places.goodForChildren,places.reviews,places.rating,places.userRatingCount' } `
+          -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body))
+        $p = @($res.places)[0]
+        if (-not $p) { throw 'not found' }
+        $found = "$($p.id) ($($p.displayName.text))"
+      }
       $calls++
-      [pscustomobject]@{ id = $s.id; cat = $s.cat; name = $s.name; goodForChildren = $p.goodForChildren; kidReviews = "$(Get-KidMentions $p)/$(@($p.reviews).Count)" }
+      [pscustomobject]@{ id = $s.id; cat = $s.cat; name = $s.name; goodForChildren = $p.goodForChildren; rating = $p.rating; reviews = $p.userRatingCount; kidReviews = "$(Get-KidMentions $p)/$(@($p.reviews).Count)"; foundPlaceId = $found }
     } catch { [pscustomobject]@{ id = $s.id; cat = $s.cat; name = $s.name; goodForChildren = 'ERR ' + (Read-Error $_); kidReviews = '' } }
   }
   "API 호출 $calls 회 (Place Details Enterprise + Atmosphere, 월 1,000회 무료)"
