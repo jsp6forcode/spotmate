@@ -167,16 +167,6 @@
       "tips": ["The steam clock whistles and puffs steam every 15 minutes"]
     },
     {
-      "id": "nightmarket", "cat": "city", "kids": true, "name": "Richmond Night Market", "area": "Richmond",
-      "lat": 49.1938, "lng": -123.1336, "emoji": "🏮", "placeId": "ChIJQ7wAFCR1hlQRL7RB8W3XeOU",
-      "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Richmond_Night_Market_2019_%2833946171228%29.jpg/960px-Richmond_Night_Market_2019_%2833946171228%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"GoToVan","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Richmond_Night_Market_2019_(33946171228).jpg"},
-      "trend": [9, 51, 52], "env": "outdoor", "price": "$", "time": "2 hrs", "crowd": "meal", "weather": ["sunny", "cloudy"],
-      "summary": "Summer-season night market open on weekends",
-      "signals": ["richmond night market closing date", "why is the richmond night market closing", "richmond night market entrance fee"],
-      "why": "Searches like 'closing date' and 'why is it closing' have spiked. Searches peak on weekends (Sep 19–20) and drop off sharply on weekdays.",
-      "tips": ["Check the official site to confirm it's open before you go"]
-    },
-    {
       "id": "vag", "cat": "city", "name": "Vancouver Art Gallery", "area": "Downtown",
       "lat": 49.2828, "lng": -123.1206, "emoji": "🖼️", "placeId": "ChIJwXz9f39xhlQRT3qxXAPDlbU", "hours": "Sa-Th 10:00-17:00; Fr 10:00-20:00", "hoursSource": "osm",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/Vancouver_Art_Gallery_%2829787380987%29.jpg/960px-Vancouver_Art_Gallery_%2829787380987%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"dronepicr","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0","source":"https://commons.wikimedia.org/wiki/File:Vancouver_Art_Gallery_(29787380987).jpg"},

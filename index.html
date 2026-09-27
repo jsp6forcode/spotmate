@@ -46,8 +46,11 @@ const CATS = {
 const PAGES = { list: ['nature', 'city'], eats: ['food', 'dessert'] };
 // 페이지별 카테고리 드롭다운 항목 ('all' 제외). 행사는 Explore와 지도에서만
 const catOptions = view => PAGES[view] ? [...PAGES[view], ...(view === 'list' ? ['events'] : [])] : [...Object.keys(CATS), 'events'];
+// Eats에는 All이 없어요 (Food가 기본). 다른 페이지는 All부터
+const hasAll = view => view !== 'eats';
+const defaultCat = view => hasAll(view) ? 'all' : PAGES[view][0];
 // 히든젬은 별도 카테고리가 아니라 각 카테고리 안의 스팟에 붙는 표시(gem: true)예요
-const GEM = { label: 'Hidden gem', icon: '💎', criteria: 'A Google rating of 4.6+ with 500+ reviews, but low search volume (Google Trends score under 15). Visitors love it, yet it is still under the radar.' };
+const GEM = { label: 'Hidden gem', icon: '💎', criteria: 'A Google rating of 4.6+ with 500+ reviews, but searched far less than the famous spots. Visitors love it, yet it is still under the radar.' };
 // 🧸 Kids 필터: 아이 동반 장소(family: true, 놀이터·수영장·몰·농장 등)와 아이랑 가기 좋은 곳(kids: true)만 남겨요
 const KIDS_TAG = "Playgrounds, museums, malls with play areas, pools, farms, and parks where Google reviews say it's great for kids and families (4.2+ rating, 500+ reviews), plus other spots that Google marks as good for children.";
 const pickInfo = s => s.gem ? GEM : null;
@@ -58,20 +61,44 @@ const CLASSIC_MIN = 40;
 const isClassic = s => hasTrend(s) && s.trend[2] >= CLASSIC_MIN;
 // 처음 본 지 이 기간이 안 된 스팟은 "New since your last visit"으로 표시해요
 const NEW_DAYS = 14;
-// ── 평소 대비 증가율 (data/trends-weekly.json: Google Trends BC, 최근 12개월 주간 검색량) ──
-// 증가율 = 최근 완결된 2주 평균 ÷ 12개월 평균. 장소마다 따로 조회한 값이라 장소끼리 척도는 달라도 비율은 비교할 수 있어요.
+// ── 평소 대비 증가율 (data/trends-weekly.json: Google Trends BC) ──
+// 평소 = 최근 12개월 주간 검색량 평균(series), 최근 = 마지막 RECENT_DAYS일의 일간 검색량 평균(daily).
+// Trends는 요청마다 척도가 달라서, 주간·일간이 겹치는 주들로 비율(k)을 구해 일간 값을 주간 척도로 바꿔 비교해요.
+// 장소마다 따로 조회한 값이라 장소끼리 척도는 달라도 비율은 비교할 수 있어요.
 // 검색량이 너무 적으면(0인 주가 많으면) 비율이 튀어서 계산하지 않아요.
+// 일간 값의 0은 "검색이 없었다"가 아니라 "양이 적어 Google이 비워 둔 날"이라, 0이 낀 주·날은 계산에서 빼요.
 const RISE_MIN_WEEKS = 40;   // 12개월 중 검색량이 0이 아닌 주가 이만큼은 있어야 해요
-const RISING_MIN = 1.25;     // 평소보다 25% 이상 많이 검색되면 "Rising"
-function riseOf(sr) {
-  if (!sr || !Array.isArray(sr.v)) return null;
-  const v = sr.partial ? sr.v.slice(0, -1) : sr.v.slice();
-  if (v.length < 26 || v.filter(x => x > 0).length < RISE_MIN_WEEKS) return null;
+const RECENT_DAYS = 3;       // "최근"으로 보는 날 수 (완결된 날만)
+const RISING_MIN = 1.05;     // 평소보다 5% 이상 많이 검색되면 "Rising"
+const DAY = 864e5, isoDay = t => new Date(t).toISOString().slice(0, 10), dayMs = iso => Date.parse(iso + 'T00:00:00Z');
+function riseOf(sr, dy, weekThrough) {
+  if (!sr || !Array.isArray(sr.v) || !dy || !Array.isArray(dy.v) || !weekThrough) return null;
   const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
-  const base = avg(v);
-  return base > 0 ? Math.round(avg(v.slice(-2)) / base * 100) / 100 : null;
+  const w = sr.partial ? sr.v.slice(0, -1) : sr.v.slice();
+  if (w.length < 26 || w.filter(x => x > 0).length < RISE_MIN_WEEKS) return null;
+  const d = dy.partial ? dy.v.slice(0, -1) : dy.v.slice();
+  const r = d.slice(-RECENT_DAYS);
+  if (r.length < RECENT_DAYS || r.some(x => !(x > 0))) return null;
+  const d0 = dayMs(dy.d0), wEnd = dayMs(weekThrough);
+  // 일간 값이 7일 모두 0이 아닌 주들로 척도 비율 k = Σ주간값 ÷ Σ(그 주 일간 평균)
+  let sw = 0, sd = 0, n = 0;
+  for (let j = w.length - 1; j >= 0; j--) {
+    const end = wEnd - (w.length - 1 - j) * 7 * DAY, a = Math.round((end - 6 * DAY - d0) / DAY), b = Math.round((end - d0) / DAY);
+    if (a < 0) break;
+    if (b >= d.length) continue;
+    const wk = d.slice(a, b + 1);
+    if (!(w[j] > 0) || wk.some(x => !(x > 0))) continue;
+    sw += w[j]; sd += avg(wk); n++;
+  }
+  if (n < 1 || sd <= 0) return null;
+  const base = avg(w), recent = avg(r) * sw / sd;
+  return base > 0 ? Math.round(recent / base * 100) / 100 : null;
 }
-const fmtRise = r => `${r.toFixed(1)}×`;
+// 평소보다 많이 검색되는 이유: trends-weekly.json의 notes[스팟 id] = { why, rising: [최근 7일 급상승 연관 검색어] }
+let RISE_NOTES = {};
+const isRising = s => s.rise != null && s.rise >= RISING_MIN;
+// 5% 차이도 보이게, 2배 미만이면 소수점 둘째 자리까지
+const fmtRise = r => `${r < 2 ? r.toFixed(2) : r.toFixed(1)}×`;
 // 카드·모달용 문구: 평소와 거의 같으면(±5%) 배율 대신 "About its usual"
 const riseText = (r, suffix) => Math.abs(r - 1) < 0.05 ? `➖ About its usual ${suffix}` : `${r > 1 ? '📈' : '📉'} ${fmtRise(r)} its usual ${suffix}`;
 const TF = { today: { label: 'Today', i: 0 }, week: { label: 'This week', i: 1 }, month: { label: 'This month', i: 2 } };
@@ -99,7 +126,13 @@ const ORIGINS = {
 // data/spots.json에서 불러와요. trend: [오늘, 이번 주, 이번 달] 트렌드 지수
 let SPOTS = [];
 let DATA_META = { source: '', updatedAt: '', trendNote: '', coordsNote: '' };
-let RISE_META = { updatedAt: '', through: '' };
+let RISE_META = { updatedAt: '', through: '', recentFrom: '', recentThrough: '' };
+// "Sep 23–25"처럼 최근 비교 기간을 짧게
+const recentLabel = () => {
+  const { recentFrom: a, recentThrough: b } = RISE_META;
+  if (!a || !b) return 'the last few days';
+  return `${shortDate(a)}–${a.slice(0, 7) === b.slice(0, 7) ? +b.slice(8, 10) : shortDate(b)}`;
+};
 // data/spot-guides.json: 스팟별 할 거리(do), 먹을 것(eat), 준비물(bring). 없는 스팟은 자동 준비물만 보여줘요
 let GUIDES = {}, GUIDES_NOTE = '';
 // 장소 종류에서 자동으로 뽑는 준비물 (이름·설명의 단어와 실내/야외로 판단)
@@ -268,8 +301,8 @@ class App {
     const prefersDark = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches;
     const savedRadius = load('spotmate-radius');
     this.state = {
-      // sort: 'fresh' = 새로 생긴 곳·뜨는 곳·숨은 명소 먼저, 유명 명소는 맨 아래 / 'trend' = 검색량 순 / 'distance'
-      // tf: 검색량 기간. 화면에서 고르지 않고, 하루치보다 안정적인 "이번 달"로 고정해요 (Most searched 정렬과 추세 막대에 쓰여요)
+      // sort: 'fresh' = 새로 생긴 곳·뜨는 곳·숨은 명소 먼저, 유명 명소는 맨 아래 / 'distance'
+      // tf: AI 분석 캐시 키에만 남아 있어요 (검색량 점수는 더 이상 화면에 쓰지 않아요)
       cat: 'all', tf: 'month', sort: 'fresh',
       // known: "이미 아는 곳"으로 숨긴 스팟 id (이 브라우저에만 저장)
       known: [], showKnown: false, classicsOpen: false,
@@ -329,8 +362,9 @@ class App {
         const tr = await fetch('data/trends-weekly.json', { cache: 'no-cache' });
         if (tr.ok) {
           const td = await tr.json();
-          SPOTS.forEach(s => { s.rise = riseOf(td.series && td.series[s.id]); });
-          RISE_META = { updatedAt: td.updatedAt || '', through: td.through || '' };
+          SPOTS.forEach(s => { s.rise = riseOf(td.series && td.series[s.id], td.daily && td.daily[s.id], td.through); });
+          RISE_META = { updatedAt: td.updatedAt || '', through: td.through || '', recentFrom: td.recentFrom || '', recentThrough: td.recentThrough || '' };
+          RISE_NOTES = td.notes || {};
         }
       } catch (e) {}
       // 스팟 안내(할 거리·먹을 것·준비물): 없어도 괜찮아요
@@ -389,11 +423,9 @@ class App {
     if (s.rise != null) return 1;
     return s.gem ? 2 : 3;
   }
-  // 카드·지도·모달에 보여줄 순위 번호: Fresh finds면 증가율 순위, 그 외엔 검색량 순위
-  rankOf(s) { return this.state.sort === 'fresh' ? s.freshNo : s.rank; }
-  rankLabel(s) {
-    return this.state.sort === 'fresh' ? `#${s.freshNo}` : `#${s.rank} ${TF[this.state.tf].label.toLowerCase()}`;
-  }
+  // 카드·지도·모달에 보여줄 순위 번호: Fresh finds에서만, 평소 대비 증가율 순위
+  rankOf(s) { return this.state.sort === 'fresh' ? s.freshNo : null; }
+  rankLabel(s) { return `#${s.freshNo}`; }
   toggleKnown(id) {
     const known = this.state.known.includes(id) ? this.state.known.filter(x => x !== id) : [...this.state.known, id];
     store('spotmate-known', JSON.stringify(known));
@@ -402,9 +434,8 @@ class App {
 
   // ── 데이터 ──
   list() {
-    const { cat, tf, sort, radius } = this.state;
+    const { cat, sort, radius } = this.state;
     if (cat === 'events') return [];
-    const ti = TF[tf].i;
     const origin = this.origin();
     // "Indoor": 비 오는 날용. 실내와 실내+야외(both) 장소만 남겨요.
     // Indoor·Kids 필터는 장소용이라 Eats 페이지에서는 적용하지 않아요
@@ -430,12 +461,8 @@ class App {
         return true;
       });
     }
-    // 순위는 트렌드 데이터가 있는 스팟끼리만 매겨요. 리뷰 기준 스팟은 순위 없이 뒤에 데이터 순서대로.
-    const byTrend = items.filter(hasTrend).sort((a, b) => b.trend[ti] - a.trend[ti]);
-    const rank = {}; byTrend.forEach((s, i) => rank[s.id] = i + 1);
-    items = items.map(s => ({ ...s, rank: rank[s.id] || null, score: hasTrend(s) ? s.trend[ti] : null }));
-    if (sort === 'fresh') items.sort((a, b) => this.freshRank(a) - this.freshRank(b) || (b.rise ?? 0) - (a.rise ?? 0) || (b.score ?? -1) - (a.score ?? -1));
-    if (sort === 'trend') items.sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
+    // 순위와 "뜨는 곳" 판단은 평소 대비 증가율(rise)만 써요. 같은 그룹 안에서는 데이터 순서대로.
+    if (sort === 'fresh') items.sort((a, b) => this.freshRank(a) - this.freshRank(b) || (b.rise ?? 0) - (a.rise ?? 0));
     if (sort === 'distance') items.sort((a, b) => a.dist - b.dist);
     // Fresh finds 순위: 증가율이 있는 곳에만 목록 순서대로 번호를 매겨요
     if (sort === 'fresh') { let n = 0; items.forEach(s => { s.freshNo = this.freshRank(s) === 1 ? ++n : null; }); }
@@ -477,15 +504,6 @@ class App {
     const o = this.origin();
     return o ? (o.label || 'your location') : '';
   }
-  rising(s) {
-    const ti = TF[this.state.tf].i;
-    // 평소(12개월 평균)보다 많이 검색되면 Rising. 증가율 파일이 없을 때만 예전 방식(이번 달 대비)으로 판단해요
-    if (s.rise != null) { if (s.rise >= RISING_MIN) return 'Rising'; }
-    else if (hasTrend(s) && ti < 2 && s.trend[ti] - s.trend[2] >= 8) return 'Rising';
-    if (!hasTrend(s)) return '';
-    if (ti === 2 && s.trend[2] >= 88) return 'Top pick';
-    return '';
-  }
   // 혼잡도 0~2, 영업시간상 닫혀 있으면 -1. now=true면 지금 이 순간의 영업 상태로 판단해요
   crowdAt(s, { h, weekend }, now = false) {
     if (now ? openInfo(s)?.open === false : openAt(s, h) === false) return -1;
@@ -519,7 +537,7 @@ class App {
     // Fresh finds에서는 목록 순서(새로운 곳 먼저)를 따르고, 유명 명소는 다른 후보가 없을 때만 추천해요
     const pick = this.state.sort === 'fresh'
       ? (cands.find(s => !isClassic(s)) || cands[0])
-      : [...cands].sort((a, b) => (b.score ?? -1) - (a.score ?? -1))[0];
+      : [...cands].sort((a, b) => (b.rise ?? 0) - (a.rise ?? 0))[0];
     if (!pick) return null;
     let reason;
     if (dark) reason = `${h < 7 ? 'Open right now' : 'Still open this evening'} (${openInfo(pick).text.replace(/^Open · /, '')}).`;
@@ -536,11 +554,12 @@ class App {
     const { act, val } = el.dataset;
     switch (act) {
       case 'noop': return;
-      case 'cat': if (el.tagName === 'SELECT') return; return this.set({ cat: val });
+      case 'cat': if (el.tagName === 'SELECT') return; return this.set({ cat: val === 'all' && !hasAll(this.state.view) ? defaultCat(this.state.view) : val });
       case 'retry': return this.loadData();
       case 'view': {
-        // 새 페이지에 없는 카테고리를 보고 있었다면 All로 돌려요
-        const cat = this.state.cat === 'all' || catOptions(val).includes(this.state.cat) ? this.state.cat : 'all';
+        // 새 페이지에 없는 카테고리를 보고 있었다면 그 페이지의 기본 카테고리로 (Eats는 Food, 나머지는 All)
+        const keep = catOptions(val).includes(this.state.cat) || (this.state.cat === 'all' && hasAll(val));
+        const cat = keep ? this.state.cat : defaultCat(val);
         return this.set({ view: val, cat, copyMsg: '', copyText: '' });
       }
       case 'dark': {
@@ -548,7 +567,6 @@ class App {
       }
       case 'open': this.opener = this.focusKey(el); document.body.style.overflow = 'hidden'; return this.set({ modal: val, trendInfo: false });
       case 'close': return this.closeModal();
-      case 'trendinfo': return this.set({ trendInfo: !this.state.trendInfo });
       case 'save': return this.togglePlan(val);
       case 'ai': return this.runAI(val);
       case 'aistop': if (this.aiCtl) this.aiCtl.abort(); return;
@@ -635,13 +653,13 @@ class App {
     this.ai[key] = { status: 'loading', text: '' }; this.render();
     const today = new Date().toLocaleDateString('en-CA', { timeZone: TZ, year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
     const prompt = `You are a Vancouver local-trends analyst. Today is ${today}.
-In 2-3 sentences of plain English, explain why the place below is getting searched and talked about (${TF[tf].label.toLowerCase()}).
+In 2-3 sentences of plain English, explain why the place below is being searched more than usual right now.
 - Use only the given signals, the season, and today's weather (${WEATHER[weather].label}) as evidence.
 - Do not invent numbers, events, or dates that are not in the data. Phrase guesses as "likely" or "probably".
 - End with one short tip for someone planning to go now.
 - No greeting, no preamble, no markdown. Body text only.
 
-Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label, setting: ENV[s.env], trendIndex: hasTrend(s) ? { today: s.trend[0], thisWeek: s.trend[1], thisMonth: s.trend[2] } : 'none (picked by reviews)', risingSearches: s.signals, goodWeather: s.weather.map(w => WEATHER[w].label) })}`;
+Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label, setting: ENV[s.env], searchesVsUsualLastWeek: s.rise != null ? fmtRise(s.rise) : 'unknown', risingSearches: (RISE_NOTES[s.id] && RISE_NOTES[s.id].rising) || [], goodWeather: s.weather.map(w => WEATHER[w].label) })}`;
     try {
       const { text } = await this.sample(prompt, {
         modelTier: 'quick', signal: ctl.signal,
@@ -689,7 +707,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           `}
         </main>
         <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-10 text-xs text-slate-500 dark:text-slate-400">
-          Trend index: based on Google Trends search interest · Weather: Open-Meteo · Coordinates: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Opening hours: OpenStreetMap where available, otherwise typical park hours · Events: compiled from official market and organizer pages (check before you go) · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
+          Search trends: Google Trends (BC), each place's weekly searches vs its own 12-month average · Weather: Open-Meteo · Coordinates: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Opening hours: OpenStreetMap where available, otherwise typical park hours · Events: compiled from official market and organizer pages (check before you go) · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
         </footer>
       </div>
       ${modal ? this.modal(byId(modal), items) : ''}
@@ -765,7 +783,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
           <label class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Category
             <select data-act="cat" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold">
-              ${[['all', 'All'], ...catOptions(s.view).map(k => [k, k === 'events' ? '🎪 Events' : `${CATS[k].icon} ${CATS[k].label}`])]
+              ${[...(hasAll(s.view) ? [['all', 'All']] : []), ...catOptions(s.view).map(k => [k, k === 'events' ? '🎪 Events' : `${CATS[k].icon} ${CATS[k].label}`])]
                 .map(([k, label]) => `<option value="${k}" ${s.cat === k ? 'selected' : ''}>${label}</option>`).join('')}
             </select>
           </label>
@@ -788,13 +806,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <label class="ml-auto flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Sort
             <select data-act="sort" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm">
               <option value="fresh" ${s.sort === 'fresh' ? 'selected' : ''}>Fresh finds</option>
-              <option value="trend" ${s.sort === 'trend' ? 'selected' : ''}>Most searched</option>
               <option value="distance" ${s.sort === 'distance' ? 'selected' : ''}>Distance</option>
             </select>
           </label>`}
         </div>
         ${this.locationBar(items)}
-        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, [s.view !== 'eats' && s.kidsOnly && 'kid-friendly', s.view !== 'eats' && s.indoor && 'indoor', 'spot'].filter(Boolean).join(' '))}${s.openNow && HOURS_READY ? ' open now' : ''} · Trend index from Google Trends (BC) as of ${esc(DATA_META.updatedAt)} · Crowd levels are estimates.`}</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, [s.view !== 'eats' && s.kidsOnly && 'kid-friendly', s.view !== 'eats' && s.indoor && 'indoor', 'spot'].filter(Boolean).join(' '))}${s.openNow && HOURS_READY ? ' open now' : ''}${RISE_META.recentThrough ? ` · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}` : ''} · Crowd levels are estimates.`}</p>
         ${s.cat !== 'events' && s.openNow && HOURS_READY && (this._hidden.closed + this._hidden.unknown) ? `
         <p class="text-xs text-slate-600 dark:text-slate-300">Hidden: ${this._hidden.closed} closed right now${this._hidden.unknown ? `, ${this._hidden.unknown} with unknown hours` : ''}. <button data-act="opennow" class="font-semibold underline text-violet-700 dark:text-violet-300">Show all</button></p>` : ''}
         ${s.cat !== 'events' && (this._knownHidden || (s.showKnown && s.known.length)) ? `
@@ -897,7 +914,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     <div class="mt-6 space-y-1 text-sm text-slate-600 dark:text-slate-300">
       ${lines.map(l => `<p>${l}</p>`).join('')}
       <p class="text-xs text-slate-500 dark:text-slate-400">${this.state.sort === 'fresh'
-        ? "Fresh finds: new spots first, then places ranked by how much more they're searched than usual (compared with their own 12-month average), then hidden gems without enough search data. The famous classics are tucked away at the bottom."
+        ? "Fresh finds: new spots first, then places ranked by how much more they were searched in the last 3 days than usual (compared with their own 12-month average), then hidden gems without enough search data. The famous classics are tucked away at the bottom."
         : "These picks aren't ranked by search trends, so they appear after the trending spots."}</p>
     </div>`;
     }
@@ -944,8 +961,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   }
 
   card(s) {
-    const c = CATS[s.cat], tf = TF[this.state.tf], saved = this.state.plan.includes(s.id);
-    const level = this.crowdAt(s, vanClock(), true), crowd = this.crowdBadge(level), rise = this.rising(s);
+    const c = CATS[s.cat], saved = this.state.plan.includes(s.id);
+    const level = this.crowdAt(s, vanClock(), true), crowd = this.crowdBadge(level);
     const evHere = this._spotEvents && this._spotEvents[s.id];
     // 오른쪽 위 배지: New → Classic → 순위 → 숨은 명소 → 리뷰 추천 → 아이 동반 (해당 없으면 배지 없음)
     const badge = this.isNew(s) ? '✨ New' : this.state.sort === 'fresh' && isClassic(s) ? '🏛️ Classic' : this.rankOf(s) ? this.rankLabel(s)
@@ -961,7 +978,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <h3 class="text-lg font-bold leading-snug group-hover:text-violet-700 dark:group-hover:text-violet-300">${esc(s.name)}</h3>
         <p class="text-sm text-slate-500 dark:text-slate-400">${esc(s.area)}${s.dist != null ? `, ${s.dist.toFixed(1)} km` : ''}</p>
         <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">${esc(s.summary)}</p>
-        ${s.rise != null ? `<p class="mt-2 text-sm ${s.rise >= RISING_MIN ? 'font-semibold text-rose-600 dark:text-rose-300' : 'text-slate-500 dark:text-slate-400'}" title="Google searches in BC over the last 2 weeks, compared with its 12-month average">${riseText(s.rise, 'searches')}</p>` : ''}
+        ${s.rise != null ? `<p class="mt-2 text-sm ${s.rise >= RISING_MIN ? 'font-semibold text-rose-600 dark:text-rose-300' : 'text-slate-500 dark:text-slate-400'}" title="Google searches in BC over the last 3 days, compared with its 12-month average">${riseText(s.rise, 'searches')}</p>` : ''}
         ${(() => { const m = GUIDES[s.id] && GUIDES[s.id].menu; return m && m.length ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold">🍴 Popular:</span> ${m.slice(0, 3).map(esc).join(' · ')}</p>` : ''; })()}
         ${evHere ? `<p class="mt-2 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${esc(evHere.ev.icon || '🎪')} ${esc(dayLabel(evHere.next))}: ${esc(evHere.ev.name)}</p>` : ''}
         ${(() => { const oi = openInfo(s); return oi
@@ -971,18 +988,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${s.price ? `<span>💰 ${esc(s.price)}</span>` : ''}<span>⏱️ ${esc(s.time)}</span><span>${ENV_ICON[s.env]} ${ENV[s.env]}</span>
           ${isKid(s) ? '<span class="font-semibold text-rose-600 dark:text-rose-300">🧸 Kid-friendly</span>' : ''}
         </div>
-        ${s.score != null ? `
-        <div class="mt-4">
-          <div class="flex items-center justify-between text-xs font-semibold mb-1">
-            <span class="text-slate-500 dark:text-slate-400">Trend index (${tf.label.toLowerCase()}) ${rise ? `<span class="ml-1 px-1.5 py-0.5 rounded bg-rose-500 text-white">${rise}</span>` : ''}</span>
-            <span class="text-violet-700 dark:text-violet-300">${s.score}</span>
-          </div>
-          <div class="h-2 rounded-full bg-slate-100 dark:bg-slate-800"><div class="h-2 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500" style="width:${s.score}%"></div></div>
-        </div>` : ''}
-        ${s.why ? `
-        <div class="mt-4 rounded-xl p-3 bg-violet-50 dark:bg-violet-500/10">
-          <p class="text-xs font-bold text-violet-700 dark:text-violet-300">✨ Why it's hot</p>
-          <p class="mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(s.why)}</p>
+        ${isRising(s) && RISE_NOTES[s.id] && RISE_NOTES[s.id].why ? `
+        <div class="mt-4 rounded-xl p-3 bg-rose-50 dark:bg-rose-500/10">
+          <p class="text-xs font-bold text-rose-700 dark:text-rose-300">📈 Why more people are searching</p>
+          <p class="mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(RISE_NOTES[s.id].why)}</p>
         </div>` : ''}
         ${level >= 0 ? `<p class="mt-3 text-xs"><span class="font-semibold px-2 py-1 rounded-full ${crowd.c}">Expected crowd now: ${crowd.t}</span></p>` : ''}
         <div class="mt-auto pt-4 grid grid-cols-[1fr_auto] gap-2">
@@ -1096,7 +1105,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               <span class="block font-bold truncate">${esc(s.name)}</span>
               <span class="block text-xs text-slate-500 dark:text-slate-400">${CATS[s.cat].label}, ${esc(s.area)}${s.dist != null ? `, ${s.dist.toFixed(1)} km` : ''}</span>
             </span>
-            <span class="text-sm font-bold text-violet-700 dark:text-violet-300">${s.score ?? ''}</span>
+            <span class="text-sm font-bold text-violet-700 dark:text-violet-300">${s.rise != null ? fmtRise(s.rise) : ''}</span>
           </button>`).join('') || '<p class="text-sm text-slate-500">No spots match these filters.</p>'}
       </div>
     </div>`;
@@ -1187,7 +1196,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
         </div>
         <div class="px-6 pt-5">
-          <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.icon} ${c.label}${s.cuisine ? ` · ${esc(s.cuisine)}` : ''}${rank ? `, ${st.sort === 'fresh' ? `#${rank} for rising searches` : `#${rank} ${tf.label.toLowerCase()}`}` : ''}</p>
+          <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.icon} ${c.label}${s.cuisine ? ` · ${esc(s.cuisine)}` : ''}${rank ? `, #${rank} for rising searches` : ''}</p>
           <h2 class="mt-1 text-3xl font-bold leading-tight pr-2">${esc(s.name)}</h2>
           <p class="mt-1 text-slate-600 dark:text-slate-300">📍 ${esc(s.area)}${cur && cur.dist != null ? `, ${cur.dist.toFixed(1)} km` : ''}</p>
           ${(() => { const oi = openInfo(s); return oi ? `
@@ -1196,7 +1205,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             : '<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Opening hours unknown. Check Google Maps.</p>'; })()}
           ${s.rise != null ? `
           <p class="mt-2 text-sm ${s.rise >= RISING_MIN ? 'font-semibold text-rose-600 dark:text-rose-300' : 'text-slate-600 dark:text-slate-300'}">${riseText(s.rise, 'search level')}
-            <span class="block text-xs font-normal text-slate-500 dark:text-slate-400">Google searches in BC over the last 2 weeks${RISE_META.through ? ` (through ${esc(RISE_META.through)})` : ''}, compared with its own 12-month average.</span></p>` : ''}
+            <span class="block text-xs font-normal text-slate-500 dark:text-slate-400">Google searches in BC over ${esc(recentLabel())}, compared with its own 12-month average.</span></p>` : ''}
         </div>
 
         <div class="p-6 space-y-6">
@@ -1204,10 +1213,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/20 hover:ring-amber-400">
               <p class="text-2xl">⭐</p><p class="font-bold">Google Maps</p><p class="text-xs text-slate-500 dark:text-slate-400">Ratings & reviews</p>
             </a>
-            ${hasTrend(s) ? `
-            <button data-act="trendinfo" aria-expanded="${st.trendInfo}" class="rounded-xl p-3 text-center bg-violet-50 dark:bg-violet-500/10 ring-1 ring-violet-200 dark:ring-violet-500/20 hover:ring-violet-400">
-              <p class="text-2xl">🔥</p><p class="font-bold">${s.trend[tf.i]}</p><p class="text-xs text-slate-500 dark:text-slate-400">How it's scored</p>
-            </button>` : `
+            ${s.rise != null ? `
+            <div class="rounded-xl p-3 text-center bg-violet-50 dark:bg-violet-500/10 ring-1 ring-violet-200 dark:ring-violet-500/20">
+              <p class="text-2xl">${s.rise >= 1 ? '📈' : '📉'}</p><p class="font-bold">${fmtRise(s.rise)}</p><p class="text-xs text-slate-500 dark:text-slate-400">vs usual searches</p>
+            </div>` : `
             <div class="rounded-xl p-3 text-center bg-violet-50 dark:bg-violet-500/10 ring-1 ring-violet-200 dark:ring-violet-500/20">
               <p class="text-2xl">${pickInfo(s) ? pickInfo(s).icon : c.icon}</p><p class="font-bold">${pickInfo(s) ? pickInfo(s).label : s.family ? 'Kid-friendly' : 'Review pick'}</p><p class="text-xs text-slate-500 dark:text-slate-400">${c.label}</p>
             </div>`}
@@ -1216,26 +1225,22 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             </a>
           </div>
 
-          ${st.trendInfo && hasTrend(s) ? `
-          <div class="rounded-xl p-4 bg-violet-50 dark:bg-violet-500/10 text-sm text-slate-700 dark:text-slate-300">
-            <p class="font-bold text-slate-900 dark:text-white">How the trend index works</p>
-            <p class="mt-2">${esc(DATA_META.trendNote)}</p>
-            <p class="mt-2">This place: today ${s.trend[0]}, this week ${s.trend[1]}, this month ${s.trend[2]}.</p>
-            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">It counts searches for the place name itself, so neighborhood names or news stories can make it differ from actual visitor interest.</p>
-          </div>` : ''}
-
-          ${hasTrend(s) ? `
-          <section class="rounded-2xl p-5 bg-gradient-to-br from-violet-50 to-fuchsia-50 dark:from-violet-500/10 dark:to-fuchsia-500/10 ring-1 ring-violet-200 dark:ring-violet-500/20">
-            <h3 class="font-bold text-violet-800 dark:text-violet-300">✨ Why it's hot right now</h3>
-            ${s.why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(s.why)}</p>` : ''}
-            ${s.signals.length ? `
-            <p class="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">Rising related searches on Google Trends</p>
-            <div class="mt-1.5 flex flex-wrap gap-1.5">${s.signals.map(x => `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/80 dark:bg-slate-800 text-violet-700 dark:text-violet-300">📈 ${esc(x)}</span>`).join('')}</div>` : ''}
+          ${isRising(s) ? (() => {
+            // 평소보다 25% 이상 많이 검색될 때만: 이유(notes.why)와 최근 7일 급상승 연관 검색어
+            const n = RISE_NOTES[s.id] || {};
+            return `
+          <section class="rounded-2xl p-5 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-500/10 dark:to-fuchsia-500/10 ring-1 ring-rose-200 dark:ring-rose-500/20">
+            <h3 class="font-bold text-rose-800 dark:text-rose-300">📈 Why more people are searching</h3>
+            <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">Searched ${fmtRise(s.rise)} its usual amount over ${esc(recentLabel())}.</p>
+            ${n.why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(n.why)}${/^https:\/\//i.test(n.source || '') ? ` <a href="${esc(n.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>` : ''}
+            ${n.rising && n.rising.length ? `
+            <p class="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">Searches that rose alongside it in the past 7 days (Google Trends, BC)</p>
+            <div class="mt-1.5 flex flex-wrap gap-1.5">${n.rising.map(x => `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/80 dark:bg-slate-800 text-rose-700 dark:text-rose-300">📈 ${esc(x)}</span>`).join('')}</div>` : ''}
             ${aiBlock}
-          </section>` : `
+          </section>`; })() : `
           <section class="rounded-2xl p-5 bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/20">
-            <h3 class="font-bold text-amber-800 dark:text-amber-300">${s.gem ? `${GEM.icon} Why it's a hidden gem` : s.family ? `🧸 Why it's kid-friendly` :'⭐ How we picked it'}</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(pickInfo(s) ? pickInfo(s).criteria : s.family ? KIDS_TAG : c.criteria || '')}</p>
+            <h3 class="font-bold text-amber-800 dark:text-amber-300">${s.gem ? `${GEM.icon} Why it's a hidden gem` : s.family ? `🧸 Why it's kid-friendly` : c.criteria ? '⭐ How we picked it' : '📍 About this place'}</h3>
+            ${(() => { const why = pickInfo(s) ? pickInfo(s).criteria : s.family ? KIDS_TAG : c.criteria || ''; return why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(why)}</p>` : ''; })()}
             <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">${esc(s.summary)}</p>
             <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="mt-3 inline-block text-sm font-semibold text-amber-800 dark:text-amber-300">See the latest ratings and reviews on Google Maps →</a>
           </section>`}
