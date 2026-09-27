@@ -105,7 +105,7 @@ const isRising = s => s.rise != null && s.rise >= RISING_MIN;
 // 5% 차이도 보이게, 2배 미만이면 소수점 둘째 자리까지
 const fmtRise = r => `${r < 2 ? r.toFixed(2) : r.toFixed(1)}×`;
 // 카드·모달용 문구: 평소와 거의 같으면(±5%) 배율 대신 "About its usual"
-const riseText = (r, suffix) => Math.abs(r - 1) < 0.05 ? `➖ About its usual ${suffix}` : `${r > 1 ? '📈' : '📉'} ${fmtRise(r)} its usual ${suffix}`;
+const riseText = (r, suffix) => Math.abs(r - 1) < 0.05 ? `About its usual ${suffix}` : `${fmtRise(r)} its usual ${suffix}`;
 const TF = { today: { label: 'Today', i: 0 }, week: { label: 'This week', i: 1 }, month: { label: 'This month', i: 2 } };
 const WEATHER = { sunny: { label: 'Sunny', icon: '☀️' }, cloudy: { label: 'Cloudy', icon: '☁️' }, rain: { label: 'Rain', icon: '🌧️' } };
 const ENV = { indoor: 'Indoor', outdoor: 'Outdoor', both: 'Indoor + outdoor' };
@@ -444,7 +444,8 @@ class App {
     const cutoff = vanDate(-NEW_DAYS);
     return new Set(SPOTS.filter(s => seen[s.id] && seen[s.id] > cutoff).map(s => s.id));
   }
-  isNew(s) { return !!(this.newIds && this.newIds.has(s.id)); }
+  // 행사 장소(venue)는 행사가 있을 때만 잠깐 뜨는 곳이라 "New"로 치지 않아요
+  isNew(s) { return !s.venue && !!(this.newIds && this.newIds.has(s.id)); }
   // "지금 가 볼 이유": 이 장소에서 곧 열리는 행사 > 시즌(단풍·연어·핼러윈 등) > 평소보다 많이 검색됨.
   // 매주 열리는 파머스 마켓은 언제든 있는 일이라 점수를 조금만 줘요. 이유가 강한 순서로 돌려줘요.
   nowReasons(s) {
@@ -487,7 +488,9 @@ class App {
     let items = SPOTS.filter(s =>
       (cat === 'all' ? !PAGES[this.state.view] || PAGES[this.state.view].includes(s.cat) : s.cat === cat)
       && (eats || !this.state.indoor || s.env !== 'outdoor') && (eats || !this.state.kidsOnly || isKid(s))
-      && (cat !== 'food' || !this.state.cuisine || s.cuisine === this.state.cuisine))
+      && (cat !== 'food' || !this.state.cuisine || s.cuisine === this.state.cuisine)
+      // 행사 장소(Pacific Coliseum, 컨벤션센터, 마켓이 열리는 공원 등)는 7일 안에 그곳 행사가 있을 때만
+      && (!s.venue || !!(this._spotEvents && this._spotEvents[s.id])))
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
     // 위치 필터가 켜져 있으면 반경 안의 스팟만 남기고, 순위도 그 안에서 다시 매겨요
     if (this.nearActive() && radius !== 'any') items = items.filter(s => s.dist <= radius);
@@ -576,28 +579,6 @@ class App {
       { t: 'Busy', c: 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300' }
     ][level];
   }
-  weatherPick(items) {
-    const w = this.state.weather;
-    // 지금 닫힌 곳은 추천하지 않아요. 어두운 시간(저녁 8시~아침 7시)에는 야외 장소를 빼고,
-    // 영업시간으로 지금 열려 있다고 확인된 곳만 추천해요
-    const { h } = vanClock(), dark = h < 7 || h >= 20;
-    const cands = items.filter(s => {
-      const o = openInfo(s);
-      return s.weather.includes(w) && (dark ? o?.open === true && s.env !== 'outdoor' : o?.open !== false);
-    });
-    // Fresh finds에서는 목록 순서(새로운 곳 먼저)를 따르고, 유명 명소는 다른 후보가 없을 때만 추천해요
-    const pick = this.state.sort === 'fresh'
-      ? (cands.find(s => !isClassic(s)) || cands[0])
-      : [...cands].sort((a, b) => (b.rise ?? 0) - (a.rise ?? 0))[0];
-    if (!pick) return null;
-    let reason;
-    if (dark) reason = `${h < 7 ? 'Open right now' : 'Still open this evening'} (${openInfo(pick).text.replace(/^Open · /, '')}).`;
-    else if (w === 'rain') reason = pick.env === 'outdoor' ? 'It actually gets moodier and more atmospheric in the rain.' : "It's indoors, so the rain won't get in the way.";
-    else if (w === 'sunny') reason = pick.env === 'indoor' ? 'An easy stop on a sunny day.' : 'This is where a clear day really shines.';
-    else reason = "Still a great visit when it's overcast.";
-    return { pick, reason };
-  }
-
   // ── 이벤트 ──
   onClick(e) {
     const el = e.target.closest('[data-act]');
@@ -752,10 +733,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.controls(items)}
         <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
           ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : this.state.cat === 'events' ? this.eventsView() : `
-            ${view !== 'map' ? this.hotStrip(items) : ''}
+            ${view !== 'map' ? this.seasonChips() : ''}
             ${this.criteriaBanner(items)}
             ${this.state.cat === 'all' && view !== 'eats' ? this.eventsStrip() : ''}
-            ${view !== 'eats' ? this.weatherBanner(items) : ''}
             ${view === 'map' ? this.mapView(items) : this.listView(items)}
           `}
         </main>
@@ -816,12 +796,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             <p class="mt-3 text-white/85 text-base md:text-lg">Fresh, rising and under-the-radar spots around Vancouver</p>
           </div>
           <div class="flex items-center gap-2">
-            <span class="hidden sm:inline-block text-sm font-semibold px-3 py-1.5 rounded-full bg-white/15 border border-white/25">📍 Vancouver</span>
+            <span class="hidden sm:inline-block text-sm font-semibold px-3 py-1.5 rounded-full bg-white/15 border border-white/25">Vancouver</span>
             <button data-act="dark" aria-label="${dark ? 'Switch to light mode' : 'Switch to dark mode'}" class="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 border border-white/25 flex items-center justify-center">${dark ? '☀️' : '🌙'}</button>
           </div>
         </div>
         <nav class="mt-6 inline-flex gap-1 p-1 rounded-full bg-white/10 border border-white/25 backdrop-blur">
-          ${tab('list', '🧭 Explore')}${tab('eats', '🍜 Eats')}${tab('map', '🗺️ Map')}${tab('plan', `♥ Saved${plan.length ? ` (${plan.length})` : ''}`)}
+          ${tab('list', 'Explore')}${tab('eats', 'Eats')}${tab('map', 'Map')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}
         </nav>
       </div>
     </header>`;
@@ -836,7 +816,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
           <label class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Category
             <select data-act="cat" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold">
-              ${[...(hasAll(s.view) ? [['all', 'All']] : []), ...catOptions(s.view).map(k => [k, k === 'events' ? '🎪 Events' : `${CATS[k].icon} ${CATS[k].label}`])]
+              ${[...(hasAll(s.view) ? [['all', 'All']] : []), ...catOptions(s.view).map(k => [k, k === 'events' ? 'Events' : CATS[k].label])]
                 .map(([k, label]) => `<option value="${k}" ${s.cat === k ? 'selected' : ''}>${label}</option>`).join('')}
             </select>
           </label>
@@ -851,10 +831,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             </select>
           </label>`; })() : ''}
           ${s.cat === 'events' || !HOURS_READY ? '' : `
-          <button data-act="opennow" aria-pressed="${s.openNow}" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.openNow ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">${s.openNow ? '🟢 Open now' : '⚪ Open now'}</button>`}
+          <button data-act="opennow" aria-pressed="${s.openNow}" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.openNow ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Open now</button>`}
           ${s.cat === 'events' || s.view === 'eats' ? '' : `
-          <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.indoor ? 'bg-sky-600 border-sky-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">🏠 Indoor</button>
-          <button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.kidsOnly ? 'bg-rose-600 border-rose-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">🧸 Kids</button>`}
+          <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.indoor ? 'bg-sky-600 border-sky-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Indoor</button>
+          <button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.kidsOnly ? 'bg-rose-600 border-rose-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Kids</button>`}
           ${s.cat === 'events' ? '' : `
           <label class="ml-auto flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Sort
             <select data-act="sort" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm">
@@ -864,13 +844,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </label>`}
         </div>
         ${this.locationBar(items)}
-        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, [s.view !== 'eats' && s.kidsOnly && 'kid-friendly', s.view !== 'eats' && s.indoor && 'indoor', 'spot'].filter(Boolean).join(' '))}${s.openNow && HOURS_READY ? ' open now' : ''}${RISE_META.recentThrough ? ` · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}` : ''} · Crowd levels are estimates.`}</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, [s.view !== 'eats' && s.kidsOnly && 'kid-friendly', s.view !== 'eats' && s.indoor && 'indoor', 'spot'].filter(Boolean).join(' '))}${s.openNow && HOURS_READY ? ' open now' : ''}${RISE_META.recentThrough ? ` · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}${RISE_META.updatedAt ? `, updated ${esc(ago(RISE_META.updatedAt))}` : ''}` : ''} · Crowd levels are estimates.`}</p>
         ${s.cat !== 'events' && s.openNow && HOURS_READY && (this._hidden.closed + this._hidden.unknown) ? `
         <p class="text-xs text-slate-600 dark:text-slate-300">Hidden: ${this._hidden.closed} closed right now${this._hidden.unknown ? `, ${this._hidden.unknown} with unknown hours` : ''}. <button data-act="opennow" class="font-semibold underline text-violet-700 dark:text-violet-300">Show all</button></p>` : ''}
         ${s.cat !== 'events' && (this._knownHidden || (s.showKnown && s.known.length)) ? `
         <p class="text-xs text-slate-600 dark:text-slate-300">${s.showKnown
           ? `Showing places you marked as known. <button data-act="showknown" class="font-semibold underline text-violet-700 dark:text-violet-300">Hide them again</button>`
-          : `👋 ${plural(this._knownHidden, 'place')} you already know ${this._knownHidden === 1 ? 'is' : 'are'} hidden. <button data-act="showknown" class="font-semibold underline text-violet-700 dark:text-violet-300">Show</button>`}</p>` : ''}
+          : `${plural(this._knownHidden, 'place')} you already know ${this._knownHidden === 1 ? 'is' : 'are'} hidden. <button data-act="showknown" class="font-semibold underline text-violet-700 dark:text-violet-300">Show</button>`}</p>` : ''}
       </div>
     </section>`;
   }
@@ -887,7 +867,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (!status && !near && s.sort === 'distance') status = 'Distances are from Downtown. Pick a location to change that.';
     return `
         <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
-          <button data-act="geo" ${s.geoBusy ? 'disabled' : ''} class="px-3 py-2 rounded-lg font-semibold ${s.nearKey === 'here' && near ? 'bg-violet-100 text-violet-800 dark:bg-violet-500/20 dark:text-violet-200' : 'bg-violet-600 hover:bg-violet-700 text-white'} disabled:opacity-60">📍 ${s.geoBusy ? 'Locating...' : s.nearKey === 'here' && near ? 'Near me ✓' : 'Near me'}</button>
+          <button data-act="geo" ${s.geoBusy ? 'disabled' : ''} class="px-3 py-2 rounded-lg font-semibold ${s.nearKey === 'here' && near ? 'bg-violet-100 text-violet-800 dark:bg-violet-500/20 dark:text-violet-200' : 'bg-violet-600 hover:bg-violet-700 text-white'} disabled:opacity-60">${s.geoBusy ? 'Locating...' : s.nearKey === 'here' && near ? 'Near me ✓' : 'Near me'}</button>
           <label class="flex items-center gap-2 font-semibold text-slate-600 dark:text-slate-300">or
             <select data-act="near" aria-label="Location" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">
               <option value="" ${!near ? 'selected' : ''}>Anywhere</option>
@@ -919,43 +899,23 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="text-xs text-slate-500 dark:text-slate-400">${esc(EVENT_TYPES[ev.type] || 'Event')} · ${esc(ev.venue)}${ev.dist != null ? ` · ${ev.dist.toFixed(1)} km` : ''}</p>
           ${compact ? '' : `<p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(ev.summary)}</p>`}
           <p class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs font-semibold">
-            ${ev.lat != null ? `<a href="${eventMapsUrl(ev)}" target="_blank" rel="noopener" class="text-indigo-700 dark:text-indigo-300">🗺️ Directions</a>` : ''}
+            ${ev.lat != null ? `<a href="${eventMapsUrl(ev)}" target="_blank" rel="noopener" class="text-indigo-700 dark:text-indigo-300">Directions</a>` : ''}
             <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="text-slate-600 dark:text-slate-300 underline">Official info ↗</a>
             ${spot ? `<button data-act="open" data-val="${spot.id}" class="text-violet-700 dark:text-violet-300">See ${esc(spot.name)} →</button>` : ''}
           </p>
         </div>
       </div>`;
   }
-  // 목록 맨 위: 지금 가 볼 이유가 있는 곳(가로 스트립, 순위 순) + 지금 시즌 태그 칩
-  hotStrip(items) {
-    const top = items.map(s => ({ s, why: this.nowReasons(s) })).map(x => ({ ...x, score: x.why.reduce((a, r) => a + r.score, 0) }))
-      .filter(x => x.score >= NOW_MIN && !this.isNew(x.s)).sort((a, b) => b.score - a.score || (b.s.rise ?? 0) - (a.s.rise ?? 0)).slice(0, 12);
+  // 목록 맨 위: 지금 시즌 태그 칩 (누르면 그 태그의 장소만). 순위와 이유는 카드에서 보여줘요
+  seasonChips() {
     const tags = activeTags().filter(t => this._tagCounts && this._tagCounts[t.id]);
-    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="shrink-0 text-sm font-semibold px-3 py-1.5 rounded-full border ${on ? 'bg-orange-500 border-orange-500 text-white' : 'border-orange-200 text-orange-800 hover:border-orange-400 dark:border-orange-500/30 dark:text-orange-300'}">${esc(t.emoji)} #${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
-    if (!top.length && !tags.length) return '';
+    if (!tags.length) return '';
+    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-sm font-semibold px-3 py-1 rounded-full border ${on ? 'bg-orange-500 border-orange-500 text-white' : 'border-orange-200 text-orange-800 hover:border-orange-400 dark:border-orange-500/30 dark:text-orange-300'}">#${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
     return `
-    <section class="mt-6">
-      <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-        <h2 class="text-lg font-bold">🔥 Worth going now</h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400">Events here soon · what's in season · searches vs usual (Google Trends BC, ${esc(recentLabel())}${RISE_META.updatedAt ? `, updated ${esc(ago(RISE_META.updatedAt))}` : ''})</p>
-      </div>
-      ${top.length ? `
-      <div data-keep-scroll="hot" class="mt-3 flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
-        ${top.map(({ s, why }) => `
-        <button data-act="open" data-val="${s.id}" class="shrink-0 w-64 text-left rounded-2xl p-4 bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-500/10 dark:to-orange-500/10 ring-1 ring-rose-200 dark:ring-rose-500/20 hover:ring-rose-400">
-          <p class="flex items-baseline justify-between gap-2"><span class="font-bold truncate">${esc(s.name)}</span>${s.freshNo ? `<span class="shrink-0 text-xs font-bold px-2 py-0.5 rounded-full bg-slate-900/75 text-white">#${s.freshNo}</span>` : ''}</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">${CATS[s.cat].icon} ${esc(s.area)}${isRising(s) ? ` · <span class="font-semibold text-rose-600 dark:text-rose-300">📈 ${fmtRise(s.rise)}</span>` : ''}</p>
-          <p class="mt-2 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(why[0].icon)} ${esc(why[0].text)}</p>
-          ${why.length > 1 ? `<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Also: ${why.slice(1).map(r => esc(r.icon)).join(' ')}</p>` : ''}
-        </button>`).join('')}
-      </div>` : `
-      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Quiet week: no events, seasons or search spikes for places here right now.</p>`}
-      ${tags.length ? `
-      <div data-keep-scroll="tags" class="mt-3 flex items-center gap-2 overflow-x-auto pb-1">
-        <span class="shrink-0 text-sm font-semibold text-slate-600 dark:text-slate-300">🗓️ In season:</span>
-        ${tags.map(chip).join('')}
-      </div>` : ''}
-    </section>`;
+    <div class="mt-6 flex flex-wrap items-center gap-2">
+      <span class="text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>
+      ${tags.map(chip).join('')}
+    </div>`;
   }
   // 목록 위: 이번 주(7일) 행사 미리보기
   eventsStrip() {
@@ -964,7 +924,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     return `
     <section class="mt-6">
       <div class="flex items-end justify-between gap-3">
-        <h2 class="text-lg font-bold">🎪 Happening this week${this.nearActive() ? ' near ' + esc(this.originLabel()) : ''}</h2>
+        <h2 class="text-lg font-bold">Happening this week${this.nearActive() ? ' near ' + esc(this.originLabel()) : ''}</h2>
         <button data-act="cat" data-val="events" class="text-sm font-semibold text-violet-700 dark:text-violet-300">See all ${evs.length} →</button>
       </div>
       <div class="mt-3 grid gap-3 md:grid-cols-2">${evs.map((ev, i) => [ev, i])
@@ -994,8 +954,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (!c || !c.criteria) {
       // 목록에 실제로 있는 표시만 설명해요
       const lines = [];
-      if (this.state.kidsOnly) lines.push(`<b>🧸 Kids</b>: ${esc(KIDS_TAG)}`);
-      if (items.some(s => s.gem)) lines.push(`<b>${GEM.icon} ${GEM.label}</b>: ${esc(GEM.criteria)}`);
+      if (this.state.kidsOnly) lines.push(`<b>Kids</b>: ${esc(KIDS_TAG)}`);
+      // 히든젬 기준은 목록 위가 아니라 히든젬 카드 안에서만 보여줘요
       if (!lines.length) return '';
       return `
     <div class="mt-6 space-y-1 text-sm text-slate-600 dark:text-slate-300">
@@ -1013,18 +973,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     </section>`;
   }
 
-  weatherBanner(items) {
-    const wp = this.weatherPick(items);
-    if (!wp) return '';
-    const w = WEATHER[this.state.weather];
-    return `
-    <button data-act="open" data-val="${wp.pick.id}" class="mt-6 w-full text-left rounded-2xl p-5 bg-gradient-to-r from-amber-100 to-rose-100 dark:from-amber-500/10 dark:to-rose-500/10 border border-amber-200 dark:border-amber-500/20 hover:border-amber-300 dark:hover:border-amber-400/40 transition-colors">
-      <p class="text-sm font-semibold text-amber-800 dark:text-amber-300">${w.icon} ${this.state.live ? `Vancouver right now: ${esc(this.state.live.desc)}, ${this.state.live.temp}°C` : `If it's ${w.label.toLowerCase()} today`}</p>
-      <p class="mt-1 text-xl font-bold text-slate-900 dark:text-white">Your best bet: ${esc(wp.pick.name)}</p>
-      <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${wp.reason} ${CATS[wp.pick.cat].icon} ${CATS[wp.pick.cat].label}, ${esc(wp.pick.area)}</p>
-    </button>`;
-  }
-
   // 대표 이미지: 데이터에 사진이 있으면 사진, 없으면 스팟별 일러스트 커버
   cover(s, h) {
     const c = CATS[s.cat];
@@ -1032,9 +980,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (s.photo) return `<div class="w-full ${h} relative overflow-hidden bg-slate-200 dark:bg-slate-800">
         <img src="${esc(s.photo.url)}" alt="${esc(s.name)}" loading="lazy" class="w-full h-full object-cover">
         <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-        <span class="absolute left-4 bottom-3 text-sm font-semibold text-white/95 drop-shadow">📍 ${esc(s.area)}</span>
+        <span class="absolute left-4 bottom-3 text-sm font-semibold text-white/95 drop-shadow">${esc(s.area)}</span>
         <a data-act="noop" href="${esc(s.photo.source)}" target="_blank" rel="noopener" title="Photo: ${esc(s.photo.credit)} (${esc(s.photo.license)}), via Wikimedia Commons"
-          class="absolute right-2 bottom-2 max-w-[45%] truncate text-[10px] leading-tight px-1.5 py-0.5 rounded bg-black/45 text-white/85 hover:text-white">📷 ${esc(s.photo.credit)} · ${esc(s.photo.license)}</a>
+          class="absolute right-2 bottom-2 max-w-[45%] truncate text-[10px] leading-tight px-1.5 py-0.5 rounded bg-black/45 text-white/85 hover:text-white">${esc(s.photo.credit)} · ${esc(s.photo.license)}</a>
       </div>`;
     // 실제 사진이 없으면 장소 종류에 맞는 일러스트 (사진처럼 보이지 않게 "Illustration" 표시)
     const sc = sceneSvg(s), center = sc.kind === 'food' || sc.kind === 'dessert';
@@ -1042,7 +990,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${sc.svg}
         <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/45 to-transparent pointer-events-none"></div>
         <span class="absolute ${center ? 'left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-7xl' : 'right-6 top-1/2 -translate-y-1/2 text-5xl'} drop-shadow-lg select-none" aria-hidden="true">${esc(s.emoji || c.icon)}</span>
-        <span class="absolute left-4 bottom-3 text-sm font-semibold text-white/95 drop-shadow">📍 ${esc(s.area)}</span>
+        <span class="absolute left-4 bottom-3 text-sm font-semibold text-white/95 drop-shadow">${esc(s.area)}</span>
         <span class="absolute right-2 bottom-2 text-[10px] px-1.5 py-0.5 rounded bg-black/35 text-white/85">Illustration</span>
       </div>`;
   }
@@ -1052,37 +1000,38 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const level = this.crowdAt(s, vanClock(), true), crowd = this.crowdBadge(level);
     const evHere = this._spotEvents && this._spotEvents[s.id];
     // 오른쪽 위 배지: New → 순위 → Classic → 숨은 명소 → 리뷰 추천 → 아이 동반 (해당 없으면 배지 없음)
-    const badge = this.isNew(s) ? '✨ New' : this.rankOf(s) ? this.rankLabel(s) : this.state.sort === 'fresh' && isClassic(s) ? '🏛️ Classic'
-      : pickInfo(s) ? `${pickInfo(s).icon} ${pickInfo(s).label}` : c.basis === 'reviews' ? '⭐ Review pick' : isKid(s) ? '🧸 Kid-friendly' : '';
+    const badge = this.isNew(s) ? 'New' : this.rankOf(s) ? this.rankLabel(s) : this.state.sort === 'fresh' && isClassic(s) ? 'Classic'
+      : pickInfo(s) ? pickInfo(s).label : c.basis === 'reviews' ? 'Review pick' : isKid(s) ? 'Kid-friendly' : '';
     return `
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-2 hover:ring-violet-400 dark:hover:ring-violet-600 hover:shadow-lg transition overflow-hidden">
       <div class="relative">
         ${this.cover(s, 'h-40')}
-        <span class="absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full bg-white/90 text-slate-900 shadow-sm">${c.icon} ${esc(s.cuisine || c.label)}</span>
+        <span class="absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full bg-white/90 text-slate-900 shadow-sm">${esc(s.cuisine || c.label)}</span>
         ${badge ? `<span class="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full ${this.isNew(s) ? 'bg-fuchsia-600 text-white' : 'bg-slate-900/75 text-white'}">${badge}</span>` : ''}
       </div>
       <div class="p-5 flex flex-col flex-1">
         <h3 class="text-lg font-bold leading-snug group-hover:text-violet-700 dark:group-hover:text-violet-300">${esc(s.name)}</h3>
         <p class="text-sm text-slate-500 dark:text-slate-400">${esc(s.area)}${s.dist != null ? `, ${s.dist.toFixed(1)} km` : ''}</p>
         <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">${esc(s.summary)}</p>
+        ${s.gem ? `<p class="mt-2 text-xs text-slate-500 dark:text-slate-400"><span class="font-semibold text-slate-600 dark:text-slate-300">${esc(GEM.label)}:</span> ${esc(GEM.criteria)}</p>` : ''}
         ${s.rise != null ? `<p class="mt-2 text-sm ${s.rise >= RISING_MIN ? 'font-semibold text-rose-600 dark:text-rose-300' : 'text-slate-500 dark:text-slate-400'}" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
-        ${spotTags(s).length ? `<p class="mt-2 flex flex-wrap gap-1.5">${spotTags(s).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300">${esc(t.emoji)} #${esc(t.label)}</span>`).join('')}</p>` : ''}
-        ${(() => { const m = GUIDES[s.id] && GUIDES[s.id].menu; return m && m.length ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold">🍴 Popular:</span> ${m.slice(0, 3).map(esc).join(' · ')}</p>` : ''; })()}
-        ${evHere ? `<p class="mt-2 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${esc(evHere.ev.icon || '🎪')} ${esc(dayLabel(evHere.next))}: ${esc(evHere.ev.name)}</p>` : ''}
+        ${spotTags(s).length ? `<p class="mt-2 flex flex-wrap gap-1.5">${spotTags(s).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300">#${esc(t.label)}</span>`).join('')}</p>` : ''}
+        ${(() => { const m = GUIDES[s.id] && GUIDES[s.id].menu; return m && m.length ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold">Popular:</span> ${m.slice(0, 3).map(esc).join(' · ')}</p>` : ''; })()}
+        ${evHere && `${dayLabel(evHere.next)}: ${evHere.ev.name}` !== (this.nowReasons(s)[0] || {}).text ? `<p class="mt-2 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${esc(dayLabel(evHere.next))}: ${esc(evHere.ev.name)}</p>` : ''}
         ${(() => { const oi = openInfo(s); return oi
-          ? `<p class="mt-2 text-xs font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}">${oi.open ? '🟢' : '🔴'} ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'public' ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
+          ? `<p class="mt-2 text-xs font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'public' ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
           : HOURS_READY ? '<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
         <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-600 dark:text-slate-300">
-          ${s.price ? `<span>💰 ${esc(s.price)}</span>` : ''}<span>⏱️ ${esc(s.time)}</span><span>${ENV_ICON[s.env]} ${ENV[s.env]}</span>
-          ${isKid(s) ? '<span class="font-semibold text-rose-600 dark:text-rose-300">🧸 Kid-friendly</span>' : ''}
+          ${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>
+          ${isKid(s) ? '<span class="font-semibold text-rose-600 dark:text-rose-300">Kid-friendly</span>' : ''}
         </div>
         ${(() => {
           // 지금 가 볼 이유 중 가장 강한 것 하나 (행사·시즌·검색 증가). 순위가 붙은 곳의 근거예요
           const r = this.nowReasons(s).filter(x => x.score >= NOW_MIN)[0];
           return r ? `
         <div class="mt-4 rounded-xl p-3 bg-rose-50 dark:bg-rose-500/10">
-          <p class="text-xs font-bold text-rose-700 dark:text-rose-300">${r.icon === '📈' ? '📈 Why more people are searching' : '🔥 Why go now'}</p>
-          <p class="mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${r.icon === '📈' ? '' : `${esc(r.icon)} `}${esc(r.text)}</p>
+          <p class="text-xs font-bold text-rose-700 dark:text-rose-300">${r.icon === '📈' ? 'Why more people are searching' : 'Why go now'}</p>
+          <p class="mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(r.text)}</p>
         </div>` : ''; })()}
         ${level >= 0 ? `<p class="mt-3 text-xs"><span class="font-semibold px-2 py-1 rounded-full ${crowd.c}">Expected crowd now: ${crowd.t}</span></p>` : ''}
         <div class="mt-auto pt-4 grid grid-cols-[1fr_auto] gap-2">
@@ -1096,7 +1045,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   // "이미 아는 곳" 버튼: 누르면 이 브라우저에서 목록에서 숨겨요
   knownButton(s, size) {
     const known = this.state.known.includes(s.id);
-    return `<button data-act="known" data-val="${s.id}" aria-pressed="${known}" title="${known ? 'Show this place in the list again' : 'Already know this place? Hide it so you see new ones'}" class="${size} rounded-xl font-semibold border border-slate-200 text-slate-600 hover:border-slate-400 dark:border-slate-700 dark:text-slate-300">${known ? '↩ Unhide' : '👋 Know it'}</button>`;
+    return `<button data-act="known" data-val="${s.id}" aria-pressed="${known}" title="${known ? 'Show this place in the list again' : 'Already know this place? Hide it so you see new ones'}" class="${size} rounded-xl font-semibold border border-slate-200 text-slate-600 hover:border-slate-400 dark:border-slate-700 dark:text-slate-300">${known ? 'Unhide' : 'Know it'}</button>`;
   }
 
   listView(items) {
@@ -1127,10 +1076,17 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <button data-act="cat" data-val="all" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all spots</button>`}
       </div>`;
     const grid = list => `<div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">${list.map(s => this.card(s)).join('')}</div>`;
-    if (this.state.sort !== 'fresh') return grid(items);
+    // 카드 목록 제목: 위의 "Happening this week"(행사)와 구별되게
+    const heading = (title, sub) => `
+      <div class="mt-10 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+        <h2 class="text-lg font-bold">${title}</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400">${sub}</p>
+      </div>`;
+    if (this.state.sort !== 'fresh') return heading('Closest first', plural(items.length, 'spot')) + grid(items);
     const newCount = items.filter(s => this.isNew(s)).length;
     return `
-      ${newCount ? `<p class="mt-6 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">✨ ${plural(newCount, 'new spot')} since your last visit, shown first.</p>` : ''}
+      ${heading('Worth going now', 'Ranked by events here soon, what’s in season and searches vs usual. Unranked places are the same any day.')}
+      ${newCount ? `<p class="mt-3 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${plural(newCount, 'new spot')} since your last visit, shown first.</p>` : ''}
       ${grid(items)}`;
   }
 
@@ -1165,7 +1121,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <div class="lg:col-span-2 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden">
         <div class="px-5 py-3 flex flex-wrap gap-3 text-xs font-semibold border-b border-slate-100 dark:border-slate-800">
           ${Object.values(CATS).map(c => `<span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full" style="background:${c.dot}"></span>${c.label}</span>`).join('')}
-          <span class="text-slate-500 dark:text-slate-400">Number = ${this.state.sort === 'fresh' ? 'rank by rising searches' : `rank (${TF[this.state.tf].label.toLowerCase()})`}, ★ = review pick, ◆ = hidden gem</span>
+          <span class="text-slate-500 dark:text-slate-400">${this.state.sort === 'fresh' ? 'Number = rank by reasons to go now, ' : ''}★ = review pick, ◆ = hidden gem</span>
         </div>
         ${outside.length ? `<p class="px-5 py-2 text-xs text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">Outside the map: ${outside.map(s => esc(`${s.name} (${s.area})`)).join(', ')}</p>` : ''}
         <div data-keep-scroll="map" style="overflow-x:auto">
@@ -1221,7 +1177,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="text-sm text-slate-500 dark:text-slate-400">${plural(spots.length, 'spot')}${spots.length > 1 ? `, about ${total.toFixed(1)} km straight-line in the order you saved them` : ''}</p>
         </div>
         <div class="flex gap-2">
-          <button data-act="copyplan" class="px-4 py-2 rounded-lg font-semibold bg-violet-600 hover:bg-violet-700 text-white">🔗 Copy to share</button>
+          <button data-act="copyplan" class="px-4 py-2 rounded-lg font-semibold bg-violet-600 hover:bg-violet-700 text-white">Copy to share</button>
           <button data-act="clearplan" class="px-4 py-2 rounded-lg font-semibold border border-slate-200 dark:border-slate-700">Clear all</button>
         </div>
       </div>
@@ -1262,7 +1218,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${ai.msg ? `<p class="mt-1 text-sm text-rose-600 dark:text-rose-400">${esc(ai.msg)}</p>` : ''}
           <button data-act="ai" data-val="${s.id}" class="mt-2 text-xs font-semibold text-violet-700 dark:text-violet-300">Analyze again</button>
         </div>`;
-      else aiBlock = `<button data-act="ai" data-val="${s.id}" class="mt-3 px-3 py-2 rounded-lg text-sm font-semibold bg-violet-600 hover:bg-violet-700 text-white">🤖 Get an AI take for right now</button>`;
+      else aiBlock = `<button data-act="ai" data-val="${s.id}" class="mt-3 px-3 py-2 rounded-lg text-sm font-semibold bg-violet-600 hover:bg-violet-700 text-white">Get an AI take for right now</button>`;
     }
 
     return `
@@ -1275,11 +1231,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
         </div>
         <div class="px-6 pt-5">
-          <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.icon} ${c.label}${s.cuisine ? ` · ${esc(s.cuisine)}` : ''}${rank ? `, #${rank} for rising searches` : ''}</p>
+          <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.label}${s.cuisine ? ` · ${esc(s.cuisine)}` : ''}${rank ? ` · #${rank} worth going now` : ''}</p>
           <h2 class="mt-1 text-3xl font-bold leading-tight pr-2">${esc(s.name)}</h2>
-          <p class="mt-1 text-slate-600 dark:text-slate-300">📍 ${esc(s.area)}${cur && cur.dist != null ? `, ${cur.dist.toFixed(1)} km` : ''}</p>
+          <p class="mt-1 text-slate-600 dark:text-slate-300">${esc(s.area)}${cur && cur.dist != null ? `, ${cur.dist.toFixed(1)} km` : ''}</p>
           ${(() => { const oi = openInfo(s); return oi ? `
-          <p class="mt-1 text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}">${oi.open ? '🟢' : '🔴'} ${esc(oi.text)}</p>
+          <p class="mt-1 text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>
           <p class="text-xs text-slate-500 dark:text-slate-400">${s.hoursSource === 'osm' ? `Hours: ${esc(s.hours)} · from OpenStreetMap, check Google Maps before you go` : esc(HOURS_NOTE[s.hoursSource] || '')}</p>`
             : '<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Opening hours unknown. Check Google Maps.</p>'; })()}
           ${s.rise != null ? `
@@ -1290,17 +1246,17 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="p-6 space-y-6">
           <div class="grid grid-cols-3 gap-3">
             <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/20 hover:ring-amber-400">
-              <p class="text-2xl">⭐</p><p class="font-bold">Google Maps</p><p class="text-xs text-slate-500 dark:text-slate-400">Ratings & reviews</p>
+              <p class="font-bold">Google Maps</p><p class="text-xs text-slate-500 dark:text-slate-400">Ratings & reviews</p>
             </a>
             ${s.rise != null ? `
             <div class="rounded-xl p-3 text-center bg-violet-50 dark:bg-violet-500/10 ring-1 ring-violet-200 dark:ring-violet-500/20">
-              <p class="text-2xl">${s.rise >= 1 ? '📈' : '📉'}</p><p class="font-bold">${fmtRise(s.rise)}</p><p class="text-xs text-slate-500 dark:text-slate-400">vs usual searches</p>
+              <p class="font-bold">${fmtRise(s.rise)}</p><p class="text-xs text-slate-500 dark:text-slate-400">vs usual searches</p>
             </div>` : `
             <div class="rounded-xl p-3 text-center bg-violet-50 dark:bg-violet-500/10 ring-1 ring-violet-200 dark:ring-violet-500/20">
-              <p class="text-2xl">${pickInfo(s) ? pickInfo(s).icon : c.icon}</p><p class="font-bold">${pickInfo(s) ? pickInfo(s).label : s.family ? 'Kid-friendly' : 'Review pick'}</p><p class="text-xs text-slate-500 dark:text-slate-400">${c.label}</p>
+              <p class="font-bold">${pickInfo(s) ? pickInfo(s).label : s.family ? 'Kid-friendly' : 'Review pick'}</p><p class="text-xs text-slate-500 dark:text-slate-400">${c.label}</p>
             </div>`}
             <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-emerald-50 dark:bg-emerald-500/10 ring-1 ring-emerald-200 dark:ring-emerald-500/20 hover:ring-emerald-400">
-              <p class="text-2xl">💰</p><p class="font-bold">${s.price ? esc(s.price) : 'Prices'}</p><p class="text-xs text-slate-500 dark:text-slate-400">Prices & booking</p>
+              <p class="font-bold">${s.price ? esc(s.price) : 'Prices'}</p><p class="text-xs text-slate-500 dark:text-slate-400">Prices & booking</p>
             </a>
           </div>
 
@@ -1309,16 +1265,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const n = RISE_NOTES[s.id] || {};
             return `
           <section class="rounded-2xl p-5 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-500/10 dark:to-fuchsia-500/10 ring-1 ring-rose-200 dark:ring-rose-500/20">
-            <h3 class="font-bold text-rose-800 dark:text-rose-300">📈 Why more people are searching</h3>
+            <h3 class="font-bold text-rose-800 dark:text-rose-300">Why more people are searching</h3>
             <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">Searched ${fmtRise(s.rise)} its usual amount over ${esc(recentLabel())}.</p>
             ${n.why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(n.why)}${/^https:\/\//i.test(n.source || '') ? ` <a href="${esc(n.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>` : ''}
             ${n.rising && n.rising.length ? `
             <p class="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">Searches that rose alongside it in the past 7 days (Google Trends, BC)</p>
-            <div class="mt-1.5 flex flex-wrap gap-1.5">${n.rising.map(x => `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/80 dark:bg-slate-800 text-rose-700 dark:text-rose-300">📈 ${esc(x)}</span>`).join('')}</div>` : ''}
+            <div class="mt-1.5 flex flex-wrap gap-1.5">${n.rising.map(x => `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/80 dark:bg-slate-800 text-rose-700 dark:text-rose-300">${esc(x)}</span>`).join('')}</div>` : ''}
             ${aiBlock}
           </section>`; })() : `
           <section class="rounded-2xl p-5 bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/20">
-            <h3 class="font-bold text-amber-800 dark:text-amber-300">${s.gem ? `${GEM.icon} Why it's a hidden gem` : s.family ? `🧸 Why it's kid-friendly` : c.criteria ? '⭐ How we picked it' : '📍 About this place'}</h3>
+            <h3 class="font-bold text-amber-800 dark:text-amber-300">${s.gem ? "Why it's a hidden gem" : s.family ? "Why it's kid-friendly" : c.criteria ? 'How we picked it' : 'About this place'}</h3>
             ${(() => { const why = pickInfo(s) ? pickInfo(s).criteria : s.family ? KIDS_TAG : c.criteria || ''; return why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(why)}</p>` : ''; })()}
             <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">${esc(s.summary)}</p>
             <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="mt-3 inline-block text-sm font-semibold text-amber-800 dark:text-amber-300">See the latest ratings and reviews on Google Maps →</a>
@@ -1326,8 +1282,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
           ${spotTags(s).length ? `
           <section class="rounded-2xl p-5 bg-orange-50 dark:bg-orange-500/10 ring-1 ring-orange-200 dark:ring-orange-500/20">
-            <h3 class="font-bold text-orange-800 dark:text-orange-300">🗓️ Why go now</h3>
-            ${spotTags(s).map(t => { const x = t.spots[s.id]; return `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200"><span class="font-semibold">${esc(t.emoji)} #${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('')}
+            <h3 class="font-bold text-orange-800 dark:text-orange-300">Why go now</h3>
+            ${spotTags(s).map(t => { const x = t.spots[s.id]; return `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200"><span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('')}
             <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">${esc(SEASON_NOTE)}</p>
           </section>` : ''}
 
@@ -1336,7 +1292,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const r = REDDIT.mentions[s.id];
             return r && r.posts && r.posts.length ? `
           <section>
-            <h3 class="font-bold">💬 On Reddit lately</h3>
+            <h3 class="font-bold">On Reddit lately</h3>
             <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">${plural(r.n, 'post')} naming this place in local subreddits, ${esc(shortDate(REDDIT.from))}–${esc(shortDate(REDDIT.to))}. Opens Reddit.</p>
             <ul class="mt-2 space-y-1.5">${r.posts.filter(p => /^https:\/\/(www\.)?reddit\.com\//.test(p.url)).map(p => `<li class="text-sm"><a href="${esc(p.url)}" target="_blank" rel="noopener" class="underline text-slate-700 dark:text-slate-300 hover:text-violet-700 dark:hover:text-violet-300">${esc(p.title)}</a> <span class="text-xs text-slate-500 dark:text-slate-400">r/${esc(p.sub)} · ${esc(shortDate(p.date))}</span></li>`).join('')}</ul>
           </section>` : '';
@@ -1353,7 +1309,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             </div>` : '';
             // 음식점·카페는 조사한 인기 메뉴(menu)를 우선 보여주고, 없으면 기존 메모(eat)
             const eats = s.cat === 'food' || s.cat === 'dessert';
-            const body = list('Things to do', g.do, '👉') + list(eats ? 'Popular menu' : 'What to eat', eats ? (g.menu || g.eat) : g.eat, '🍴') + list('What to bring', bring, '🎒');
+            const body = list('Things to do', g.do, '•') + list(eats ? 'Popular menu' : 'What to eat', eats ? (g.menu || g.eat) : g.eat, '•') + list('What to bring', bring, '•');
             const src = eats && g.menu && /^https:\/\//i.test(g.menuSource || '') ? g.menuSource : '';
             return body ? `
           <section class="space-y-5">
@@ -1366,10 +1322,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const evs = EVENTS.filter(ev => ev.spotId === s.id).map(ev => ({ ...ev, next: upcomingDates(ev, 60)[0] })).filter(ev => ev.next);
             return evs.length ? `
           <section>
-            <h3 class="font-bold">🎪 Events here</h3>
+            <h3 class="font-bold">Events here</h3>
             <div class="mt-2 space-y-2">${evs.map(ev => `
               <div class="rounded-xl p-3 bg-fuchsia-50 dark:bg-fuchsia-500/10 text-sm">
-                <p class="font-semibold">${esc(ev.icon || '🎪')} ${esc(ev.name)}</p>
+                <p class="font-semibold">${esc(ev.name)}</p>
                 <p class="text-slate-600 dark:text-slate-300">Next: ${esc(dayLabel(ev.next))} · ${esc(eventHours(ev))} · ${esc(eventWhen(ev))}</p>
                 <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="text-xs font-semibold underline text-slate-600 dark:text-slate-300">Official info ↗</a>
               </div>`).join('')}
@@ -1393,7 +1349,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </section>` : ''}
 
           <div class="grid grid-cols-2 gap-3">
-            <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="py-3 rounded-xl font-semibold text-center text-white bg-indigo-600 hover:bg-indigo-700">🗺️ Directions</a>
+            <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="py-3 rounded-xl font-semibold text-center text-white bg-indigo-600 hover:bg-indigo-700">Directions</a>
             <button data-act="save" data-val="${s.id}" class="py-3 rounded-xl font-semibold border ${saved ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-300' : 'border-slate-200 dark:border-slate-700'}">${saved ? '♥ Saved' : '♡ Save'}</button>
           </div>
           <div class="text-center -mt-3">${this.knownButton(s, 'px-4 py-2 text-sm')}</div>
