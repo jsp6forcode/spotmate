@@ -34,6 +34,12 @@ function CheckAge($name, $updated) {
 $spots = (Load 'spots.json').spots
 $ids = @{}; foreach ($s in $spots) { $ids[$s.id] = $s }
 Ok "spots.json: $($spots.Count)곳"
+foreach ($s in @($spots | Where-Object { $_.hoursUntil })) {
+  if (-not (IsDate $s.hoursUntil)) { Err "$($s.id).hoursUntil 은 YYYY-MM-DD 이어야 해요" }
+  elseif ((D $s.hoursUntil) -lt $today) { Warn "$($s.id) 의 계절 영업시간이 $(S $s.hoursUntil)에 끝났어요. 새 시즌 시간을 찾아 넣어 주세요." }
+}
+$noHours = @($spots | Where-Object { -not $_.hours -and -not $_.venue })
+if ($noHours.Count) { Ok "영업시간 없는 스팟 $($noHours.Count)곳 (행사 장소 제외)" }
 foreach ($s in @($spots | Where-Object { $_.opened })) {
   if ((S $s.opened) -notmatch '^\d{4}-\d{2}$') { Err "$($s.id).opened 는 YYYY-MM 이어야 해요" }
   if ($s.openedSource -notmatch '^https://') { Err "$($s.id).openedSource 는 개업 기사·공식 SNS https 링크여야 해요" }
@@ -116,7 +122,7 @@ if ($pk) {
   foreach ($x in (Props $pk.spots)) { $n++; if (-not $ids[$x.Name]) { Err "parking 에 없는 스팟 id: $($x.Name)" } }
   $missing = @($spots | Where-Object { -not ($pk.spots.PSObject.Properties.Name -contains $_.id) } | ForEach-Object { $_.id })
   if ($missing.Count) { Warn "주차 정보가 없는 스팟 $($missing.Count)곳: $($missing[0..4] -join ', '). tools/parking-osm.ps1 -Ids 로 채워 주세요." }
-  Ok "parking $n곳"
+  Ok "parking $($n)곳"
 }
 
 # ── Reddit 언급 ──

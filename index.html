@@ -169,16 +169,26 @@ let PARKING = { spots: {}, radius: 400 };
 const PARK_KIND = { surface: 'Surface lot', 'multi-storey': 'Parkade', underground: 'Underground', rooftop: 'Rooftop', street_side: 'Street parking', lane: 'Street parking', layby: 'Pull-out' };
 const parkingOf = s => PARKING.spots[s.id];
 // 카드용 한 줄: 가장 가까운 주차장 거리와 유료 여부
+// data/parking-meters.json: 밴쿠버시 길거리 미터(200m 안) 요금 요약 { id: { n, day, dayMin, dayMax, eve, limit, card } }
+let METERS = { spots: {}, radius: 200 };
+const money = v => `$${v % 1 ? v.toFixed(2) : v}`;
 // 주차 요약: 근처 주차장 중 하나라도 무료면 무료, 유료가 있으면 유료, 모르면 "요금 정보 없음"
+// 주차 요약: 밴쿠버시 미터가 있으면 그 정보와 함께 판단해요 ("요금 모름"이라고 한 뒤 미터 요금이 나오는 모순 방지)
 function parkSummary(s) {
-  const p = parkingOf(s) || [];
+  const p = parkingOf(s) || [], m = METERS.spots[s.id] && METERS.spots[s.id].day != null;
+  if (m) return p.some(x => x.fee === 'no') ? 'Free lot nearby, plus metered street parking' : 'Metered street parking nearby';
   if (!p.length) return s.cat === 'nature' ? 'No lot mapped near this point. Big parks usually have lots at their entrances.' : 'No lot mapped nearby. Street parking or transit may be easiest.';
   if (p.some(x => x.fee === 'no')) return 'Free parking nearby';
   if (p.some(x => x.fee === 'yes')) return 'Paid parking nearby';
   return 'Parking nearby, fee not listed';
 }
 // 카드용 한 줄 (주차장이 없으면 표시 안 함)
-const parkShort = s => { const p = parkingOf(s); if (!p || !p.length) return ''; return p.some(x => x.fee === 'no') ? 'Free parking' : p.some(x => x.fee === 'yes') ? 'Paid parking' : 'Parking nearby'; };
+const parkShort = s => {
+  const m = METERS.spots[s.id];
+  if (m && m.day != null) return `Street meters ~${money(m.day)}/hr`;
+  const p = parkingOf(s); if (!p || !p.length) return '';
+  return p.some(x => x.fee === 'no') ? 'Free parking' : p.some(x => x.fee === 'yes') ? 'Paid parking' : 'Parking nearby';
+};
 const parkRate = c => c.replace(/(\d+(?:\.\d+)?)\s*CAD/g, '$$$1').replace(/\s*\/\s*/g, '/');
 const parkingUrl = s => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(`parking near ${s.name} BC`);
 const ago = iso => { if (!iso) return ''; const d = Math.round((Date.parse(vanDate(0)) - Date.parse(iso)) / 864e5); return d <= 0 ? 'today' : d === 1 ? 'yesterday' : `${d} days ago`; };
@@ -211,14 +221,8 @@ function km(a, b) {
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(r(a.lat)) * Math.cos(r(b.lat)) * Math.sin(dLng / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(h));
 }
-// 혼잡도와 "오늘"은 보는 사람 기기가 아니라 밴쿠버 시간 기준
+// "오늘"·영업 여부는 보는 사람 기기가 아니라 밴쿠버 시간 기준
 const TZ = 'America/Vancouver';
-const VAN_FMT = new Intl.DateTimeFormat('en-US', { timeZone: TZ, hour: 'numeric', hourCycle: 'h23', weekday: 'short' });
-function vanClock(date = new Date()) {
-  const p = {}; VAN_FMT.formatToParts(date).forEach(x => p[x.type] = x.value);
-  return { h: +p.hour % 24, weekend: p.weekday === 'Sat' || p.weekday === 'Sun' };
-}
-const hourLabel = h => h === 12 ? '12p' : h > 12 ? `${h - 12}p` : `${h}a`;
 
 // ───────── 행사 (파머스 마켓, 축제) ─────────
 // data/events.json: schedule = { from, to, weekdays?(0=일), start?, end?, hoursText? }
@@ -263,7 +267,9 @@ const OH_NOMINATIM = { lat: 49.25, lon: -123.1, address: { country_code: 'ca', s
 // "sunrise-sunset"(해 뜰 때부터 해 질 때까지)인 공원은 시각을 계산하지 않고 그 사실만 보여줘요.
 // (opening_hours.js 브라우저 빌드는 이를 06:00-18:00으로 고정해 계산해서, 해석기에 넣지 않아요)
 const isDaylight = s => s.hours === 'sunrise-sunset';
-const HOURS_NOTE = { osm: 'Hours from OpenStreetMap', citypark: 'Vancouver park hours, 6am–10pm', park: 'Typical park hours, sunrise to sunset', public: 'Public area' };
+const HOURS_NOTE = { osm: 'Hours from OpenStreetMap', web: "Hours from the place's website or listings", citypark: 'Vancouver park hours, 6am–10pm', park: 'Typical park hours, sunrise to sunset', public: 'Public area' };
+// 계절 영업시간은 hoursUntil(YYYY-MM-DD)까지만 믿어요. 지나면 "영업시간 모름"으로 봐요
+const hoursValid = s => !s.hoursUntil || vanDate(0) <= s.hoursUntil;
 let HOURS_READY = false;
 function loadScript(src) { return new Promise((ok, bad) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = bad; document.head.appendChild(s); }); }
 // 라이브러리는 브라우저 로컬 시각으로 계산하므로, 밴쿠버 벽시계 시각을 로컬 Date로 만들어 넘겨요
@@ -295,7 +301,8 @@ function openInfo(s) {
     // "16:30+"처럼 마감 시간이 없는 경우: 라이브러리는 '알 수 없음' 상태로 돌려줘요
     if (!open && s._oh.getUnknown(now)) return { open: true, text: 'Open · closing time not listed' };
     const next = s._oh.getNextChange(now);
-    const when = !next ? '' : next.toDateString() === now.toDateString() ? fmtClock(next) : `${DOW[next.getDay()]} ${fmtClock(next)}`;
+    // 오늘이면 시각만, 일주일 안이면 요일, 그보다 멀면 날짜(예: 계절 휴장 뒤 다시 여는 날)
+    const when = !next ? '' : next.toDateString() === now.toDateString() ? fmtClock(next) : next - now < 6 * 864e5 ? `${DOW[next.getDay()]} ${fmtClock(next)}` : `${MON[next.getMonth()]} ${next.getDate()}, ${fmtClock(next)}`;
     return { open, text: open ? (next ? `Open · closes ${when}` : 'Open') : (next ? `Closed · opens ${when}` : 'Closed') };
   } catch (e) { return null; }
 }
@@ -459,6 +466,11 @@ class App {
         const gr = await fetch('data/spot-guides.json', { cache: 'no-cache' });
         if (gr.ok) { const gd = await gr.json(); GUIDES = gd.guides || {}; GUIDES_NOTE = gd.note || ''; }
       } catch (e) {}
+      // 밴쿠버시 주차 미터 요금: 없어도 괜찮아요
+      try {
+        const mr = await fetch('data/parking-meters.json', { cache: 'no-cache' });
+        if (mr.ok) { const md = await mr.json(); METERS = { spots: md.spots || {}, radius: md.radius || 200 }; }
+      } catch (e) {}
       // 주차장: 없어도 괜찮아요
       try {
         const pr = await fetch('data/parking.json', { cache: 'no-cache' });
@@ -477,7 +489,7 @@ class App {
       // 영업시간 해석 라이브러리: 못 불러오면 "Open now" 필터 없이 동작해요
       try {
         if (!window.opening_hours) await loadScript(OH_LIB);
-        SPOTS.forEach(s => { if (s.hours && !isDaylight(s)) { try { s._oh = new opening_hours(s.hours, OH_NOMINATIM); } catch (e) { s._oh = null; } } });
+        SPOTS.forEach(s => { if (s.hours && !isDaylight(s) && hoursValid(s)) { try { s._oh = new opening_hours(s.hours, OH_NOMINATIM); } catch (e) { s._oh = null; } } });
         HOURS_READY = true;
       } catch (e) { HOURS_READY = false; }
       DATA_META = { source: data.source, updatedAt: data.updatedAt, trendNote: data.trendNote || '', coordsNote: data.coordsNote || '' };
@@ -499,7 +511,7 @@ class App {
       const live = { kind: weatherKind(current.weather_code), desc: weatherDesc(current.weather_code), temp: Math.round(current.temperature_2m) };
       this.set({ live, weather: live.kind });
     } catch (e) {
-      // 날씨를 못 가져와도 앱은 그대로 쓸 수 있어요. 기본 날씨(state.weather)로 혼잡도를 계산해요.
+      // 날씨를 못 가져와도 앱은 그대로 쓸 수 있어요. 날씨는 AI 추천 문구에만 쓰여요.
     }
   }
 
@@ -644,27 +656,6 @@ class App {
   originLabel() {
     const o = this.origin();
     return o ? (o.label || 'your location') : '';
-  }
-  // 혼잡도 0~2, 영업시간상 닫혀 있으면 -1. now=true면 지금 이 순간의 영업 상태로 판단해요
-  crowdAt(s, { h, weekend }, now = false) {
-    if (now ? openInfo(s)?.open === false : openAt(s, h) === false) return -1;
-    let v;
-    if (s.crowd === 'meal') v = (h >= 11 && h < 14) || (h >= 17 && h < 20) ? 1.6 : (h >= 10 && h < 22 ? 0.7 : 0);
-    else if (s.crowd === 'attraction') v = h >= 10 && h < 16 ? 1 : (h >= 9 && h < 18 ? 0.5 : 0);
-    else v = h >= 10 && h < 17 ? 1 : (h >= 8 && h < 19 ? 0.5 : 0);
-    if (v > 0 && weekend) v += 0.8;
-    const w = this.state.weather;
-    if (v > 0 && w === 'rain') v += s.env === 'outdoor' ? -0.8 : s.env === 'indoor' ? 0.5 : 0;
-    if (v > 0 && w === 'sunny' && s.env !== 'indoor') v += 0.4;
-    return v >= 1.8 ? 2 : v >= 0.9 ? 1 : 0;
-  }
-  crowdBadge(level) {
-    if (level < 0) return { t: 'Closed', c: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300' };
-    return [
-      { t: 'Quiet', c: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300' },
-      { t: 'Moderate', c: 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300' },
-      { t: 'Busy', c: 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300' }
-    ][level];
   }
   // ── 이벤트 ──
   onClick(e) {
@@ -827,7 +818,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           `}
         </main>
         <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-10 text-xs text-slate-500 dark:text-slate-400">
-          Search trends: Google Trends (BC), each place's last 3 days of searches vs the 4 weeks before · Weather: Open-Meteo · Coordinates and parking: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Opening hours: OpenStreetMap where available, otherwise typical park hours · Events: compiled from official market and organizer pages (check before you go) · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
+          Search trends: Google Trends (BC), each place's last 3 days of searches vs the 4 weeks before · Weather: Open-Meteo · Coordinates and parking: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Parking meter rates: City of Vancouver Open Data, <a class="underline" href="https://opendata.vancouver.ca/pages/licence/" target="_blank" rel="noopener">Open Government Licence – Vancouver</a> · Opening hours: OpenStreetMap where available, otherwise typical park hours · Events: compiled from official market and organizer pages (check before you go) · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
         </footer>
       </div>
       ${modal ? this.modal(byId(modal), items) : ''}
@@ -933,7 +924,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </label>`}
         </div>
         ${this.locationBar(items)}
-        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, [s.view !== 'eats' && s.kidsOnly && 'kid-friendly', s.view !== 'eats' && s.indoor && 'indoor', 'spot'].filter(Boolean).join(' '))}${s.openNow && HOURS_READY ? ' open now' : ''}${RISE_META.recentThrough ? ` · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}${RISE_META.updatedAt ? `, updated ${esc(ago(RISE_META.updatedAt))}` : ''}` : ''} · Crowd levels are estimates.${this.state.live ? ` · Now ${esc(this.state.live.desc)}, ${this.state.live.temp}°C` : ''}`}</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, [s.view !== 'eats' && s.kidsOnly && 'kid-friendly', s.view !== 'eats' && s.indoor && 'indoor', 'spot'].filter(Boolean).join(' '))}${s.openNow && HOURS_READY ? ' open now' : ''}${RISE_META.recentThrough ? ` · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}${RISE_META.updatedAt ? `, updated ${esc(ago(RISE_META.updatedAt))}` : ''}` : ''}${this.state.live ? ` · Now ${esc(this.state.live.desc)}, ${this.state.live.temp}°C` : ''}`}</p>
         ${s.cat !== 'events' && s.openNow && HOURS_READY && (this._hidden.closed + this._hidden.unknown) ? `
         <p class="text-xs text-slate-600 dark:text-slate-300">Hidden: ${this._hidden.closed} closed right now${this._hidden.unknown ? `, ${this._hidden.unknown} with unknown hours` : ''}. <button data-act="opennow" class="font-semibold underline text-violet-700 dark:text-violet-300">Show all</button></p>` : ''}
         ${s.cat !== 'events' && (this._knownHidden || (s.showKnown && s.known.length)) ? `
@@ -1092,8 +1083,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
   card(s) {
     const c = CATS[s.cat], saved = this.state.plan.includes(s.id);
-    // 영업시간을 모르면 혼잡도 배지를 숨겨요 (열려 있는지도 모르는데 "Moderate"라고 하면 헷갈려요)
-    const level = HOURS_READY && !openInfo(s) ? -2 : this.crowdAt(s, vanClock(), true), crowd = this.crowdBadge(level);
     const evHere = this._spotEvents && this._spotEvents[s.id];
     // 오른쪽 위 배지: New → 순위 → Classic → 숨은 명소 → 리뷰 추천 → 아이 동반 (해당 없으면 배지 없음)
     // 새로 생겨 뜨는 곳은 순위 배지 밑에 "New Rising Spot" 배지를 하나 더 달아요
@@ -1120,7 +1109,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${(() => { const m = GUIDES[s.id] && GUIDES[s.id].menu; return m && m.length ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold">Popular:</span> ${m.slice(0, 3).map(esc).join(' · ')}</p>` : ''; })()}
         ${evHere && `${dayLabel(evHere.next)}: ${evHere.ev.name}` !== (this.nowReasons(s)[0] || {}).text ? `<p class="mt-2 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${esc(dayLabel(evHere.next))}: ${esc(evHere.ev.name)}</p>` : ''}
         ${(() => { const oi = openInfo(s); return oi
-          ? `<p class="mt-2 text-xs font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'public' && !isDaylight(s) ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
+          ? `<p class="mt-2 text-xs font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'web' && s.hoursSource !== 'public' && !isDaylight(s) ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
           : HOURS_READY ? '<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
         <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-600 dark:text-slate-300">
           ${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>${parkShort(s) ? `<span>${esc(parkShort(s))}</span>` : ''}
@@ -1134,7 +1123,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="text-xs font-bold text-rose-700 dark:text-rose-300">${r.icon === '📈' ? 'Why more people are searching' : 'Why go now'}</p>
           <p class="mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(r.text)}</p>
         </div>` : ''; })()}
-        ${level >= 0 ? `<p class="mt-3 text-xs"><span class="font-semibold px-2 py-1 rounded-full ${crowd.c}">Expected crowd now: ${crowd.t}</span></p>` : ''}
         <div class="mt-auto pt-4 grid grid-cols-[1fr_auto] gap-2">
           <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="py-2.5 rounded-xl font-semibold text-sm border ${saved ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-300' : 'border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200'}">${saved ? '♥ Saved' : '♡ Save'}</button>
           ${this.knownButton(s, 'px-3 py-2.5 text-sm')}
@@ -1294,18 +1282,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const rank = cur ? this.rankOf(cur) : null;
     const saved = st.plan.includes(s.id);
     const key = `${s.id}|${st.tf}|${st.weather}`, ai = this.ai[key];
-    const now = vanClock();
-    const hours = Array.from({ length: 13 }, (_, i) => 9 + i);
-    const bars = hours.map(h => {
-      const lv = this.crowdAt(s, { h, weekend: now.weekend }), isNow = now.h === h;
-      return `<div class="flex flex-col items-center gap-1 flex-1" ${lv < 0 ? 'title="Closed"' : ''}>
-        ${lv < 0
-          ? `<div class="w-full rounded-t border-t-2 border-dashed ${isNow ? 'border-slate-500' : 'border-slate-300 dark:border-slate-600'}" style="height:4px"></div>`
-          : `<div class="w-full rounded-t ${isNow ? 'bg-violet-600' : 'bg-violet-300 dark:bg-violet-500/50'}" style="height:${[10, 26, 44][lv]}px"></div>`}
-        <span class="text-[10px] ${isNow ? 'font-bold text-violet-700 dark:text-violet-300' : 'text-slate-500 dark:text-slate-400'}">${hourLabel(h)}</span></div>`;
-    }).join('');
-    const crowd = this.crowdBadge(this.crowdAt(s, now, true));
-
     let aiBlock = '';
     if (this.sample) {
       if (ai && ai.status === 'loading') aiBlock = `
@@ -1337,7 +1313,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="mt-1 text-slate-600 dark:text-slate-300">${esc(s.area)}${cur && cur.dist != null ? `, ${cur.dist.toFixed(1)} km` : ''}</p>
           ${(() => { const oi = openInfo(s); return oi ? `
           <p class="mt-1 text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">${s.hoursSource === 'osm' ? `Hours: ${esc(weekHours(s) || s.hours)} · from OpenStreetMap, check Google Maps before you go` : isDaylight(s) ? 'Typical park hours. Check posted signs for gate or parking lot closing times.' : esc(HOURS_NOTE[s.hoursSource] || '')}</p>`
+          <p class="text-xs text-slate-500 dark:text-slate-400">${s.hoursSource === 'osm' ? `Hours: ${esc(weekHours(s) || s.hours)} · from OpenStreetMap, check Google Maps before you go`
+            : s.hoursSource === 'web' ? `Hours: ${esc(weekHours(s) || s.hours)} · from ${/^https:\/\//.test(s.hoursUrl || '') ? `<a href="${esc(s.hoursUrl)}" target="_blank" rel="noopener" class="underline">the place's website or listings</a>` : "the place's website or listings"}, check before you go` : isDaylight(s) ? 'Typical park hours. Check posted signs for gate or parking lot closing times.' : esc(HOURS_NOTE[s.hoursSource] || '')}</p>`
             : '<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Opening hours unknown. Check Google Maps.</p>'; })()}
           ${s.rise != null ? `
           <p class="mt-2 text-sm ${s.rise >= RISING_MIN ? 'font-semibold text-rose-600 dark:text-rose-300' : 'text-slate-600 dark:text-slate-300'}">${riseText(s.rise, 'search level')}
@@ -1400,13 +1377,27 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             // 주차: 근처(400m) 주차장이 무료인지 유료인지, 요금(OSM에 있으면)과 요금을 확인할 링크. 거리는 보여주지 않아요
             const p = parkingOf(s);
             if (!p) return '';
-            const lots = p.map(x => [x.name || x.operator, PARK_KIND[x.kind], x.fee === 'no' ? 'Free' : x.fee === 'yes' ? 'Paid' : '', x.charge ? parkRate(x.charge) : '', x.customers ? 'Customers only' : ''].filter(Boolean).join(' · ')).filter((x, i, a) => x && a.indexOf(x) === i);
+            // 이름·운영사나 실제 요금이 있는 주차장만 한 줄로 (지상 주차장·유료 같은 일반 설명만 있는 줄은 빼요)
+            const lots = p.filter(x => x.name || x.operator || x.charge).map(x => [x.name || x.operator, x.charge ? parkRate(x.charge) : x.fee === 'no' ? 'free' : x.fee === 'yes' ? 'paid' : '', x.customers ? 'customers only' : ''].filter(Boolean).join(' · ')).filter((x, i, a) => x && a.indexOf(x) === i);
             const site = p.map(x => x.site).find(u => /^https?:\/\//.test(u || ''));
             return `
           <section>
             <h3 class="font-bold">Parking</h3>
             <p class="mt-2 text-sm font-semibold text-slate-800 dark:text-slate-200">${esc(parkSummary(s))}</p>
             ${lots.length ? `<ul class="mt-1.5 space-y-1">${lots.map(x => `<li class="text-sm text-slate-600 dark:text-slate-300">• ${esc(x)}</li>`).join('')}</ul>` : ''}
+            ${(() => {
+              // 밴쿠버시 길거리 미터: 낮·저녁 요금, 시간 제한, 결제 방법
+              const m = METERS.spots[s.id];
+              if (!m || m.day == null) return '';
+              const range = m.dayMin != null && m.dayMax != null && m.dayMin !== m.dayMax ? ` (${money(m.dayMin)}–${money(m.dayMax)} depending on the block)` : '';
+              return `
+            <div class="mt-2 rounded-xl p-3 bg-slate-50 dark:bg-slate-800/60 text-sm text-slate-700 dark:text-slate-300">
+              <p class="font-semibold">City street meters within ${METERS.radius} m</p>
+              <p class="mt-1">About ${money(m.day)}/hr 9am–6pm${range}${m.eve != null ? `, ${money(m.eve)}/hr 6pm–10pm` : ''}, free 10pm–9am.${m.limit ? ` Usually a ${esc(m.limit.replace(/\s*Hr$/i, '-hour'))} limit.` : ''}</p>
+              <p class="mt-1">Pay ${m.card ? 'by card at the meter or ' : ''}with the PayByPhone app.</p>
+              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Rates: City of Vancouver Open Data, <a href="https://opendata.vancouver.ca/pages/licence/" target="_blank" rel="noopener" class="underline">Open Government Licence – Vancouver</a>.</p>
+            </div>`;
+            })()}
             <p class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold">
               <a href="${parkingUrl(s)}" target="_blank" rel="noopener" class="underline text-indigo-700 dark:text-indigo-300">Parking and rates on Google Maps ↗</a>
               ${site ? `<a href="${esc(site)}" target="_blank" rel="noopener" class="underline text-indigo-700 dark:text-indigo-300">Lot website ↗</a>` : ''}
@@ -1462,12 +1453,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           })()}
 
           <section>
-            <div class="flex items-center justify-between">
-              <h3 class="font-bold">Expected crowds today</h3>
-              <span class="text-xs font-semibold px-2 py-1 rounded-full ${crowd.c}">Now: ${crowd.t}</span>
-            </div>
-            <div class="mt-3 flex items-end gap-1 h-16">${bars}</div>
-            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Estimated from the day of week, time of day (Vancouver time), and the current weather. Not live crowd data.${bars.includes('title="Closed"') ? ' Dashed lines mark hours when it is closed.' : ''}${HOURS_READY && !s._oh && !isDaylight(s) && !eventToday(s) ? ' Opening hours are unknown, so this assumes it is open all day.' : ''}</p>
+            <h3 class="font-bold">How busy is it?</h3>
+            <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">Google Maps shows popular times and live busyness from real visits.</p>
+            <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="mt-2 inline-block text-sm font-semibold underline text-indigo-700 dark:text-indigo-300">Live busyness and popular times on Google Maps ↗</a>
           </section>
 
           ${s.tips.length ? `
