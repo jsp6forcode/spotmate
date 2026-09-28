@@ -808,7 +808,7 @@
     {
       "id": "hillcrest", "cat": "city", "family": true, "name": "Hillcrest Aquatic Centre", "area": "Riley Park",
       "lat": 49.2438, "lng": -123.1071, "emoji": "🏊", "placeId": "ChIJ9WR6-fVzhlQRkK4b5y0VowQ", "hours": "Mo-Fr 06:00-21:00; Sa-Su 06:00-19:00", "hoursSource": "osm",
-      "trend": null, "env": "indoor", "price": "$", "time": "2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
+      "trend": null, "env": "both", "price": "$", "time": "2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Indoor and outdoor pools next to Queen Elizabeth Park", "signals": [], "why": "", "tips": ["Check the public swim schedule before you go"]
     },
     { "id": "earnest", "cat": "dessert", "name": "Earnest Ice Cream", "area": "Mount Pleasant", "lat": 49.2688, "lng": -123.1029, "emoji": "🍦", "placeId": "ChIJv1NxVGBxhlQRT1bpKNwx78A",

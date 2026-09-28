@@ -1,5 +1,5 @@
 ﻿# 스팟 근처 주차장 찾기 (OpenStreetMap, Overpass API). 결과는 data/parking.json
-# - 스팟 좌표 400m 안의 amenity=parking 중 가까운 순 최대 2곳: 거리(m), 유료 여부(fee), 형태(지상/주차 빌딩/지하/길가), 이름
+# - 스팟 좌표 400m 안의 amenity=parking 중 가까운 순 최대 2곳: 거리(m), 유료 여부(fee), 요금(charge), 운영사(operator), 웹사이트, 형태, 이름
 # - access=private/no 인 곳은 빼고, access=customers(손님 전용)는 표시해요
 # - OSM(ODbL) 데이터라 저장해도 되고, 앱에 "© OpenStreetMap contributors"를 표시해요
 # 실행: powershell -File tools/parking-osm.ps1 [-Ids a,b]   (새 스팟만 추가할 때는 -Ids, 기존 결과와 합쳐요)
@@ -36,7 +36,7 @@ for ($i = 0; $i -lt $spots.Count; $i += $Batch) {
     $lat = if ($_.lat) { $_.lat } else { $_.center.lat }; $lon = if ($_.lon) { $_.lon } else { $_.center.lon }
     $t = $_.tags
     if ($t.access -in 'private', 'no') { return }
-    [pscustomobject]@{ lat = $lat; lon = $lon; fee = $t.fee; kind = $t.parking; name = $t.name; access = $t.access }
+    [pscustomobject]@{ lat = $lat; lon = $lon; fee = $t.fee; kind = $t.parking; name = $t.name; access = $t.access; operator = $t.operator; charge = $t.charge; site = $(if ($t.website) { $t.website } else { $t.'contact:website' }) }
   })
   foreach ($s in $chunk) {
     $near = @($lots | ForEach-Object { $_ | Add-Member m (Dist $s.lat $s.lng $_.lat $_.lon) -Force -PassThru } | Where-Object { $_.m -le $Radius } | Sort-Object m | Select-Object -First 2)
@@ -46,6 +46,9 @@ for ($i = 0; $i -lt $spots.Count; $i += $Batch) {
       if ($_.kind -in 'surface', 'multi-storey', 'underground', 'street_side', 'lane', 'layby', 'rooftop') { $o.kind = $_.kind }
       if ($_.name) { $o.name = [string]$_.name }
       if ($_.access -eq 'customers') { $o.customers = $true }
+      if ($_.operator) { $o.operator = [string]$_.operator }
+      if ($_.charge) { $o.charge = [string]$_.charge }
+      if ($_.site -match '^https?://') { $o.site = [string]$_.site }
       $o
     })
   }
