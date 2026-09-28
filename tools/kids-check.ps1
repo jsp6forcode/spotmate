@@ -8,8 +8,8 @@
 #   새 후보 찾기:    powershell -ExecutionPolicy Bypass -File tools\kids-check.ps1 -Mode discover
 #   새로 더한 곳만:  powershell -ExecutionPolicy Bypass -File tools\kids-check.ps1 -Ids a,b,c
 #     placeId가 없는 스팟은 이름+좌표로 찾아서 placeId를 같이 보여줘요 (Place ID는 저장해도 돼요)
-#   판단: goodForChildren=True 이면 "kids": true, 여기에 평점 4.2+·리뷰 300+ 이고 아이 언급 리뷰가 2개 이상이면 "family": true
-param([ValidateSet('existing', 'discover')][string]$Mode = 'existing', [double]$MinRating = 4.3, [int]$MinReviews = 300, [string[]]$Ids)
+#   판단: goodForChildren=True 이면 "kids": true, 여기에 평점 4.0+·리뷰 50+ 이고 아이 언급 리뷰가 2개 이상이면 "family": true
+param([ValidateSet('existing', 'discover')][string]$Mode = 'existing', [double]$MinRating = 4.0, [int]$MinReviews = 50, [string[]]$Ids)
 # powershell -File 로 부르면 "a,b,c"가 한 덩어리로 와서 쉼표로 나눠요
 if ($Ids) { $Ids = @($Ids | ForEach-Object { $_ -split ',' } | Where-Object { $_ }) }
 

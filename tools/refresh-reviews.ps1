@@ -20,7 +20,7 @@ $justOpened = { param($s) $s.opened -and (Get-Date) -lt ([datetime]::ParseExact(
 $rules = @(
   @{ name = 'just opened'; test = $justOpened; minRating = 4.9; minReviews = 30 },
   @{ name = 'gem';    test = { param($s) $s.gem };             minRating = 4.6; minReviews = 500 },
-  @{ name = 'family'; test = { param($s) $s.family };          minRating = 4.2; minReviews = 300 },
+  @{ name = 'family'; test = { param($s) $s.family };          minRating = 4.0; minReviews = 50 },
   @{ name = 'food';   test = { param($s) $s.cat -eq 'food' };  minRating = 4.0; minReviews = 300 },
   @{ name = 'dessert'; test = { param($s) $s.cat -eq 'dessert' }; minRating = 4.5; minReviews = 300 }
 )

@@ -52,7 +52,7 @@ const defaultCat = view => hasAll(view) ? 'all' : PAGES[view][0];
 // "Vancouver classic": 이미 많은 사람이 알고 좋아하는 곳. 데이터의 gem(구글 4.6+·리뷰 500+)과 검색량 상위(isClassic)를 합쳤어요
 const CLASSIC = { label: 'Vancouver classic', criteria: 'A local favourite that plenty of people already know and love: rated 4.6+ on Google from 500+ reviews, or one of the most searched places in BC.' };
 // 🧸 Kids 필터: 아이 동반 장소(family: true, 놀이터·수영장·몰·농장 등)와 아이랑 가기 좋은 곳(kids: true)만 남겨요
-const KIDS_TAG = "Playgrounds, museums, malls with play areas, pools, farms, and parks where Google reviews say it's great for kids and families (4.2+ rating, 300+ reviews), plus other spots that Google marks as good for children.";
+const KIDS_TAG = "Playgrounds, museums, malls with play areas, pools, farms, and parks where Google reviews say it's great for kids and families (4.0+ rating, 50+ reviews), plus other spots that Google marks as good for children.";
 const isVanClassic = s => !!s.gem || isClassic(s);
 // 모달의 "왜 골랐나" 정보: 히든젬 > 리뷰 기준(음식점·디저트) > 아이 동반. 해당 없으면 null
 const REVIEW_MIN = { food: 'Google 4.0+ · 300+ reviews', dessert: 'Google 4.5+ · 300+ reviews' };
@@ -67,7 +67,7 @@ function pickOf(s) {
   if (s.gem) return { label: CLASSIC.label, short: 'Google 4.6+ · 500+ reviews', heading: "Why it's a Vancouver classic", criteria: CLASSIC.criteria };
   if (isClassic(s)) return { label: CLASSIC.label, short: 'Among the most searched', heading: "Why it's a Vancouver classic", criteria: CLASSIC.criteria };
   if (c.basis === 'reviews') return { label: 'Review pick', short: REVIEW_MIN[s.cat] || 'Google reviews', heading: "Why it's a review pick", criteria: c.criteria };
-  if (s.family) return { label: 'Kid-friendly', short: 'Google 4.2+ · 300+ reviews', heading: "Why it's kid-friendly", criteria: KIDS_TAG };
+  if (s.family) return { label: 'Kid-friendly', short: 'Google 4.0+ · 50+ reviews', heading: "Why it's kid-friendly", criteria: KIDS_TAG };
   if (s.kids) return { label: 'Kid-friendly', short: 'Good for children', heading: "Why it's kid-friendly", criteria: KIDS_TAG };
   return null;
 }
@@ -233,6 +233,9 @@ const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct
 // sale: 브랜드 웨어하우스·팩토리 세일, meet: 사인회·팬미팅, popup: 팝업·박람회처럼 며칠만 열리는 행사
 const EVENT_TYPES = { market: 'Farmers market', festival: 'Festival', seasonal: 'Seasonal', sale: 'Warehouse sale', meet: 'Signing & meet-up', popup: 'Pop-up & show' };
 const RARE_EVENT = ['sale', 'meet', 'popup'];
+const REST_STEP = 12;
+// Worth going now에 늘 보여줄 추천 수 (이유가 있는 곳이 모자라면 클래식·리뷰 추천으로 채워요)
+const TOP_N = 10;
 const VAN_DATE = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' });
 // 밴쿠버 기준 오늘(+n일) 날짜 'YYYY-MM-DD'
 const vanDate = (n = 0) => VAN_DATE.format(new Date(Date.now() + n * 864e5));
@@ -252,6 +255,15 @@ function dayLabel(iso) {
   if (iso === vanDate(0)) return 'Today';
   if (iso === vanDate(1)) return 'Tomorrow';
   return `${DOW[dowOf(iso)]}, ${shortDate(iso)}`;
+}
+// 카드의 "Why go now" 문구: 행사 이름에서 장소 이름을 빼요 (카드 제목과 겹치지 않게)
+// "Pumpkin patch at Port Kells Nurseries" → "Pumpkin patch", 장소 이름과 같으면 "Open for the season"
+function eventReason(ev, spot, next) {
+  // "at Aldor Acres"처럼 장소 이름의 앞부분만 써도 빼요
+  const at = /\s+at\s+(.+)$/i.exec(ev.name), spotLc = spot.name.toLowerCase();
+  let name = at && spotLc.startsWith(at[1].toLowerCase()) ? ev.name.slice(0, at.index) : ev.name;
+  if (name.toLowerCase() === spot.name.toLowerCase()) name = ev.type === 'seasonal' ? 'Open for the season' : (EVENT_TYPES[ev.type] || 'Event');
+  return `${dayLabel(next)}: ${name}`;
 }
 const fmtTime = t => { const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}${m ? ':' + String(m).padStart(2, '0') : ''}${h >= 12 ? 'pm' : 'am'}`; };
 const eventHours = ev => ev.schedule.hoursText || (ev.schedule.start ? `${fmtTime(ev.schedule.start)}–${fmtTime(ev.schedule.end)}` : 'Times vary');
@@ -398,20 +410,22 @@ class App {
       // sort: 'fresh' = 새로 생긴 곳·뜨는 곳·숨은 명소 먼저, 유명 명소는 맨 아래 / 'distance'
       // tf: AI 분석 캐시 키에만 남아 있어요 (검색량 점수는 더 이상 화면에 쓰지 않아요)
       cat: 'all', tf: 'month', sort: 'fresh',
-      // known: "이미 아는 곳"으로 숨긴 스팟 id (이 브라우저에만 저장)
-      known: [], showKnown: false, tag: '',
+      tag: '',
       // 날씨는 직접 고르지 않고 Open-Meteo 실제 날씨를 자동으로 써요 (못 가져오면 'cloudy' 기준)
       weather: 'cloudy', live: null,
       view: 'list', dark: savedDark === null ? prefersDark : savedDark === '1',
       // nearKey: '' = 위치 필터 없음, 'here' = GPS 현재 위치(origin), 그 외 = ORIGINS의 지역
       nearKey: '', origin: null, geoMsg: '', geoBusy: false,
-      openNow: load('spotmate-opennow') !== '0',
+      // "Open now"는 늘 꺼진 채로 시작해요 (밤에 켜 두면 추천이 몇 곳만 남아서, 켠 상태를 기억하지 않아요)
+      openNow: false,
       indoor: load('spotmate-indoor') === '1',
       kidsOnly: load('spotmate-kids') === '1',
       // cuisine: Food 카테고리에서 고른 음식 종류 ('' = 전체)
       cuisine: '',
       radius: RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
+      // "Good any day" 목록에서 보여줄 개수 (Show more로 12개씩 늘어나요)
+      restShown: REST_STEP,
       plan: [], copyMsg: '', copyText: '',
       loading: true, loadError: ''
     };
@@ -424,6 +438,11 @@ class App {
     });
     this.root.addEventListener('change', e => this.onChange(e));
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && this.state.modal) this.closeModal(); });
+    // 이미 열린 페이지에 공유 링크(#spot=id)를 붙여 넣은 경우
+    window.addEventListener('hashchange', () => {
+      const m = /^#spot=([^&]+)/.exec(location.hash), s = m && SPOTS.length && byId(decodeURIComponent(m[1]));
+      if (s && this.state.modal !== s.id) this.openModal(s.id);
+    });
     this.render();
     this.loadData();
     this.loadWeather();
@@ -495,10 +514,13 @@ class App {
       DATA_META = { source: data.source, updatedAt: data.updatedAt, trendNote: data.trendNote || '', coordsNote: data.coordsNote || '' };
       let plan = [];
       try { plan = JSON.parse(load('spotmate-plan') || '[]').filter(id => byId(id)); } catch (e) {}
-      let known = [];
-      try { known = JSON.parse(load('spotmate-known') || '[]').filter(id => byId(id)); } catch (e) {}
+      // "Know it"(아는 곳 숨기기)은 없앴어요. 예전에 숨겨 둔 목록은 지워서 모든 곳이 다시 보이게 해요
+      try { localStorage.removeItem('spotmate-known'); localStorage.removeItem('spotmate-opennow'); } catch (e) {}
       this.newIds = this.trackSeen();
-      this.set({ loading: false, plan, known });
+      this.set({ loading: false, plan });
+      // 공유받은 링크(#spot=id)로 들어오면 그 장소를 바로 열어요
+      const m = /^#spot=([^&]+)/.exec(location.hash), shared = m && byId(decodeURIComponent(m[1]));
+      if (shared) this.openModal(shared.id);
     } catch (e) {
       this.set({ loading: false, loadError: "We couldn't load the spots. Check your connection and try again." });
     }
@@ -515,7 +537,11 @@ class App {
     }
   }
 
-  set(patch) { Object.assign(this.state, patch); this.render(); }
+  set(patch) {
+    // 목록이 바뀌는 필터를 건드리면 "Show more"로 늘린 개수를 처음으로 되돌려요
+    if (['cat', 'view', 'tag', 'cuisine', 'sort', 'nearKey', 'radius', 'kidsOnly', 'indoor', 'openNow'].some(k => k in patch && patch[k] !== this.state[k])) patch.restShown = REST_STEP;
+    Object.assign(this.state, patch); this.render();
+  }
 
   // 첫 방문 때 있던 스팟은 기준(0)으로, 그 뒤 새로 생긴 스팟은 처음 본 날짜로 기록해요.
   // 처음 본 지 NEW_DAYS일이 안 된 스팟 id를 돌려줘요 (첫 방문이면 비어 있어요)
@@ -537,7 +563,7 @@ class App {
     const out = [], e = this._spotEvents && this._spotEvents[s.id];
     if (e) {
       const days = Math.round((Date.parse(e.next) - Date.parse(vanDate(0))) / 864e5);
-      out.push({ score: e.ev.type === 'market' ? 0.5 : 4 - Math.min(days, 3) * 0.3, icon: e.ev.icon || '🎪', text: `${dayLabel(e.next)}: ${e.ev.name}` });
+      out.push({ score: e.ev.type === 'market' ? 0.5 : 4 - Math.min(days, 3) * 0.3, icon: e.ev.icon || '🎪', text: eventReason(e.ev, s, e.next) });
     }
     // 시즌: 스팟별 start(단풍 절정·첫 연어·개막일)가 지났으면 "지금" 2.5, 아직이면 예고라 0.5 (그것만으로는 순위 X, 닫힌 Playland가 순위에 오르지 않게)
     // 새로 연 곳: 연 지 1개월 안이면 2.5, 3개월 안이면 2, 그 뒤 6개월까지 1.2
@@ -552,6 +578,18 @@ class App {
     if (isRising(s)) out.push({ score: 1 + Math.min(s.rise - 1, 1) * 2, icon: '📈', text: (RISE_NOTES[s.id] && RISE_NOTES[s.id].why) || `Searched ${fmtRise(s.rise)} its usual amount` });
     return out.sort((a, b) => b.score - a.score);
   }
+  // 10곳을 채우려고 넣은 곳의 카드 이유: 곧 있을 일(약한 이유) → 왜 추천하는지(클래식·리뷰·아이 동반)
+  pickReason(s) {
+    const weak = this.nowReasons(s)[0];
+    if (weak) return { pick: true, label: 'Coming up', text: weak.text };
+    const p = pickOf(s);
+    if (!p) return null;
+    const text = p.label === CLASSIC.label ? (s.gem ? 'A local favourite, rated 4.6+ on Google from 500+ reviews' : 'One of the most searched places in BC')
+      : p.label === 'Review pick' ? `Well reviewed on Google (${p.short.replace('Google ', '').replace(' · ', ' with ')})`
+      : p.label === 'Kid-friendly' ? (s.family ? 'Families love it: rated 4.0+ on Google, with reviews that mention kids' : 'Google marks it as good for children')
+      : p.criteria;
+    return { pick: true, label: `Why it's a top pick`, text };
+  }
   // Worth going now(정렬 값 fresh) 순서: 새로 생긴 곳 → 지금 가 볼 이유가 있는 곳(점수 높은 순, 순위 번호) → 숨은 명소 → 나머지(언제 가도 같은 곳)
   freshRank(s) {
     if (this.isNew(s)) return 0;
@@ -561,11 +599,7 @@ class App {
   // 카드·지도·모달에 보여줄 순위 번호: Worth going now 정렬에서만, 지금 가 볼 이유 순위
   rankOf(s) { return this.state.sort === 'fresh' ? s.freshNo : null; }
   rankLabel(s) { return `#${s.freshNo}`; }
-  toggleKnown(id) {
-    const known = this.state.known.includes(id) ? this.state.known.filter(x => x !== id) : [...this.state.known, id];
-    store('spotmate-known', JSON.stringify(known));
-    this.set({ known });
-  }
+
 
   // ── 데이터 ──
   list() {
@@ -586,9 +620,9 @@ class App {
     // 음식 종류: 드롭다운 개수는 위치·Know it·Open now 필터를 먼저 적용한 뒤, 음식 종류를 고르기 전 기준으로 세요
     this._cuisineCounts = {};
     if (cat === 'food') {
-      const known0 = this.state.showKnown ? [] : this.state.known;
+
       const openOk = s => !(this.state.openNow && HOURS_READY) || (openInfo(s) || {}).open === true;
-      items.forEach(s => { if (s.cuisine && !known0.includes(s.id) && openOk(s)) this._cuisineCounts[s.cuisine] = (this._cuisineCounts[s.cuisine] || 0) + 1; });
+      items.forEach(s => { if (s.cuisine && openOk(s)) this._cuisineCounts[s.cuisine] = (this._cuisineCounts[s.cuisine] || 0) + 1; });
       if (this.state.cuisine) items = items.filter(s => s.cuisine === this.state.cuisine);
     }
     // 시즌 태그 필터: 칩에 보여줄 개수는 태그를 고르기 전 목록 기준
@@ -598,9 +632,7 @@ class App {
     if (tag) items = items.filter(s => tag.spots[s.id]);
     if (this.state.tag === 'justopened') items = items.filter(isJustOpened);
     // "Know it"으로 숨긴 곳은 빼고 개수만 세어 둬요
-    const known = this.state.showKnown ? [] : this.state.known;
-    this._knownHidden = items.filter(s => known.includes(s.id)).length;
-    items = items.filter(s => !known.includes(s.id));
+
     // "Open now": 지금 열려 있는 곳만. 닫혔거나 영업시간을 모르는 곳은 개수만 세어 둬요
     this._hidden = { closed: 0, unknown: 0 };
     if (this.state.openNow && HOURS_READY) {
@@ -618,7 +650,18 @@ class App {
     }
     if (sort === 'distance') items.sort((a, b) => a.dist - b.dist);
     // Worth going now 순위: 지금 가 볼 이유가 있는 곳에만 목록 순서대로 번호를 매겨요
-    if (sort === 'fresh') { let n = 0; items.forEach(s => { s.freshNo = this.freshRank(s) === 1 ? ++n : null; }); }
+    if (sort === 'fresh') {
+      let n = 0; items.forEach(s => { s.freshNo = this.freshRank(s) === 1 ? ++n : null; s.filler = false; });
+      // 이유가 있는 곳이 TOP_N곳이 안 되면 (Indoor·Kids 필터 등) 추천할 만한 곳으로 TOP_N곳까지 채워요:
+      // 약한 이유(곧 시작하는 시즌·마켓)가 있는 곳 → 클래식·리뷰 추천·아이 동반 → 나머지 (목록 순서 그대로)
+      const top = items.filter(s => this.freshRank(s) <= 1).length;
+      const rest = items.filter(s => this.freshRank(s) > 1);
+      const pickScore = s => (s.now > 0 ? 2 : 0) + (pickOf(s) ? 1 : 0);
+      rest.map((s, i) => [s, i]).sort((a, b) => pickScore(b[0]) - pickScore(a[0]) || a[1] - b[1])
+        .slice(0, Math.max(0, TOP_N - top)).forEach(([s]) => { s.freshNo = ++n; s.filler = true; });
+      // 채운 곳을 순위 목록 바로 뒤로 옮겨요
+      if (rest.some(s => s.filler)) items = [...items.filter(s => this.freshRank(s) <= 1), ...rest.filter(s => s.filler).sort((a, b) => a.freshNo - b.freshNo), ...rest.filter(s => !s.filler)];
+    }
     return items;
   }
   // 앞으로 days일 안에 열리는 행사 (위치 필터 적용, 가까운 날짜 → 가까운 거리 순)
@@ -675,20 +718,13 @@ class App {
       case 'dark': {
         const dark = !this.state.dark; store('spotmate-dark', dark ? '1' : '0'); return this.set({ dark });
       }
-      case 'open': this.opener = this.focusKey(el); document.body.style.overflow = 'hidden'; return this.set({ modal: val, trendInfo: false });
+      case 'open': this.opener = this.focusKey(el); return this.openModal(val);
       case 'close': return this.closeModal();
       case 'save': return this.togglePlan(val);
       case 'ai': return this.runAI(val);
       case 'aistop': if (this.aiCtl) this.aiCtl.abort(); return;
       case 'geo': return this.locate();
-      case 'opennow': { const openNow = !this.state.openNow; store('spotmate-opennow', openNow ? '1' : '0'); return this.set({ openNow }); }
-      case 'known': {
-        this.toggleKnown(val);
-        // 모달에서 숨기면 목록에서 사라지니 모달도 닫아요
-        if (this.state.modal && this.state.known.includes(val)) this.closeModal();
-        return;
-      }
-      case 'showknown': return this.set({ showKnown: !this.state.showKnown });
+      case 'opennow': return this.set({ openNow: !this.state.openNow });
       case 'kids': { const kidsOnly = !this.state.kidsOnly; store('spotmate-kids', kidsOnly ? '1' : '0'); return this.set({ kidsOnly }); }
       case 'tag': return this.set({ tag: this.state.tag === val ? '' : val });
       case 'indoor': { const indoor = !this.state.indoor; store('spotmate-indoor', indoor ? '1' : '0'); return this.set({ indoor }); }
@@ -697,6 +733,8 @@ class App {
       }
       case 'nearoff': this.geoToken = (this.geoToken || 0) + 1; return this.set({ nearKey: '', geoMsg: '', geoBusy: false });
       case 'copyplan': return this.copyPlan();
+      case 'more': return this.set({ restShown: this.state.restShown + REST_STEP });
+      case 'share': return this.share(val);
       case 'clearplan': store('spotmate-plan', '[]'); return this.set({ plan: [], copyMsg: '', copyText: '' });
     }
   }
@@ -712,10 +750,30 @@ class App {
       this.set({ nearKey: el.value, geoMsg: '', geoBusy: false });
     }
   }
+  // 모달을 열면 주소에 #spot=id 를 붙여요. 그 주소를 공유하면 받은 사람도 바로 이 장소가 열려요
+  openModal(id) {
+    document.body.style.overflow = 'hidden';
+    try { history.replaceState(null, '', '#spot=' + encodeURIComponent(id)); } catch (e) {}
+    this.set({ modal: id, trendInfo: false, shareMsg: null });
+  }
   closeModal() {
     if (this.aiCtl) this.aiCtl.abort();
     document.body.style.overflow = '';
-    this.set({ modal: null, trendInfo: false });
+    try { if (/^#spot=/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    this.set({ modal: null, trendInfo: false, shareMsg: null });
+  }
+  // 공유: 휴대폰은 공유 시트, 안 되면 링크를 클립보드에 복사
+  async share(id) {
+    const s = byId(id);
+    if (!s) return;
+    const url = location.origin + location.pathname + '#spot=' + encodeURIComponent(id);
+    const done = text => { this.set({ shareMsg: { id, text } }); clearTimeout(this.shareTimer); this.shareTimer = setTimeout(() => { if (this.state.shareMsg) this.set({ shareMsg: null }); }, 2500); };
+    if (navigator.share) {
+      try { await navigator.share({ title: `${s.name} · SpotMate`, text: `${s.name} (${s.area})`, url }); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    try { await navigator.clipboard.writeText(url); done('Link copied'); }
+    catch (e) { window.prompt('Copy this link', url); }
   }
   togglePlan(id) {
     const plan = this.state.plan.includes(id) ? this.state.plan.filter(x => x !== id) : [...this.state.plan, id];
@@ -813,8 +871,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : this.state.cat === 'events' ? this.eventsView() : `
             ${view !== 'map' ? this.seasonChips() : ''}
             ${this.criteriaBanner(items)}
-            ${this.state.cat === 'all' && view !== 'eats' ? this.eventsStrip() : ''}
-            ${view === 'map' ? this.mapView(items) : this.listView(items)}
+      
+            ${view === 'map' ? this.mapView(items) + (this.state.cat === 'all' ? this.eventsStrip() : '') : this.listView(items)}
           `}
         </main>
         <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-10 text-xs text-slate-500 dark:text-slate-400">
@@ -864,21 +922,22 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
   header() {
     const { dark, view, plan } = this.state;
-    const tab = (v, label) => `<button data-act="view" data-val="${v}" class="px-4 py-2 rounded-full text-sm font-semibold transition-colors ${view === v ? 'bg-white text-indigo-700 shadow' : 'text-white/90 hover:bg-white/15'}">${label}</button>`;
+    // 첫 화면에 추천 카드가 보이도록 헤더를 낮게: 모바일은 부제 없이 로고 + 탭만
+    const tab = (v, label) => `<button data-act="view" data-val="${v}" class="px-4 py-2.5 sm:py-2 rounded-full text-sm font-semibold transition-colors ${view === v ? 'bg-white text-indigo-700 shadow' : 'text-white/90 hover:bg-white/15'}">${label}</button>`;
     return `
     <header class="bg-gradient-to-br from-indigo-600 via-violet-600 to-fuchsia-600 dark:from-indigo-950 dark:via-violet-950 dark:to-fuchsia-950 text-white">
-      <div class="max-w-6xl mx-auto px-4 md:px-6 pt-8 pb-6">
+      <div class="max-w-6xl mx-auto px-4 md:px-6 pt-5 pb-4">
         <div class="flex items-start justify-between gap-4">
           <div>
-            <h1 class="font-brand text-5xl md:text-6xl font-extrabold tracking-tight leading-none">SpotMate</h1>
-            <p class="mt-3 text-white/85 text-base md:text-lg">Fresh, rising and classic spots around Vancouver</p>
+            <h1 class="font-brand text-3xl md:text-5xl font-extrabold tracking-tight leading-none">SpotMate</h1>
+            <p class="hidden sm:block mt-2 text-white/85 text-base">Fresh, rising and classic spots around Vancouver</p>
           </div>
           <div class="flex items-center gap-2">
             <span class="hidden sm:inline-block text-sm font-semibold px-3 py-1.5 rounded-full bg-white/15 border border-white/25">Vancouver</span>
             <button data-act="dark" aria-label="${dark ? 'Switch to light mode' : 'Switch to dark mode'}" class="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 border border-white/25 flex items-center justify-center">${dark ? '☀️' : '🌙'}</button>
           </div>
         </div>
-        <nav class="mt-6 inline-flex gap-1 p-1 rounded-full bg-white/10 border border-white/25 backdrop-blur">
+        <nav class="mt-4 inline-flex gap-1 p-1 rounded-full bg-white/10 border border-white/25 backdrop-blur">
           ${tab('list', 'Explore')}${tab('eats', 'Eats')}${tab('map', 'Map')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}
         </nav>
       </div>
@@ -890,10 +949,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (s.view === 'plan') return '';
     return `
     <section class="md:sticky md:top-0 z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800">
-      <div class="max-w-6xl mx-auto px-4 md:px-6 py-4 space-y-3">
-        <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
-          <label class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Category
-            <select data-act="cat" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold">
+      <div class="max-w-6xl mx-auto px-4 md:px-6 py-3 space-y-2">
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <label class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300"><span class="hidden sm:inline">Category</span>
+            <select data-act="cat" aria-label="Category" class="min-h-[44px] px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold">
               ${[...(hasAll(s.view) ? [['all', 'All']] : []), ...catOptions(s.view).map(k => [k, k === 'events' ? 'Events' : CATS[k].label])]
                 .map(([k, label]) => `<option value="${k}" ${s.cat === k ? 'selected' : ''}>${label}</option>`).join('')}
             </select>
@@ -904,33 +963,30 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             if (s.cuisine && !(s.cuisine in counts)) counts[s.cuisine] = 0;
             const total = Object.values(counts).reduce((a, b) => a + b, 0);
             return `
-          <label class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Cuisine
-            <select data-act="cuisine" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold">
+          <label class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300"><span class="hidden sm:inline">Cuisine</span>
+            <select data-act="cuisine" aria-label="Cuisine" class="min-h-[44px] px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold">
               <option value="">All cuisines (${total})</option>
               ${Object.keys(counts).sort().map(k => `<option value="${esc(k)}" ${s.cuisine === k ? 'selected' : ''}>${esc(k)} (${counts[k]})</option>`).join('')}
             </select>
           </label>`; })() : ''}
           ${s.cat === 'events' || !HOURS_READY ? '' : `
-          <button data-act="opennow" aria-pressed="${s.openNow}" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.openNow ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Open now</button>`}
+          <button data-act="opennow" aria-pressed="${s.openNow}" class="min-h-[44px] px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.openNow ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Open now</button>`}
           ${s.cat === 'events' || s.view === 'eats' ? '' : `
-          <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.indoor ? 'bg-sky-600 border-sky-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Indoor</button>
-          <button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.kidsOnly ? 'bg-rose-600 border-rose-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Kids</button>`}
+          <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="min-h-[44px] px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.indoor ? 'bg-sky-600 border-sky-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Indoor</button>
+          <button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="min-h-[44px] px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.kidsOnly ? 'bg-rose-600 border-rose-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Kids</button>`}
           ${s.cat === 'events' ? '' : `
-          <label class="ml-auto flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300">Sort
-            <select data-act="sort" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm">
+          <label class="sm:ml-auto flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300"><span class="hidden sm:inline">Sort</span>
+            <select data-act="sort" aria-label="Sort" class="min-h-[44px] px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm">
               <option value="fresh" ${s.sort === 'fresh' ? 'selected' : ''}>Worth going now</option>
               <option value="distance" ${s.sort === 'distance' ? 'selected' : ''}>Distance</option>
             </select>
           </label>`}
         </div>
         ${this.locationBar(items)}
-        <p class="text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, [s.view !== 'eats' && s.kidsOnly && 'kid-friendly', s.view !== 'eats' && s.indoor && 'indoor', 'spot'].filter(Boolean).join(' '))}${s.openNow && HOURS_READY ? ' open now' : ''}${RISE_META.recentThrough ? ` · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}${RISE_META.updatedAt ? `, updated ${esc(ago(RISE_META.updatedAt))}` : ''}` : ''}${this.state.live ? ` · Now ${esc(this.state.live.desc)}, ${this.state.live.temp}°C` : ''}`}</p>
+        <p class="hidden sm:block text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, [s.view !== 'eats' && s.kidsOnly && 'kid-friendly', s.view !== 'eats' && s.indoor && 'indoor', 'spot'].filter(Boolean).join(' '))}${s.openNow && HOURS_READY ? ' open now' : ''}${RISE_META.recentThrough ? ` · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}${RISE_META.updatedAt ? `, updated ${esc(ago(RISE_META.updatedAt))}` : ''}` : ''}${this.state.live ? ` · Now ${esc(this.state.live.desc)}, ${this.state.live.temp}°C` : ''}`}</p>
         ${s.cat !== 'events' && s.openNow && HOURS_READY && (this._hidden.closed + this._hidden.unknown) ? `
         <p class="text-xs text-slate-600 dark:text-slate-300">Hidden: ${this._hidden.closed} closed right now${this._hidden.unknown ? `, ${this._hidden.unknown} with unknown hours` : ''}. <button data-act="opennow" class="font-semibold underline text-violet-700 dark:text-violet-300">Show all</button></p>` : ''}
-        ${s.cat !== 'events' && (this._knownHidden || (s.showKnown && s.known.length)) ? `
-        <p class="text-xs text-slate-600 dark:text-slate-300">${s.showKnown
-          ? `Showing places you marked as known. <button data-act="showknown" class="font-semibold underline text-violet-700 dark:text-violet-300">Hide them again</button>`
-          : `${plural(this._knownHidden, 'place')} you already know ${this._knownHidden === 1 ? 'is' : 'are'} hidden. <button data-act="showknown" class="font-semibold underline text-violet-700 dark:text-violet-300">Show</button>`}</p>` : ''}
+
       </div>
     </section>`;
   }
@@ -947,9 +1003,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (!status && !near && s.sort === 'distance') status = 'Distances are from Downtown. Pick a location to change that.';
     return `
         <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
-          <button data-act="geo" ${s.geoBusy ? 'disabled' : ''} class="px-3 py-2 rounded-lg font-semibold ${s.nearKey === 'here' && near ? 'bg-violet-100 text-violet-800 dark:bg-violet-500/20 dark:text-violet-200' : 'bg-violet-600 hover:bg-violet-700 text-white'} disabled:opacity-60">${s.geoBusy ? 'Locating...' : s.nearKey === 'here' && near ? 'Near me ✓' : 'Near me'}</button>
+          <button data-act="geo" ${s.geoBusy ? 'disabled' : ''} class="min-h-[44px] px-3 py-2 rounded-lg font-semibold ${s.nearKey === 'here' && near ? 'bg-violet-100 text-violet-800 dark:bg-violet-500/20 dark:text-violet-200' : 'bg-violet-600 hover:bg-violet-700 text-white'} disabled:opacity-60">${s.geoBusy ? 'Locating...' : s.nearKey === 'here' && near ? 'Near me ✓' : 'Near me'}</button>
           <label class="flex items-center gap-2 font-semibold text-slate-600 dark:text-slate-300">or
-            <select data-act="near" aria-label="Location" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+            <select data-act="near" aria-label="Location" class="min-h-[44px] px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">
               <option value="" ${!near ? 'selected' : ''}>Anywhere</option>
               ${s.nearKey === 'here' && near ? '<option value="here" selected>My location</option>' : '<option value="gps">My location</option>'}
               ${Object.entries(ORIGINS).map(([k, o]) => `<option value="${k}" ${s.nearKey === k ? 'selected' : ''}>Near ${o.label}</option>`).join('')}
@@ -974,14 +1030,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="mt-1 text-xs font-bold text-violet-700 dark:text-violet-300 leading-tight">${esc(dayLabel(ev.next))}</p>
         </div>
         <div class="flex-1 min-w-0">
-          <p class="font-bold leading-snug">${esc(ev.name)}</p>
+          <p class="font-bold leading-snug">${esc(ev.name)}${RARE_EVENT.includes(ev.type) ? ' <span class="ml-1 align-middle text-[11px] font-bold px-1.5 py-0.5 rounded bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-500/20 dark:text-fuchsia-200">Few days only</span>' : ''}</p>
           <p class="text-sm text-slate-600 dark:text-slate-300">${esc(eventHours(ev))} · ${esc(eventWhen(ev))}</p>
           <p class="text-xs text-slate-500 dark:text-slate-400">${esc(EVENT_TYPES[ev.type] || 'Event')} · ${esc(ev.venue)}${ev.dist != null ? ` · ${ev.dist.toFixed(1)} km` : ''}</p>
           ${compact ? '' : `<p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(ev.summary)}</p>`}
-          <p class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs font-semibold">
-            ${ev.lat != null ? `<a href="${eventMapsUrl(ev)}" target="_blank" rel="noopener" class="text-indigo-700 dark:text-indigo-300">Directions</a>` : ''}
-            <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="text-slate-600 dark:text-slate-300 underline">Official info ↗</a>
-            ${spot ? `<button data-act="open" data-val="${spot.id}" class="text-violet-700 dark:text-violet-300">See ${esc(spot.name)} →</button>` : ''}
+          <p class="mt-1 flex flex-wrap gap-x-4 text-sm font-semibold">
+            ${ev.lat != null ? `<a href="${eventMapsUrl(ev)}" target="_blank" rel="noopener" class="inline-flex items-center py-2 text-indigo-700 dark:text-indigo-300">Directions</a>` : ''}
+            <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="inline-flex items-center py-2 text-slate-600 dark:text-slate-300 underline">Official info ↗</a>
+            ${spot ? `<button data-act="open" data-val="${spot.id}" class="inline-flex items-center py-2 text-violet-700 dark:text-violet-300 text-left">See ${esc(spot.name)} →</button>` : ''}
           </p>
         </div>
       </div>`;
@@ -991,10 +1047,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const tags = activeTags().filter(t => this._tagCounts && this._tagCounts[t.id]);
     const fresh = this._tagCounts && this._tagCounts.justopened, freshOn = this.state.tag === 'justopened';
     if (!tags.length && !fresh) return '';
-    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-sm font-semibold px-3 py-1 rounded-full border ${on ? 'bg-orange-500 border-orange-500 text-white' : 'border-orange-200 text-orange-800 hover:border-orange-400 dark:border-orange-500/30 dark:text-orange-300'}">#${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
+    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-sm font-semibold px-3 py-2 rounded-full border ${on ? 'bg-orange-500 border-orange-500 text-white' : 'border-orange-200 text-orange-800 hover:border-orange-400 dark:border-orange-500/30 dark:text-orange-300'}">#${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
     return `
-    <div class="mt-6 flex flex-wrap items-center gap-2">
-      ${fresh ? `<button data-act="tag" data-val="justopened" aria-pressed="${freshOn}" title="${esc(JUST_OPENED.criteria)}" class="text-sm font-semibold px-3 py-1 rounded-full border ${freshOn ? 'bg-violet-600 border-violet-600 text-white' : 'border-violet-200 text-violet-800 hover:border-violet-400 dark:border-violet-500/30 dark:text-violet-300'}">New Rising Spots <span class="font-normal opacity-75">${fresh}</span></button>` : ''}
+    <div class="mt-4 flex flex-wrap items-center gap-2">
+      ${fresh ? `<button data-act="tag" data-val="justopened" aria-pressed="${freshOn}" title="${esc(JUST_OPENED.criteria)}" class="text-sm font-semibold px-3 py-2 rounded-full border ${freshOn ? 'bg-violet-600 border-violet-600 text-white' : 'border-violet-200 text-violet-800 hover:border-violet-400 dark:border-violet-500/30 dark:text-violet-300'}">New Rising Spots <span class="font-normal opacity-75">${fresh}</span></button>` : ''}
       ${tags.length ? `<span class="${fresh ? 'ml-2 ' : ''}text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>${tags.map(chip).join('')}` : ''}
     </div>`;
   }
@@ -1002,18 +1058,38 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   eventsStrip() {
     const evs = this.upcomingEvents(7);
     if (!evs.length) return '';
+    // 매주 열리는 마켓은 묶어서 아래로, 세일·축제·팝업 같은 행사가 먼저 보이게
+    // 며칠만 여는 세일·사인회·팝업을 맨 앞에 (그 안에서는 날짜 순)
+    const markets = evs.filter(ev => ev.type === 'market'), others = evs.filter(ev => ev.type !== 'market')
+      .sort((a, b) => RARE_EVENT.includes(b.type) - RARE_EVENT.includes(a.type) || a.next.localeCompare(b.next));
     return `
-    <section class="mt-6">
+    <section class="mt-10">
       <div class="flex items-end justify-between gap-3">
         <h2 class="text-lg font-bold">Happening this week${this.nearActive() ? ' near ' + esc(this.originLabel()) : ''}</h2>
         <button data-act="cat" data-val="events" class="text-sm font-semibold text-violet-700 dark:text-violet-300">See all ${evs.length} →</button>
       </div>
-      <div class="mt-3 grid gap-3 md:grid-cols-2">${evs.map((ev, i) => [ev, i])
-        // 세일·사인회·팝업은 며칠만 열려서, 매주 열리는 마켓보다 먼저 보여줘요 (그 안에서는 원래 순서)
-        .sort((a, b) => RARE_EVENT.includes(b[0].type) - RARE_EVENT.includes(a[0].type) || a[1] - b[1])
-        // 모바일에선 2개만 보여줘서 장소 카드가 너무 아래로 밀리지 않게 해요 (나머지는 "See all")
-        .slice(0, 4).map(([ev], i) => i < 2 ? this.eventRow(ev, true) : `<div class="hidden md:block">${this.eventRow(ev, true)}</div>`).join('')}</div>
+      ${others.length ? `<div class="mt-3 grid gap-3 md:grid-cols-2">${others
+        // 날짜 순 그대로 (며칠만 여는 세일·팝업은 "Few days only" 표시로 구별해요)
+        // 모바일에선 3개만 (나머지는 "See all"). 순위 카드 밑에 있어서 첫 화면을 차지하지 않아요
+        .slice(0, 4).map((ev, i) => i < 3 ? this.eventRow(ev, true) : `<div class="hidden md:block">${this.eventRow(ev, true)}</div>`).join('')}</div>` : ''}
+      ${markets.length ? this.marketsRow(markets) : ''}
     </section>`;
+  }
+  // 매주 열리는 파머스 마켓은 한 줄로 묶어요: 마켓 이름 · 요일 칩 (누르면 그 장소)
+  marketsRow(markets) {
+    const when = iso => iso === vanDate(0) ? 'Today' : iso === vanDate(1) ? 'Tomorrow' : DOW[dowOf(iso)];
+    const short = name => name.replace(/\s+(Village\s+)?Farmers'?\s+Market$|\s+Saturday Market$/i, '');
+    return `
+      <div class="mt-3 rounded-xl p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
+        <p class="font-bold">Farmers markets this week <span class="font-normal text-slate-500 dark:text-slate-400">${markets.length}</span></p>
+        <div class="mt-2 flex flex-wrap gap-2">${markets.map(ev => {
+          const label = `${esc(short(ev.name))} <span class="font-normal text-slate-500 dark:text-slate-400">${esc(when(ev.next))}</span>`;
+          const cls = 'min-h-[36px] inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border border-emerald-200 text-emerald-800 hover:border-emerald-400 dark:border-emerald-500/30 dark:text-emerald-300';
+          return ev.spotId && byId(ev.spotId)
+            ? `<button data-act="open" data-val="${ev.spotId}" class="${cls}">${label}</button>`
+            : `<a href="${esc(ev.source)}" target="_blank" rel="noopener" class="${cls}">${label}</a>`;
+        }).join('')}</div>
+      </div>`;
   }
   eventsView() {
     const evs = this.upcomingEvents(45), today = vanDate(0), week = vanDate(6);
@@ -1066,7 +1142,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (s.photo) return `<div class="w-full ${h} relative overflow-hidden bg-slate-200 dark:bg-slate-800">
         <img src="${esc(s.photo.url)}" alt="${esc(s.name)}" loading="lazy" class="w-full h-full object-cover">
         <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-        <span class="absolute left-4 bottom-3 text-sm font-semibold text-white/95 drop-shadow">${esc(s.area)}</span>
         <a data-act="noop" href="${esc(s.photo.source)}" target="_blank" rel="noopener" title="Photo: ${esc(s.photo.credit)} (${esc(s.photo.license)}), via Wikimedia Commons"
           class="absolute right-2 bottom-2 max-w-[45%] truncate text-[10px] leading-tight px-1.5 py-0.5 rounded bg-black/45 text-white/85 hover:text-white">${esc(s.photo.credit)} · ${esc(s.photo.license)}</a>
       </div>`;
@@ -1076,7 +1151,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${sc.svg}
         <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/45 to-transparent pointer-events-none"></div>
         <span class="absolute ${center ? 'left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-7xl' : 'right-6 top-1/2 -translate-y-1/2 text-5xl'} drop-shadow-lg select-none" aria-hidden="true">${esc(s.emoji || c.icon)}</span>
-        <span class="absolute left-4 bottom-3 text-sm font-semibold text-white/95 drop-shadow">${esc(s.area)}</span>
         <span class="absolute right-2 bottom-2 text-[10px] px-1.5 py-0.5 rounded bg-black/35 text-white/85">Illustration</span>
       </div>`;
   }
@@ -1089,25 +1163,38 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const rising = isJustOpened(s);
     const badge = this.isNew(s) && !rising ? 'New' : this.rankOf(s) ? this.rankLabel(s) : rising ? '' : isVanClassic(s) ? CLASSIC.label
       : c.basis === 'reviews' ? 'Review pick' : isKid(s) ? 'Kid-friendly' : '';
+    // 순위 배지는 크게, 1~3위는 금색으로 (New 배지일 땐 순위가 아니에요)
+    const rank = badge && badge !== 'New' && this.rankOf(s);
+    // 지금 가 볼 이유 중 가장 강한 것 하나 (행사·시즌·검색 증가). 순위의 근거라 제목 바로 밑에 둬요
+    const why = this.nowReasons(s).filter(x => x.score >= NOW_MIN)[0] || (s.filler ? this.pickReason(s) : null);
     return `
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-2 hover:ring-violet-400 dark:hover:ring-violet-600 hover:shadow-lg transition overflow-hidden">
       <div class="relative">
         ${this.cover(s, 'h-40')}
         <span class="absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full bg-white/90 text-slate-900 shadow-sm">${esc(s.cuisine || c.label)}</span>
         ${badge || rising ? `<div class="absolute top-3 right-3 flex flex-col items-end gap-1">
-          ${badge ? `<span class="text-xs font-bold px-2.5 py-1 rounded-full ${badge === 'New' ? 'bg-fuchsia-600 text-white' : 'bg-slate-900/75 text-white'}">${badge}</span>` : ''}
-          ${rising ? `<span class="text-xs font-bold px-2.5 py-1 rounded-full bg-violet-600 text-white">${JUST_OPENED.label}</span>` : ''}
+          ${badge ? `<span class="${rank ? `text-sm font-extrabold px-3 py-1 shadow ring-2 ring-white/80 ${rank <= 3 ? 'bg-amber-500' : 'bg-violet-700'}` : `text-xs font-bold px-2.5 py-1 ${badge === 'New' ? 'bg-fuchsia-600' : 'bg-slate-900/75'}`} rounded-full text-white">${badge}</span>` : ''}
+          ${rising ? `<span class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-600 text-white">${JUST_OPENED.label}</span>` : ''}
         </div>` : ''}
       </div>
       <div class="p-5 flex flex-col flex-1">
         <h3 class="text-lg font-bold leading-snug group-hover:text-violet-700 dark:group-hover:text-violet-300">${esc(s.name)}</h3>
         <p class="text-sm text-slate-500 dark:text-slate-400">${esc(s.area)}${s.dist != null ? `, ${s.dist.toFixed(1)} km` : ''}</p>
-        <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">${esc(s.summary)}</p>
+        ${why ? why.pick ? `
+        <div class="mt-3 border-l-4 border-amber-400 rounded-r-lg bg-amber-50 dark:bg-amber-500/10 pl-3 pr-3 py-2">
+          <p class="text-xs font-bold uppercase tracking-wide text-amber-800 dark:text-amber-300">${esc(why.label)}</p>
+          <p class="mt-0.5 text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
+        </div>` : `
+        <div class="mt-3 border-l-4 border-rose-500 rounded-r-lg bg-rose-50 dark:bg-rose-500/10 pl-3 pr-3 py-2">
+          <p class="text-xs font-bold uppercase tracking-wide text-rose-700 dark:text-rose-300">${why.icon === '📈' ? 'Why more people are searching' : 'Why go now'}</p>
+          <p class="mt-0.5 text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
+        </div>` : ''}
+        <p class="mt-2 text-sm text-slate-700 dark:text-slate-300 ${why ? 'clamp2' : ''}">${esc(s.summary)}</p>
 
         ${s.rise != null ? `<p class="mt-2 text-sm ${s.rise >= RISING_MIN ? 'font-semibold text-rose-600 dark:text-rose-300' : 'text-slate-500 dark:text-slate-400'}" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
         ${spotTags(s).length ? `<p class="mt-2 flex flex-wrap gap-1.5">${spotTags(s).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300">#${esc(t.label)}</span>`).join('')}</p>` : ''}
         ${(() => { const m = GUIDES[s.id] && GUIDES[s.id].menu; return m && m.length ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold">Popular:</span> ${m.slice(0, 3).map(esc).join(' · ')}</p>` : ''; })()}
-        ${evHere && `${dayLabel(evHere.next)}: ${evHere.ev.name}` !== (this.nowReasons(s)[0] || {}).text ? `<p class="mt-2 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${esc(dayLabel(evHere.next))}: ${esc(evHere.ev.name)}</p>` : ''}
+        ${evHere && eventReason(evHere.ev, s, evHere.next) !== (why || {}).text ? `<p class="mt-2 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${esc(eventReason(evHere.ev, s, evHere.next))}</p>` : ''}
         ${(() => { const oi = openInfo(s); return oi
           ? `<p class="mt-2 text-xs font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'web' && s.hoursSource !== 'public' && !isDaylight(s) ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
           : HOURS_READY ? '<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
@@ -1115,27 +1202,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>${parkShort(s) ? `<span>${esc(parkShort(s))}</span>` : ''}
           ${isKid(s) && badge !== 'Kid-friendly' ? '<span class="font-semibold text-rose-600 dark:text-rose-300">Kid-friendly</span>' : ''}
         </div>
-        ${(() => {
-          // 지금 가 볼 이유 중 가장 강한 것 하나 (행사·시즌·검색 증가). 순위가 붙은 곳의 근거예요
-          const r = this.nowReasons(s).filter(x => x.score >= NOW_MIN)[0];
-          return r ? `
-        <div class="mt-4 rounded-xl p-3 bg-rose-50 dark:bg-rose-500/10">
-          <p class="text-xs font-bold text-rose-700 dark:text-rose-300">${r.icon === '📈' ? 'Why more people are searching' : 'Why go now'}</p>
-          <p class="mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(r.text)}</p>
-        </div>` : ''; })()}
-        <div class="mt-auto pt-4 grid grid-cols-[1fr_auto] gap-2">
-          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="py-2.5 rounded-xl font-semibold text-sm border ${saved ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-300' : 'border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200'}">${saved ? '♥ Saved' : '♡ Save'}</button>
-          ${this.knownButton(s, 'px-3 py-2.5 text-sm')}
+        <div class="mt-auto pt-4">
+          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="w-full py-2.5 rounded-xl font-semibold text-sm border ${saved ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-300' : 'border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200'}">${saved ? '♥ Saved' : '♡ Save'}</button>
+
         </div>
       </div>
     </article>`;
   }
 
-  // "이미 아는 곳" 버튼: 누르면 이 브라우저에서 목록에서 숨겨요
-  knownButton(s, size) {
-    const known = this.state.known.includes(s.id);
-    return `<button data-act="known" data-val="${s.id}" aria-pressed="${known}" title="${known ? 'Show this place in the list again' : 'Already know this place? Hide it so you see new ones'}" class="${size} rounded-xl font-semibold border border-slate-200 text-slate-600 hover:border-slate-400 dark:border-slate-700 dark:text-slate-300">${known ? 'Unhide' : 'Know it'}</button>`;
-  }
 
   listView(items) {
     const { radius } = this.state;
@@ -1165,18 +1239,34 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <button data-act="cat" data-val="all" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all spots</button>`}
       </div>`;
     const grid = list => `<div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">${list.map(s => this.card(s)).join('')}</div>`;
-    // 카드 목록 제목: 위의 "Happening this week"(행사)와 구별되게
-    const heading = (title, sub) => `
-      <div class="mt-10 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-        <h2 class="text-lg font-bold">${title}</h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400">${sub}</p>
+    // 카드 목록 제목: "Happening this week"(행사)와 구별되게 크게
+    const heading = (id, title, sub) => `
+      <div id="${id}" class="mt-8 scroll-mt-40 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <h2 class="text-2xl font-extrabold tracking-tight">${title}</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400">${sub}</p>
       </div>`;
-    if (this.state.sort !== 'fresh') return heading('Closest first', plural(items.length, 'spot')) + grid(items);
-    const newCount = items.filter(s => this.isNew(s)).length;
+    // 이번 주 행사는 순위 카드 다음에 (첫 화면엔 추천 카드가 먼저 보이게)
+    const events = this.state.cat === 'all' && this.state.view !== 'eats' ? this.eventsStrip() : '';
+    // 나머지(언제 가도 같은 곳)는 12개씩 "Show more"
+    const more = rest => {
+      const shown = rest.slice(0, this.state.restShown);
+      return `${grid(shown)}${rest.length > shown.length ? `
+      <div class="mt-6 text-center">
+        <button data-act="more" class="min-h-[44px] px-5 py-2.5 rounded-xl font-semibold border border-slate-300 text-slate-700 hover:border-slate-500 dark:border-slate-700 dark:text-slate-200">Show more <span class="font-normal text-slate-500 dark:text-slate-400">(${rest.length - shown.length} left)</span></button>
+      </div>` : ''}`;
+    };
+    if (this.state.sort !== 'fresh') return heading('list-top', 'Closest first', plural(items.length, 'spot')) + more(items) + events;
+    const top = items.filter(s => this.freshRank(s) <= 1 || s.filler), rest = items.filter(s => this.freshRank(s) > 1 && !s.filler);
+    const newCount = top.filter(s => this.isNew(s)).length, fill = top.filter(s => s.filler).length;
+    const sub = top.length === fill ? 'Nothing special on this week here, so these are our top picks: Vancouver classics and places Google reviewers love.'
+      : `${plural(top.length - fill, 'spot')} with a reason to go this week: an event here, something in season or more searches than usual.${fill ? ` Plus ${plural(fill, 'top pick')} to round out the list.` : ''}`;
     return `
-      ${heading('Worth going now', 'Ranked by events here soon, what’s in season and searches vs usual. Unranked places are the same any day.')}
+      ${top.length ? `${heading('list-top', 'Worth going now', sub)}
       ${newCount ? `<p class="mt-3 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${plural(newCount, 'new spot')} since your last visit, shown first.</p>` : ''}
-      ${grid(items)}`;
+      ${grid(top)}` : ''}
+      ${events}
+      ${rest.length ? `${heading('list-rest', top.length ? 'Good any day' : 'Spots', `${plural(rest.length, 'spot')}. Vancouver classics first, then the rest in no particular order.`)}
+      ${more(rest)}` : ''}`;
   }
 
   mapView(items) {
@@ -1322,23 +1412,37 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         </div>
 
         <div class="p-6 space-y-6">
-          <div class="grid grid-cols-3 gap-3">
-            <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/20 hover:ring-amber-400">
-              <p class="font-bold">Google Maps</p><p class="text-xs text-slate-500 dark:text-slate-400">Ratings & reviews</p>
-            </a>
-            ${s.rise != null ? `
-            <div class="rounded-xl p-3 text-center bg-violet-50 dark:bg-violet-500/10 ring-1 ring-violet-200 dark:ring-violet-500/20">
-              <p class="font-bold">${fmtRise(s.rise)}</p><p class="text-xs text-slate-500 dark:text-slate-400">vs usual searches</p>
-            </div>` : `
-            <div class="rounded-xl p-3 text-center bg-violet-50 dark:bg-violet-500/10 ring-1 ring-violet-200 dark:ring-violet-500/20">
-              ${(() => { const p = pickOf(s); return p
-                ? `<p class="font-bold">${esc(p.label)}</p><p class="text-xs text-slate-500 dark:text-slate-400">${esc(p.short)}</p>`
+          ${(() => {
+            // 지금 가 볼 이유: 이 장소의 행사(60일 안) + 시즌 태그를 한 곳에, 영업시간 바로 밑에
+            const evs = EVENTS.filter(ev => ev.spotId === s.id).map(ev => ({ ...ev, next: upcomingDates(ev, 60)[0] })).filter(ev => ev.next).sort((a, b) => a.next.localeCompare(b.next));
+            const tags = spotTags(s);
+            if (!evs.length && !tags.length) return '';
+            return `
+          <section class="rounded-2xl p-5 bg-rose-50 dark:bg-rose-500/10 border-l-4 border-rose-500">
+            <h3 class="font-bold text-rose-800 dark:text-rose-300">Why go now</h3>
+            ${evs.map(ev => `
+            <div class="mt-2 text-sm">
+              <p class="font-semibold text-slate-900 dark:text-slate-100">${esc(ev.name)}</p>
+              <p class="text-slate-600 dark:text-slate-300">Next: ${esc(dayLabel(ev.next))} · ${esc(eventHours(ev))} · ${esc(eventWhen(ev))} <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Official info ↗</a></p>
+            </div>`).join('')}
+            ${tags.map(t => { const x = t.spots[s.id]; return `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200"><span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('')}
+            ${tags.length ? `<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">${esc(SEASON_NOTE)}</p>` : ''}
+          </section>`; })()}
 
-                : `<p class="font-bold">${esc(ENV[s.env])}</p><p class="text-xs text-slate-500 dark:text-slate-400">About ${esc(s.time)}</p>`; })()}
-            </div>`}
-            <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-emerald-50 dark:bg-emerald-500/10 ring-1 ring-emerald-200 dark:ring-emerald-500/20 hover:ring-emerald-400">
-              <p class="font-bold">${s.price ? esc(s.price) : 'Prices'}</p><p class="text-xs text-slate-500 dark:text-slate-400">Search prices online</p>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/20 hover:ring-amber-400">
+              <p class="font-bold">Google Maps ↗</p><p class="text-xs text-slate-500 dark:text-slate-400">Ratings & reviews</p>
             </a>
+            <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="sm:order-last rounded-xl p-3 text-center bg-emerald-50 dark:bg-emerald-500/10 ring-1 ring-emerald-200 dark:ring-emerald-500/20 hover:ring-emerald-400">
+              <p class="font-bold">${s.price ? esc(s.price) : 'Prices'} ↗</p><p class="text-xs text-slate-500 dark:text-slate-400">Search prices online</p>
+            </a>
+            <div class="col-span-2 sm:col-span-1 rounded-xl p-3 text-center">
+              ${s.rise != null
+                ? `<p class="font-bold">${fmtRise(s.rise)}</p><p class="text-xs text-slate-500 dark:text-slate-400">vs usual searches</p>`
+                : (() => { const p = pickOf(s); return p
+                ? `<p class="font-bold">${esc(p.label)}</p><p class="text-xs text-slate-500 dark:text-slate-400">${esc(p.short)}</p>`
+                : `<p class="font-bold">${esc(ENV[s.env])}</p><p class="text-xs text-slate-500 dark:text-slate-400">About ${esc(s.time)}</p>`; })()}
+            </div>
           </div>
 
           ${isRising(s) ? (() => {
@@ -1366,12 +1470,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="mt-3 inline-block text-sm font-semibold text-amber-800 dark:text-amber-300">See the latest ratings and reviews on Google Maps →</a>
           </section>`; })()}
 
-          ${spotTags(s).length ? `
-          <section class="rounded-2xl p-5 bg-orange-50 dark:bg-orange-500/10 ring-1 ring-orange-200 dark:ring-orange-500/20">
-            <h3 class="font-bold text-orange-800 dark:text-orange-300">Why go now</h3>
-            ${spotTags(s).map(t => { const x = t.spots[s.id]; return `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200"><span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('')}
-            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">${esc(SEASON_NOTE)}</p>
-          </section>` : ''}
 
           ${(() => {
             // 주차: 근처(400m) 주차장이 무료인지 유료인지, 요금(OSM에 있으면)과 요금을 확인할 링크. 거리는 보여주지 않아요
@@ -1391,12 +1489,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               if (!m || m.day == null) return '';
               const range = m.dayMin != null && m.dayMax != null && m.dayMin !== m.dayMax ? ` (${money(m.dayMin)}–${money(m.dayMax)} depending on the block)` : '';
               return `
-            <div class="mt-2 rounded-xl p-3 bg-slate-50 dark:bg-slate-800/60 text-sm text-slate-700 dark:text-slate-300">
-              <p class="font-semibold">City street meters within ${METERS.radius} m</p>
-              <p class="mt-1">About ${money(m.day)}/hr 9am–6pm${range}${m.eve != null ? `, ${money(m.eve)}/hr 6pm–10pm` : ''}, free 10pm–9am.${m.limit ? ` Usually a ${esc(m.limit.replace(/\s*Hr$/i, '-hour'))} limit.` : ''}</p>
+            <details class="mt-2 rounded-xl p-3 bg-slate-50 dark:bg-slate-800/60 text-sm text-slate-700 dark:text-slate-300">
+              <summary class="cursor-pointer font-semibold">City street meters nearby: about ${money(m.day)}/hr daytime</summary>
+              <p class="mt-2">Within ${METERS.radius} m: about ${money(m.day)}/hr 9am–6pm${range}${m.eve != null ? `, ${money(m.eve)}/hr 6pm–10pm` : ''}, free 10pm–9am.${m.limit ? ` Usually a ${esc(m.limit.replace(/\s*Hr$/i, '-hour'))} limit.` : ''}</p>
               <p class="mt-1">Pay ${m.card ? 'by card at the meter or ' : ''}with the PayByPhone app.</p>
               <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Rates: City of Vancouver Open Data, <a href="https://opendata.vancouver.ca/pages/licence/" target="_blank" rel="noopener" class="underline">Open Government Licence – Vancouver</a>.</p>
-            </div>`;
+            </details>`;
             })()}
             <p class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold">
               <a href="${parkingUrl(s)}" target="_blank" rel="noopener" class="underline text-indigo-700 dark:text-indigo-300">Parking and rates on Google Maps ↗</a>
@@ -1437,20 +1535,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </section>` : '';
           })()}
 
-          ${(() => {
-            const evs = EVENTS.filter(ev => ev.spotId === s.id).map(ev => ({ ...ev, next: upcomingDates(ev, 60)[0] })).filter(ev => ev.next);
-            return evs.length ? `
-          <section>
-            <h3 class="font-bold">Events here</h3>
-            <div class="mt-2 space-y-2">${evs.map(ev => `
-              <div class="rounded-xl p-3 bg-fuchsia-50 dark:bg-fuchsia-500/10 text-sm">
-                <p class="font-semibold">${esc(ev.name)}</p>
-                <p class="text-slate-600 dark:text-slate-300">Next: ${esc(dayLabel(ev.next))} · ${esc(eventHours(ev))} · ${esc(eventWhen(ev))}</p>
-                <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="text-xs font-semibold underline text-slate-600 dark:text-slate-300">Official info ↗</a>
-              </div>`).join('')}
-            </div>
-          </section>` : '';
-          })()}
 
           <section>
             <h3 class="font-bold">How busy is it?</h3>
@@ -1464,12 +1548,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             <ul class="mt-2 space-y-1.5">${s.tips.map(t => `<li class="text-sm text-slate-700 dark:text-slate-300 flex gap-2"><span class="text-violet-600 dark:text-violet-400 font-bold">✓</span>${esc(t)}</li>`).join('')}</ul>
           </section>` : ''}
 
-          <div class="grid grid-cols-2 gap-3">
-            <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="py-3 rounded-xl font-semibold text-center text-white bg-indigo-600 hover:bg-indigo-700">Directions</a>
-            <button data-act="save" data-val="${s.id}" class="py-3 rounded-xl font-semibold border ${saved ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-300' : 'border-slate-200 dark:border-slate-700'}">${saved ? '♥ Saved' : '♡ Save'}</button>
-          </div>
-          <div class="text-center -mt-3">${this.knownButton(s, 'px-4 py-2 text-sm')}</div>
+
         </div>
+        </div>
+        <div class="shrink-0 grid grid-cols-[1fr_1fr_auto] gap-2 px-4 py-3 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+          <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="min-h-[44px] flex items-center justify-center rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700">Directions</a>
+          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="min-h-[44px] rounded-xl font-semibold border ${saved ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-300' : 'border-slate-200 dark:border-slate-700'}">${saved ? '♥ Saved' : '♡ Save'}</button>
+          <button data-act="share" data-val="${s.id}" class="min-h-[44px] px-4 rounded-xl font-semibold border border-slate-200 dark:border-slate-700">${st.shareMsg && st.shareMsg.id === s.id ? esc(st.shareMsg.text) : 'Share'}</button>
         </div>
       </div>
     </div>`;
