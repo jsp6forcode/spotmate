@@ -140,7 +140,11 @@ const WEATHER = { sunny: { label: 'Sunny', icon: '☀️' }, cloudy: { label: 'C
 const ENV = { indoor: 'Indoor', outdoor: 'Outdoor', both: 'Indoor + outdoor' };
 const ENV_ICON = { indoor: '🏠', outdoor: '🌳', both: '🏠🌳' };
 // 위치 기반 반경 필터 옵션 (km). 'any'는 거리 제한 없음
-const RADII = [2, 5, 10, 25, 'any'];
+// 반경: 200 m는 직장인이 걸어서 가는 거리
+const RADII = [0.2, 2, 5, 10, 25, 'any'];
+const radiusLabel = r => r === 'any' ? 'Any' : r < 1 ? `${Math.round(r * 1000)} m` : `${r} km`;
+// 거리: 1 km 미만은 m와 걸어서 몇 분 (직선거리 기준, 분당 80 m), 그 이상은 km
+const fmtDist = d => d < 1 ? `${Math.max(10, Math.round(d * 100) * 10)} m · ~${Math.max(1, Math.round(d * 1000 / 80))} min walk` : `${d.toFixed(1)} km`;
 // 가장 가까운 스팟이 이보다 멀면 메트로 밴쿠버 밖으로 보고 다운타운 기준으로 바꿔요
 const OUT_OF_AREA_KM = 60;
 const ORIGINS = {
@@ -180,6 +184,59 @@ let PRESS = {};
 const PRESS_DAYS = 30;
 const recentPress = s => (PRESS[s.id] || []).filter(p => /^https:\/\//.test(p.url || '') && p.date && p.date >= vanDate(-PRESS_DAYS) && p.date <= vanDate(0))
   .sort((a, b) => b.date.localeCompare(a.date));
+// data/happy-hours.json: 해피아워 { id: { w: [{ d: 'Mo-Fr', f: '15:00', t: '18:00'|'close' } 또는 { d, all: true }], deals, label, note, source } }
+let HAPPY = {}, HAPPY_META = { updatedAt: '' };
+const DAY_CODES = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+const DAY_NAME = { Mo: 'Mon', Tu: 'Tue', We: 'Wed', Th: 'Thu', Fr: 'Fri', Sa: 'Sat', Su: 'Sun' };
+// "Mo-Fr", "Su-Th"(주말을 넘어감), "Mo,We-Su" → 요일 번호(일=0) 집합
+function hhDays(spec) {
+  const out = new Set();
+  spec.split(',').forEach(part => {
+    const [a, b] = part.split('-').map(x => DAY_CODES.indexOf(x.trim()));
+    if (a < 0) return;
+    if (b == null || b < 0) { out.add(a); return; }
+    for (let i = a; ; i = (i + 1) % 7) { out.add(i); if (i === b) break; }
+  });
+  return out;
+}
+const hhMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+const hhDayLabel = spec => spec === 'Mo-Su' ? 'Daily' : spec.split(',').map(p => p.split('-').map(x => DAY_NAME[x]).join('–')).join(', ');
+const hhTime = t => t === 'close' ? 'close' : (t === '24:00' || t === '00:00') ? 'midnight' : fmtTime(t);
+// data/lunch-specials.json: 런치 스페셜 (형식은 해피아워와 같고, approx: true는 "점심시간"으로만 확인된 곳)
+let LUNCH = {}, LUNCH_META = { updatedAt: '' };
+const APPROX_LUNCH = { f: '11:30', t: '14:30' };
+// "3pm–6pm" → "3–6pm" (둘 다 pm이면 앞쪽 pm을 빼요)
+function hhRange(w) {
+  if (w.all) return 'all day';
+  if (w.approx) return 'lunch hours';
+  const a = fmtTime(w.f), b = hhTime(w.t), sa = a.slice(-2);
+  return `${/[ap]m$/.test(b) && b.slice(-2) === sa ? a.slice(0, -2) : a}–${b}`;
+}
+// 요일이 같은 창끼리 묶은 주간 일정: [{ days: 'Daily', times: '2–5pm & 9pm–close' }, ...]
+function hhSchedule(h) {
+  const groups = [];
+  h.w.forEach(w => { const g = groups.find(x => x.d === w.d); const r = hhRange(w) + (w.note ? ` (${w.note})` : ''); if (g) g.r.push(r); else groups.push({ d: w.d, r: [r] }); });
+  return groups.map(g => ({ days: hhDayLabel(g.d), times: g.r.join(' & ') }));
+}
+// 지금 해피아워(또는 런치 스페셜)인지, 아니면 오늘 몇 시에 시작하는지 (영업시간을 알면 "close"는 문 닫을 때까지)
+const hhState = s => HAPPY[s.id] ? dealState(s, HAPPY[s.id], 'Happy hour') : null;
+const lunchState = s => LUNCH[s.id] ? dealState(s, LUNCH[s.id], 'Lunch special') : null;
+function dealState(s, h, defLabel) {
+  const now = vanWallClock(), dow = now.getDay(), prev = (dow + 6) % 7, m = now.getHours() * 60 + now.getMinutes();
+  const oi = openInfo(s), open = oi ? oi.open : null;
+  let active = null, next = null;
+  for (const w0 of h.w) {
+    const w = w0.approx ? { ...w0, ...APPROX_LUNCH } : w0;
+    const days = hhDays(w.d);
+    if (w.all) { if (!active && days.has(dow) && open !== false) active = w; continue; }
+    const f = hhMin(w.f), t = w.t === 'close' ? null : hhMin(w.t);
+    const wraps = t !== null && t < f;   // 자정을 넘기는 창 (예: 9pm–1am)
+    if (!active && days.has(dow) && m >= f && (t === null ? open !== false : wraps || m < t)) active = w;
+    if (!active && wraps && days.has(prev) && m < t) active = w;
+    if (days.has(dow) && m < f && (!next || f < hhMin(next.f))) next = w;
+  }
+  return { h, label: h.label || defLabel, active, next, until: active ? (active.all ? 'close' : active.approx ? '' : hhTime(active.t)) : '' };
+}
 // 먹거리의 최근 2주 Reddit 글 (제목에 이름이 나온 글)
 const recentReddit = s => ((REDDIT.mentions[s.id] || {}).posts || []).filter(p => /^https:\/\/(www\.)?reddit\.com\//.test(p.url) && p.date >= vanDate(-14));
 // 데이터 기준일 → "today", "yesterday", "3 days ago"
@@ -337,6 +394,11 @@ function openInfo(s) {
     return { open, text: open ? (next ? `Open · closes ${when}` : 'Open') : (next ? `Closed · opens ${when}` : 'Closed') };
   } catch (e) { return null; }
 }
+// 지금 닫혀 있지만 h시간 안에 여는지 (영업시간을 모르면 false)
+function opensWithin(s, h) {
+  if (!s._oh || s.hoursSource === 'public') return false;
+  try { const now = vanWallClock(), next = s._oh.getNextChange(now); return !s._oh.getState(now) && !!next && next - now <= h * 36e5; } catch (e) { return false; }
+}
 // 오늘(밴쿠버) h시 30분에 열려 있는지: true/false, 영업시간을 모르면 null
 function openAt(s, h) {
   if (!s._oh) { const ev = eventToday(s); if (!ev) return null; const t = `${String(h).padStart(2, '0')}:30`; return t >= ev.schedule.start && t < ev.schedule.end; }
@@ -441,6 +503,10 @@ class App {
       kidsOnly: load('spotmate-kids') === '1',
       // cuisine: Food 카테고리에서 고른 음식 종류 ('' = 전체)
       cuisine: '',
+      // price: Eats 가격대 ('' = 전체, '$', '$$', '$$$' = $$$ 이상). 켜 둔 채 잊으면 목록이 줄어 보여서 기억하지 않아요
+      price: '',
+      // hh: Eats "Happy hour" 필터 (지금 하거나 오늘 이따 하는 곳만). 시간이 지나면 의미가 바뀌어서 기억하지 않아요
+      hh: false, lunch: false,
       radius: RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
       // "Good any day" 목록에서 보여줄 개수 (Show more로 12개씩 늘어나요)
@@ -519,6 +585,16 @@ class App {
         const rr = await fetch('data/reddit.json', { cache: 'no-cache' });
         if (rr.ok) { const rd = await rr.json(); REDDIT = { mentions: rd.mentions || {}, from: rd.from || '', to: rd.to || '' }; }
       } catch (e) {}
+      // 해피아워: 없어도 괜찮아요
+      try {
+        const hr = await fetch('data/happy-hours.json', { cache: 'no-cache' });
+        if (hr.ok) { const hd = await hr.json(); HAPPY = hd.spots || {}; HAPPY_META = { updatedAt: hd.updatedAt || '' }; }
+      } catch (e) {}
+      // 런치 스페셜: 없어도 괜찮아요
+      try {
+        const lr = await fetch('data/lunch-specials.json', { cache: 'no-cache' });
+        if (lr.ok) { const ld = await lr.json(); LUNCH = ld.spots || {}; LUNCH_META = { updatedAt: ld.updatedAt || '' }; }
+      } catch (e) {}
       // 음식 기사 언급: 없어도 괜찮아요
       try {
         const pr = await fetch('data/press.json', { cache: 'no-cache' });
@@ -539,7 +615,7 @@ class App {
       let plan = [];
       try { plan = JSON.parse(load('spotmate-plan') || '[]').filter(id => byId(id)); } catch (e) {}
       // "Know it"(아는 곳 숨기기)은 없앴어요. 예전에 숨겨 둔 목록은 지워서 모든 곳이 다시 보이게 해요
-      try { localStorage.removeItem('spotmate-known'); localStorage.removeItem('spotmate-opennow'); } catch (e) {}
+      try { ['spotmate-known', 'spotmate-opennow', 'spotmate-price'].forEach(k => localStorage.removeItem(k)); } catch (e) {}
       this.newIds = this.trackSeen();
       this.set({ loading: false, plan });
       // 공유받은 링크(#spot=id)로 들어오면 그 장소를 바로 열어요
@@ -563,7 +639,7 @@ class App {
 
   set(patch) {
     // 목록이 바뀌는 필터를 건드리면 "Show more"로 늘린 개수를 처음으로 되돌려요
-    if (['cat', 'view', 'tag', 'cuisine', 'sort', 'nearKey', 'radius', 'kidsOnly', 'indoor', 'openNow'].some(k => k in patch && patch[k] !== this.state[k])) patch.restShown = REST_STEP;
+    if (['cat', 'view', 'tag', 'cuisine', 'price', 'hh', 'lunch', 'sort', 'nearKey', 'radius', 'kidsOnly', 'indoor', 'openNow'].some(k => k in patch && patch[k] !== this.state[k])) patch.restShown = REST_STEP;
     Object.assign(this.state, patch); this.render();
   }
 
@@ -611,12 +687,42 @@ class App {
     if (isRising(s)) out.push({ score: 1 + Math.min(s.rise - 1, 1) * 2, icon: '📈', text: (RISE_NOTES[s.id] && RISE_NOTES[s.id].why) || `Searched ${fmtRise(s.rise)} its usual amount` });
     return out.sort((a, b) => b.score - a.score);
   }
+  // 모달의 해피아워·런치 스페셜 칸: 오늘 상태(지금·이따·오늘 없음) → 요일별 시간 → 가격·딜 → 메모와 출처
+  dealSection(st, c, meta) {
+    const T = {
+      amber: { box: 'bg-amber-50 dark:bg-amber-500/10 ring-amber-200 dark:ring-amber-500/25', h: 'text-amber-900 dark:text-amber-200', on: 'bg-amber-500', chip: 'text-amber-900 ring-amber-200 dark:text-amber-200 dark:ring-amber-500/30' },
+      emerald: { box: 'bg-emerald-50 dark:bg-emerald-500/10 ring-emerald-200 dark:ring-emerald-500/25', h: 'text-emerald-900 dark:text-emerald-200', on: 'bg-emerald-600', chip: 'text-emerald-900 ring-emerald-200 dark:text-emerald-200 dark:ring-emerald-500/30' },
+    }[c];
+    const status = st.active ? `On now${st.until ? ` · until ${st.until}` : ''}` : st.next ? `Today ${hhRange(st.next)}` : 'Not today';
+    return `
+          <section class="rounded-2xl p-5 ring-1 ${T.box}">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="font-bold ${T.h}">${esc(st.label)}${st.h.price ? ` <span class="font-semibold text-slate-600 dark:text-slate-300">· ${esc(st.h.price)}</span>` : ''}</h3>
+              <span class="inline-flex items-center gap-1.5 text-xs font-bold px-2 py-1 rounded-md ${st.active ? `${T.on} text-white` : st.next ? 'bg-white text-slate-800 ring-1 ring-slate-300 dark:bg-slate-900 dark:text-slate-200 dark:ring-slate-600' : 'bg-white/70 text-slate-600 dark:bg-slate-900 dark:text-slate-400'}">${st.active ? '<span class="w-2 h-2 rounded-full bg-white animate-pulse" aria-hidden="true"></span>' : ''}${esc(status)}</span>
+            </div>
+            <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+              ${hhSchedule(st.h).map(g => `<dt class="font-semibold text-slate-700 dark:text-slate-200">${esc(g.days)}</dt><dd class="text-slate-800 dark:text-slate-100">${esc(g.times)}</dd>`).join('')}
+            </dl>
+            ${st.h.deals && st.h.deals.length ? `<ul class="mt-3 flex flex-wrap gap-1.5">${st.h.deals.map(d => `<li class="text-xs font-semibold px-2 py-1 rounded-full bg-white ring-1 dark:bg-slate-900 ${T.chip}">${esc(d)}</li>`).join('')}</ul>` : ''}
+            ${st.h.note ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-300">${esc(st.h.note)}</p>` : ''}
+            ${st.h.w.some(w => w.approx) ? '<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Exact lunch hours not posted, so call ahead.</p>' : ''}
+            <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">Checked ${esc(shortDate(meta.updatedAt))}${/^https?:\/\//.test(st.h.source || '') ? ` · <a href="${esc(st.h.source)}" target="_blank" rel="noopener" class="underline">Source ↗</a>` : ''}. Deals change often, so confirm with the restaurant.</p>
+          </section>`;
+  }
   // 먹거리(음식점·카페)만: 지금 열려 있고 시간대나 날씨에 맞으면 "지금 먹기 좋은 이유"
   // 아침(6:30–11:30, 8:30에 여는 곳) · 심야(9pm 이후, 11:30pm에도 여는 곳) · 비/12°C 이하엔 국물 · 맑고 18°C 이상엔 아이스크림·파티오
   foodNow(s) {
     if (s.cat !== 'food' && s.cat !== 'dessert') return [];
     const oi = openInfo(s);
-    if (!oi || !oi.open) return [];
+    // 해피아워 중이면 가장 강한 "지금" 이유 (퇴근길에 제일 궁금한 정보라서)
+    const hh = hhState(s);
+    const happy = hh && hh.active && (!oi || oi.open) ? [{ score: 1.4, icon: '⏰', label: `${hh.label} now`, hh: true,
+      text: `Until ${hh.until}${hh.h.deals && hh.h.deals.length ? `: ${hh.h.deals.slice(0, 2).join(', ')}` : ''}` }] : [];
+    // 런치 스페셜 중이면 그다음으로 강한 이유 (점심시간 직장인용)
+    const lu = lunchState(s);
+    if (lu && lu.active && (!oi || oi.open)) happy.push({ score: 1.35, icon: '⏰', label: `${lu.label} now`, lunch: true,
+      text: [lu.until ? `Until ${lu.until}` : 'At lunch', lu.h.price, lu.h.deals && lu.h.deals[0]].filter(Boolean).join(' · ') });
+    if (!oi || !oi.open) return happy;
     const now = vanWallClock(), hr = now.getHours() + now.getMinutes() / 60, live = this.state.live;
     // "closes Tue 2am"처럼 자정을 넘기면 요일을 빼고, 12am은 midnight으로
     const m = / closes (.+)$/.exec(oi.text), close = m && m[1].replace(/^[A-Z][a-z]{2} /, '').replace(/^12am$/, 'midnight');
@@ -631,7 +737,7 @@ class App {
     if (hr >= 6.5 && hr < 11.5 && openAt(s, 8) && openAt(s, Math.floor(hr) + 1) !== false
       && (s.cuisine === 'Brunch & Café' || s.cat === 'dessert' || BREAKFAST_FOOD.test(t))) add(1.2, `${s.cat === 'dessert' ? 'Open now for morning coffee' : 'Open now for breakfast'}${until}`);
     if ((hr >= 21 || hr < 3) && (hr < 3 || openAt(s, 23))) add(1.2, `Open late tonight${until}`);
-    return out;
+    return [...happy, ...out];
   }
   // 10곳을 채우려고 넣은 곳의 카드 이유: 곧 있을 일(약한 이유)이 있을 때만. 클래식·리뷰 추천은 배지와 모달에서 설명해요
   pickReason(s) {
@@ -665,10 +771,24 @@ class App {
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
     // 위치 필터가 켜져 있으면 반경 안의 스팟만 남기고, 순위도 그 안에서 다시 매겨요
     if (this.nearActive() && radius !== 'any') items = items.filter(s => s.dist <= radius);
-    // 음식 종류: 드롭다운 개수는 위치·Know it·Open now 필터를 먼저 적용한 뒤, 음식 종류를 고르기 전 기준으로 세요
+    // 가격대 (Eats만): $ · $$ · $$$+($$$와 $$$$). 가격을 모르는 곳은 숨기고 개수만 세어 둬요
+    this._priceUnknown = 0;
+    if (eats && this.state.price) {
+      this._priceUnknown = items.filter(s => !s.price).length;
+      items = items.filter(s => s.price && (this.state.price === '$$$' ? s.price.length >= 3 : s.price === this.state.price));
+    }
+    // 해피아워·런치 스페셜 (Eats): 버튼에 "지금 N곳"을 보여주고, 켜면 지금 하거나 오늘 이따 시작하는 곳만
+    this._hhNow = 0; this._lunchNow = 0;
+    if (eats) {
+      const today = st => st && (st.active || st.next);
+      this._hhNow = items.filter(s => (hhState(s) || {}).active).length;
+      this._lunchNow = items.filter(s => (lunchState(s) || {}).active).length;
+      if (this.state.hh) items = items.filter(s => today(hhState(s)));
+      if (this.state.lunch) items = items.filter(s => today(lunchState(s)));
+    }
+    // 음식 종류: 드롭다운 개수는 위치·가격·Open now 필터를 먼저 적용한 뒤, 음식 종류를 고르기 전 기준으로 세요
     this._cuisineCounts = {};
     if (cat === 'food') {
-
       const openOk = s => !(this.state.openNow && HOURS_READY) || (openInfo(s) || {}).open === true;
       items.forEach(s => { if (s.cuisine && openOk(s)) this._cuisineCounts[s.cuisine] = (this._cuisineCounts[s.cuisine] || 0) + 1; });
       if (this.state.cuisine) items = items.filter(s => s.cuisine === this.state.cuisine);
@@ -693,7 +813,11 @@ class App {
     }
     // 순위와 "뜨는 곳" 판단은 평소 대비 증가율(rise)만 써요. 같은 그룹 안에서는 데이터 순서대로.
     if (sort === 'fresh') {
-      items.forEach(s => { s.now = this.nowReasons(s).reduce((x, r) => x + r.score, 0); });
+      items.forEach(s => {
+        s.now = this.nowReasons(s).reduce((x, r) => x + r.score, 0);
+        // 먹거리는 "지금" 가는 곳이라, 지금 닫혀 있고 30분 안에 열지 않으면 점수를 반으로 (새로 뜨는 곳도 지금 연 곳 뒤로)
+        if ((s.cat === 'food' || s.cat === 'dessert') && s.now > 0) { const oi = openInfo(s); if (oi && !oi.open && !opensWithin(s, 0.5)) s.now /= 2; }
+      });
       // 점수가 같으면 (예: 심야에 여는 펍 여러 곳) 밴쿠버 클래식 → 가까운 곳(위치를 골랐을 때) → 검색 증가 순
       items.sort((a, b) => this.freshRank(a) - this.freshRank(b) || b.now - a.now
         || isVanClassic(b) - isVanClassic(a) || (a.dist ?? 0) - (b.dist ?? 0) || (b.rise ?? 0) - (a.rise ?? 0));
@@ -704,7 +828,7 @@ class App {
       // "지금 먹기 좋은" 이유(시간대·날씨)만 있는 곳은 TOP_N위 안에서만 순위를 받아요 (아침엔 브런치집이 수십 곳이라)
       let n = 0; items.forEach(s => {
         s.filler = false;
-        s.overflow = this.freshRank(s) === 1 && n >= TOP_N && this.nowReasons(s).filter(r => r.score >= NOW_MIN).every(r => r.label === 'Good right now');
+        s.overflow = this.freshRank(s) === 1 && n >= TOP_N && this.nowReasons(s).filter(r => r.score >= NOW_MIN).every(r => r.label === 'Good right now' || r.hh || r.lunch);
         s.freshNo = this.freshRank(s) === 1 && !s.overflow ? ++n : null;
       });
       // 이유가 있는 곳이 TOP_N곳이 안 되면 (Indoor·Kids 필터 등) 추천할 만한 곳으로 TOP_N곳까지 채워요:
@@ -782,6 +906,10 @@ class App {
       case 'aistop': if (this.aiCtl) this.aiCtl.abort(); return;
       case 'geo': return this.locate();
       case 'opennow': return this.set({ openNow: !this.state.openNow });
+      // 해피아워와 런치 필터는 하나만 (둘 다 켜면 겹치는 곳이 거의 없어서)
+      case 'hh': return this.set({ hh: !this.state.hh, lunch: false });
+      case 'lunch': return this.set({ lunch: !this.state.lunch, hh: false });
+      case 'price': return this.set({ price: this.state.price === val ? '' : val });
       case 'kids': { const kidsOnly = !this.state.kidsOnly; store('spotmate-kids', kidsOnly ? '1' : '0'); return this.set({ kidsOnly }); }
       case 'tag': return this.set({ tag: this.state.tag === val ? '' : val });
       case 'indoor': { const indoor = !this.state.indoor; store('spotmate-indoor', indoor ? '1' : '0'); return this.set({ indoor }); }
@@ -927,7 +1055,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
           ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : this.state.cat === 'events' ? this.eventsView() : `
             ${view !== 'map' ? this.seasonChips() : ''}
-            ${this.criteriaBanner(items)}
+            ${view === 'eats' && (this.state.hh || this.state.lunch) ? '' : this.criteriaBanner(items)}
       
             ${view === 'map' ? this.mapView(items) + (this.state.cat === 'all' ? this.eventsStrip() : '') : this.listView(items)}
           `}
@@ -1026,6 +1154,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               ${Object.keys(counts).sort().map(k => `<option value="${esc(k)}" ${s.cuisine === k ? 'selected' : ''}>${esc(k)} (${counts[k]})</option>`).join('')}
             </select>
           </label>`; })() : ''}
+          ${s.view === 'eats' ? `
+          <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Price">
+            ${[['$', '$', 'Cheap eats, mostly under $18 a main'], ['$$', '$$', 'Mid-range, mains about $18–35'], ['$$$', '$$$+', 'Upscale, mains $35 and up']].map(([v, label, tip]) => `<button data-act="price" data-val="${v}" aria-pressed="${s.price === v}" title="${tip}" class="min-h-[40px] px-3 rounded-lg text-sm font-bold transition-colors ${s.price === v ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`).join('')}
+          </div>` : ''}
+          ${s.view === 'eats' && s.cat === 'food' && Object.keys(HAPPY).length ? `
+          <button data-act="hh" aria-pressed="${s.hh}" title="Places with a happy hour on now or later today" class="min-h-[44px] inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.hh ? 'bg-amber-500 border-amber-500 text-white' : 'bg-white/70 border-amber-300 text-amber-900 dark:bg-slate-800/70 dark:border-amber-500/40 dark:text-amber-200'}">Happy hour${this._hhNow ? `<span class="text-xs font-bold px-1.5 py-0.5 rounded-full ${s.hh ? 'bg-white/25' : 'bg-amber-100 text-amber-900 dark:bg-amber-500/25 dark:text-amber-100'}">${this._hhNow} on now</span>` : ''}</button>` : ''}
+          ${s.view === 'eats' && s.cat === 'food' && Object.keys(LUNCH).length ? `
+          <button data-act="lunch" aria-pressed="${s.lunch}" title="Lunch specials on now or later today" class="min-h-[44px] inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.lunch ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white/70 border-emerald-300 text-emerald-900 dark:bg-slate-800/70 dark:border-emerald-500/40 dark:text-emerald-200'}">Lunch specials${this._lunchNow ? `<span class="text-xs font-bold px-1.5 py-0.5 rounded-full ${s.lunch ? 'bg-white/25' : 'bg-emerald-100 text-emerald-900 dark:bg-emerald-500/25 dark:text-emerald-100'}">${this._lunchNow} on now</span>` : ''}</button>` : ''}
           ${s.cat === 'events' || !HOURS_READY ? '' : `
           <button data-act="opennow" aria-pressed="${s.openNow}" class="min-h-[44px] px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.openNow ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Open now</button>`}
           ${s.cat === 'events' || s.view === 'eats' ? '' : `
@@ -1041,6 +1177,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         </div>
         ${this.locationBar(items)}
         <p class="hidden sm:block text-xs text-slate-500 dark:text-slate-400">${s.cat === 'events' ? `${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks` : `${plural(items.length, [s.view !== 'eats' && s.kidsOnly && 'kid-friendly', s.view !== 'eats' && s.indoor && 'indoor', 'spot'].filter(Boolean).join(' '))}${s.openNow && HOURS_READY ? ' open now' : ''}${RISE_META.recentThrough ? ` · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}${RISE_META.updatedAt ? `, updated ${esc(ago(RISE_META.updatedAt))}` : ''}` : ''}${this.state.live ? ` · Now ${esc(this.state.live.desc)}, ${this.state.live.temp}°C` : ''}`}</p>
+        ${s.view === 'eats' && s.price && this._priceUnknown ? `
+        <p class="text-xs text-slate-600 dark:text-slate-300">Showing ${esc(s.price === '$$$' ? '$$$ and $$$$' : s.price)} places. ${plural(this._priceUnknown, 'place')} without price info ${this._priceUnknown === 1 ? 'is' : 'are'} hidden. <button data-act="price" data-val="${esc(s.price)}" class="font-semibold underline text-violet-700 dark:text-violet-300">Show all prices</button></p>` : ''}
         ${s.cat !== 'events' && s.openNow && HOURS_READY && (this._hidden.closed + this._hidden.unknown) ? `
         <p class="text-xs text-slate-600 dark:text-slate-300">Hidden: ${this._hidden.closed} closed right now${this._hidden.unknown ? `, ${this._hidden.unknown} with unknown hours` : ''}. <button data-act="opennow" class="font-semibold underline text-violet-700 dark:text-violet-300">Show all</button></p>` : ''}
 
@@ -1052,11 +1190,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   locationBar(items) {
     const s = this.state, near = this.nearActive();
     const countLabel = s.cat === 'events' ? plural(this.upcomingEvents(45).length, 'event') : plural(items.length, 'spot');
-    const seg = (val, label, on) => `<button data-act="radius" data-val="${val}" aria-pressed="${on}" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
+    const seg = (val, label, on) => `<button data-act="radius" data-val="${val}" aria-pressed="${on}" class="whitespace-nowrap px-2.5 sm:px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
     let status = s.geoMsg;
     if (!status && near) status = s.radius === 'any'
       ? `Showing all ${countLabel}, with distances from ${this.originLabel()}.`
-      : `${countLabel} within ${s.radius} km of ${this.originLabel()}.`;
+      : `${countLabel} within ${radiusLabel(s.radius)} of ${this.originLabel()}.`;
     if (!status && !near && s.sort === 'distance') status = 'Distances are from Downtown. Pick a location to change that.';
     return `
         <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
@@ -1070,7 +1208,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </label>
           ${near ? `
           <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Radius">
-            ${RADII.map(r => seg(r, r === 'any' ? 'Any' : `${r} km`, s.radius === r)).join('')}
+            ${RADII.map(r => seg(r, radiusLabel(r), s.radius === r)).join('')}
           </div>
           <button data-act="nearoff" class="text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 underline">Clear location</button>` : ''}
           ${status ? `<span class="w-full text-xs text-slate-600 dark:text-slate-300" role="status">${esc(status)}</span>` : ''}
@@ -1089,7 +1227,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="flex-1 min-w-0">
           <p class="font-bold leading-snug">${esc(ev.name)}${RARE_EVENT.includes(ev.type) ? ' <span class="ml-1 align-middle text-[11px] font-bold px-1.5 py-0.5 rounded bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-500/20 dark:text-fuchsia-200">Few days only</span>' : ''}</p>
           <p class="text-sm text-slate-600 dark:text-slate-300">${esc(eventHours(ev))} · ${esc(eventWhen(ev))}</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">${esc(EVENT_TYPES[ev.type] || 'Event')} · ${esc(ev.venue)}${ev.dist != null ? ` · ${ev.dist.toFixed(1)} km` : ''}</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">${esc(EVENT_TYPES[ev.type] || 'Event')} · ${esc(ev.venue)}${ev.dist != null ? ` · ${fmtDist(ev.dist)}` : ''}</p>
           ${compact ? '' : `<p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(ev.summary)}</p>`}
           <p class="mt-1 flex flex-wrap gap-x-4 text-sm font-semibold">
             ${ev.lat != null ? `<a href="${eventMapsUrl(ev)}" target="_blank" rel="noopener" class="inline-flex items-center py-2 text-indigo-700 dark:text-indigo-300">Directions</a>` : ''}
@@ -1157,7 +1295,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <p class="mt-4 text-xs text-slate-500 dark:text-slate-400">${esc(EVENTS_META.note)} Last checked ${esc(EVENTS_META.updatedAt)}.</p>`;
     if (!evs.length) return `${note}
       <div class="mt-6 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
-        <p class="text-lg font-bold">No events coming up${this.nearActive() ? ` within ${this.state.radius} km` : ''}</p>
+        <p class="text-lg font-bold">No events coming up${this.nearActive() ? ` within ${radiusLabel(this.state.radius)}` : ''}</p>
         ${this.nearActive() ? '<button data-act="radius" data-val="any" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show any distance</button>' : ''}
       </div>`;
     return note
@@ -1186,7 +1324,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     return `
     <section class="mt-6 rounded-2xl p-5 bg-white dark:bg-slate-900 ring-1 ring-amber-200 dark:ring-amber-500/30">
       <p class="text-sm font-bold text-amber-800 dark:text-amber-300">How we picked ${c.label}</p>
-      <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(c.criteria)} Places with a reason to go now come first with a # rank: a new rising spot, a recent article or Reddit post about it, more searches than usual, or open right now and a good fit for the time of day or the weather (breakfast spots in the morning, late-night spots after 9pm, soup and noodles when it's cold or rainy, ice cream when it's sunny and warm). The rest are in no particular order.</p>
+      <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(c.criteria)} Places with a reason to go now come first with a # rank: a happy hour on right now, a new rising spot, a recent article or Reddit post about it, more searches than usual, or open right now and a good fit for the time of day or the weather (breakfast spots in the morning, late-night spots after 9pm, soup and noodles when it's cold or rainy, ice cream when it's sunny and warm). The rest are in no particular order.</p>
       ${items.some(isJustOpened) ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold text-violet-700 dark:text-violet-300">${JUST_OPENED.label}</span>: ${esc(JUST_OPENED.criteria)} These newcomers are the exception to the review count above.</p>` : ''}
       <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Check each place on Google Maps for the latest ratings and reviews.</p>
     </section>`;
@@ -1236,9 +1374,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       </div>
       <div class="p-5 flex flex-col flex-1">
         <h3 class="text-lg font-bold leading-snug group-hover:text-violet-700 dark:group-hover:text-violet-300">${esc(s.name)}</h3>
-        <p class="text-sm text-slate-500 dark:text-slate-400">${esc(s.area)}${s.dist != null ? `, ${s.dist.toFixed(1)} km` : ''}</p>
-        ${why ? why.pick ? `
-        <div class="mt-3 border-l-4 border-amber-400 rounded-r-lg bg-amber-50 dark:bg-amber-500/10 pl-3 pr-3 py-2">
+        <p class="text-sm text-slate-500 dark:text-slate-400">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p>
+        ${why ? why.lunch ? `
+        <div class="mt-3 border-l-4 border-emerald-500 rounded-r-lg bg-emerald-50 dark:bg-emerald-500/10 pl-3 pr-3 py-2">
+          <p class="text-xs font-bold uppercase tracking-wide text-emerald-800 dark:text-emerald-300">${esc(why.label)}</p>
+          <p class="mt-0.5 text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
+        </div>` : why.pick || why.hh ? `
+        <div class="mt-3 border-l-4 ${why.hh ? 'border-amber-500' : 'border-amber-400'} rounded-r-lg bg-amber-50 dark:bg-amber-500/10 pl-3 pr-3 py-2">
           <p class="text-xs font-bold uppercase tracking-wide text-amber-800 dark:text-amber-300">${esc(why.label)}</p>
           <p class="mt-0.5 text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
         </div>` : `
@@ -1255,6 +1397,23 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${(() => { const oi = openInfo(s); return oi
           ? `<p class="mt-2 text-xs font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'web' && s.hoursSource !== 'public' && !isDaylight(s) ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
           : HOURS_READY ? '<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
+        ${(() => {
+          // 해피아워: 지금이면 눈에 띄는 배지(위 이유 박스가 이미 해피아워면 생략), 오늘 이따면 시작 시간, 아니면 주간 일정 한 줄
+          // 런치 스페셜도 같은 방식. 한 줄만: 지금 해피아워 → 지금 런치 → 오늘 이따(해피아워 → 런치) → 주간 일정
+          const hh = hhState(s), lu = lunchState(s);
+          const tone = { hh: ['bg-amber-100 text-amber-900 dark:bg-amber-500/15 dark:text-amber-200', 'bg-amber-500', 'text-amber-800 dark:text-amber-300'],
+            lu: ['bg-emerald-100 text-emerald-900 dark:bg-emerald-500/15 dark:text-emerald-200', 'bg-emerald-500', 'text-emerald-800 dark:text-emerald-300'] };
+          const nowLine = (st, t) => `
+        <p class="mt-2 self-start inline-flex items-center gap-1.5 text-xs font-bold px-2 py-1 rounded-md ${tone[t][0]}"><span class="w-2 h-2 rounded-full ${tone[t][1]} animate-pulse" aria-hidden="true"></span>${esc(st.label)} now${st.until ? ` · until ${esc(st.until)}` : ''}${t === 'lu' && st.h.price ? ` · ${esc(st.h.price)}` : ''}</p>`;
+          const laterLine = (st, t) => `
+        <p class="mt-2 text-xs font-semibold ${tone[t][2]}">${esc(st.label)} today ${esc(hhRange(st.next))}${t === 'lu' && st.h.price ? ` · ${esc(st.h.price)}` : ''}</p>`;
+          if (hh && hh.active) return why && why.hh ? '' : nowLine(hh, 'hh');
+          if (lu && lu.active) return why && why.lunch ? '' : nowLine(lu, 'lu');
+          if (hh && hh.next) return laterLine(hh, 'hh');
+          if (lu && lu.next) return laterLine(lu, 'lu');
+          const st = hh || lu;
+          return st ? `
+        <p class="mt-2 text-xs text-slate-500 dark:text-slate-400 truncate">${esc(st.label)}: ${esc(hhSchedule(st.h).map(g => `${g.days} ${g.times}`).join(' · '))}</p>` : ''; })()}
         <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-600 dark:text-slate-300">
           ${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>${parkShort(s) ? `<span>${esc(parkShort(s))}</span>` : ''}
           ${isKid(s) && badge !== 'Kid-friendly' ? '<span class="font-semibold text-rose-600 dark:text-rose-300">Kid-friendly</span>' : ''}
@@ -1274,9 +1433,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       const wider = RADII[RADII.indexOf(radius) + 1];
       return `
       <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
-        <p class="text-lg font-bold">No spots within ${radius} km of ${esc(this.originLabel())}</p>
+        <p class="text-lg font-bold">No spots within ${radiusLabel(radius)} of ${esc(this.originLabel())}</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Try a wider radius${this.state.cat !== 'all' ? ' or another category' : ''}.</p>
-        <button data-act="radius" data-val="${wider}" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">${wider === 'any' ? 'Show any distance' : `Widen to ${wider} km`}</button>
+        <button data-act="radius" data-val="${wider}" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">${wider === 'any' ? 'Show any distance' : `Widen to ${radiusLabel(wider)}`}</button>
       </div>`;
     }
     if (!items.length) return `
@@ -1284,7 +1443,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.state.openNow && this._hidden && (this._hidden.closed + this._hidden.unknown) ? `
         <p class="text-lg font-bold">Nothing here is open right now</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">${this._hidden.closed} closed and ${this._hidden.unknown} with unknown hours are hidden.</p>
-        <button data-act="opennow" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all, open or not</button>` : this.state.view !== 'eats' && (this.state.indoor || this.state.kidsOnly) ? `
+        <button data-act="opennow" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all, open or not</button>` : this.state.view === 'eats' && this.state.hh ? `
+        <p class="text-lg font-bold">No more happy hours today${this.nearActive() ? ' nearby' : ''}</p>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Most run 2–6pm, and many come back after 9pm.</p>
+        <button data-act="hh" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all restaurants</button>` : this.state.view === 'eats' && this.state.lunch ? `
+        <p class="text-lg font-bold">No more lunch specials today${this.nearActive() ? ' nearby' : ''}</p>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Most run from about 11:30am to 3pm on weekdays.</p>
+        <button data-act="lunch" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all restaurants</button>` : this.state.view === 'eats' && this.state.price ? `
+        <p class="text-lg font-bold">No ${esc(this.state.price === '$$$' ? '$$$ or $$$$' : this.state.price)} places here</p>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Try another price range or cuisine.</p>
+        <button data-act="price" data-val="${esc(this.state.price)}" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all prices</button>` : this.state.view !== 'eats' && (this.state.indoor || this.state.kidsOnly) ? `
         <p class="text-lg font-bold">No ${[this.state.kidsOnly && 'kid-friendly', this.state.indoor && 'indoor'].filter(Boolean).join(' ')} spots here</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Try another category, or loosen the filters.</p>
         <div class="mt-4 flex flex-wrap justify-center gap-2">
@@ -1312,12 +1480,23 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <button data-act="more" class="min-h-[44px] px-5 py-2.5 rounded-xl font-semibold border border-slate-300 text-slate-700 hover:border-slate-500 dark:border-slate-700 dark:text-slate-200">Show more <span class="font-normal text-slate-500 dark:text-slate-400">(${rest.length - shown.length} left)</span></button>
       </div>` : ''}`;
     };
+    // 해피아워 필터를 켰을 때: "지금 하는 곳"(끝나는 시간이 이른 순이 아니라 추천 순) → "오늘 이따 시작하는 곳"(시작 시간 순)
+    // 런치 스페셜 필터도 같은 방식 ("지금 하는 곳" → "오늘 이따")
+    if (this.state.view === 'eats' && (this.state.hh || this.state.lunch)) {
+      const fn = this.state.hh ? hhState : lunchState, title = this.state.hh ? 'Happy hour on now' : 'Lunch specials on now';
+      const st = new Map(items.map(s => [s.id, fn(s)]));
+      const now = items.filter(s => st.get(s.id).active);
+      const later = items.filter(s => !st.get(s.id).active).sort((a, b) => hhMin(st.get(a.id).next.f) - hhMin(st.get(b.id).next.f) || (a.dist ?? 0) - (b.dist ?? 0));
+      return `
+      ${now.length ? heading('list-top', title, `${plural(now.length, 'place')}. Times and deals are checked on each restaurant's site or recent listings, but they change, so confirm before you go.`) + grid(now) : ''}
+      ${later.length ? heading(now.length ? 'list-rest' : 'list-top', 'Later today', `${plural(later.length, 'place')}, earliest first.`) + grid(later) : ''}`;
+    }
     if (this.state.sort !== 'fresh') return heading('list-top', 'Closest first', plural(items.length, 'spot')) + more(items) + events;
     // 순위(번호)는 지금 가 볼 이유가 있는 곳에만. 10곳을 채운 곳은 번호 없이 "Also worth a try"로
     const ranked = items.filter(s => this.freshRank(s) <= 1 && !s.overflow), fill = items.filter(s => s.filler);
     const rest = items.filter(s => (this.freshRank(s) > 1 || s.overflow) && !s.filler);
     const eats = this.state.view === 'eats';
-    const reasons = eats ? 'open now and a good fit for the time of day or the weather, talked about lately, newly opened, or searched more than usual'
+    const reasons = eats ? 'a happy hour on now, open now and a good fit for the time of day or the weather, talked about lately, newly opened, or searched more than usual'
       : 'an event here, something in season or more searches than usual';
     const newCount = ranked.filter(s => this.isNew(s)).length;
     const fillNote = 'Vancouver classics and places Google reviewers love, in no particular order.';
@@ -1383,7 +1562,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             <span class="w-7 h-7 shrink-0 rounded-full text-white text-xs font-extrabold flex items-center justify-center" style="background:${CATS[s.cat].dot}">${this.rankOf(s) || (isVanClassic(s) ? '◆' : '★')}</span>
             <span class="flex-1 min-w-0">
               <span class="block font-bold truncate">${esc(s.name)}</span>
-              <span class="block text-xs text-slate-500 dark:text-slate-400">${CATS[s.cat].label}, ${esc(s.area)}${s.dist != null ? `, ${s.dist.toFixed(1)} km` : ''}</span>
+              <span class="block text-xs text-slate-500 dark:text-slate-400">${CATS[s.cat].label}, ${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</span>
             </span>
             <span class="text-sm font-bold text-violet-700 dark:text-violet-300">${s.rise != null ? fmtRise(s.rise) : ''}</span>
           </button>`).join('') || '<p class="text-sm text-slate-500">No spots match these filters.</p>'}
@@ -1466,7 +1645,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="px-6 pt-5">
           <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.label}${s.cuisine ? ` · ${esc(s.cuisine)}` : ''}${rank ? ` · #${rank} worth going now` : ''}</p>
           <h2 class="mt-1 text-3xl font-bold leading-tight pr-2">${esc(s.name)}</h2>
-          <p class="mt-1 text-slate-600 dark:text-slate-300">${esc(s.area)}${cur && cur.dist != null ? `, ${cur.dist.toFixed(1)} km` : ''}</p>
+          <p class="mt-1 text-slate-600 dark:text-slate-300">${esc(s.area)}${cur && cur.dist != null ? `, ${fmtDist(cur.dist)}` : ''}</p>
           ${(() => { const oi = openInfo(s); return oi ? `
           <p class="mt-1 text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>
           <p class="text-xs text-slate-500 dark:text-slate-400">${s.hoursSource === 'osm' ? `Hours: ${esc(weekHours(s) || s.hours)} · from OpenStreetMap, check Google Maps before you go`
@@ -1498,6 +1677,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             ${tags.map(t => { const x = t.spots[s.id]; return `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200"><span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('')}
             ${tags.length ? `<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">${esc(SEASON_NOTE)}</p>` : ''}
           </section>`; })()}
+
+          ${[[lunchState(s), 'emerald', LUNCH_META], [hhState(s), 'amber', HAPPY_META]]
+            // 점심 전에는 런치가 먼저 보이도록 (지금 하는 쪽이 있으면 그쪽을 위로)
+            .sort((a, b) => !!(b[0] && b[0].active) - !!(a[0] && a[0].active))
+            .map(([st, c, meta]) => st ? this.dealSection(st, c, meta) : '').join('')}
 
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/20 hover:ring-amber-400">

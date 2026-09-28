@@ -9,7 +9,8 @@
 #   새로 더한 곳만:  powershell -ExecutionPolicy Bypass -File tools\kids-check.ps1 -Ids a,b,c
 #     placeId가 없는 스팟은 이름+좌표로 찾아서 placeId를 같이 보여줘요 (Place ID는 저장해도 돼요)
 #   판단: goodForChildren=True 이면 "kids": true, 여기에 평점 4.0+·리뷰 50+ 이고 아이 언급 리뷰가 2개 이상이면 "family": true
-param([ValidateSet('existing', 'discover')][string]$Mode = 'existing', [double]$MinRating = 4.0, [int]$MinReviews = 50, [string[]]$Ids)
+#   검색어를 직접: -Mode discover -Search "spray park Surrey BC;playground Burnaby" (세미콜론으로 구분), -Out 파일로 후보 저장(임시 파일에만, 저장소에 넣지 않기)
+param([ValidateSet('existing', 'discover')][string]$Mode = 'existing', [double]$MinRating = 4.0, [int]$MinReviews = 50, [string[]]$Ids, [string]$Search, [string]$Out)
 # powershell -File 로 부르면 "a,b,c"가 한 덩어리로 와서 쉼표로 나눠요
 if ($Ids) { $Ids = @($Ids | ForEach-Object { $_ -split ',' } | Where-Object { $_ }) }
 
@@ -60,6 +61,13 @@ $queries = @(
   'indoor playground Surrey BC', 'indoor playground Richmond BC', 'indoor playground Vancouver', 'kids activities Langley BC',
   'family farm Langley BC', 'public library Coquitlam', 'splash park Vancouver', 'wave pool Metro Vancouver', 'family attractions Surrey BC'
 )
+if ($Search) {
+  # 파일 경로면 한 줄에 검색어 하나 (powershell -File 인자로는 공백 들어간 긴 목록이 잘려요)
+  $list = if (Test-Path $Search) { Get-Content $Search -Encoding UTF8 } else { $Search -split ';' }
+  $queries = @($list | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+}
+# 이미 spots.json에 있는 곳(placeId)은 후보에서 빼요
+$known = @{}; foreach ($s in (Get-Content (Join-Path $root 'data\spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots) { if ($s.placeId) { $known[$s.placeId] = $s.id } }
 $fields = 'places.id,places.displayName,places.rating,places.userRatingCount,places.primaryTypeDisplayName,places.formattedAddress,places.goodForChildren,places.reviews'
 $seen = @{}
 $rows = :outer foreach ($q in $queries) {
@@ -77,6 +85,8 @@ $rows = :outer foreach ($q in $queries) {
   }
 }
 "API 호출 $calls 회 (Text Search Enterprise + Atmosphere, 월 1,000회 무료)"
-$rows | Where-Object { $_.rating -ge $MinRating -and $_.reviews -ge $MinReviews -and ($_.kids -eq $true -or $_.m -ge 2) } |
-  Sort-Object query, @{ e = { $_.reviews }; Descending = $true } |
-  Format-Table name, rating, reviews, kids, kidReviews, type, address, placeId -AutoSize | Out-String -Width 400
+$ok = @($rows | Where-Object { -not $known[$_.placeId] -and $_.rating -ge $MinRating -and $_.reviews -ge $MinReviews -and ($_.kids -eq $true -or $_.m -ge 2) } |
+  Sort-Object query, @{ e = { $_.reviews }; Descending = $true })
+"새 후보 $($ok.Count) 곳 (이미 있는 곳 제외)"
+if ($Out) { $ok | Select-Object name, type, address, placeId, kids, m, query | ConvertTo-Json -Depth 3 | Set-Content -Path $Out -Encoding UTF8 }
+$ok | Format-Table name, rating, reviews, kids, kidReviews, type, address, placeId -AutoSize | Out-String -Width 400
