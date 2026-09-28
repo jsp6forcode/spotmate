@@ -72,6 +72,18 @@ function pickOf(s) {
   return null;
 }
 const isKid = s => !!s.kids || !!s.family;
+// 먹거리 "지금 먹기 좋은 곳": 비·추운 날엔 국물 요리, 맑고 따뜻한 날엔 아이스크림·파티오 (이름·설명으로 판단)
+const HOT_FOOD = /ramen|\bpho\b|phở|hot ?pot|noodle|udon|laksa|jjigae|tonkotsu|bun bo|congee|soup|dumpling|\bmomos?\b/i;
+const BREAKFAST_FOOD = /breakfast|brunch|pancake|waffle|bakery|bagel|croissant|diner|eggs|benny|café|cafe\b|coffee/i;
+const SUNNY_FOOD = /patio|rooftop|beach|waterfront|terrace|ice cream|gelato|froyo|frozen yogurt|shaved ice|bingsu|soft serve/i;
+function hotDish(s) {
+  const t = `${s.name} ${s.summary}`;
+  if (/ramen|tonkotsu/i.test(t)) return 'a bowl of ramen';
+  if (/\bpho\b|phở/i.test(t) || s.cuisine === 'Vietnamese') return 'a bowl of pho';
+  if (/hot ?pot/i.test(t)) return 'hot pot';
+  if (/dumpling|momo/i.test(t)) return 'hot dumplings';
+  return 'something hot';
+}
 const hasTrend = s => Array.isArray(s.trend);
 // 이번 달 검색량이 이 이상이면 누구나 아는 명소(Classic)로 보고, 배지를 달아요 (목록에선 다른 곳과 함께 보여줘요)
 const CLASSIC_MIN = 40;
@@ -163,6 +175,13 @@ const activeTags = () => { const d = vanDate(0); return SEASON.filter(t => t.fro
 const spotTags = s => activeTags().filter(t => t.spots[s.id]);
 // data/reddit.json: 최근 2주 Reddit 글 중 제목에 스팟 이름이 들어간 글 (배율 계산 없이 "근거 링크"로만 보여줘요)
 let REDDIT = { mentions: {}, from: '', to: '' };
+// data/press.json: 스팟 이름이 나온 최근 지역 음식 기사 { id: [{ outlet, title, url, date }] }. 기사 날짜부터 PRESS_DAYS일 동안 "지금 가 볼 이유"
+let PRESS = {};
+const PRESS_DAYS = 30;
+const recentPress = s => (PRESS[s.id] || []).filter(p => /^https:\/\//.test(p.url || '') && p.date && p.date >= vanDate(-PRESS_DAYS) && p.date <= vanDate(0))
+  .sort((a, b) => b.date.localeCompare(a.date));
+// 먹거리의 최근 2주 Reddit 글 (제목에 이름이 나온 글)
+const recentReddit = s => ((REDDIT.mentions[s.id] || {}).posts || []).filter(p => /^https:\/\/(www\.)?reddit\.com\//.test(p.url) && p.date >= vanDate(-14));
 // 데이터 기준일 → "today", "yesterday", "3 days ago"
 // data/parking.json: 스팟 근처 400m 안 주차장 (OpenStreetMap). { id: [{ m, fee?, kind?, name?, customers? }] }
 let PARKING = { spots: {}, radius: 400 };
@@ -500,6 +519,11 @@ class App {
         const rr = await fetch('data/reddit.json', { cache: 'no-cache' });
         if (rr.ok) { const rd = await rr.json(); REDDIT = { mentions: rd.mentions || {}, from: rd.from || '', to: rd.to || '' }; }
       } catch (e) {}
+      // 음식 기사 언급: 없어도 괜찮아요
+      try {
+        const pr = await fetch('data/press.json', { cache: 'no-cache' });
+        if (pr.ok) PRESS = (await pr.json()).items || {};
+      } catch (e) {}
       // 시즌 태그: 없어도 괜찮아요
       try {
         const sr = await fetch('data/season.json', { cache: 'no-cache' });
@@ -569,26 +593,50 @@ class App {
     // 새로 연 곳: 연 지 1개월 안이면 2.5, 3개월 안이면 2, 그 뒤 6개월까지 1.2
     if (isJustOpened(s)) {
       const months = (Date.now() - openedDate(s).getTime()) / (30.4 * 864e5);
-      out.push({ score: months <= 1.5 ? 2.5 : months <= 3.5 ? 2 : 1.2, icon: '🆕', text: `New rising spot: opened in ${openedLabel(s)} and already rated 4.9+ on Google (30+ reviews).` });
+      out.push({ score: months <= 1.5 ? 2.5 : months <= 3.5 ? 2 : 1.2, icon: '🆕', text: `Opened in ${openedLabel(s)} and already rated 4.9+ on Google (30+ reviews).` });
     }
     spotTags(s).forEach(t => {
       const x = t.spots[s.id], wait = x.start ? Math.round((Date.parse(x.start) - Date.parse(vanDate(0))) / 864e5) : 0;
       out.push({ score: wait <= 0 ? 2.5 : 0.5, icon: t.emoji, text: x.why });
     });
+    // 먹거리가 최근 기사(30일)나 Reddit(2주)에 나왔으면 "요즘 화제"
+    if (s.cat === 'food' || s.cat === 'dessert') {
+      const p = recentPress(s)[0], r = recentReddit(s)[0];
+      if (p) out.push({ score: 1.5, icon: '📰', label: 'In the news', text: `${p.outlet}: “${p.title}” (${shortDate(p.date)})` });
+      else if (r) out.push({ score: 1.1, icon: '💬', label: 'Talked about lately', text: `On r/${r.sub}: “${r.title}” (${shortDate(r.date)})` });
+    }
+    // 시간대·날씨 이유는 가장 강한 하나만 (둘이 겹쳐 점수가 부풀지 않게)
+    const food = this.foodNow(s).sort((a, b) => b.score - a.score)[0];
+    if (food) out.push(food);
     if (isRising(s)) out.push({ score: 1 + Math.min(s.rise - 1, 1) * 2, icon: '📈', text: (RISE_NOTES[s.id] && RISE_NOTES[s.id].why) || `Searched ${fmtRise(s.rise)} its usual amount` });
     return out.sort((a, b) => b.score - a.score);
   }
-  // 10곳을 채우려고 넣은 곳의 카드 이유: 곧 있을 일(약한 이유) → 왜 추천하는지(클래식·리뷰·아이 동반)
+  // 먹거리(음식점·카페)만: 지금 열려 있고 시간대나 날씨에 맞으면 "지금 먹기 좋은 이유"
+  // 아침(6:30–11:30, 8:30에 여는 곳) · 심야(9pm 이후, 11:30pm에도 여는 곳) · 비/12°C 이하엔 국물 · 맑고 18°C 이상엔 아이스크림·파티오
+  foodNow(s) {
+    if (s.cat !== 'food' && s.cat !== 'dessert') return [];
+    const oi = openInfo(s);
+    if (!oi || !oi.open) return [];
+    const now = vanWallClock(), hr = now.getHours() + now.getMinutes() / 60, live = this.state.live;
+    // "closes Tue 2am"처럼 자정을 넘기면 요일을 빼고, 12am은 midnight으로
+    const m = / closes (.+)$/.exec(oi.text), close = m && m[1].replace(/^[A-Z][a-z]{2} /, '').replace(/^12am$/, 'midnight');
+    const until = close ? `, open until ${close}` : '';
+    const out = [], add = (score, text) => out.push({ score, icon: '⏰', label: 'Good right now', text });
+    const t = `${s.name} ${s.summary}`;
+    if (live && (live.kind === 'rain' || live.temp <= 12) && (HOT_FOOD.test(t) || s.cuisine === 'Vietnamese'))
+      add(1.3, `${live.kind === 'rain' ? 'Rainy' : 'Chilly'} and ${live.temp}°C: good weather for ${hotDish(s)}${until}`);
+    if (live && live.kind === 'sunny' && live.temp >= 18 && SUNNY_FOOD.test(t))
+      add(1.3, `Sunny and ${live.temp}°C: ${/ice cream|gelato|froyo|yogurt|soft serve|shaved ice|bingsu/i.test(t) ? 'ice cream weather' : 'a good day to eat outside'}${until}`);
+    // 아침: 아침·브런치·베이커리 성격의 곳만 (아침부터 열 뿐인 펍·체인은 빼요), 한 시간 넘게 더 열 때
+    if (hr >= 6.5 && hr < 11.5 && openAt(s, 8) && openAt(s, Math.floor(hr) + 1) !== false
+      && (s.cuisine === 'Brunch & Café' || s.cat === 'dessert' || BREAKFAST_FOOD.test(t))) add(1.2, `${s.cat === 'dessert' ? 'Open now for morning coffee' : 'Open now for breakfast'}${until}`);
+    if ((hr >= 21 || hr < 3) && (hr < 3 || openAt(s, 23))) add(1.2, `Open late tonight${until}`);
+    return out;
+  }
+  // 10곳을 채우려고 넣은 곳의 카드 이유: 곧 있을 일(약한 이유)이 있을 때만. 클래식·리뷰 추천은 배지와 모달에서 설명해요
   pickReason(s) {
     const weak = this.nowReasons(s)[0];
-    if (weak) return { pick: true, label: 'Coming up', text: weak.text };
-    const p = pickOf(s);
-    if (!p) return null;
-    const text = p.label === CLASSIC.label ? (s.gem ? 'A local favourite, rated 4.6+ on Google from 500+ reviews' : 'One of the most searched places in BC')
-      : p.label === 'Review pick' ? `Well reviewed on Google (${p.short.replace('Google ', '').replace(' · ', ' with ')})`
-      : p.label === 'Kid-friendly' ? (s.family ? 'Families love it: rated 4.0+ on Google, with reviews that mention kids' : 'Google marks it as good for children')
-      : p.criteria;
-    return { pick: true, label: `Why it's a top pick`, text };
+    return weak ? { pick: true, label: 'Coming up', text: weak.text } : null;
   }
   // Worth going now(정렬 값 fresh) 순서: 새로 생긴 곳 → 지금 가 볼 이유가 있는 곳(점수 높은 순, 순위 번호) → 숨은 명소 → 나머지(언제 가도 같은 곳)
   freshRank(s) {
@@ -646,21 +694,30 @@ class App {
     // 순위와 "뜨는 곳" 판단은 평소 대비 증가율(rise)만 써요. 같은 그룹 안에서는 데이터 순서대로.
     if (sort === 'fresh') {
       items.forEach(s => { s.now = this.nowReasons(s).reduce((x, r) => x + r.score, 0); });
-      items.sort((a, b) => this.freshRank(a) - this.freshRank(b) || b.now - a.now || (b.rise ?? 0) - (a.rise ?? 0));
+      // 점수가 같으면 (예: 심야에 여는 펍 여러 곳) 밴쿠버 클래식 → 가까운 곳(위치를 골랐을 때) → 검색 증가 순
+      items.sort((a, b) => this.freshRank(a) - this.freshRank(b) || b.now - a.now
+        || isVanClassic(b) - isVanClassic(a) || (a.dist ?? 0) - (b.dist ?? 0) || (b.rise ?? 0) - (a.rise ?? 0));
     }
     if (sort === 'distance') items.sort((a, b) => a.dist - b.dist);
     // Worth going now 순위: 지금 가 볼 이유가 있는 곳에만 목록 순서대로 번호를 매겨요
     if (sort === 'fresh') {
-      let n = 0; items.forEach(s => { s.freshNo = this.freshRank(s) === 1 ? ++n : null; s.filler = false; });
+      // "지금 먹기 좋은" 이유(시간대·날씨)만 있는 곳은 TOP_N위 안에서만 순위를 받아요 (아침엔 브런치집이 수십 곳이라)
+      let n = 0; items.forEach(s => {
+        s.filler = false;
+        s.overflow = this.freshRank(s) === 1 && n >= TOP_N && this.nowReasons(s).filter(r => r.score >= NOW_MIN).every(r => r.label === 'Good right now');
+        s.freshNo = this.freshRank(s) === 1 && !s.overflow ? ++n : null;
+      });
       // 이유가 있는 곳이 TOP_N곳이 안 되면 (Indoor·Kids 필터 등) 추천할 만한 곳으로 TOP_N곳까지 채워요:
       // 약한 이유(곧 시작하는 시즌·마켓)가 있는 곳 → 클래식·리뷰 추천·아이 동반 → 나머지 (목록 순서 그대로)
+      // 채운 곳은 순서에 근거가 없으니 순위 번호를 달지 않고 "Also worth a try"로 보여줘요
       const top = items.filter(s => this.freshRank(s) <= 1).length;
       const rest = items.filter(s => this.freshRank(s) > 1);
       const pickScore = s => (s.now > 0 ? 2 : 0) + (pickOf(s) ? 1 : 0);
-      rest.map((s, i) => [s, i]).sort((a, b) => pickScore(b[0]) - pickScore(a[0]) || a[1] - b[1])
-        .slice(0, Math.max(0, TOP_N - top)).forEach(([s]) => { s.freshNo = ++n; s.filler = true; });
+      const fill = rest.map((s, i) => [s, i]).sort((a, b) => pickScore(b[0]) - pickScore(a[0]) || a[1] - b[1])
+        .slice(0, Math.max(0, TOP_N - top)).map(([s]) => s);
+      fill.forEach(s => { s.filler = true; });
       // 채운 곳을 순위 목록 바로 뒤로 옮겨요
-      if (rest.some(s => s.filler)) items = [...items.filter(s => this.freshRank(s) <= 1), ...rest.filter(s => s.filler).sort((a, b) => a.freshNo - b.freshNo), ...rest.filter(s => !s.filler)];
+      if (fill.length) items = [...items.filter(s => this.freshRank(s) <= 1), ...fill, ...rest.filter(s => !s.filler)];
     }
     return items;
   }
@@ -1129,7 +1186,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     return `
     <section class="mt-6 rounded-2xl p-5 bg-white dark:bg-slate-900 ring-1 ring-amber-200 dark:ring-amber-500/30">
       <p class="text-sm font-bold text-amber-800 dark:text-amber-300">How we picked ${c.label}</p>
-      <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(c.criteria)} Places with a reason to go now (a new rising spot, an event, or more searches than usual) come first with a # rank; the rest are in no particular order.</p>
+      <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(c.criteria)} Places with a reason to go now come first with a # rank: a new rising spot, a recent article or Reddit post about it, more searches than usual, or open right now and a good fit for the time of day or the weather (breakfast spots in the morning, late-night spots after 9pm, soup and noodles when it's cold or rainy, ice cream when it's sunny and warm). The rest are in no particular order.</p>
       ${items.some(isJustOpened) ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold text-violet-700 dark:text-violet-300">${JUST_OPENED.label}</span>: ${esc(JUST_OPENED.criteria)} These newcomers are the exception to the review count above.</p>` : ''}
       <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Check each place on Google Maps for the latest ratings and reviews.</p>
     </section>`;
@@ -1186,7 +1243,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="mt-0.5 text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
         </div>` : `
         <div class="mt-3 border-l-4 border-rose-500 rounded-r-lg bg-rose-50 dark:bg-rose-500/10 pl-3 pr-3 py-2">
-          <p class="text-xs font-bold uppercase tracking-wide text-rose-700 dark:text-rose-300">${why.icon === '📈' ? 'Why more people are searching' : 'Why go now'}</p>
+          <p class="text-xs font-bold uppercase tracking-wide text-rose-700 dark:text-rose-300">${why.label ? esc(why.label) : why.icon === '📈' ? 'Why more people are searching' : why.icon === '🆕' ? JUST_OPENED.label : 'Why go now'}</p>
           <p class="mt-0.5 text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
         </div>` : ''}
         <p class="mt-2 text-sm text-slate-700 dark:text-slate-300 ${why ? 'clamp2' : ''}">${esc(s.summary)}</p>
@@ -1256,16 +1313,25 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       </div>` : ''}`;
     };
     if (this.state.sort !== 'fresh') return heading('list-top', 'Closest first', plural(items.length, 'spot')) + more(items) + events;
-    const top = items.filter(s => this.freshRank(s) <= 1 || s.filler), rest = items.filter(s => this.freshRank(s) > 1 && !s.filler);
-    const newCount = top.filter(s => this.isNew(s)).length, fill = top.filter(s => s.filler).length;
-    const sub = top.length === fill ? 'Nothing special on this week here, so these are our top picks: Vancouver classics and places Google reviewers love.'
-      : `${plural(top.length - fill, 'spot')} with a reason to go this week: an event here, something in season or more searches than usual.${fill ? ` Plus ${plural(fill, 'top pick')} to round out the list.` : ''}`;
+    // 순위(번호)는 지금 가 볼 이유가 있는 곳에만. 10곳을 채운 곳은 번호 없이 "Also worth a try"로
+    const ranked = items.filter(s => this.freshRank(s) <= 1 && !s.overflow), fill = items.filter(s => s.filler);
+    const rest = items.filter(s => (this.freshRank(s) > 1 || s.overflow) && !s.filler);
+    const eats = this.state.view === 'eats';
+    const reasons = eats ? 'open now and a good fit for the time of day or the weather, talked about lately, newly opened, or searched more than usual'
+      : 'an event here, something in season or more searches than usual';
+    const newCount = ranked.filter(s => this.isNew(s)).length;
+    const fillNote = 'Vancouver classics and places Google reviewers love, in no particular order.';
     return `
-      ${top.length ? `${heading('list-top', 'Worth going now', sub)}
+      ${ranked.length ? `${heading('list-top', 'Worth going now', `${plural(ranked.length, 'spot')} with a reason to go ${eats ? 'right now' : 'this week'}: ${reasons}.`)}
       ${newCount ? `<p class="mt-3 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${plural(newCount, 'new spot')} since your last visit, shown first.</p>` : ''}
-      ${grid(top)}` : ''}
+      ${grid(ranked)}` : ''}
+      ${fill.length ? (ranked.length ? `
+      <div class="mt-8">
+        <h3 class="text-lg font-bold">Also worth a try</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400">${fillNote}</p>
+      </div>` : heading('list-top', 'Top picks', `Nothing stands out ${eats ? 'right now' : 'this week'}, so here are ${fillNote}`)) + grid(fill) : ''}
       ${events}
-      ${rest.length ? `${heading('list-rest', top.length ? 'Good any day' : 'Spots', `${plural(rest.length, 'spot')}. Vancouver classics first, then the rest in no particular order.`)}
+      ${rest.length ? `${heading('list-rest', ranked.length || fill.length ? 'Good any day' : 'Spots', `${plural(rest.length, 'spot')}. Vancouver classics first, then the rest in no particular order.`)}
       ${more(rest)}` : ''}`;
   }
 
@@ -1416,10 +1482,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             // 지금 가 볼 이유: 이 장소의 행사(60일 안) + 시즌 태그를 한 곳에, 영업시간 바로 밑에
             const evs = EVENTS.filter(ev => ev.spotId === s.id).map(ev => ({ ...ev, next: upcomingDates(ev, 60)[0] })).filter(ev => ev.next).sort((a, b) => a.next.localeCompare(b.next));
             const tags = spotTags(s);
-            if (!evs.length && !tags.length) return '';
+            // 먹거리: 최근 기사(링크)·Reddit 글·지금 시간대·날씨에 맞는 이유
+            const press = recentPress(s), food = this.nowReasons(s).filter(r => r.label === 'Good right now' || r.label === 'Talked about lately');
+            if (!evs.length && !tags.length && !press.length && !food.length) return '';
             return `
           <section class="rounded-2xl p-5 bg-rose-50 dark:bg-rose-500/10 border-l-4 border-rose-500">
             <h3 class="font-bold text-rose-800 dark:text-rose-300">Why go now</h3>
+            ${food.map(r => `<p class="mt-2 text-sm text-slate-800 dark:text-slate-200"><span class="font-semibold">${esc(r.label)}</span> · ${esc(r.text)}</p>`).join('')}
+            ${press.map(p => `<p class="mt-2 text-sm text-slate-800 dark:text-slate-200"><span class="font-semibold">In the news</span> · ${esc(p.outlet)}, ${esc(shortDate(p.date))}: <a href="${esc(p.url)}" target="_blank" rel="noopener" class="underline">${esc(p.title)} ↗</a></p>`).join('')}
             ${evs.map(ev => `
             <div class="mt-2 text-sm">
               <p class="font-semibold text-slate-900 dark:text-slate-100">${esc(ev.name)}</p>

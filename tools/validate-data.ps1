@@ -125,6 +125,24 @@ if ($pk) {
   Ok "parking $($n)곳"
 }
 
+# ── 음식 기사 언급 (press.json) ──
+$pr = Load 'press.json'
+if ($pr) {
+  $n = 0
+  foreach ($x in (Props $pr.items)) {
+    if (-not $ids[$x.Name]) { Err "press 에 없는 스팟 id: $($x.Name)"; continue }
+    if (@('food', 'dessert') -notcontains $ids[$x.Name].cat) { Warn "press.$($x.Name) 는 먹거리가 아니라 앱에서 쓰이지 않아요" }
+    foreach ($p in @($x.Value)) {
+      $n++
+      if (-not ($p.outlet -and $p.title)) { Err "press.$($x.Name) 에 outlet/title 이 빠졌어요" }
+      if ($p.url -notmatch '^https://') { Err "press.$($x.Name) 링크는 https 여야 해요: $($p.url)" }
+      if (-not (IsDate $p.date)) { Err "press.$($x.Name).date 는 YYYY-MM-DD 여야 해요" }
+      elseif (($today - (D $p.date)).Days -gt 30) { Warn "press.$($x.Name) 기사($(S $p.date))가 30일 지나 앱에서 안 보여요. 지워 주세요." }
+    }
+  }
+  Ok "press 기사 $n 개"
+}
+
 # ── Reddit 언급 ──
 $rd = Load 'reddit.json'
 if ($rd) {
