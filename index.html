@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SpotMate</title>
+<meta name="description" content="Places to take the kids around Metro Vancouver: playgrounds, spray parks, farms, museums and indoor play, with hours, weather and weekend events.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -43,17 +44,71 @@ const CATS = {
   food:   { label: 'Food',           icon: '🍜', basis: 'reviews', dot: '#f59e0b', criteria: 'Places with a Google rating of 4.0+ and 300+ reviews across Metro Vancouver, from local favourites to popular chains.' },
   dessert: { label: 'Desserts & Cafés', icon: '🍰', basis: 'reviews', dot: '#ec4899', criteria: 'Bakeries, patisseries, ice cream and gelato shops, and cafés with a Google rating of 4.5+ and 300+ reviews, spread across Metro Vancouver (no chains).' }
 };
-// 목록 페이지: Explore(view 'list') = 장소, Eats(view 'eats') = 음식점·카페. 지도는 모든 카테고리를 그대로 보여줘요
-const PAGES = { list: ['nature', 'city'], eats: ['food', 'dessert'] };
+// 목록 페이지: Explore(view 'list') = 장소, Eats(view 'eats') = 음식점·카페
+// EATS_ON: 사이트를 아이 동반 부모용으로 맞추면서 Eats는 잠시 숨겨 둬요 (데이터와 코드는 그대로, true로 바꾸면 돌아와요)
+const EATS_ON = false;
+// KIDS_ONLY: Explore와 지도는 아이랑 가기 좋은 곳(isKid)만 보여줘요 (그래서 Kids 버튼은 없어요)
+const KIDS_ONLY = true;
+// WIZARD: Explore를 6단계 질문(언제·예산·실내외·시간·목적·나이)으로 골라 10곳을 추천하는 방식으로 (false면 예전 검색·필터 목록)
+const WIZARD = true;
+const WIZ = [
+  { key: 'age', q: 'How old are the kids?', opts: [['baby', 'Babies & toddlers', 'Ages 0–3'], ['pre', 'Preschoolers', 'Ages 3–5'], ['school', 'School age', 'Ages 5–12'], ['mixed', 'Mixed ages', 'Kids of different ages']] },
+  { key: 'when', q: 'When are you going?', opts: [['now', 'Right now', 'Places open at this moment'], ['tomorrow', 'Tomorrow', 'Places open tomorrow'], ['weekend', 'This weekend', 'Open Saturday or Sunday, weekend events first'], ['any', 'Any time', 'Every place, whenever you go']] },
+  { key: 'budget', q: "What's your budget?", opts: [['free', 'Free', 'No entry fee'], ['paid', 'Paid', 'Places with an entry fee'], ['any', 'Either', 'Free or paid']] },
+  { key: 'place', q: 'Indoors or outdoors?', opts: [['indoor', 'Indoor', 'Good for rainy days'], ['outdoor', 'Outdoor', 'Parks, beaches, trails'], ['any', 'Either', 'Indoor or outdoor']] },
+  { key: 'dur', q: 'How long do you have?', opts: [['short', 'Up to an hour', 'A quick outing'], ['mid', '1–3 hours', 'A good chunk of the day'], ['long', '3 hours or more', 'Half a day or longer'], ['any', 'Any length', "Doesn't matter"]] },
+  { key: 'purpose', q: 'What kind of outing?', opts: [['kid', 'Kid-focused activity', 'Playgrounds, indoor play, climbing, crafts'], ['family', 'Family outing', 'Parks, beaches, museums, farms'], ['any', 'Both', 'Either kind']] },
+];
+// 장소 종류 → 태그 이름·목적(kid 아이 중심 / family 가족 나들이 / both)·맞는 나이(b 0–3, p 3–5, s 5–12). 이름과 설명 첫머리로 판단해요 (위에서부터 먼저 맞는 것)
+const KINDS = [
+  ['water', 'Spray park', /spray park$|^spray|splash|wading|water ?park|water play/i, 'kid', 'bps'],
+  ['play', 'Playground', /playground|tot lot|adventure play/i, 'kid', 'bps'],
+  ['indoorplay', 'Indoor play', /indoor play|play (centre|center|caf)|playland|jungle|kidtropolis|play ?zone|fun ?land|bounce|fun centre/i, 'kid', 'bps'],
+  ['active', 'Active play', /trampoline|climb|boulder|parkour|gymnastics|ninja|kids gym|air park/i, 'kid', 'ps'],
+  ['games', 'Games', /laser|escape|\bvr\b|go-kart|kart track|bowling/i, 'kid', 's'],
+  ['arcade', 'Arcade & mini golf', /arcade|claw|mini golf|mini putt/i, 'kid', 'ps'],
+  ['wheels', 'Bike & skate', /bike park|bmx|pump ?track|skate park/i, 'kid', 's'],
+  ['arts', 'Arts & crafts', /pottery|art studio|arts centre|craft|paint/i, 'kid', 'ps'],
+  ['mall', 'Mall', /\bmall\b|park royal|metropolis|coquitlam centre|richmond centre|town centre|tsawwassen mills|oakridge|lansdowne|shopping/i, 'family', 'bps'],
+  ['library', 'Library', /library/i, 'both', 'bps'],
+  ['pool', 'Pool', /pool|aquatic|swim/i, 'both', 'bps'],
+  ['rec', 'Rec centre', /recreation|community cent|leisure|ymca|family place|sportsplex|sport & ice/i, 'both', 'bps'],
+  ['rink', 'Ice rink', /ice rink|skating|arena|\bice\b|oval/i, 'both', 'ps'],
+  ['farm', 'Farm & animals', /farm|zoo|petting|animal|ranch|hatchery|aquarium|bird|wildlife|sanctuary/i, 'family', 'bps'],
+  ['museum', 'Museum', /museum|gallery|science|planetarium|space cent|historic site|heritage village/i, 'family', 'ps'],
+  ['beach', 'Beach & lake', /beach|\blake\b/i, 'family', 'bps'],
+  ['garden', 'Garden', /garden|conservatory|arboretum/i, 'family', 'bps'],
+  ['trail', 'Trail', /trail|hike|canyon|falls|lookout|mountain|forest|pathway/i, 'family', 'ps'],
+  ['park', 'Park', /park/i, 'both', 'bps'],
+];
+const AGE_LABEL = { b: '0–3', p: '3–5', s: '5–12' };
+// 스팟의 종류·태그·목적·나이 (한 번 계산해서 s._kp에 둬요)
+function kidProfile(s) {
+  if (s._kp) return s._kp;
+  const head = s.summary.split(' with ')[0], text = `${s.name} ${head}`;
+  // 이름으로 먼저, 안 되면 설명 첫머리로 (설명의 "next to a salmon hatchery" 때문에 공원이 농장이 되지 않게)
+  const k = KINDS.find(x => x[2].test(s.name)) || KINDS.find(x => x[2].test(head)) || ['sight', s.cat === 'nature' ? 'Nature' : 'Attraction', null, 'family', 'ps'];
+  const ages = k[4].split('');
+  const tags = [/^free/i.test(s.price || '') ? 'Free' : s.price ? 'Paid' : null, s.env === 'indoor' ? 'Indoor' : s.env === 'outdoor' ? 'Outdoor' : 'Indoor & outdoor', k[1]];
+  // 설명에 나온 시설도 태그로 (공원의 놀이터·물놀이)
+  if (/a playground/.test(s.summary) && k[0] !== 'play') tags.push('Playground');
+  if (/a spray park/.test(s.summary) && k[0] !== 'water') tags.push('Spray park');
+  if (/washrooms/.test(s.summary)) tags.push('Washrooms');
+  // 공원에 놀이터가 있으면 아이 중심 활동에도 맞아요
+  const purpose = k[0] === 'park' ? (/a playground|a spray park/.test(s.summary) || s.play ? 'both' : 'family') : k[3];
+  const mins = (() => { const m = /(\d+)(?:–(\d+))? hrs?/.exec(s.time || ''); return /half day|full day/i.test(s.time || '') ? [3, 5] : m ? [+m[1], +(m[2] || m[1])] : [1, 2]; })();
+  return (s._kp = { kind: k[0], label: k[1], purpose, ages, agesText: ages.length === 3 ? 'Ages 0–12' : `Ages ${AGE_LABEL[ages[0]].split('–')[0]}–${AGE_LABEL[ages[ages.length - 1]].split('–')[1]}`, tags: tags.filter(Boolean), hours: mins });
+}
+const PAGES = { list: ['nature', 'city'], eats: ['food', 'dessert'], ...(EATS_ON ? {} : { map: ['nature', 'city'] }) };
 // 페이지별 카테고리 드롭다운 항목 ('all' 제외). 행사는 Explore와 지도에서만
-const catOptions = view => PAGES[view] ? [...PAGES[view], ...(view === 'list' ? ['events'] : [])] : [...Object.keys(CATS), 'events'];
+const catOptions = view => PAGES[view] ? [...PAGES[view], ...(view !== 'eats' ? ['events'] : [])] : [...Object.keys(CATS), 'events'];
 // Eats에는 All이 없어요 (Food가 기본). 다른 페이지는 All부터
 const hasAll = view => view !== 'eats';
 const defaultCat = view => hasAll(view) ? 'all' : PAGES[view][0];
 // "Vancouver classic": 이미 많은 사람이 알고 좋아하는 곳. 데이터의 gem(구글 4.6+·리뷰 500+)과 검색량 상위(isClassic)를 합쳤어요
 const CLASSIC = { label: 'Vancouver classic', criteria: 'A local favourite that plenty of people already know and love: rated 4.6+ on Google from 500+ reviews, or one of the most searched places in BC.' };
 // 🧸 Kids 필터: 아이 동반 장소(family: true, 놀이터·수영장·몰·농장 등)와 아이랑 가기 좋은 곳(kids: true)만 남겨요
-const KIDS_TAG = "Playgrounds, museums, malls with play areas, pools, farms, and parks where Google reviews say it's great for kids and families (4.0+ rating, 50+ reviews), plus other spots that Google marks as good for children.";
+const KIDS_TAG = "Playgrounds, spray parks and pools built for kids, plus places Google marks as good for children or where Google reviews (4.0+ rating, 50+ reviews) say it's great for families.";
 const isVanClassic = s => !!s.gem || isClassic(s);
 // 모달의 "왜 골랐나" 정보: 히든젬 > 리뷰 기준(음식점·디저트) > 아이 동반. 해당 없으면 null
 const REVIEW_MIN = { food: 'Google 4.0+ · 300+ reviews', dessert: 'Google 4.5+ · 300+ reviews' };
@@ -70,9 +125,11 @@ function pickOf(s) {
   if (c.basis === 'reviews') return { label: 'Review pick', short: REVIEW_MIN[s.cat] || 'Google reviews', heading: "Why it's a review pick", criteria: c.criteria };
   if (s.family) return { label: 'Kid-friendly', short: 'Google 4.0+ · 50+ reviews', heading: "Why it's kid-friendly", criteria: KIDS_TAG };
   if (s.kids) return { label: 'Kid-friendly', short: 'Good for children', heading: "Why it's kid-friendly", criteria: KIDS_TAG };
+  if (s.play) return { label: 'Kid-friendly', short: 'A place built for kids', heading: "Why it's kid-friendly", criteria: KIDS_TAG };
   return null;
 }
-const isKid = s => !!s.kids || !!s.family;
+// play: 놀이터·물놀이장·어린이 수영장처럼 아이를 위해 만든 시설 (리뷰가 적어도 아이랑 갈 곳이에요)
+const isKid = s => !!s.kids || !!s.family || !!s.play;
 // 먹거리 "지금 먹기 좋은 곳": 비·추운 날엔 국물 요리, 맑고 따뜻한 날엔 아이스크림·파티오 (이름·설명으로 판단)
 const HOT_FOOD = /ramen|\bpho\b|phở|hot ?pot|noodle|udon|laksa|jjigae|tonkotsu|bun bo|congee|soup|dumpling|\bmomos?\b/i;
 const BREAKFAST_FOOD = /breakfast|brunch|pancake|waffle|bakery|bagel|croissant|diner|eggs|benny|café|cafe\b|coffee/i;
@@ -237,7 +294,9 @@ function riseOf(sr, dy, weekThrough) {
 }
 // 평소보다 많이 검색되는 이유: trends-weekly.json의 notes[스팟 id] = { why, rising: [최근 7일 급상승 연관 검색어] }
 let RISE_NOTES = {};
-const isRising = s => s.rise != null && s.rise >= RISING_MIN;
+// TRENDS_ON: "평소보다 N배 검색" 표시와 그걸 이유로 한 순위. 아직 데이터가 적어서 꺼 둬요 (true로 바꾸면 돌아와요)
+const TRENDS_ON = false;
+const isRising = s => TRENDS_ON && s.rise != null && s.rise >= RISING_MIN;
 // 5% 차이도 보이게, 2배 미만이면 소수점 둘째 자리까지
 const fmtRise = r => `${r < 2 ? r.toFixed(2) : r.toFixed(1)}×`;
 // 카드·모달용 문구: 평소와 거의 같으면(±5%) 배율 대신 "About its usual"
@@ -723,6 +782,8 @@ class App {
       // 검색창: q = 검색어, kw = 알아들은 키워드(장소 이름·설명·메뉴에서 찾기, 하나라도 맞으면), free = Explore에서 무료만
       // filtersOpen: 모바일에서 카테고리·정렬·위치를 펼쳤는지
       filtersOpen: false,
+      // wiz: Explore 6단계 추천 (step 0–5, ans = 단계별 고른 값, done = 결과 보기), wizMore: 결과를 몇 곳 보여줄지
+      wiz: { step: 0, ans: {}, done: false }, wizMore: 10,
       q: '', kw: [], unused: [], free: false, qBusy: false, aiSay: '',
       radius: RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
@@ -785,8 +846,9 @@ class App {
         const st = await fetch('data/review-status.json', { cache: 'no-cache' });
         if (st.ok) { const { inactive = {} } = await st.json(); SPOTS = SPOTS.filter(s => !inactive[s.id]); }
       } catch (e) {}
-      // 평소 대비 증가율: 파일이 없으면 증가율 없이 동작해요
+      // 평소 대비 증가율: 파일이 없으면 증가율 없이 동작해요. TRENDS_ON이 꺼져 있으면 아예 불러오지 않아요 (지도·카드·모달 어디에도 배율이 안 나와요)
       try {
+        if (!TRENDS_ON) throw 0;
         const tr = await fetch('data/trends-weekly.json', { cache: 'no-cache' });
         if (tr.ok) {
           const td = await tr.json();
@@ -1018,7 +1080,7 @@ class App {
     const eats = this.state.view === 'eats';
     let items = SPOTS.filter(s =>
       (cat === 'all' ? !PAGES[this.state.view] || PAGES[this.state.view].includes(s.cat) : s.cat === cat)
-      && (eats || !this.state.indoor || s.env !== 'outdoor') && (eats || !this.state.kidsOnly || isKid(s))
+      && (eats || !this.state.indoor || s.env !== 'outdoor') && (eats || !(this.state.kidsOnly || KIDS_ONLY) || isKid(s))
       // 행사 장소(Pacific Coliseum, 컨벤션센터, 마켓이 열리는 공원 등)는 7일 안에 그곳 행사가 있을 때만
       && (!s.venue || !!(this._spotEvents && this._spotEvents[s.id])))
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
@@ -1186,6 +1248,30 @@ class App {
       case 'geo': return this.locate();
       // Open now는 지금 기준이라, 켜면 다른 날 계획(내일·주말)은 풀어요
       case 'filters': return this.set({ filtersOpen: !this.state.filtersOpen });
+      // 6단계 추천: 고르기 → 다음 → … → 결과. 결과에서 칩을 누르면 그 단계로 돌아가요
+      // 옵션을 누르면 강조를 잠깐 보여준 뒤 다음 질문으로 넘어가요 (마지막 질문이나 결과에서 고치는 중이면 바로 결과)
+      case 'wizopt': {
+        const [k, v] = val.split(':'), w = { ...this.state.wiz, ans: { ...this.state.wiz.ans, [k]: v } };
+        this.set({ wiz: w });
+        clearTimeout(this.wizTimer);
+        this.wizTimer = setTimeout(() => {
+          if (this.state.wiz !== w) return;   // 그 사이 다른 걸 눌렀으면 그대로
+          if (w.step < WIZ.length - 1 && !w.editing) { this.set({ wiz: { ...w, step: w.step + 1 } }); window.scrollTo({ top: 0 }); }
+          else this.wizFinish({ ...w, editing: false });
+        }, 250);
+        return;
+      }
+      case 'wizback': return this.set({ wiz: { ...this.state.wiz, step: Math.max(0, this.state.wiz.step - 1) } });
+      case 'wiznext': {
+        const w = this.state.wiz;
+        if (!w.ans[WIZ[w.step].key]) return;
+        if (w.step < WIZ.length - 1 && !w.editing) return this.set({ wiz: { ...w, step: w.step + 1 } });
+        return this.wizFinish({ ...w, editing: false });
+      }
+      case 'wizedit': return this.set({ wiz: { ...this.state.wiz, step: +val, done: false, editing: true } });
+      case 'wizset': { const [k, v] = val.split(':'); return this.wizFinish({ ...this.state.wiz, ans: { ...this.state.wiz.ans, [k]: v } }); }
+      case 'wizmore': return this.set({ wizMore: this.state.wizMore + 10 });
+      case 'wizreset': return this.set({ wiz: { step: 0, ans: {}, done: false }, wizMore: 10, when: '' });
       case 'whenoff': return this.set({ when: '' });
       case 'whenset': return this.set({ when: val, openNow: false });
       case 'opennow': return this.set({ openNow: !this.state.openNow, when: !this.state.openNow && this.planLater() ? '' : this.state.when });
@@ -1206,9 +1292,9 @@ class App {
       case 'tag': return this.set({ tag: this.state.tag === val ? '' : val });
       case 'indoor': return this.set({ indoor: !this.state.indoor });
       case 'radius': {
-        const radius = val === 'any' ? 'any' : +val; store('spotmate-radius', String(radius)); return this.set({ radius });
+        const radius = val === 'any' ? 'any' : +val; store('spotmate-radius', String(radius)); this.set({ radius, wizMore: 10 }); return this.wizLocScroll();
       }
-      case 'nearoff': this.geoToken = (this.geoToken || 0) + 1; return this.set({ nearKey: '', geoMsg: '', geoBusy: false });
+      case 'nearoff': this.geoToken = (this.geoToken || 0) + 1; this.set({ nearKey: '', geoMsg: '', geoBusy: false, wizMore: 10 }); return this.wizLocScroll();
       case 'copyplan': return this.copyPlan();
       case 'more': return this.set({ restShown: this.state.restShown + REST_STEP });
       case 'share': return this.share(val);
@@ -1226,7 +1312,8 @@ class App {
       // 진행 중인 위치 요청이 나중에 도착해도 사용자가 고른 지역을 덮어쓰지 않도록 토큰을 올려요
       this.geoToken = (this.geoToken || 0) + 1;
       if (el.value === 'gps') return this.locate();
-      this.set({ nearKey: el.value, geoMsg: '', geoBusy: false });
+      this.set({ nearKey: el.value, geoMsg: '', geoBusy: false, ...this.wizLocPatch(el.value) });
+      this.wizLocScroll();
     }
   }
   // 검색: 질문을 해석해서 기존 필터(페이지·지금 영업·아이·실내·가격·해피아워·런치·가까운 곳)를 켜고, 키워드로 좁혀요
@@ -1251,6 +1338,14 @@ class App {
     const later = whenDates(when).some(d => d !== vanDate(0));
     // 페이지를 정할 단서가 없으면 보던 페이지에 머물러요 (Eats에서 "fondue" → Eats)
     if (p.viewSet === false && this.state.view === 'eats') { p.view = 'eats'; p.cat = this.state.cat === 'dessert' ? 'dessert' : 'food'; }
+    // Eats를 숨긴 동안엔 음식 검색어("ramen")는 쓰지 않고 "Not used"로 알려줘요. 해피아워·런치·가격도 끄고 Explore에서
+    if (!EATS_ON) {
+      const food = p.kw.filter(k => k.cat === 'food' || k.cat === 'dessert');
+      p.unused = [...(p.unused || []), ...food.map(k => k.label.toLowerCase())];
+      p.kw = p.kw.filter(k => !food.includes(k));
+      Object.assign(p, { view: 'list', cat: 'all', hh: false, lunch: false, price: '', cheap: false, fancy: false });
+    }
+    if (KIDS_ONLY) p.kids = false;
     const patch = {
       q, kw: p.kw, unused: p.unused || [], free: p.free && p.view === 'list', view: p.view, cat: p.cat, cuisine: '', tag: '', when,
       openNow: p.now && HOURS_READY && !later, kidsOnly: p.kids && p.view === 'list', indoor: p.indoor && p.view === 'list',
@@ -1338,10 +1433,12 @@ class App {
         const here = { lat: p.coords.latitude, lng: p.coords.longitude, label: 'you' };
         const nearest = Math.min(...SPOTS.map(s => km(here, s)));
         if (nearest > OUT_OF_AREA_KM) {
-          return this.set({ nearKey: 'downtown', origin: null, geoBusy: false,
+          this.wizLocScroll();
+          return this.set({ nearKey: 'downtown', origin: null, geoBusy: false, ...this.wizLocPatch('downtown'),
             geoMsg: `You look to be about ${Math.round(nearest).toLocaleString()} km from our nearest spot, outside Metro Vancouver. Showing spots near Downtown instead.` });
         }
-        this.set({ nearKey: 'here', origin: here, geoMsg: '', geoBusy: false });
+        this.set({ nearKey: 'here', origin: here, geoMsg: '', geoBusy: false, ...this.wizLocPatch('here') });
+        this.wizLocScroll();
       },
       () => {
         if (token !== this.geoToken) return;
@@ -1419,7 +1516,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.header()}
         ${this.controls(items)}
         <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
-          ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : this.state.cat === 'events' ? this.eventsView() : `
+          ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : view === 'list' && WIZARD ? this.wizardView() : this.state.cat === 'events' ? this.eventsView() : `
             ${this.planBar()}
             ${view !== 'map' ? this.seasonChips() : ''}
             ${view === 'eats' && (this.state.hh || this.state.lunch) ? '' : this.criteriaBanner(items)}
@@ -1428,7 +1525,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           `}
         </main>
         <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-10 text-xs text-slate-500 dark:text-slate-400">
-          Search trends: Google Trends (BC), each place's last 3 days of searches vs the 4 weeks before · Weather: Open-Meteo · Coordinates and parking: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Parking meter rates: City of Vancouver Open Data, <a class="underline" href="https://opendata.vancouver.ca/pages/licence/" target="_blank" rel="noopener">Open Government Licence – Vancouver</a> · Opening hours: OpenStreetMap where available, otherwise typical park hours · Events: compiled from official market and organizer pages (check before you go) · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
+          Weather: Open-Meteo · Coordinates and parking: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Parking meter rates: City of Vancouver Open Data, <a class="underline" href="https://opendata.vancouver.ca/pages/licence/" target="_blank" rel="noopener">Open Government Licence – Vancouver</a> · Opening hours: OpenStreetMap where available, otherwise typical park hours · Events: compiled from official market and organizer pages (check before you go) · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
         </footer>
       </div>
       ${modal ? this.modal(byId(modal), items) : ''}
@@ -1491,7 +1588,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="flex items-start justify-between gap-4">
           <div>
             <h1 class="font-brand text-3xl md:text-5xl font-extrabold tracking-tight leading-none">SpotMate</h1>
-            <p class="hidden sm:block mt-2 text-white/85 text-base">Fresh, rising and classic spots around Vancouver</p>
+            <p class="hidden sm:block mt-2 text-white/85 text-base">Places to take the kids around Metro Vancouver</p>
           </div>
           <div class="flex flex-col items-end">
             <div class="flex items-center gap-2">
@@ -1503,7 +1600,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </div>
         </div>
         <nav class="mt-4 inline-flex gap-1 p-1 rounded-full bg-white/10 border border-white/25 backdrop-blur">
-          ${tab('list', 'Explore')}${tab('eats', 'Eats')}${tab('map', 'Map')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}
+          ${tab('list', 'Explore')}${EATS_ON ? tab('eats', 'Eats') : ''}${tab('map', 'Map')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}
         </nav>
       </div>
     </header>`;
@@ -1511,13 +1608,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
   controls(items) {
     const s = this.state;
-    if (s.view === 'plan') return '';
+    if (s.view === 'plan' || (s.view === 'list' && WIZARD)) return '';
     return `
     <section class="bg-white/80 dark:bg-slate-900/80 border-b border-slate-200/70 dark:border-slate-800">
       <div class="max-w-6xl mx-auto px-4 md:px-6 py-3 space-y-2">
         <form data-act="search" role="search" class="flex gap-2">
           <input name="q" type="search" value="${esc(this.qDraft ?? s.q)}" autocomplete="off" enterkeyhint="search" aria-label="Search"
-            placeholder="${s.view === 'eats' ? (innerWidth < 640 ? 'Try “brunch this Saturday”' : 'Try “brunch this Saturday in Richmond”') : innerWidth < 640 ? 'Try “kids this weekend”' : innerWidth < 1024 ? 'Try “kids this weekend in Coquitlam”' : 'Try “free things to do with kids this weekend in Coquitlam”'}"
+            placeholder="${s.view === 'eats' ? (innerWidth < 640 ? 'Try “brunch this Saturday”' : 'Try “brunch this Saturday in Richmond”') : innerWidth < 640 ? 'Try “spray park near me”' : innerWidth < 1024 ? 'Try “free this weekend in Coquitlam”' : 'Try “free things to do this weekend in Coquitlam”'}"
             class="flex-1 min-w-0 min-h-[44px] px-4 rounded-xl border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500">
           <button type="submit" ${s.qBusy ? 'disabled aria-busy="true"' : ''} class="min-h-[44px] px-4 rounded-xl font-semibold bg-violet-600 hover:bg-violet-700 disabled:opacity-70 text-white">${s.qBusy ? 'Thinking…' : AI_SEARCH_URL ? '✨ Search' : 'Search'}</button>
         </form>
@@ -1586,7 +1683,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <button data-act="opennow" aria-pressed="${s.openNow}" class="shrink-0 whitespace-nowrap min-h-[44px] px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.openNow ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Open now</button>`}
           ${s.cat === 'events' || s.view === 'eats' ? '' : `
           <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="shrink-0 whitespace-nowrap min-h-[44px] px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.indoor ? 'bg-sky-600 border-sky-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Indoor</button>
-          <button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="shrink-0 whitespace-nowrap min-h-[44px] px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.kidsOnly ? 'bg-teal-600 border-teal-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Kids</button>`}
+          ${KIDS_ONLY ? '' : `<button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="shrink-0 whitespace-nowrap min-h-[44px] px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${s.kidsOnly ? 'bg-teal-600 border-teal-600 text-white' : 'bg-white/70 border-slate-200 text-slate-700 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200'}">Kids</button>`}`}
           ${s.cat === 'events' ? '' : `
           <div class="${this._moreCls}">
           <label class="sm:ml-auto flex shrink-0 items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300"><span class="${s.filtersOpen ? '' : 'hidden sm:inline'}">Sort</span>
@@ -1637,7 +1734,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const what = plural(items.length, [s.view !== 'eats' && s.kidsOnly && 'kid-friendly', s.view !== 'eats' && s.indoor && 'indoor', 'spot'].filter(Boolean).join(' ')) + (s.openNow && HOURS_READY ? ' open now' : '');
     const where = near ? (s.radius === 'any' ? `, distances from ${this.originLabel()}` : ` ${ORIGINS[s.nearKey] ? 'in or ' : ''}within ${radiusLabel(s.radius)} of ${this.originLabel()}`)
       : s.sort === 'distance' ? ', distances from Downtown (pick a location to change that)' : '';
-    const trends = RISE_META.recentThrough ? `<span class="hidden sm:inline"> · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}${RISE_META.updatedAt ? `, updated ${esc(ago(RISE_META.updatedAt))}` : ''}</span>` : '';
+    const trends = TRENDS_ON && RISE_META.recentThrough ? `<span class="hidden sm:inline"> · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}${RISE_META.updatedAt ? `, updated ${esc(ago(RISE_META.updatedAt))}` : ''}</span>` : '';
     return esc(what + where) + trends;
   }
 
@@ -1799,7 +1896,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 새로 생겨 뜨는 곳은 순위 배지 밑에 "New Rising Spot" 배지를 하나 더 달아요
     const rising = isJustOpened(s);
     const badge = this.isNew(s) && !rising ? 'New' : this.rankOf(s) ? this.rankLabel(s) : rising ? '' : isVanClassic(s) ? CLASSIC.label
-      : c.basis === 'reviews' ? 'Review pick' : isKid(s) ? 'Kid-friendly' : '';
+      : c.basis === 'reviews' ? 'Review pick' : isKid(s) && !KIDS_ONLY ? 'Kid-friendly' : '';
     // 순위 배지는 크게, 1~3위는 금색으로 (New 배지일 땐 순위가 아니에요)
     const rank = badge && badge !== 'New' && this.rankOf(s);
     // 지금 가 볼 이유 중 가장 강한 것 하나 (행사·시즌·검색 증가). 순위의 근거라 제목 바로 밑에 둬요
@@ -1840,7 +1937,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           : HOURS_READY ? '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
         <p class="mt-2 text-sm text-slate-700 dark:text-slate-300 ${why ? 'clamp2' : ''}">${esc(s.summary)}</p>
 
-        ${s.rise != null && s.rise >= RISING_MIN && !(why && why.icon === RISE_ICON) ? `<p class="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-300" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
+        ${TRENDS_ON && s.rise != null && s.rise >= RISING_MIN && !(why && why.icon === RISE_ICON) ? `<p class="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-300" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
         ${spotTags(s).length ? `<p class="mt-2 flex flex-wrap gap-1.5">${spotTags(s).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300">#${esc(t.label)}</span>`).join('')}</p>` : ''}
         ${(() => { const m = GUIDES[s.id] && GUIDES[s.id].menu; return m && m.length ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold">Popular:</span> ${m.slice(0, 3).map(esc).join(' · ')}</p>` : ''; })()}
         ${evHere && eventReason(evHere.ev, s, evHere.next) !== (why || {}).text ? `<p class="mt-2 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${esc(eventReason(evHere.ev, s, evHere.next))}</p>` : ''}
@@ -1864,9 +1961,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           const st = hh || lu;
           return st ? `
         <p class="mt-2 text-xs text-slate-500 dark:text-slate-400 truncate">${esc(st.label)}: ${esc(hhSchedule(st.h).map(g => `${g.days} ${g.times}`).join(' · '))}</p>` : ''; })()}
+        ${KIDS_ONLY && isKid(s) ? (() => {
+          // 아이 동반 장소: 무료/유료·실내/야외·종류 태그와 맞는 나이
+          const kp = kidProfile(s);
+          return `
+        <p class="mt-3 flex flex-wrap gap-1.5">${kp.tags.map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full ${t === 'Free' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'}">${esc(t)}</span>`).join('')}</p>
+        <p class="mt-2 text-sm font-semibold text-teal-700 dark:text-teal-300">${esc(kp.agesText)}</p>`; })() : ''}
         <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-600 dark:text-slate-300">
-          ${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>${parkShort(s) ? `<span>${esc(parkShort(s))}</span>` : ''}
-          ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
+          ${KIDS_ONLY && isKid(s) ? `<span>${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span>${esc(s.price)}</span>` : ''}` : `${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>`}${parkShort(s) ? `<span>${esc(parkShort(s))}</span>` : ''}
+          ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
         </div>
         <div class="mt-auto pt-4">
           <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="w-full py-2.5 rounded-xl font-semibold text-sm border ${saved ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-300' : 'border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200'}">${saved ? '♥ Saved' : '♡ Save'}</button>
@@ -1876,6 +1979,142 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     </article>`;
   }
 
+
+  // ── 6단계 추천 (Explore) ──
+  // 한 단계의 조건에 맞는지. skip에 든 단계는 보지 않아요 ("Also worth a try"에서 조건을 하나씩 풀 때)
+  wizMatch(s, a, skip = []) {
+    const kp = kidProfile(s), on = k => !skip.includes(k) && a[k] && a[k] !== 'any' && a[k] !== 'mixed';
+    if (on('when')) {
+      if (a.when === 'now') {
+        const h = vanWallClock().getHours();
+        if (isDaylight(s)) { if (h < 7 || h >= 20) return false; }   // 해 지는 시각은 계산하지 않고, 밤(8pm–7am)엔 공원을 빼요
+        else { const o = openInfo(s); if (!o || !o.open) return false; }
+      } else if (whenDates(a.when).every(d => closedOn(s, d))) return false;
+    }
+    if (on('budget') && (a.budget === 'free') !== /^free/i.test(s.price || '')) return false;
+    if (on('budget') && a.budget === 'paid' && !s.price) return false;
+    if (on('place') && s.env !== 'both' && s.env !== a.place) return false;
+    if (on('dur')) {
+      const [lo, hi] = kp.hours;
+      if (a.dur === 'short' && lo > 1) return false;
+      if (a.dur === 'mid' && (hi < 1.5 || lo > 3)) return false;
+      if (a.dur === 'long' && hi < 3) return false;
+    }
+    if (on('purpose') && kp.purpose !== 'both' && kp.purpose !== a.purpose) return false;
+    if (!skip.includes('age') && a.age === 'mixed' && kp.ages.length < 2) return false;
+    if (on('age') && !kp.ages.includes(a.age[0])) return false;
+    return true;
+  }
+  // 추천 결과에서 위치를 고르면: 그 지역에 맞는 반경(도시 5 km, 동네 2 km, 내 위치 5 km)으로 10곳부터 다시 보여줘요
+  wizLocPatch(key) {
+    if (!(WIZARD && this.state.view === 'list' && this.state.wiz.done)) return {};
+    return { radius: key === 'here' ? 5 : ORIGINS[key] ? placeRadius(key) : this.state.radius, wizMore: 10 };
+  }
+  // 다시 그린 뒤 새 목록 제목으로 스크롤
+  wizLocScroll() {
+    if (!(WIZARD && this.state.view === 'list' && this.state.wiz.done)) return;
+    setTimeout(() => { const t = document.getElementById('list-top'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 0);
+  }
+  // 결과 보기: "언제"를 날짜 계획(when)으로 옮겨서 카드가 그날 영업시간·행사를 보여주게 해요
+  wizFinish(w) {
+    const when = { tomorrow: 'tomorrow', weekend: 'weekend' }[w.ans.when] || '';
+    this.set({ wiz: { ...w, done: true, editing: false }, wizMore: 10, when, openNow: false, modal: null });
+    const top = this.root.querySelector('main');
+    if (top) top.scrollIntoView({ block: 'start' });
+  }
+  // 추천 점수: 그날 이 장소의 행사 > 시즌 > 새로 연 곳 > 밴쿠버 클래식·가족 추천 > 사진 있는 곳. 날마다 조금씩 순서가 바뀌게 날짜로 섞어요
+  wizScore(s) {
+    const r = this.nowReasons(s).reduce((x, y) => x + y.score, 0);
+    const day = vanDate(0); let h = 0; for (const ch of s.id + day) h = (h * 31 + ch.charCodeAt(0)) % 1000;
+    return r + (isVanClassic(s) ? 1.5 : 0) + (s.family ? 1 : 0) + (s.kids ? 0.5 : 0) + (s.photo ? 0.7 : 0) + h / 2000 - (s.dist != null ? s.dist * (this.nearActive() ? 0.4 : 0.08) : 0);   // 위치를 골랐으면 가까운 곳이 더 앞으로
+  }
+  // 종류가 한쪽으로 몰리지 않게 (같은 종류는 3곳까지), 모자라면 나머지로 채워요
+  wizPick(list, n, exclude = new Set()) {
+    const out = [], per = {};
+    for (const s of list) { if (out.length >= n) break; if (exclude.has(s.id)) continue; const k = kidProfile(s).kind; if ((per[k] || 0) < 3) { out.push(s); per[k] = (per[k] || 0) + 1; } }
+    for (const s of list) { if (out.length >= n) break; if (!exclude.has(s.id) && !out.includes(s)) out.push(s); }
+    return out;
+  }
+  // 추천 결과: { top: 조건에 모두 맞는 곳(점수 순), also: 조건을 하나씩 풀어서 채운 곳, relaxed: 푼 단계 }
+  wizResults() {
+    const a = this.state.wiz.ans, origin = this.origin(), radius = this.state.radius;
+    const o = ORIGINS[this.state.nearKey], inArea = o ? new RegExp(`(^|[(,] ?)${o.label}\\b`, 'i') : null;
+    let pool = SPOTS.filter(s => isKid(s) && !['food', 'dessert'].includes(s.cat) && (!s.venue || (this._spotEvents && this._spotEvents[s.id])))
+      .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
+    if (this.nearActive() && radius !== 'any') pool = pool.filter(s => s.dist <= radius || (inArea && inArea.test(s.area || '')));
+    pool.forEach(s => { s.score = this.wizScore(s); });
+    pool.sort((x, y) => y.score - x.score);
+    const match = pool.filter(s => this.wizMatch(s, a));
+    const top = this.wizPick(match, this.state.wizMore);
+    let also = [], relaxed = [];
+    if (top.length < 10) {
+      // 덜 중요한 조건부터 풀어요: 시간 → 목적 → 실내외 → 예산 → 나이 (나이는 첫 질문이라 가장 늦게, 언제는 끝까지 지켜요)
+      const order = ['dur', 'purpose', 'place', 'budget', 'age'], shown = new Set(top.map(s => s.id));
+      for (let i = 1; i <= order.length && top.length + also.length < 10; i++) {
+        const skip = order.slice(0, i);
+        const more = this.wizPick(pool.filter(s => this.wizMatch(s, a, skip)), 10 - top.length - also.length, new Set([...shown, ...also.map(s => s.id)]));
+        if (more.length) { also.push(...more); relaxed = skip; }
+      }
+    }
+    return { top, also, relaxed, total: match.length };
+  }
+  wizardView() {
+    const w = this.state.wiz, a = w.ans;
+    // 결과 위 칩: "Either"만으로는 무슨 조건인지 몰라서 상관없음은 풀어서 써요
+    const ANY = { when: 'Any time', budget: 'Free or paid', place: 'Indoor or outdoor', dur: 'Any length', purpose: 'Any kind of outing', age: 'Mixed ages' };
+    const optLabel = (k, v) => v === 'any' ? ANY[k] : ((WIZ.find(x => x.key === k) || { opts: [] }).opts.find(o => o[0] === v) || [])[1] || '';
+    if (!w.done) {
+      const st = WIZ[w.step], pick = a[st.key];
+      return `
+      <section class="mt-6 max-w-2xl mx-auto" aria-label="Find a place">
+        <div class="flex items-center justify-between text-sm font-semibold text-slate-600 dark:text-slate-300">
+          <span>Step ${w.step + 1} of ${WIZ.length}</span>
+          ${w.step || Object.keys(a).length ? '<button data-act="wizreset" class="underline">Start over</button>' : ''}
+        </div>
+        <div class="mt-2 h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden" role="progressbar" aria-valuemin="1" aria-valuemax="${WIZ.length}" aria-valuenow="${w.step + 1}" aria-label="Progress">
+          <div class="h-full rounded-full bg-violet-600 transition-all" style="width:${((w.step + 1) / WIZ.length) * 100}%"></div>
+        </div>
+        <h2 class="mt-6 text-2xl sm:text-3xl font-extrabold tracking-tight">${esc(st.q)}</h2>
+        <div class="mt-5 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="${esc(st.q)}">
+          ${st.opts.map(([v, label, sub]) => { const on = pick === v; return `
+          <button data-act="wizopt" data-val="${st.key}:${v}" role="radio" aria-checked="${on}" class="text-left min-h-[72px] rounded-2xl p-4 border-2 transition-colors ${on ? 'border-violet-600 bg-violet-50 dark:bg-violet-500/15 dark:border-violet-400' : 'border-slate-200 bg-white hover:border-violet-300 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-violet-500/60'}">
+            <span class="flex items-center justify-between gap-2"><span class="text-lg font-bold ${on ? 'text-violet-800 dark:text-violet-200' : ''}">${esc(label)}</span>${on ? '<span class="w-6 h-6 shrink-0 rounded-full bg-violet-600 text-white text-sm flex items-center justify-center" aria-hidden="true">✓</span>' : ''}</span>
+            ${sub ? `<span class="mt-1 block text-sm text-slate-600 dark:text-slate-300">${esc(sub)}</span>` : ''}
+          </button>`; }).join('')}
+        </div>
+        <div class="mt-6 flex items-center justify-between gap-3">
+          <button data-act="wizback" ${w.step ? '' : 'disabled'} class="min-h-[48px] px-5 rounded-xl font-semibold border border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-200 disabled:opacity-40">← Back</button>
+          <button data-act="wiznext" ${pick ? '' : 'disabled'} class="min-h-[48px] px-6 rounded-xl font-bold bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-40">${w.editing ? 'Update results' : w.step === WIZ.length - 1 ? 'Get recommendations' : 'Next →'}</button>
+        </div>
+      </section>`;
+    }
+    const r = this.wizResults();
+    const grid = list => `<div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">${list.map(s => this.card(s)).join('')}</div>`;
+    const late = a.when === 'now' && (() => { const h = vanWallClock().getHours(); return h >= 20 || h < 7; })();
+    return `
+      <section class="mt-6" aria-label="Your choices">
+        <div class="flex flex-wrap items-center gap-2">
+          ${WIZ.map((st, i) => `<button data-act="wizedit" data-val="${i}" title="Change: ${esc(st.q)}" class="min-h-[36px] px-3 py-1.5 rounded-full text-sm font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 dark:bg-violet-500/20 dark:text-violet-200">${esc(optLabel(st.key, a[st.key]))}</button>`).join('')}
+          <button data-act="wizreset" class="ml-1 min-h-[36px] text-sm font-semibold underline text-slate-600 dark:text-slate-300">Start over</button>
+        </div>
+        <div class="mt-3">${this.locationBar([])}</div>
+        ${this.state.geoMsg ? `<p class="mt-1 text-xs text-slate-600 dark:text-slate-300" role="status">${esc(this.state.geoMsg)}</p>` : ''}
+      </section>
+      ${this.planBar()}
+      ${late ? `<p class="mt-4 text-sm text-slate-600 dark:text-slate-300">It's late, so most places are closed. <button data-act="wizset" data-val="when:tomorrow" class="font-semibold underline text-violet-700 dark:text-violet-300">See what's good tomorrow →</button></p>` : ''}
+      <div id="list-top" class="mt-8 scroll-mt-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <h2 class="text-2xl font-extrabold tracking-tight">${r.top.length ? (r.top.length >= 10 ? `Your top ${r.top.length}` : `${r.top.length} ${r.top.length === 1 ? 'match' : 'matches'}`) + (this.nearActive() ? ` near ${esc(this.originLabel())}` : '') : 'No places match all your choices'}</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400">${r.top.length ? `${plural(r.total, 'place')} fit everything you picked. Best picks first.` : 'Here are close matches instead.'}</p>
+      </div>
+      ${r.top.length ? grid(r.top) : ''}
+      ${r.total > r.top.length ? `<div class="mt-6 text-center"><button data-act="wizmore" class="min-h-[44px] px-5 py-2.5 rounded-xl font-semibold border border-slate-300 text-slate-700 hover:border-slate-500 dark:border-slate-700 dark:text-slate-200">Show more matches <span class="font-normal text-slate-500 dark:text-slate-400">(${r.total - r.top.length} left)</span></button></div>` : ''}
+      ${r.also.length ? `
+      <div class="mt-10">
+        <h3 class="text-xl font-bold">Also worth a try</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Close matches that don't fit your ${r.relaxed.map(k => ({ age: 'age', dur: 'time', purpose: 'outing type', place: 'indoor/outdoor', budget: 'budget' })[k]).join(', ').replace(/, ([^,]*)$/, ' or $1')} choice${r.relaxed.length > 1 ? 's' : ''}.</p>
+      </div>${grid(r.also)}` : ''}
+      ${this.eventsStrip()}`;
+  }
 
   listView(items) {
     const { radius } = this.state;
@@ -1903,7 +2142,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <p class="text-lg font-bold">Nothing matched “${esc(this.state.q)}”</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Remove one of the chips above, or try another search.</p>
         <div class="mt-4 flex flex-wrap justify-center gap-2">
-          ${['ramen near me now', 'free things to do with kids this weekend', 'brunch saturday', 'sushi in burnaby', 'rainy day indoor', 'happy hour nearby', 'lunch special tomorrow'].map(x => `<button data-act="qtry" data-val="${esc(x)}" class="px-3 py-1.5 rounded-full text-sm font-semibold border border-slate-300 text-slate-700 hover:border-violet-400 dark:border-slate-600 dark:text-slate-200">${esc(x)}</button>`).join('')}
+          ${(EATS_ON ? ['ramen near me now', 'free things to do with kids this weekend', 'brunch saturday', 'sushi in burnaby', 'rainy day indoor', 'happy hour nearby', 'lunch special tomorrow'] : ['free things to do this weekend', 'spray park near me', 'playground in burnaby', 'rainy day indoor', 'farm this saturday', 'museum tomorrow']).map(x => `<button data-act="qtry" data-val="${esc(x)}" class="px-3 py-1.5 rounded-full text-sm font-semibold border border-slate-300 text-slate-700 hover:border-violet-400 dark:border-slate-600 dark:text-slate-200">${esc(x)}</button>`).join('')}
         </div>
         <button data-act="qclear" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Clear search</button>
       </div>`;
@@ -1972,13 +2211,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const rest = items.filter(s => (this.freshRank(s) > 1 || s.overflow) && !s.filler);
     const eats = this.state.view === 'eats';
     const reasons = eats ? 'a happy hour on now, open now and a good fit for the time of day or the weather, talked about lately, newly opened, or searched more than usual'
-      : 'an event here, something in season or more searches than usual';
+      : 'an event here or something in season';
     // 날짜 계획: "Worth going this weekend"처럼 그 날 기준으로
     const w = this.state.when, period = w === 'weekend' ? 'this weekend' : w === 'today' ? 'today' : w === 'tomorrow' ? 'tomorrow' : w ? `on ${WHEN[w]}` : '';
     const newCount = ranked.filter(s => this.isNew(s)).length;
     const fillNote = 'Vancouver classics and places Google reviewers love, in no particular order.';
     return `
-      ${ranked.length ? `${heading('list-top', period ? `Worth going ${period}` : 'Worth going now', period ? `${plural(ranked.length, 'spot')} with a reason to go ${period}: ${this.planLater() ? 'an event that day, something in season, newly opened, or more searches than usual' : reasons}.` : eats ? `${plural(ranked.length, 'spot')} with a reason to go right now.` : `${plural(ranked.length, 'spot')} with a reason to go this week: ${reasons}.`)}
+      ${ranked.length ? `${heading('list-top', period ? `Worth going ${period}` : 'Worth going now', period ? `${plural(ranked.length, 'spot')} with a reason to go ${period}: ${this.planLater() ? 'an event that day, something in season, or newly opened' : reasons}.` : eats ? `${plural(ranked.length, 'spot')} with a reason to go right now.` : `${plural(ranked.length, 'spot')} with a reason to go this week: ${reasons}.`)}
       ${newCount ? `<p class="mt-3 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${plural(newCount, 'new spot')} since your last visit, shown first.</p>` : ''}
       ${grid(ranked)}` : ''}
       ${fill.length ? (ranked.length ? `
@@ -2130,7 +2369,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="text-xs text-slate-500 dark:text-slate-400">${s.hoursSource === 'osm' ? `Hours: ${esc(weekHours(s) || s.hours)} · from OpenStreetMap, check Google Maps before you go`
             : s.hoursSource === 'web' ? `Hours: ${esc(weekHours(s) || s.hours)} · from ${/^https:\/\//.test(s.hoursUrl || '') ? `<a href="${esc(s.hoursUrl)}" target="_blank" rel="noopener" class="underline">the place's website or listings</a>` : "the place's website or listings"}, check before you go` : isDaylight(s) ? 'Typical park hours. Check posted signs for gate or parking lot closing times.' : esc(HOURS_NOTE[s.hoursSource] || '')}</p>`
             : '<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Opening hours unknown. Check Google Maps.</p>'; })()}
-          ${s.rise != null ? `
+          ${TRENDS_ON && s.rise != null ? `
           <p class="mt-2 text-sm ${s.rise >= RISING_MIN ? 'font-semibold text-rose-600 dark:text-rose-300' : 'text-slate-600 dark:text-slate-300'}">${riseText(s.rise, 'search level')}
             <span class="block text-xs font-normal text-slate-500 dark:text-slate-400">Google searches in BC over ${esc(recentLabel())}, compared with the 4 weeks before.</span></p>` : ''}
         </div>
@@ -2195,7 +2434,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             if (!p && isRising(s)) return '';
             // 아이 동반·밴쿠버 클래식은 긴 기준 설명 대신 장소 설명 + 짧은 배지 한 줄 (구글맵 링크는 위 타일에 있어요)
             const badge = p && p.label === 'Kid-friendly' ? { cls: 'bg-teal-50 text-teal-800 dark:bg-teal-500/15 dark:text-teal-200', tip: KIDS_TAG,
-                text: `Kid-friendly · ${s.family ? 'families rate it 4.0+ on Google' : 'Google marks it good for kids'}` }
+                text: `Kid-friendly · ${s.family ? 'families rate it 4.0+ on Google' : s.kids ? 'Google marks it good for kids' : 'a place built for kids'}` }
               : p && p.label === CLASSIC.label ? { cls: 'bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300', tip: CLASSIC.criteria,
                 text: `${CLASSIC.label} · ${s.gem ? 'rated 4.6+ on Google from 500+ reviews' : 'one of the most searched places in BC'}` }
               : p && p.label === JUST_OPENED.label ? { cls: 'bg-emerald-50 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300', tip: JUST_OPENED.criteria,
