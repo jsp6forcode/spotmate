@@ -1,39 +1,170 @@
 {
-  "updatedAt": "2026-09-26",
-  "note": "Seasonal reasons to go now, checked against official or organizer pages. Dates can change, so check the source before you go.",
-  "tags": [
+  "note" : "Seasonal reasons to go now, checked against official or organizer pages. Dates can change, so check the source before you go.",
+  "tags" : [
     {
-      "id": "fallcolours", "label": "FallColours", "emoji": "🍁", "from": "2026-09-20", "to": "2026-11-10",
-      "about": "Maples and ginkgos usually peak mid-to-late October.",
-      "spots": {
-        "vandusen": { "why": "Harvest Days runs on weekends Sept 26 to Oct 18 (plus Thanksgiving Monday, Oct 12), included with admission. Sugar maples, ginkgos and Japanese maples usually peak mid-to-late October.", "source": "https://vancouver.ca/parks-recreation-culture/harvest-days.aspx" },
-        "qepark": { "start": "2026-10-10", "why": "One of the city's go-to fall colour walks. Maples around the quarry garden usually peak mid-to-late October.", "source": "https://vandusengarden.org/bloom-calendar/fall-bloom/" },
-        "nitobe": { "start": "2026-10-10", "why": "The Japanese maples turn red and orange in October, usually at their best mid-to-late month.", "source": "https://vandusengarden.org/bloom-calendar/fall-bloom/" }
-      }
+      "about" : "Maples and ginkgos usually peak mid-to-late October.",
+      "emoji" : "🍁",
+      "from" : "2026-09-20",
+      "id" : "fallcolours",
+      "label" : "FallColours",
+      "spots" : {
+        "burnabylakeregionalpark" : {
+          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
+          "start" : "2026-10-10",
+          "why" : "Fall colour around the lake, plus ducks and birds to spot from the boardwalks."
+        },
+        "campbellvalley" : {
+          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
+          "start" : "2026-10-10",
+          "why" : "Boardwalk and forest trails that are pretty in fall colour."
+        },
+        "deerlakepark" : {
+          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
+          "start" : "2026-10-10",
+          "why" : "The trees around the lake change colour in October, an easy flat loop with a stroller."
+        },
+        "godwinfarmbiodiversitypr" : {
+          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
+          "start" : "2026-10-10",
+          "why" : "Hundreds of trees, some rare, turn colour through October."
+        },
+        "lynnheadwaters" : {
+          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
+          "start" : "2026-10-10",
+          "why" : "Rushing water and forest trails in fall colour."
+        },
+        "minnekhada" : {
+          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
+          "start" : "2026-10-10",
+          "why" : "A local favourite for fall walks and photos, with marsh and forest trails."
+        },
+        "nitobe" : {
+          "source" : "https://vandusengarden.org/bloom-calendar/fall-bloom/",
+          "start" : "2026-10-10",
+          "why" : "The Japanese maples turn red and orange in October, usually at their best mid-to-late month."
+        },
+        "pacificspiritregionalpar" : {
+          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
+          "start" : "2026-10-10",
+          "why" : "Big trail network where the maples go yellow in October."
+        },
+        "qepark" : {
+          "source" : "https://vandusengarden.org/bloom-calendar/fall-bloom/",
+          "start" : "2026-10-10",
+          "why" : "One of the city's go-to fall colour walks. Maples around the quarry garden usually peak mid-to-late October."
+        },
+        "queenspark" : {
+          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
+          "start" : "2026-10-10",
+          "why" : "Big old trees and a meadow that look their best in fall, next to the petting farm and playground."
+        },
+        "redwood" : {
+          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
+          "start" : "2026-10-10",
+          "why" : "Mixed trees around the redwood grove turn colour in fall, with a treehouse and playground."
+        },
+        "stanley" : {
+          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
+          "start" : "2026-10-10",
+          "why" : "The seawall near the rowing club and the Coal Harbour path turn gold and red in October."
+        },
+        "vandusen" : {
+          "source" : "https://vancouver.ca/parks-recreation-culture/harvest-days.aspx",
+          "why" : "Harvest Days runs on weekends Sept 26 to Oct 18 (plus Thanksgiving Monday, Oct 12), included with admission. Sugar maples, ginkgos and Japanese maples usually peak mid-to-late October."
+        }
+      },
+      "to" : "2026-11-10"
     },
     {
-      "id": "salmonrun", "label": "SalmonRun", "emoji": "🐟", "from": "2026-09-20", "to": "2026-11-30",
-      "about": "Salmon return to local rivers and hatcheries in fall.",
-      "spots": {
-        "capilanoriver": { "why": "Coho are returning now and Chinook come back in October and November. The Capilano River Hatchery has free underwater viewing windows (open 8am to 6pm in October).", "source": "https://www.pac.dfo-mpo.gc.ca/sep-pmvs/hatcheries-ecloseries/capilano-eng.html" },
-        "tynehead": { "start": "2026-10-01", "why": "Adult coho, chum and Chinook return to the Serpentine River here from October to December.", "source": "https://psf.ca/blog/salmon-spotting-metro-vancouver/" }
-      }
+      "about" : "Salmon return to local rivers and hatcheries in fall.",
+      "emoji" : "🐟",
+      "from" : "2026-09-20",
+      "id" : "salmonrun",
+      "label" : "SalmonRun",
+      "spots" : {
+        "capilanoriver" : {
+          "source" : "https://www.pac.dfo-mpo.gc.ca/sep-pmvs/hatcheries-ecloseries/capilano-eng.html",
+          "why" : "Coho are returning now and Chinook come back in October and November. The Capilano River Hatchery has free underwater viewing windows (open 8am to 6pm in October)."
+        },
+        "capilanoriverhatchery" : {
+          "source" : "https://www.pac.dfo-mpo.gc.ca/sep-pmvs/hatcheries-ecloseries/capilano-eng.html",
+          "why" : "Coho are returning now and Chinook come back in October and November. The hatchery has viewing windows."
+        },
+        "kanaka" : {
+          "source" : "https://metrovancouver.org/services/regional-parks/park/kanaka-creek-regional-park",
+          "start" : "2026-10-10",
+          "why" : "Chum and coho return to the creek in fall. The Return of the Salmon event at the Bell-Irving Hatchery is on Oct 18."
+        },
+        "tynehead" : {
+          "source" : "https://psf.ca/blog/salmon-spotting-metro-vancouver/",
+          "start" : "2026-10-01",
+          "why" : "Adult coho, chum and Chinook return to the Serpentine River here from October to December."
+        }
+      },
+      "to" : "2026-11-30"
     },
     {
-      "id": "halloween", "label": "Halloween", "emoji": "🎃", "from": "2026-09-19", "to": "2026-10-31",
-      "about": "Pumpkin patches and haunted nights through October.",
-      "spots": {
-        "playland": { "start": "2026-10-07", "why": "The summer ride season is over, which is why searches are down. It reopens for Fright Nights from Oct 7 to 31 (Wednesday to Sunday, from 6pm).", "source": "https://frightnights.ca/" },
-        "aldor": { "why": "The pumpkin patch is open daily Sept 19 to Oct 31, 9am to 5pm, with hayrides and farm animals.", "source": "https://aldoracresfamilyfarm.ca/pumpkin-patch/" }
-      }
+      "about" : "Pumpkin patches and haunted nights through October.",
+      "emoji" : "🎃",
+      "from" : "2026-09-19",
+      "id" : "halloween",
+      "label" : "Halloween",
+      "spots" : {
+        "aldor" : {
+          "source" : "https://aldoracresfamilyfarm.ca/pumpkin-patch/",
+          "why" : "The pumpkin patch is open daily Sept 19 to Oct 31, 9am to 5pm, with hayrides and farm animals."
+        },
+        "hazelmere" : {
+          "source" : "https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026",
+          "why" : "Pumpkin patch at Gabriel Farms with wagon rides, animals and a mini corn maze. Weekends to Oct 31, weekdays Oct 1 to 30 from 2 to 5pm."
+        },
+        "playland" : {
+          "source" : "https://frightnights.ca/",
+          "start" : "2026-10-07",
+          "why" : "The summer ride season is over, which is why searches are down. It reopens for Fright Nights from Oct 7 to 31 (Wednesday to Sunday, from 6pm)."
+        },
+        "portkells" : {
+          "source" : "https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026",
+          "start" : "2026-10-01",
+          "why" : "Pumpkin patch Oct 1 to 31, daily 9am to 6pm, with a cedar maze, animals and an indoor sand pit. $6.99 each, pumpkin included."
+        },
+        "richmondcountryfarms" : {
+          "source" : "https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026",
+          "start" : "2026-09-26",
+          "why" : "Pumpkin patch Sept 26 to Oct 31, with wagon rides, animals and live music. Weekdays 9am to 4pm, weekends 10am to 4:30pm."
+        },
+        "westhamislandherbfarm" : {
+          "source" : "https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026",
+          "why" : "Pick your own pumpkins until Oct 31, daily 10am to 5pm, with a scarecrow display."
+        }
+      },
+      "to" : "2026-10-31"
     },
     {
-      "id": "skiseasonsoon", "label": "SkiSeasonSoon", "emoji": "⛷️", "from": "2026-09-20", "to": "2026-12-20",
-      "about": "Local ski hills open when the snow arrives.",
-      "spots": {
-        "cypress": { "start": "2026-11-28", "why": "Summer hiking is winding down and ski season is next. Projected opening is Nov 28, depending on snow. 2026/27 season passes are on sale.", "source": "https://www.onthesnow.com/vancouver/projected-openings" },
-        "grouse": { "start": "2026-12-18", "why": "Ski season is next. Projected opening is mid-December, depending on snow, and 2026/27 passes are on sale now.", "source": "https://www.onthesnow.com/vancouver/projected-openings" }
-      }
+      "about" : "Local ski hills open when the snow arrives.",
+      "emoji" : "⛷️",
+      "from" : "2026-09-20",
+      "id" : "skiseasonsoon",
+      "label" : "SkiSeasonSoon",
+      "spots" : {
+        "cypress" : {
+          "source" : "https://www.onthesnow.com/vancouver/projected-openings",
+          "start" : "2026-11-28",
+          "why" : "Summer hiking is winding down and ski season is next. Projected opening is Nov 28, depending on snow. 2026/27 season passes are on sale."
+        },
+        "grouse" : {
+          "source" : "https://www.onthesnow.com/vancouver/projected-openings",
+          "start" : "2026-12-18",
+          "why" : "Ski season is next. Projected opening is mid-December, depending on snow, and 2026/27 passes are on sale now."
+        },
+        "mountseymourpark" : {
+          "source" : "https://www.onthesnow.com/vancouver/projected-openings",
+          "start" : "2026-12-19",
+          "why" : "Ski season is next. Mt Seymour is the family and beginner hill, with a projected opening of Dec 19, depending on snow."
+        }
+      },
+      "to" : "2026-12-20"
     }
-  ]
+  ],
+  "updatedAt" : "2026-09-30"
 }

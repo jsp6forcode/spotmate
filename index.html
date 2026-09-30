@@ -63,18 +63,20 @@ const WIZ = [
 const KINDS = [
   ['water', 'Spray park', /spray park$|^spray|splash|wading|water ?park|water play/i, 'kid', 'bps'],
   ['play', 'Playground', /playground|tot lot|adventure play/i, 'kid', 'bps'],
-  ['indoorplay', 'Indoor play', /indoor play|play (centre|center|caf)|playland|jungle|kidtropolis|play ?zone|fun ?land|bounce|fun centre/i, 'kid', 'bps'],
+  ['rides', 'Rides & amusements', /\bplayland\b|amusement park|fun ?park/i, 'kid', 'ps'],
+  ['indoorplay', 'Indoor play', /indoor play|play (centre|center|caf)|jungle|kidtropolis|play ?zone|fun ?land|bounce|fun centre/i, 'kid', 'bps'],
   ['active', 'Active play', /trampoline|climb|boulder|parkour|gymnastics|ninja|kids gym|air park/i, 'kid', 'ps'],
   ['games', 'Games', /laser|escape|\bvr\b|go-kart|kart track|bowling/i, 'kid', 's'],
   ['arcade', 'Arcade & mini golf', /arcade|claw|mini golf|mini putt/i, 'kid', 'ps'],
   ['wheels', 'Bike & skate', /bike park|bmx|pump ?track|skate park/i, 'kid', 's'],
   ['arts', 'Arts & crafts', /pottery|art studio|arts centre|craft|paint/i, 'kid', 'ps'],
-  ['mall', 'Mall', /\bmall\b|park royal|metropolis|coquitlam centre|richmond centre|town centre|tsawwassen mills|oakridge|lansdowne|shopping/i, 'family', 'bps'],
-  ['library', 'Library', /library/i, 'both', 'bps'],
+  ['mall', 'Shopping', /\bikea\b|kids market|\bmall\b|park royal|metropolis|coquitlam centre|richmond centre|town centre|tsawwassen mills|oakridge|lansdowne|shopping/i, 'family', 'bps'],
+  ['library', 'Library', /librar(y|ies)/i, 'both', 'bps'],
   ['pool', 'Pool', /pool|aquatic|swim/i, 'both', 'bps'],
   ['rec', 'Rec centre', /recreation|community cent|leisure|ymca|family place|sportsplex|sport & ice/i, 'both', 'bps'],
   ['rink', 'Ice rink', /ice rink|skating|arena|\bice\b|oval/i, 'both', 'ps'],
-  ['farm', 'Farm & animals', /farm|zoo|petting|animal|ranch|hatchery|aquarium|bird|wildlife|sanctuary/i, 'family', 'bps'],
+  // 단어 경계로 ("Branch"의 ranch, "Libraries"가 농장이 되지 않게). 농장은 아이 중심 활동에도 맞아요
+  ['farm', 'Farm & animals', /\bfarms?\b|\bzoo\b|\branch\b|\bbirds?\b|petting|animal|hatchery|aquarium|wildlife|sanctuary|pumpkin patch/i, 'both', 'bps'],
   ['museum', 'Museum', /museum|gallery|science|planetarium|space cent|historic site|heritage village/i, 'family', 'ps'],
   ['beach', 'Beach & lake', /beach|\blake\b/i, 'family', 'bps'],
   ['garden', 'Garden', /garden|conservatory|arboretum/i, 'family', 'bps'],
@@ -1271,7 +1273,7 @@ class App {
       case 'wizedit': return this.set({ wiz: { ...this.state.wiz, step: +val, done: false, editing: true } });
       case 'wizset': { const [k, v] = val.split(':'); return this.wizFinish({ ...this.state.wiz, ans: { ...this.state.wiz.ans, [k]: v } }); }
       case 'wizmore': return this.set({ wizMore: this.state.wizMore + 10 });
-      case 'wizreset': return this.set({ wiz: { step: 0, ans: {}, done: false }, wizMore: 10, when: '' });
+      case 'wizreset': return this.set({ wiz: { step: 0, ans: {}, done: false }, wizMore: 10, when: '', tag: '' });
       case 'whenoff': return this.set({ when: '' });
       case 'whenset': return this.set({ when: val, openNow: false });
       case 'opennow': return this.set({ openNow: !this.state.openNow, when: !this.state.openNow && this.planLater() ? '' : this.state.when });
@@ -1289,7 +1291,15 @@ class App {
       case 'lunch': return this.set({ lunch: !this.state.lunch, hh: false });
       case 'price': return this.set({ price: this.state.price === val ? '' : val });
       case 'kids': return this.set({ kidsOnly: !this.state.kidsOnly });
-      case 'tag': return this.set({ tag: this.state.tag === val ? '' : val });
+      case 'tag': {
+        const tag = this.state.tag === val ? '' : val;
+        // 6단계 질문 중에 시즌 태그를 누르면, 안 고른 질문은 "상관없음"으로 두고 그 시즌 장소를 바로 보여줘요
+        if (WIZARD && this.state.view === 'list' && !this.state.q && !this.state.wiz.done && tag) {
+          const ans = { ...this.state.wiz.ans }; WIZ.forEach(st => { if (!ans[st.key]) ans[st.key] = 'any'; });
+          this.state.tag = tag; return this.wizFinish({ ...this.state.wiz, ans });
+        }
+        return this.set({ tag });
+      }
       case 'indoor': return this.set({ indoor: !this.state.indoor });
       case 'radius': {
         const radius = val === 'any' ? 'any' : +val; store('spotmate-radius', String(radius)); this.set({ radius, wizMore: 10 }); return this.wizLocScroll();
@@ -1516,7 +1526,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.header()}
         ${this.controls(items)}
         <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
-          ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : view === 'list' && WIZARD ? this.wizardView() : this.state.cat === 'events' ? this.eventsView() : `
+          ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : view === 'list' && WIZARD && !this.state.q ? this.wizardView()
+            : view === 'list' && WIZARD ? `<button data-act="qclear" class="mt-6 inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">← Back to the picker</button>${this.planBar()}${this.listView(items)}` : this.state.cat === 'events' ? this.eventsView() : `
             ${this.planBar()}
             ${view !== 'map' ? this.seasonChips() : ''}
             ${view === 'eats' && (this.state.hh || this.state.lunch) ? '' : this.criteriaBanner(items)}
@@ -1608,7 +1619,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
   controls(items) {
     const s = this.state;
-    if (s.view === 'plan' || (s.view === 'list' && WIZARD)) return '';
+    if (s.view === 'plan') return '';
+    // 6단계 추천 화면(Explore)엔 검색창만 (필터 줄은 지도에서). 검색하면 결과 목록과 위치 줄을 보여줘요
+    const lite = s.view === 'list' && WIZARD;
     return `
     <section class="bg-white/80 dark:bg-slate-900/80 border-b border-slate-200/70 dark:border-slate-800">
       <div class="max-w-6xl mx-auto px-4 md:px-6 py-3 space-y-2">
@@ -1633,6 +1646,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${s.unused && s.unused.length ? `<span class="px-2.5 py-1 rounded-full text-slate-500 ring-1 ring-slate-300 dark:text-slate-400 dark:ring-slate-600" title="These words didn't match any filter or place">Not used: ${esc(s.unused.join(', '))}</span>` : ''}
           <button data-act="qclear" class="ml-1 min-h-[32px] font-semibold underline text-slate-600 dark:text-slate-300">Clear search</button>
         </div>`; })() : ''}
+        ${lite ? (s.q ? `<div>${this.locationBar(items)}</div><p class="text-xs text-slate-500 dark:text-slate-400">${this.countLine(items)}</p>` : '') : `
         ${(() => {
           // 모바일: 자주 쓰는 필터만 한 줄(옆으로 넘기기) + "Filters" 버튼. 카테고리·음식 종류·정렬·위치는 Filters 안에
           // 데스크톱: 전부 한 줄에 (접는 칸은 display: contents로 같은 줄에 섞여요)
@@ -1702,6 +1716,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${s.cat !== 'events' && s.openNow && HOURS_READY && (this._hidden.closed + this._hidden.unknown) ? `
         <p class="text-xs text-slate-600 dark:text-slate-300">Hidden: ${this._hidden.closed} closed right now${this._hidden.unknown ? `, ${this._hidden.unknown} with unknown hours` : ''}. <button data-act="opennow" class="font-semibold underline text-violet-700 dark:text-violet-300">Show all</button></p>` : ''}
 
+        `}
       </div>
     </section>`;
   }
@@ -2039,11 +2054,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   wizResults() {
     const a = this.state.wiz.ans, origin = this.origin(), radius = this.state.radius;
     const o = ORIGINS[this.state.nearKey], inArea = o ? new RegExp(`(^|[(,] ?)${o.label}\\b`, 'i') : null;
-    let pool = SPOTS.filter(s => isKid(s) && !['food', 'dessert'].includes(s.cat) && (!s.venue || (this._spotEvents && this._spotEvents[s.id])))
+    let pool = SPOTS.filter(s => isKid(s) && !['food', 'dessert'].includes(s.cat) && (!s.venue || EVENTS.some(ev => ev.spotId === s.id && upcomingDates(ev, 14).length)))   // 행사 장소(호박밭 등)는 2주 안에 그곳 행사가 있으면
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
     if (this.nearActive() && radius !== 'any') pool = pool.filter(s => s.dist <= radius || (inArea && inArea.test(s.area || '')));
     pool.forEach(s => { s.score = this.wizScore(s); });
     pool.sort((x, y) => y.score - x.score);
+    // 시즌 태그(#FallColours 등)나 New Rising Spots를 골랐으면 그 장소만
+    const tagDef = activeTags().find(t => t.id === this.state.tag);
+    if (tagDef) pool = pool.filter(s => tagDef.spots[s.id]);
+    if (this.state.tag === 'justopened') pool = pool.filter(isJustOpened);
     const match = pool.filter(s => this.wizMatch(s, a));
     const top = this.wizPick(match, this.state.wizMore);
     let also = [], relaxed = [];
@@ -2061,7 +2080,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   wizardView() {
     const w = this.state.wiz, a = w.ans;
     // 결과 위 칩: "Either"만으로는 무슨 조건인지 몰라서 상관없음은 풀어서 써요
-    const ANY = { when: 'Any time', budget: 'Free or paid', place: 'Indoor or outdoor', dur: 'Any length', purpose: 'Any kind of outing', age: 'Mixed ages' };
+    const ANY = { when: 'Any time', budget: 'Free or paid', place: 'Indoor or outdoor', dur: 'Any length', purpose: 'Any kind of outing', age: 'Any age' };
     const optLabel = (k, v) => v === 'any' ? ANY[k] : ((WIZ.find(x => x.key === k) || { opts: [] }).opts.find(o => o[0] === v) || [])[1] || '';
     if (!w.done) {
       const st = WIZ[w.step], pick = a[st.key];
@@ -2086,7 +2105,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <button data-act="wizback" ${w.step ? '' : 'disabled'} class="min-h-[48px] px-5 rounded-xl font-semibold border border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-200 disabled:opacity-40">← Back</button>
           <button data-act="wiznext" ${pick ? '' : 'disabled'} class="min-h-[48px] px-6 rounded-xl font-bold bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-40">${w.editing ? 'Update results' : w.step === WIZ.length - 1 ? 'Get recommendations' : 'Next →'}</button>
         </div>
-      </section>`;
+      </section>
+      ${w.editing ? '' : `<div class="max-w-2xl mx-auto mt-8 pt-5 border-t border-slate-200 dark:border-slate-800"><p class="text-sm text-slate-600 dark:text-slate-300">Or jump straight to what's in season:</p>${this.seasonChips()}</div>`}`;
     }
     const r = this.wizResults();
     const grid = list => `<div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">${list.map(s => this.card(s)).join('')}</div>`;
@@ -2097,6 +2117,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${WIZ.map((st, i) => `<button data-act="wizedit" data-val="${i}" title="Change: ${esc(st.q)}" class="min-h-[36px] px-3 py-1.5 rounded-full text-sm font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 dark:bg-violet-500/20 dark:text-violet-200">${esc(optLabel(st.key, a[st.key]))}</button>`).join('')}
           <button data-act="wizreset" class="ml-1 min-h-[36px] text-sm font-semibold underline text-slate-600 dark:text-slate-300">Start over</button>
         </div>
+        ${this.seasonChips()}
         <div class="mt-3">${this.locationBar([])}</div>
         ${this.state.geoMsg ? `<p class="mt-1 text-xs text-slate-600 dark:text-slate-300" role="status">${esc(this.state.geoMsg)}</p>` : ''}
       </section>
