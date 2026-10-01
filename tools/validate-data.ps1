@@ -34,6 +34,40 @@ function CheckAge($name, $updated) {
 $spots = (Load 'spots.json').spots
 $ids = @{}; foreach ($s in $spots) { $ids[$s.id] = $s }
 Ok "spots.json: $($spots.Count)곳"
+# ── 같은 장소가 두 번 들어가지 않게 (2026-09-30 규칙) ──
+# 같은 곳으로 보는 기준 (같은 무리끼리만: 아이 장소끼리, 먹거리끼리. 식당 옆 공원은 다른 곳이에요)
+#   ① placeId가 같음 ② 80 m 안이고 이름에 같은 특징 단어(4글자 이상, park·centre 같은 흔한 말 제외)가 있음 ③ 1.2 km 안이고 한쪽 이름이 다른 쪽 이름으로 시작함
+#   (예: "Whonnock Lake Park" ↔ "Whonnock Lake", "Grouse Mountain Regional Park" ↔ "Grouse Mountain")
+# 따로 두기로 정한 곳(별개 명소, 공원 안 놀이터·수영장)은 아래 $sameOk 에 "id|id"로 적어서 통과시켜요
+$sameOk = @(
+  'giwaterpark|granville', 'stevestonpark|steveston', 'fortlangleynationalhisto|fortlangley', 'fortlangleypark|fortlangley', 'fortlangleykidspark|fortlangley',
+  'mundyparktotlot|mundy', 'mundyparkpool|mundy', 'kensingtonparkoutdoorpoo|kensingtonpark', 'confederationparkwaterpa|confederationpark',
+  'kitsilanobeachplayground|kits', 'robertburnabyparkplaygro|robertburnabypark', 'stanleyparkplayground|stanley', 'diefenbakerparkplaygroun|diefenbaker',
+  # 커뮤니티 센터 안(옆)의 도서관: 따로 운영하는 시설
+  'kerrisdalecommunitycentr|vancouverpubliclibraryke2', 'renfrewparkcommunitycent|vancouverpubliclibraryre'
+)
+$okSet = @{}; foreach ($p in $sameOk) { $a, $b = $p -split '\|'; $okSet["$a|$b"] = 1; $okSet["$b|$a"] = 1 }
+function Words($n) { @((NormName $n) -split ' ' | Where-Object { $_.Length -ge 4 -and $_ -notmatch '^(park|parks|centre|center|community|public|library|branch|playground|regional|beach|lake|trail|pool|outdoor|indoor|kids|family|bistro|kitchen|restaurant|grill|diner|cafe|house|west|north|south|east|vancouver|burnaby|richmond|surrey|coquitlam|langley|delta|the)$' }) }
+function SpotGroup($s) { if ($s.cat -in 'food', 'dessert') { 'food' } else { 'place' } }
+function NormName($n) { (($n -replace '\(.*?\)', '').ToLower() -replace '[^a-z0-9 ]', ' ' -replace '\s+', ' ').Trim() }
+function Km($a, $b) { $r = [math]::PI / 180; $x = ([double]$b.lng - [double]$a.lng) * $r * [math]::Cos(([double]$a.lat + [double]$b.lat) / 2 * $r); $y = ([double]$b.lat - [double]$a.lat) * $r; 6371 * [math]::Sqrt($x * $x + $y * $y) }
+$grid = @{}; foreach ($s in $spots) { if ($null -eq $s.lat) { continue }; $k = "$([int][math]::Floor([double]$s.lat / 0.02)),$([int][math]::Floor([double]$s.lng / 0.02))"; if (-not $grid[$k]) { $grid[$k] = New-Object System.Collections.ArrayList }; [void]$grid[$k].Add($s) }
+$byPlace = @{}; $dupN = 0
+foreach ($s in $spots) {
+  if ($s.placeId) { if ($byPlace[$s.placeId]) { Err "같은 장소가 두 번 있어요 (placeId 같음): $($byPlace[$s.placeId]) / $($s.id)"; $dupN++ } else { $byPlace[$s.placeId] = $s.id } }
+  if ($null -eq $s.lat -or $s.venue) { continue }
+  $gy = [int][math]::Floor([double]$s.lat / 0.02); $gx = [int][math]::Floor([double]$s.lng / 0.02); $sn = NormName $s.name
+  foreach ($dy in -1..1) { foreach ($dx in -1..1) { foreach ($o in @($grid["$($gy + $dy),$($gx + $dx)"])) {
+    if (-not $o -or $o.id -le $s.id -or $o.venue -or $okSet["$($s.id)|$($o.id)"]) { continue }
+    if ((SpotGroup $s) -ne (SpotGroup $o)) { continue }
+    $d = Km $s $o; if ($d -gt 1.2) { continue }
+    $on = NormName $o.name
+    $prefix = ($on.Length -ge 6 -and $sn.StartsWith("$on ")) -or ($sn.Length -ge 6 -and $on.StartsWith("$sn ")) -or ($sn -eq $on)
+    $shared = @(Words $s.name | Where-Object { (Words $o.name) -contains $_ }).Count -gt 0
+    if (($d -lt 0.08 -and $shared) -or $prefix) { Err "같은 장소가 두 번 있는 것 같아요: $($s.id) ($($s.name)) / $($o.id) ($($o.name)), $([math]::Round($d * 1000)) m. 하나를 빼거나, 따로 둘 곳이면 validate-data.ps1 의 `$sameOk 에 적어 주세요."; $dupN++ }
+  } } }
+}
+if (-not $dupN) { Ok '같은 장소 중복 없음' }
 foreach ($s in @($spots | Where-Object { $_.hoursUntil })) {
   if (-not (IsDate $s.hoursUntil)) { Err "$($s.id).hoursUntil 은 YYYY-MM-DD 이어야 해요" }
   elseif ((D $s.hoursUntil) -lt $today) { Warn "$($s.id) 의 계절 영업시간이 $(S $s.hoursUntil)에 끝났어요. 새 시즌 시간을 찾아 넣어 주세요." }

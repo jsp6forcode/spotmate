@@ -135,7 +135,8 @@ function pickOf(s) {
   return null;
 }
 // play: 놀이터·물놀이장·어린이 수영장처럼 아이를 위해 만든 시설 (리뷰가 적어도 아이랑 갈 곳이에요)
-const isKid = s => !!s.kids || !!s.family || !!s.play;
+// notKid: 구글 리뷰에 아이 관련 단어가 3번 미만이고 예외(구글 "어린이에게 적합", 공식 아이 정보)도 없는 곳 (tools/kid-words.ps1)
+const isKid = s => !s.notKid && (!!s.kids || !!s.family || !!s.play);
 // 먹거리 "지금 먹기 좋은 곳": 비·추운 날엔 국물 요리, 맑고 따뜻한 날엔 아이스크림·파티오 (이름·설명으로 판단)
 const HOT_FOOD = /ramen|\bpho\b|phở|hot ?pot|noodle|udon|laksa|jjigae|tonkotsu|bun bo|congee|soup|dumpling|\bmomos?\b/i;
 const BREAKFAST_FOOD = /breakfast|brunch|pancake|waffle|bakery|bagel|croissant|diner|eggs|benny|café|cafe\b|coffee/i;
@@ -1405,6 +1406,11 @@ class App {
       case 'mapall': return this.set({ mapPicks: null });
       case 'mode': return this.set({ browse: val === 'browse', q: '', kw: [], unused: [] });
       // "I'm flexible, show me ideas": 남은 질문을 모두 "상관없음"으로 두고 바로 결과
+      // "Anything works for us": 5개 질문 모두 "상관없음"으로 바로 결과
+      case 'wizany': {
+        const ans = {}; WIZ.forEach(st => { ans[st.key] = 'any'; });
+        return this.wizFinish({ ...this.state.wiz, ans, editing: false });
+      }
       case 'wizall': {
         const ans = { ...this.state.wiz.ans }; WIZ.forEach(st => { if (!ans[st.key]) ans[st.key] = 'any'; });
         return this.wizFinish({ ...this.state.wiz, ans, editing: false });
@@ -1772,13 +1778,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (s.view === 'plan' || (s.view === 'map' && s.mapPicks)) return '';   // 추천 장소만 보는 지도엔 필터가 안 맞아서 숨겨요
     // 단계별 추천 화면(Explore)엔 검색창만 (필터 줄은 지도에서). 검색하면 결과 목록과 위치 줄을 보여줘요
     const lite = this.pickMode();
+    if (lite && !s.q && !s.wiz.done) return '';   // 질문 화면엔 보여줄 게 없어서 빈 줄도 안 그려요
     return `
     <section class="bg-white/80 dark:bg-slate-900/80 border-b border-slate-200/70 dark:border-slate-800">
       <div class="max-w-6xl mx-auto px-4 md:px-6 py-3 space-y-2">
-        ${WIZARD && s.view === 'list' ? `
-        <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="How to explore">
-          ${[['pick', 'Pick for me'], ['browse', 'Browse all']].map(([v, label]) => { const on = (v === 'browse') === !!s.browse; return `<button data-act="mode" data-val="${v}" aria-pressed="${on}" class="min-h-[40px] px-4 rounded-lg text-sm font-bold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`; }).join('')}
-        </div>` : ''}
         ${lite && !s.q && !s.wiz.done ? '' : `
         <form data-act="search" role="search" class="flex gap-2">
           <input name="q" type="search" value="${esc(this.qDraft ?? s.q)}" autocomplete="off" enterkeyhint="search" aria-label="Search"
@@ -1979,7 +1982,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     return `
     <section class="mt-10">
       <div class="flex items-end justify-between gap-3">
-        <h2 class="text-lg font-bold">Happening ${period}${this.nearActive() ? ' near ' + esc(this.originLabel()) : ''}</h2>
+        <h2 class="text-lg font-bold">Events ${period}${this.nearActive() ? ' near ' + esc(this.originLabel()) : ''}</h2>
         <button data-act="cat" data-val="events" class="text-sm font-semibold text-violet-700 dark:text-violet-300">See all ${evs.length} →</button>
       </div>
       ${others.length ? `<div class="mt-3 grid gap-3 md:grid-cols-2">${others
@@ -1989,21 +1992,23 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       ${markets.length ? this.marketsRow(markets, period) : ''}
     </section>`;
   }
-  // 매주 열리는 파머스 마켓은 한 줄로 묶어요: 마켓 이름 · 요일 칩 (누르면 그 장소)
+  // 매주 열리는 파머스 마켓: "Events this week"와 같은 크기의 제목으로 따로 보여줘요 (눈에 잘 띄게). 칩을 누르면 그 장소
   marketsRow(markets, period = 'this week') {
     const when = iso => iso === vanDate(0) ? 'Today' : iso === vanDate(1) ? 'Tomorrow' : DOW[dowOf(iso)];
     const short = name => name.replace(/\s+(Village\s+)?Farmers'?\s+Market$|\s+Saturday Market$/i, '');
     return `
-      <div class="mt-3 rounded-xl p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
-        <p class="font-bold">Farmers markets ${period} <span class="font-normal text-slate-500 dark:text-slate-400">${markets.length}</span></p>
-        <div class="mt-2 flex flex-wrap gap-2">${markets.map(ev => {
-          const label = `${esc(short(ev.name))} <span class="font-normal text-slate-500 dark:text-slate-400">${esc(when(ev.next))}</span>`;
-          const cls = 'min-h-[36px] inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border border-emerald-200 text-emerald-800 hover:border-emerald-400 dark:border-emerald-500/30 dark:text-emerald-300';
-          return ev.spotId && byId(ev.spotId)
-            ? `<button data-act="open" data-val="${ev.spotId}" class="${cls}">${label}</button>`
-            : `<a href="${esc(ev.source)}" target="_blank" rel="noopener" class="${cls}">${label}</a>`;
-        }).join('')}</div>
-      </div>`;
+      <div class="mt-8 flex items-end justify-between gap-3">
+        <h2 class="text-lg font-bold"><span aria-hidden="true">🥕</span> Farmers markets ${period} <span class="font-normal text-slate-500 dark:text-slate-400">${markets.length}</span></h2>
+      </div>
+      <p class="text-sm text-slate-600 dark:text-slate-300">Weekly markets with local produce and food. Tap one for hours and directions.</p>
+      <div class="mt-3 flex flex-wrap gap-2">${markets.map(ev => {
+        const day = when(ev.next), soon = day === 'Today' || day === 'Tomorrow';
+        const label = `<span>${esc(short(ev.name))}</span><span class="text-xs font-bold px-2 py-0.5 rounded-full ${soon ? 'bg-emerald-600 text-white' : 'bg-white text-emerald-800 dark:bg-slate-900 dark:text-emerald-300'}">${esc(day)}</span>`;
+        const cls = 'min-h-[44px] inline-flex items-center gap-2 px-4 py-2 rounded-xl text-base font-semibold bg-emerald-50 ring-1 ring-emerald-200 text-emerald-900 hover:ring-emerald-400 dark:bg-emerald-500/10 dark:ring-emerald-500/30 dark:text-emerald-200';
+        return ev.spotId && byId(ev.spotId)
+          ? `<button data-act="open" data-val="${ev.spotId}" class="${cls}">${label}</button>`
+          : `<a href="${esc(ev.source)}" target="_blank" rel="noopener" class="${cls}">${label}</a>`;
+      }).join('')}</div>`;
   }
   eventsView() {
     const evs = this.upcomingEvents(45), today = vanDate(0), week = vanDate(6);
@@ -2094,9 +2099,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="text-xs font-bold uppercase tracking-wide text-amber-800 dark:text-amber-300">${esc(why.label)}</p>
           <p class="mt-0.5 text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
         </div>` : `
-        <div class="mt-3 border-l-4 border-rose-500 rounded-r-lg bg-rose-50 dark:bg-rose-500/10 pl-3 pr-3 py-2">
-          <p class="text-xs font-bold uppercase tracking-wide text-rose-700 dark:text-rose-300">${why.label ? esc(why.label) : why.icon === '📈' ? 'Why more people are searching' : why.icon === '🆕' ? JUST_OPENED.label : 'Why go now'}</p>
+        <div class="mt-3 border-l-4 border-sky-500 rounded-r-lg bg-sky-50 dark:bg-sky-500/10 pl-3 pr-3 py-2" title="SpotMate tip from official sources. Open the card for more.">
+          <p class="text-xs font-bold uppercase tracking-wide text-sky-800 dark:text-sky-300"><span aria-hidden="true">💡</span> SpotMate tip</p>
           <p class="mt-0.5 text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
+          ${/* "Why go now"와 SpotMate tip을 한 상자로 합쳤어요 (2026-10-01). 공식 팁이 있으면 한 줄 더 */ this.tipItems(s, 'card').length ? `<p class="mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(this.tipItems(s, 'card')[0])}</p>` : ''}
         </div>` : ''}
         ${this.planLater() && HOURS_READY ? (() => {
           // 날짜 계획: 그날(들) 영업시간
@@ -2107,7 +2113,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ? `<p class="mt-2 text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'web' && s.hoursSource !== 'public' && !isDaylight(s) ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
           : HOURS_READY ? '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
         <p class="mt-2 text-sm text-slate-700 dark:text-slate-300 ${why ? 'clamp2' : ''}">${esc(s.summary)}</p>
-        ${this.tipItems(s, 'card').length ? `<p class="mt-2 text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2.5 py-1.5 clamp2" title="SpotMate tip, checked on the official site. Open the card for more."><span class="font-semibold"><span aria-hidden="true">💡</span> SpotMate tip:</span> ${esc(this.tipItems(s, 'card')[0])}</p>` : ''}
+        ${(!why || why.lunch || why.pick || why.hh) && this.tipItems(s, 'card').length ? `<p class="mt-2 text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2.5 py-1.5 clamp2" title="SpotMate tip, checked on the official site. Open the card for more."><span class="font-semibold"><span aria-hidden="true">💡</span> SpotMate tip:</span> ${esc(this.tipItems(s, 'card')[0])}</p>` : ''}
 
         ${TRENDS_ON && s.rise != null && s.rise >= RISING_MIN && !(why && why.icon === RISE_ICON) ? `<p class="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-300" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
         ${spotTags(s).length ? `<p class="mt-2 flex flex-wrap gap-1.5">${spotTags(s).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300">#${esc(t.label)}</span>`).join('')}</p>` : ''}
@@ -2266,9 +2272,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         </div>
         <div class="mt-6 flex items-center justify-between gap-3">
           <button data-act="wizback" ${w.step ? '' : 'disabled'} class="min-h-[48px] px-5 rounded-xl font-semibold border border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-200 disabled:opacity-40">← Back</button>
-          ${w.editing ? '<span></span>' : '<button data-act="wizall" class="min-h-[48px] px-3 text-sm font-semibold underline text-violet-700 dark:text-violet-300">I’m flexible, show me ideas</button>'}
           <button data-act="wiznext" ${pick ? '' : 'disabled'} class="min-h-[48px] px-6 rounded-xl font-bold bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-40">${w.editing ? 'Update results' : w.step === WIZ.length - 1 ? 'Get recommendations' : 'Next →'}</button>
         </div>
+        ${/* 답 옵션과 헷갈리지 않게 Back/Next 아래 별도 동작으로: 5개 질문을 모두 "상관없음"으로 두고 바로 결과 (Browse all 대신, 2026-10-01) */ w.editing ? '' : `
+        <div class="mt-4 text-center">
+          <button data-act="wizany" class="min-h-[44px] px-5 rounded-full text-sm font-semibold bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">Skip all ${WIZ.length} questions and show results <span aria-hidden="true">⏭</span></button>
+          <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">We’ll pick from every age, time, budget, length and kind of outing.</p>
+        </div>`}
       </section>
       ${w.editing ? '' : `<div class="max-w-2xl mx-auto mt-8 pt-5 border-t border-slate-200 dark:border-slate-800"><p class="text-sm text-slate-600 dark:text-slate-300">Or jump straight to what's in season:</p>${this.seasonChips()}</div>`}`;
     }
@@ -2279,6 +2289,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <section class="mt-6" aria-label="Your choices">
         <div class="flex flex-wrap items-center gap-2">
           ${WIZ.map((st, i) => `<button data-act="wizedit" data-val="${i}" title="Change: ${esc(st.q)}" class="min-h-[36px] px-3 py-1.5 rounded-full text-sm font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 dark:bg-violet-500/20 dark:text-violet-200">${esc(optLabel(st.key, a[st.key]))}</button>`).join('')}
+          ${/* 고른 조건이 하나라도 있으면: 한 번에 모두 "상관없음"으로 바꾸고 목록 새로 */ WIZ.some(st => a[st.key] && a[st.key] !== 'any') ? `<button data-act="wizany" class="ml-1 min-h-[36px] px-3 py-1.5 rounded-full text-sm font-semibold bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">Set all to Any <span aria-hidden="true">⏭</span></button>` : ''}
           <button data-act="wizreset" class="ml-1 min-h-[36px] text-sm font-semibold underline text-slate-600 dark:text-slate-300">Start over</button>
         </div>
         ${this.seasonChips()}
@@ -2357,7 +2368,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <button data-act="cat" data-val="all" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all spots</button>`}
       </div>`;
     const grid = list => `<div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">${list.map(s => this.card(s)).join('')}</div>`;
-    // 카드 목록 제목: "Happening this week"(행사)와 구별되게 크게
+    // 카드 목록 제목: "Events this week"(행사)와 구별되게 크게
     const heading = (id, title, sub) => `
       <div id="${id}" class="mt-8 scroll-mt-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
         <h2 class="text-2xl font-extrabold tracking-tight">${title}</h2>
@@ -2575,10 +2586,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const tags = spotTags(s);
             // 먹거리: 최근 기사(링크)·Reddit 글·지금 시간대·날씨에 맞는 이유
             const press = recentPress(s), food = this.nowReasons(s).filter(r => r.label === 'Good right now' || r.label === 'Talked about lately');
-            if (!evs.length && !tags.length && !press.length && !food.length) return '';
+            // "Why go now"(행사·시즌)와 SpotMate tip(공식 정보)을 한 상자로 합쳤어요 (2026-10-01)
+            const notes = NOTES[s.id] ? this.tipItems(s, 'modal') : [], src = (NOTES[s.id] || {}).source || '', host = (/^https:\/\/(?:www\.)?([^/]+)/.exec(src) || [])[1] || '';
+            if (!evs.length && !tags.length && !press.length && !food.length && !notes.length) return '';
             return `
-          <section class="rounded-2xl p-5 bg-rose-50 dark:bg-rose-500/10 border-l-4 border-rose-500">
-            <h3 class="font-bold text-rose-800 dark:text-rose-300">Why go now</h3>
+          <section class="rounded-2xl p-5 bg-sky-50 dark:bg-sky-500/10 ring-1 ring-sky-200 dark:ring-sky-500/25">
+            <h3 class="font-bold text-sky-900 dark:text-sky-200"><span aria-hidden="true">💡</span> SpotMate tip</h3>
             ${food.map(r => `<p class="mt-2 text-sm text-slate-800 dark:text-slate-200"><span class="font-semibold">${esc(r.label)}</span> · ${esc(r.text)}</p>`).join('')}
             ${press.map(p => `<p class="mt-2 text-sm text-slate-800 dark:text-slate-200"><span class="font-semibold">In the news</span> · ${esc(p.outlet)}, ${esc(shortDate(p.date))}: <a href="${esc(p.url)}" target="_blank" rel="noopener" class="underline">${esc(p.title)} ↗</a></p>`).join('')}
             ${evs.map(ev => `
@@ -2587,35 +2600,22 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               <p class="text-slate-600 dark:text-slate-300">Next: ${esc(dayLabel(ev.next))} · ${esc(eventHours(ev))} · ${esc(eventWhen(ev))} <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Official info ↗</a></p>
             </div>`).join('')}
             ${tags.map(t => { const x = t.spots[s.id]; return `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200"><span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('')}
+            ${notes.length ? `<ul class="mt-2 space-y-1.5 text-sm text-slate-800 dark:text-slate-200">${notes.map(x => `<li class="flex gap-2"><span aria-hidden="true" class="text-sky-600 dark:text-sky-300">•</span><span>${esc(x)}</span></li>`).join('')}</ul>
+            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Checked ${esc(shortDate(NOTES_META.updatedAt))} on ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'the official site'}. Not a review. Prices and hours change, so check before you go.</p>` : ''}
             ${tags.length ? `<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">${esc(SEASON_NOTE)}</p>` : ''}
           </section>`; })()}
-
-          ${NOTES[s.id] && this.tipItems(s, 'modal').length ? (() => {
-            // SpotMate notes: 공식 페이지에서 확인한 아이 관련 사실 (리뷰와 구분되게 "SpotMate tip"으로, 확인 날짜와 출처를 같이)
-            const n = { ...NOTES[s.id], items: this.tipItems(s, 'modal') }, host = (/^https:\/\/(?:www\.)?([^/]+)/.exec(n.source || '') || [])[1] || '';
-            return `
-          <section class="rounded-2xl p-5 bg-sky-50 dark:bg-sky-500/10 ring-1 ring-sky-200 dark:ring-sky-500/25">
-            <h3 class="font-bold text-sky-900 dark:text-sky-200"><span aria-hidden="true">💡</span> SpotMate tip</h3>
-            <ul class="mt-2 space-y-1.5 text-sm text-slate-800 dark:text-slate-200">${n.items.map(x => `<li class="flex gap-2"><span aria-hidden="true" class="text-sky-600 dark:text-sky-300">•</span><span>${esc(x)}</span></li>`).join('')}</ul>
-            <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">Checked ${esc(shortDate(NOTES_META.updatedAt))} on ${/^https:\/\//.test(n.source || '') ? `<a href="${esc(n.source)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'the official site'}. Not a review. Prices and hours change, so check before you go.</p>
-          </section>`; })() : ''}
           ${[[lunchState(s), 'emerald', LUNCH_META], [hhState(s), 'amber', HAPPY_META]]
             // 점심 전에는 런치가 먼저 보이도록 (지금 하는 쪽이 있으면 그쪽을 위로)
             .sort((a, b) => !!(b[0] && b[0].active) - !!(a[0] && a[0].active))
             .map(([st, c, meta]) => st ? this.dealSection(st, c, meta) : '').join('')}
 
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div class="grid grid-cols-2 gap-3">
             <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/20 hover:ring-amber-400">
               <p class="font-bold">Google Maps ↗</p><p class="text-xs text-slate-500 dark:text-slate-400">Ratings & reviews</p>
             </a>
-            <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="sm:order-last rounded-xl p-3 text-center bg-emerald-50 dark:bg-emerald-500/10 ring-1 ring-emerald-200 dark:ring-emerald-500/20 hover:ring-emerald-400">
+            <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-emerald-50 dark:bg-emerald-500/10 ring-1 ring-emerald-200 dark:ring-emerald-500/20 hover:ring-emerald-400">
               <p class="font-bold">${s.price ? esc(s.price) : 'Prices'} ↗</p><p class="text-xs text-slate-500 dark:text-slate-400">Search prices online</p>
             </a>
-            <div class="col-span-2 sm:col-span-1 rounded-xl p-3 text-center">
-              ${/* 검색이 평소보다 많을 때만 배율, 아니면 실내·야외와 머무는 시간 (추천 이유 배지는 아래 설명 칸에 한 번만) */ isRising(s)
-                ? `<p class="font-bold">${fmtRise(s.rise)}</p><p class="text-xs text-slate-500 dark:text-slate-400">vs usual searches</p>`
-                : `<p class="font-bold">${esc(ENV[s.env])}</p><p class="text-xs text-slate-500 dark:text-slate-400">About ${esc(s.time)}</p>`}
-            </div>
           </div>
 
           ${isRising(s) ? (() => {

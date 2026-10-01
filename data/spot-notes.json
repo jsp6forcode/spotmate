@@ -1,26 +1,637 @@
 {
-  "updatedAt": "2026-09-30",
-  "note": "SpotMate notes: kid-related facts checked on each place's official page (or the city or tourism board page). Not reviews. Prices and hours change, so check the source before you go.",
-  "notes": {
-    "scienceworld": { "items": ["Kids 2 and under are free; ages 3–12 are $25.50.", "Open daily 10am–5pm. Plan on at least 2 hours.", "Reserve tickets online before you go."], "source": "https://www.scienceworld.ca/your-visit/" },
-    "aquarium": { "items": ["Kids under 3 get in free.", "Open daily 10am–5pm.", "Buy timed-entry tickets online to skip the line."], "source": "https://www.vanaqua.org/" },
-    "capilano": { "items": ["Strollers aren't allowed on the bridge or the treetop and cliff walks. There's a stroller parking area.", "Carry babies below the railing or in a front or back carrier, not on your shoulders.", "Kids under 15 need an adult (18+) with them.", "The bridge, Treetops and Cliffwalk aren't wheelchair accessible."], "source": "https://www.capbridge.com/faq/" },
-    "grouse": { "items": ["Grizzly bear habitat with ranger talks, plus owl talks and a bird show.", "Kids Tree Canopy Adventure at the top.", "Several places to eat up top, from a coffee bar to a bistro."], "source": "https://www.grousemountain.com/plan-your-visit" },
-    "greatervancouverzoo": { "items": ["Kids 2 and under are free, including the train.", "Open daily 9am–4pm (last entry 4pm, everyone out by 5pm).", "Bring your own wagon for little ones if you have one."], "source": "https://www.gvzoo.com/visit/hours-rates-getting-here/" },
-    "maplewoodfarm": { "items": ["Over 200 farm animals. Pet the goats in the goat area.", "Daily cow-milking demonstration, and birdseed for sale to feed the ducks.", "Covered picnic tables and a playground.", "Open 10am–4pm Tuesday to Sunday, and daily from April to October."], "source": "https://destinationvancouver.com/things-to-do/maplewood-farm" },
-    "bvm": { "items": ["Free admission (Haunted Village is ticketed).", "Carousel rides are $2.62, or 13 for $31.45. The carousel runs at Spring Break, in summer and at Heritage Christmas.", "Open in seasons, so check the hours page before you go."], "source": "https://www.burnabyvillagemuseum.ca/EN/main/visit/hours-rates.html" },
-    "kidsmarket": { "items": ["Open daily 10am–6pm.", "About 25 kids' shops plus an arcade, a 4-level play area and bumper cars.", "Kids-only hair salon inside."], "source": "https://granvilleisland.com/?p=27403" },
-    "terranova": { "items": ["Ziplines, big swings and the spiral slide are for ages 8+.", "Hillside slide, log climb and rope walkway are for ages 5+.", "Toddlers (2+) can do the rolling hill and the meadow maze."], "source": "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=116" },
-    "queenspark": { "items": ["The petting farm (goats, rabbits, peacocks) is open in summer only, Victoria Day to Labour Day, 10am–5:30pm, by donation.", "It's next to Rainbow Playground."], "source": "https://newwestrecord.ca/in-the-community/queens-park-petting-farm-delights-visitors-of-all-ages-3055425" },
-    "lynn": { "items": ["The park and its suspension bridge are free.", "The Ecology Centre has nature exhibits for kids, by donation ($2 a person or $5 a family suggested).", "Ecology Centre: 10am–4pm; from October to mid-April it's open 12–4pm on weekends."], "source": "https://ecologycentre.ca/plan-your-visit" },
-    "bloedelconservatory": { "items": ["Kids 4 and under are free; ages 5–12 are $4.90 in fall and winter.", "Open 10am–5pm until Oct 31, then 10am–4pm in November and December."], "source": "https://www.vandusengarden.org/?p=69" },
-    "kidtropolis": { "items": ["Made for ages 2 to 10.", "Open Tuesday to Sunday and holidays, 10am–5pm."], "source": "https://www.visitrichmondbc.com/?p=491137" },
-    "burnabycentralrailway": { "items": ["Miniature train rides on weekends and holidays from Easter to Thanksgiving (2026: Apr 3 to Oct 12), 11am–5pm.", "$5 a ride for ages 3 and up, or 10 rides for $45.", "Tickets are sold in person only."], "source": "https://miss604.com/2026/03/ride-the-train-at-the-burnaby-central-railway/" },
-    "watermania": { "items": ["Wave pool with a tot slide, sprayers and water wheels. The two waterslides are for ages 7+ who are at least 1.2 m tall.", "Kids under 7 need an adult (16+) within arm's reach in the water, up to 3 kids per adult.", "Drop-in for kids 2–12 is $4.95."], "source": "https://www.richmond.ca/parks-recreation/centres/watermania.htm" },
-    "richmondnature": { "items": ["Free. The Nature House is open 9am–5pm and the trails dawn to dusk.", "Meet animals that live in the bog and ask the naturalist questions.", "Wheelchair- and stroller-friendly boardwalk around the pond, and a playground with a climbing tower and slide."], "source": "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=64" },
-    "fortlangleynationalhisto": { "items": ["Hands-on activities for kids at the fort.", "Youth 17 and under get in free at Parks Canada sites."], "source": "https://parks.canada.ca/lhn-nhs/bc/langley" },
-    "aldor": { "items": ["Animals to visit: pigs, goats, donkeys, chickens, sheep, bunnies, horses and cows.", "Farm market with produce, honey, eggs and snacks."], "source": "https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026" },
-    "ikeacoquitlam": { "items": ["The Småland kids' playroom is closed for renovation for now.", "Play spots around the showroom, baby care rooms, family parking, and a kids' menu in the restaurant (breakfast until 11am)."], "source": "https://www.ikea.com/ca/en/stores/coquitlam-store-index-pub99c18e3a" },
-    "ikearichmond": { "items": ["Supervised kids' playroom (Småland): Mon–Fri 12–7pm, Sat 10am–7:30pm, Sun 10am–6:30pm.", "Baby care rooms, strollers to borrow, and a kids' menu in the restaurant."], "source": "https://www.ikea.com/ca/en/stores/richmond/" }
-  }
+  "note" : "SpotMate notes: kid-related facts checked on each place's official page (or the city or tourism board page). Not reviews. Prices and hours change, so check the source before you go.",
+  "notes" : {
+    "albionsportscomplex" : {
+      "items" : [
+        "Maple Ridge spray parks open daily from mid-May, 10am–8pm, weather permitting."
+      ],
+      "scope" : "city",
+      "source" : "https://www.mapleridge.ca/node/4966"
+    },
+    "aldor" : {
+      "items" : [
+        "Animals to visit: pigs, goats, donkeys, chickens, sheep, bunnies, horses and cows.",
+        "Farm market with produce, honey, eggs and snacks."
+      ],
+      "source" : "https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026"
+    },
+    "aquarium" : {
+      "items" : [
+        "Kids under 3 get in free.",
+        "Open daily 10am–5pm.",
+        "Buy timed-entry tickets online to skip the line."
+      ],
+      "source" : "https://www.vanaqua.org/"
+    },
+    "bloedelconservatory" : {
+      "items" : [
+        "Kids 4 and under are free; ages 5–12 are $4.90 in fall and winter.",
+        "Open 10am–5pm until Oct 31, then 10am–4pm in November and December."
+      ],
+      "source" : "https://www.vandusengarden.org/?p=69"
+    },
+    "bridgeviewcommunitycentr" : {
+      "items" : [
+        "Surrey spray parks run May 16 to late September, 11am–6pm. Push the button to start the water when it’s above 20°C."
+      ],
+      "scope" : "city",
+      "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
+    },
+    "burkevilleneighbourhoodp" : {
+      "items" : [
+        "Richmond spray parks run from mid-May to early September, 9am–9pm, and can close during water restrictions."
+      ],
+      "scope" : "city",
+      "source" : "https://www.richmond.ca/parks-recreation/centres/outdoor.htm"
+    },
+    "burnabycentralrailway" : {
+      "items" : [
+        "Miniature train rides on weekends and holidays from Easter to Thanksgiving (2026: Apr 3 to Oct 12), 11am–5pm.",
+        "$5 a ride for ages 3 and up, or 10 rides for $45.",
+        "Tickets are sold in person only."
+      ],
+      "source" : "https://miss604.com/2026/03/ride-the-train-at-the-burnaby-central-railway/"
+    },
+    "bvm" : {
+      "items" : [
+        "Free admission (Haunted Village is ticketed).",
+        "Carousel rides are $2.62, or 13 for $31.45. The carousel runs at Spring Break, in summer and at Heritage Christmas.",
+        "Open in seasons, so check the hours page before you go."
+      ],
+      "source" : "https://www.burnabyvillagemuseum.ca/EN/main/visit/hours-rates.html"
+    },
+    "canlansportsnorthshore" : {
+      "items" : [
+        "Learn-to-skate programs, skating drop-ins and birthday parties for kids."
+      ],
+      "source" : "https://www.canlansports.com/north-shore"
+    },
+    "capilano" : {
+      "items" : [
+        "Strollers aren't allowed on the bridge or the treetop and cliff walks. There's a stroller parking area.",
+        "Carry babies below the railing or in a front or back carrier, not on your shoulders.",
+        "Kids under 15 need an adult (18+) with them.",
+        "The bridge, Treetops and Cliffwalk aren't wheelchair accessible."
+      ],
+      "source" : "https://www.capbridge.com/faq/"
+    },
+    "capilanomall" : {
+      "items" : [
+        "Go Bananas indoor play centre is on the second floor, above Starbucks (paid entry). Park on the second level, right outside."
+      ],
+      "source" : "https://gobananasnorthvan.com/"
+    },
+    "capilanoriverhatchery" : {
+      "items" : [
+        "Free. Watch salmon climb the fish ladder from the viewing gallery."
+      ],
+      "source" : "https://www.pac.dfo-mpo.gc.ca/sep-pmvs/hatcheries-ecloseries/capilano-eng.html"
+    },
+    "charlesrummelpark" : {
+      "items" : [
+        "Burnaby spray parks run from mid-May to the end of September, 9am–9pm (push the button to start the water)."
+      ],
+      "scope" : "city",
+      "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
+    },
+    "cityoflangleylibrary" : {
+      "items" : [
+        "Free Babytime (0–2) and Storytime at Fraser Valley Regional Library branches. Check the branch calendar for times."
+      ],
+      "scope" : "city",
+      "source" : "https://www.fvrl.bc.ca/"
+    },
+    "cloverdalearena" : {
+      "items" : [
+        "Public skating drop-ins. Kids in strollers are welcome on the ice at open skates (helmets for everyone)."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/recreation-facilities/arenas"
+    },
+    "cloverdaleathleticparksp" : {
+      "items" : [
+        "Surrey spray parks run May 16 to late September, 11am–6pm. Push the button to start the water when it’s above 20°C."
+      ],
+      "scope" : "city",
+      "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
+    },
+    "coalharbourcommunitycent" : {
+      "items" : [
+        "Playground on site and an occasional care preschool program."
+      ],
+      "source" : "https://vancouver.ca/parks-recreation-culture/coal-harbour-community-centre.aspx"
+    },
+    "confederationparkwaterpa" : {
+      "items" : [
+        "Burnaby spray parks run from mid-May to the end of September, 9am–9pm (push the button to start the water)."
+      ],
+      "scope" : "city",
+      "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
+    },
+    "coquitlamcentre" : {
+      "items" : [
+        "Toddler Play Area on Level 1 (by Carter’s | OshKosh) with a two-level maze and a slide, for kids 4 and under (under 42\"). Socks required."
+      ],
+      "source" : "https://coquitlamcentre.com/pages/amenities"
+    },
+    "coquitlampubliclibrarypo" : {
+      "items" : [
+        "Free drop-in Baby Story Time (0–2) and Toddler Plus Story Time (2–5). No registration needed."
+      ],
+      "scope" : "city",
+      "source" : "https://coqlibrary.ca/programguide"
+    },
+    "crescentbeach" : {
+      "items" : [
+        "Two roped-off swim areas, with lifeguards at Sullivan Point in summer."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/crescent-beach"
+    },
+    "ermastephensonpark" : {
+      "items" : [
+        "Surrey spray parks run May 16 to late September, 11am–6pm. Push the button to start the water when it’s above 20°C."
+      ],
+      "scope" : "city",
+      "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
+    },
+    "erniewinchpark" : {
+      "items" : [
+        "Burnaby spray parks run from mid-May to the end of September, 9am–9pm (push the button to start the water)."
+      ],
+      "scope" : "city",
+      "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
+    },
+    "fleetwoodcommunitycentre" : {
+      "items" : [
+        "Three licensed preschool rooms and preschool programs."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/recreation-facilities/fleetwood-community-centre"
+    },
+    "fortlangleynationalhisto" : {
+      "items" : [
+        "Hands-on activities for kids at the fort.",
+        "Youth 17 and under get in free at Parks Canada sites."
+      ],
+      "source" : "https://parks.canada.ca/lhn-nhs/bc/langley"
+    },
+    "georgemackielibrarynorth" : {
+      "items" : [
+        "Free Babytime (0–2) and Storytime at Fraser Valley Regional Library branches. Check the branch calendar for times."
+      ],
+      "scope" : "city",
+      "source" : "https://www.fvrl.bc.ca/"
+    },
+    "goldstonepark" : {
+      "items" : [
+        "Surrey spray parks run May 16 to late September, 11am–6pm. Push the button to start the water when it’s above 20°C."
+      ],
+      "scope" : "city",
+      "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
+    },
+    "greatervancouverzoo" : {
+      "items" : [
+        "Kids 2 and under are free, including the train.",
+        "Open daily 9am–4pm (last entry 4pm, everyone out by 5pm).",
+        "Bring your own wagon for little ones if you have one."
+      ],
+      "source" : "https://www.gvzoo.com/visit/hours-rates-getting-here/"
+    },
+    "grouse" : {
+      "items" : [
+        "Grizzly bear habitat with ranger talks, plus owl talks and a bird show.",
+        "Kids Tree Canopy Adventure at the top.",
+        "Several places to eat up top, from a coffee bar to a bistro."
+      ],
+      "source" : "https://www.grousemountain.com/plan-your-visit"
+    },
+    "hastingscommunitycentre" : {
+      "items" : [
+        "Playground and a water park outside the centre."
+      ],
+      "source" : "https://vancouver.ca/parks-recreation-culture/hastings-community-centre.aspx"
+    },
+    "hawthornepark" : {
+      "items" : [
+        "Surrey spray parks run May 16 to late September, 11am–6pm. Push the button to start the water when it’s above 20°C."
+      ],
+      "scope" : "city",
+      "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
+    },
+    "hazelgrove" : {
+      "items" : [
+        "Surrey spray parks run May 16 to late September, 11am–6pm. Push the button to start the water when it’s above 20°C."
+      ],
+      "scope" : "city",
+      "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
+    },
+    "holland" : {
+      "items" : [
+        "Playground (renovated in 2020), fountains and big lawns."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/holland-park"
+    },
+    "humepark" : {
+      "items" : [
+        "New Westminster spray parks run May 16 to Sept 15, daily 9am–8pm."
+      ],
+      "scope" : "city",
+      "source" : "https://www.newwestcity.ca/parks-and-recreation/parks/amenities/sb_expander_articles/961.php"
+    },
+    "ikeacoquitlam" : {
+      "items" : [
+        "The Småland kids' playroom is closed for renovation for now.",
+        "Play spots around the showroom, baby care rooms, family parking, and a kids' menu in the restaurant (breakfast until 11am)."
+      ],
+      "source" : "https://www.ikea.com/ca/en/stores/coquitlam-store-index-pub99c18e3a"
+    },
+    "ikearichmond" : {
+      "items" : [
+        "Supervised kids' playroom (Småland): Mon–Fri 12–7pm, Sat 10am–7:30pm, Sun 10am–6:30pm.",
+        "Baby care rooms, strollers to borrow, and a kids' menu in the restaurant."
+      ],
+      "source" : "https://www.ikea.com/ca/en/stores/richmond/"
+    },
+    "keswickpark" : {
+      "items" : [
+        "Burnaby spray parks run from mid-May to the end of September, 9am–9pm (push the button to start the water)."
+      ],
+      "scope" : "city",
+      "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
+    },
+    "kidsmarket" : {
+      "items" : [
+        "Open daily 10am–6pm.",
+        "About 25 kids' shops plus an arcade, a 4-level play area and bumper cars.",
+        "Kids-only hair salon inside."
+      ],
+      "source" : "https://granvilleisland.com/?p=27403"
+    },
+    "kidtropolis" : {
+      "items" : [
+        "Made for ages 2 to 10.",
+        "Open Tuesday to Sunday and holidays, 10am–5pm."
+      ],
+      "source" : "https://www.visitrichmondbc.com/?p=491137"
+    },
+    "killarneypool" : {
+      "items" : [
+        "Indoor leisure pool, separate from the lengths pool."
+      ],
+      "source" : "https://vancouver.ca/parks-recreation-culture/killarney-pool.aspx"
+    },
+    "kits" : {
+      "items" : [
+        "Lifeguards on duty May 16 to Sept 7, 2026, 11:30am–8:30pm."
+      ],
+      "scope" : "city",
+      "source" : "https://www.ctvnews.ca/vancouver/article/vancouver-to-remove-lifeguards-from-some-beaches-for-2026-season/"
+    },
+    "lonsdalequay" : {
+      "items" : [
+        "Phoenix Toys is on the second level, and the food hall has fun for the kids."
+      ],
+      "source" : "https://lonsdalequay.com/vendors/"
+    },
+    "lougheedmall" : {
+      "items" : [
+        "Indoor play area for ages 5–12 on the Lower Level (west side), plus a Family Lounge with a soft toddler play area and family washroom on the Upper Level."
+      ],
+      "source" : "https://thecityoflougheed.com/service-and-security/family-lounge/"
+    },
+    "lynn" : {
+      "items" : [
+        "The park and its suspension bridge are free.",
+        "The Ecology Centre has nature exhibits for kids, by donation ($2 a person or $5 a family suggested).",
+        "Ecology Centre: 10am–4pm; from October to mid-April it's open 12–4pm on weekends."
+      ],
+      "source" : "https://ecologycentre.ca/plan-your-visit"
+    },
+    "mapleridgepark" : {
+      "items" : [
+        "Maple Ridge spray parks open daily from mid-May, 10am–8pm, weather permitting."
+      ],
+      "scope" : "city",
+      "source" : "https://www.mapleridge.ca/node/4966"
+    },
+    "maplewoodfarm" : {
+      "items" : [
+        "Over 200 farm animals. Pet the goats in the goat area.",
+        "Daily cow-milking demonstration, and birdseed for sale to feed the ducks.",
+        "Covered picnic tables and a playground.",
+        "Open 10am–4pm Tuesday to Sunday, and daily from April to October."
+      ],
+      "source" : "https://destinationvancouver.com/things-to-do/maplewood-farm"
+    },
+    "metrotown" : {
+      "items" : [
+        "Free stroller rentals at Guest Services (Ground Level, next to Walmart). Bring government ID."
+      ],
+      "source" : "https://www.metropolisatmetrotown.com/services/"
+    },
+    "murielarnasonlibrary" : {
+      "items" : [
+        "Free Babytime (0–2) and Storytime at Fraser Valley Regional Library branches. Check the branch calendar for times."
+      ],
+      "scope" : "city",
+      "source" : "https://www.fvrl.bc.ca/"
+    },
+    "newwestminsterpubliclibr" : {
+      "items" : [
+        "Free Babytime (0–12 months) and Baby Social (0–23 months)."
+      ],
+      "source" : "https://www.nwpl.ca/"
+    },
+    "northsurreysporticecompl" : {
+      "items" : [
+        "Public skating drop-ins. Kids in strollers are welcome on the ice at open skates (helmets for everyone)."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/recreation-facilities/arenas"
+    },
+    "northvancouvercitylibrar" : {
+      "items" : [
+        "Free drop-in Baby Storytime for ages 2 and under."
+      ],
+      "scope" : "city",
+      "source" : "https://www.nvcl.ca/"
+    },
+    "northvancouverdistrictpu" : {
+      "items" : [
+        "Free drop-in storytimes for babies, toddlers and preschoolers (BabyTales, ToddleTales, StoryTales). Check the branch calendar for times."
+      ],
+      "scope" : "city",
+      "source" : "https://www.nvdpl.ca/children"
+    },
+    "northvancouverdistrictpu2" : {
+      "items" : [
+        "Free drop-in storytimes for babies, toddlers and preschoolers (BabyTales, ToddleTales, StoryTales). Check the branch calendar for times."
+      ],
+      "scope" : "city",
+      "source" : "https://www.nvdpl.ca/children"
+    },
+    "parkroyal" : {
+      "items" : [
+        "Castle Royale inside the mall has active play for kids of all ages."
+      ],
+      "source" : "https://parkroyal.ca/store/castle-royale/"
+    },
+    "pierpark" : {
+      "items" : [
+        "New Westminster spray parks run May 16 to Sept 15, daily 9am–8pm."
+      ],
+      "scope" : "city",
+      "source" : "https://www.newwestcity.ca/parks-and-recreation/parks/amenities/sb_expander_articles/961.php"
+    },
+    "queenspark" : {
+      "items" : [
+        "The petting farm (goats, rabbits, peacocks) is open in summer only, Victoria Day to Labour Day, 10am–5:30pm, by donation.",
+        "It's next to Rainbow Playground."
+      ],
+      "source" : "https://newwestrecord.ca/in-the-community/queens-park-petting-farm-delights-visitors-of-all-ages-3055425"
+    },
+    "renememorialpark" : {
+      "items" : [
+        "Burnaby spray parks run from mid-May to the end of September, 9am–9pm (push the button to start the water)."
+      ],
+      "scope" : "city",
+      "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
+    },
+    "renfrewparkcommunitycent" : {
+      "items" : [
+        "Indoor pool with a slide and a diving board."
+      ],
+      "source" : "https://vancouver.ca/parks-recreation-culture/renfrew-park-community-centre.aspx"
+    },
+    "richmondcountryfarms" : {
+      "items" : [
+        "Pumpkin picking, wagon rides and farm animals in the fall."
+      ],
+      "source" : "https://www.richmondcountryfarms.com/"
+    },
+    "richmondnature" : {
+      "items" : [
+        "Free. The Nature House is open 9am–5pm and the trails dawn to dusk.",
+        "Meet animals that live in the bog and ask the naturalist questions.",
+        "Wheelchair- and stroller-friendly boardwalk around the pond, and a playground with a climbing tower and slide."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=64"
+    },
+    "rosemarybrownrecreationc" : {
+      "items" : [
+        "Public skates for all ages. Kids 7 and under need an adult (16+) on the ice, and a helmet is required for 12 and under."
+      ],
+      "source" : "https://www.burnaby.ca/recreation-and-arts/recreation-facilities/rosemary-brown-recreation-centre"
+    },
+    "ryallpark" : {
+      "items" : [
+        "New Westminster spray parks run May 16 to Sept 15, daily 9am–8pm."
+      ],
+      "scope" : "city",
+      "source" : "https://www.newwestcity.ca/parks-and-recreation/parks/amenities/sb_expander_articles/961.php"
+    },
+    "sasamat" : {
+      "items" : [
+        "Swimming at Sasamat Lake is unsupervised: no lifeguards."
+      ],
+      "scope" : "city",
+      "source" : "https://metrovancouver.org/services/regional-parks/park/t%C9%99mt%C9%99m%C3%ADx%CA%B7t%C9%99n-belcarra-regional-park"
+    },
+    "scienceworld" : {
+      "items" : [
+        "Kids 2 and under are free; ages 3–12 are $25.50.",
+        "Open daily 10am–5pm. Plan on at least 2 hours.",
+        "Reserve tickets online before you go."
+      ],
+      "source" : "https://www.scienceworld.ca/your-visit/"
+    },
+    "southarmoutdoorpool" : {
+      "items" : [
+        "Summer outdoor pool with two twisting slides and a wading pool."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/centres/outdoor.htm"
+    },
+    "southsurreyarena" : {
+      "items" : [
+        "Public skating drop-ins. Kids in strollers are welcome on the ice at open skates (helmets for everyone)."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/recreation-facilities/arenas"
+    },
+    "stewartfarm" : {
+      "items" : [
+        "Free heritage farm with hands-on family activities; the kids’ bedrooms have old toys."
+      ],
+      "source" : "https://www.surrey.ca/arts-culture/historic-stewart-farm"
+    },
+    "stoneycreekravinepark" : {
+      "items" : [
+        "Burnaby spray parks run from mid-May to the end of September, 9am–9pm (push the button to start the water)."
+      ],
+      "scope" : "city",
+      "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
+    },
+    "suncrestpark" : {
+      "items" : [
+        "Burnaby spray parks run from mid-May to the end of September, 9am–9pm (push the button to start the water)."
+      ],
+      "scope" : "city",
+      "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
+    },
+    "sunsetrink" : {
+      "items" : [
+        "Preschoolers (0–4) skate free with an adult. Sunset Community Centre next door has a playground."
+      ],
+      "source" : "https://vancouver.ca/parks-recreation-culture/sunset-rink.aspx"
+    },
+    "surreylibrariesclaytonbr" : {
+      "items" : [
+        "Free drop-in Babytime (0–12 months) and Toddler Storytime with DUPLO (ages 1–3). No registration needed."
+      ],
+      "scope" : "city",
+      "source" : "https://surreylibraries.ca/node/16686"
+    },
+    "surreylibrariescloverdal" : {
+      "items" : [
+        "Free drop-in Babytime (0–12 months) and Toddler Storytime with DUPLO (ages 1–3). No registration needed."
+      ],
+      "scope" : "city",
+      "source" : "https://surreylibraries.ca/node/16686"
+    },
+    "surreylibrariesfleetwood" : {
+      "items" : [
+        "Free drop-in Babytime (0–12 months) and Toddler Storytime with DUPLO (ages 1–3). No registration needed."
+      ],
+      "scope" : "city",
+      "source" : "https://surreylibraries.ca/node/16686"
+    },
+    "surreylibrariesguildford" : {
+      "items" : [
+        "Free drop-in Babytime (0–12 months) and Toddler Storytime with DUPLO (ages 1–3). No registration needed."
+      ],
+      "scope" : "city",
+      "source" : "https://surreylibraries.ca/node/16686"
+    },
+    "surreylibrariesnewtonbra" : {
+      "items" : [
+        "Free drop-in Babytime (0–12 months) and Toddler Storytime with DUPLO (ages 1–3). No registration needed."
+      ],
+      "scope" : "city",
+      "source" : "https://surreylibraries.ca/node/16686"
+    },
+    "terranova" : {
+      "items" : [
+        "Ziplines, big swings and the spiral slide are for ages 8+.",
+        "Hillside slide, log climb and rope walkway are for ages 5+.",
+        "Toddlers (2+) can do the rolling hill and the meadow maze."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=116"
+    },
+    "troutlake" : {
+      "items" : [
+        "No lifeguards at the Trout Lake beach in 2026, so keep a close eye on swimmers."
+      ],
+      "scope" : "city",
+      "source" : "https://www.ctvnews.ca/vancouver/article/vancouver-to-remove-lifeguards-from-some-beaches-for-2026-season/"
+    },
+    "vancouverpubliclibrarybr" : {
+      "items" : [
+        "Free storytimes for babies, toddlers and families. Check the branch calendar for times."
+      ],
+      "scope" : "city",
+      "source" : "https://vpl.bibliocommons.com/events/search/fq=types:(53e94ec21fdd78680200591e)"
+    },
+    "vancouverpubliclibraryce" : {
+      "items" : [
+        "Free storytimes for babies, toddlers and families. Check the branch calendar for times."
+      ],
+      "scope" : "city",
+      "source" : "https://vpl.bibliocommons.com/events/search/fq=types:(53e94ec21fdd78680200591e)"
+    },
+    "vancouverpubliclibrarych" : {
+      "items" : [
+        "Free storytimes for babies, toddlers and families. Check the branch calendar for times."
+      ],
+      "source" : "https://vpl.bibliocommons.com/events/search/fq=types:(53e94ec21fdd78680200591e)"
+    },
+    "vancouverpubliclibraryco" : {
+      "items" : [
+        "Free storytimes for babies, toddlers and families. Check the branch calendar for times."
+      ],
+      "scope" : "city",
+      "source" : "https://vpl.bibliocommons.com/events/search/fq=types:(53e94ec21fdd78680200591e)"
+    },
+    "vancouverpubliclibraryke" : {
+      "items" : [
+        "Free storytimes for babies, toddlers and families. Check the branch calendar for times."
+      ],
+      "scope" : "city",
+      "source" : "https://vpl.bibliocommons.com/events/search/fq=types:(53e94ec21fdd78680200591e)"
+    },
+    "vancouverpubliclibraryke2" : {
+      "items" : [
+        "Free storytimes for babies, toddlers and families. Check the branch calendar for times."
+      ],
+      "scope" : "city",
+      "source" : "https://vpl.bibliocommons.com/events/search/fq=types:(53e94ec21fdd78680200591e)"
+    },
+    "vancouverpubliclibraryki" : {
+      "items" : [
+        "Free storytimes for babies, toddlers and families. Check the branch calendar for times."
+      ],
+      "scope" : "city",
+      "source" : "https://vpl.bibliocommons.com/events/search/fq=types:(53e94ec21fdd78680200591e)"
+    },
+    "vancouverpubliclibrarymo" : {
+      "items" : [
+        "Free storytimes for babies, toddlers and families. Check the branch calendar for times."
+      ],
+      "scope" : "city",
+      "source" : "https://vpl.bibliocommons.com/events/search/fq=types:(53e94ec21fdd78680200591e)"
+    },
+    "vancouverpubliclibraryre" : {
+      "items" : [
+        "Free storytimes for babies, toddlers and families. Check the branch calendar for times."
+      ],
+      "source" : "https://vpl.bibliocommons.com/events/search/fq=types:(53e94ec21fdd78680200591e)"
+    },
+    "vancouverpubliclibraryte" : {
+      "items" : [
+        "Free storytimes for babies, toddlers and families. Check the branch calendar for times."
+      ],
+      "scope" : "city",
+      "source" : "https://vpl.bibliocommons.com/events/search/fq=types:(53e94ec21fdd78680200591e)"
+    },
+    "watermania" : {
+      "items" : [
+        "Wave pool with a tot slide, sprayers and water wheels. The two waterslides are for ages 7+ who are at least 1.2 m tall.",
+        "Kids under 7 need an adult (16+) within arm's reach in the water, up to 3 kids per adult.",
+        "Drop-in for kids 2–12 is $4.95."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/centres/watermania.htm"
+    },
+    "wesburn" : {
+      "items" : [
+        "Burnaby spray parks run from mid-May to the end of September, 9am–9pm (push the button to start the water)."
+      ],
+      "scope" : "city",
+      "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
+    },
+    "westvancouveraquaticcent" : {
+      "items" : [
+        "Leisure pool, water slide and family hot tub. Kids under 7 need an adult within arm’s reach in the pool."
+      ],
+      "source" : "https://westvancouver.ca/parks-recreation/recreation-programs-services/recreation-activities/swimming"
+    },
+    "whitepinebeach" : {
+      "items" : [
+        "Swimming here is unsupervised: no lifeguards."
+      ],
+      "scope" : "city",
+      "source" : "https://metrovancouver.org/services/regional-parks/park/t%C9%99mt%C9%99m%C3%ADx%CA%B7t%C9%99n-belcarra-regional-park"
+    },
+    "willowbrookmall" : {
+      "items" : [
+        "8 family parking spaces by the main entrances, and a Toys“R”Us inside."
+      ],
+      "source" : "https://shopwillowbrook.com/visit/"
+    }
+  },
+  "updatedAt" : "2026-10-01"
 }
