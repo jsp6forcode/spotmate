@@ -1,6 +1,12 @@
 {
   "note" : "SpotMate notes: kid-related facts checked on each place's official page (or the city or tourism board page). Not reviews. Prices and hours change, so check the source before you go.",
   "notes" : {
+    "aberdeenneighbourhoodpar" : {
+      "items" : [
+        "Also here: an off-leash dog area and sports courts."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=119"
+    },
     "aggiepark" : {
       "items" : [
         "Also here: picnic tables and washrooms."
@@ -46,6 +52,12 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "amblesidepark" : {
+      "items" : [
+        "Lifeguards watch the swim area in summer, and a Mobi-mat makes the beach easier for strollers. Washrooms are open year-round."
+      ],
+      "source" : "https://westvancouver.ca/parks-recreation/parks-trails/ambleside-park"
+    },
     "aquarium" : {
       "items" : [
         "Kids under 3 get in free.",
@@ -54,11 +66,23 @@
       ],
       "source" : "https://www.vanaqua.org/"
     },
+    "artwilkinsonpark" : {
+      "items" : [
+        "Also here: sports courts."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
     "bakerviewpark" : {
       "items" : [
         "Also here: picnic tables."
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/bakerview-park"
+    },
+    "barnet" : {
+      "items" : [
+        "Also here: a bike skills park, picnic tables, walking trails and an off-leash dog area."
+      ],
+      "source" : "https://www.burnaby.ca/explore-outdoors/parks/barnet-marine-park"
     },
     "bearcreek" : {
       "items" : [
@@ -83,6 +107,12 @@
         "Also here: walking trails, wheelchair access and sports courts."
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "bertflinnpark" : {
+      "items" : [
+        "Also here: an off-leash dog area."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
     },
     "blakeburnlagoonspark" : {
       "items" : [
@@ -169,6 +199,18 @@
       ],
       "source" : "https://miss604.com/2026/03/ride-the-train-at-the-burnaby-central-railway/"
     },
+    "burnabyfraserforeshorepa" : {
+      "items" : [
+        "Also here: washrooms, walking trails, parking and wheelchair access."
+      ],
+      "source" : "https://www.burnaby.ca/explore-outdoors/parks/burnaby-fraser-foreshore-park"
+    },
+    "burnabymountainconservat" : {
+      "items" : [
+        "Also here: picnic tables, walking trails, parking and wheelchair access."
+      ],
+      "source" : "https://www.burnaby.ca/explore-outdoors/parks/burnaby-mountain-conservation-area"
+    },
     "burnabypubliclibrarybobp" : {
       "items" : [
         "Picture books in 25+ languages, including My First Language Kits, and children’s librarians who can help find the right books."
@@ -188,6 +230,12 @@
         "Also here: a sand play area."
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "canadianmuseumofflight" : {
+      "items" : [
+        "Kids 5 and under are free, youth (6–18) $10, family (2 adults + up to 5 youth) $35. There’s a fully fenced picnic area outside."
+      ],
+      "source" : "https://canadianmuseumofflight.ca/admission/"
     },
     "canlansportsnorthshore" : {
       "items" : [
@@ -223,11 +271,23 @@
       "scope" : "city",
       "source" : "https://www.portcoquitlam.ca/node/5318"
     },
+    "caulfeildpark" : {
+      "items" : [
+        "No lifeguards here, so keep kids close in the water. Washrooms open 7am–9pm."
+      ],
+      "source" : "https://westvancouver.ca/parks-recreation/parks-trails/caulfeild-park"
+    },
     "cedarpark" : {
       "items" : [
         "Also here: a sand play area, water play in summer, walking trails and an outdoor fitness circuit."
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "centralpark" : {
+      "items" : [
+        "Also here: an outdoor pool in summer, picnic tables and an outdoor fitness circuit."
+      ],
+      "source" : "https://www.burnaby.ca/explore-outdoors/parks/central-park"
     },
     "centralpark2" : {
       "items" : [
@@ -298,6 +358,12 @@
         "Also here: washrooms, a drinking fountain and fishing."
       ],
       "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-26"
+    },
+    "confederationpark" : {
+      "items" : [
+        "Also here: water play in summer, covered picnic areas, walking trails and wheelchair access."
+      ],
+      "source" : "https://www.burnaby.ca/explore-outdoors/parks/confederation-park"
     },
     "confederationparkwaterpa" : {
       "items" : [
@@ -375,11 +441,23 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "deerlakepark" : {
+      "items" : [
+        "Also here: picnic tables, wildlife viewing and fishing."
+      ],
+      "source" : "https://www.burnaby.ca/explore-outdoors/parks/deer-lake-park"
+    },
     "diefenbaker" : {
       "items" : [
         "The Rotary Waterworks spray park runs from May long weekend to September long weekend, water on 10am–9pm."
       ],
       "source" : "https://admin.delta.ca/node/203"
+    },
+    "dundaraveparkwestvancouv" : {
+      "items" : [
+        "Lifeguards watch the swim area in summer. Washrooms open year-round 6am–10pm; the concession is open daily 11am–7pm."
+      ],
+      "source" : "https://westvancouver.ca/parks-recreation/parks-trails/dundarave-park"
     },
     "eagleridgepoolgroundsand" : {
       "items" : [
@@ -493,6 +571,12 @@
       ],
       "source" : "https://parks.canada.ca/lhn-nhs/bc/langley"
     },
+    "fraserriverdiscoverycent" : {
+      "items" : [
+        "Under 2 free, kids 3–12 $5, family (2 adults + 4 kids) $20. Open Wednesday to Sunday, 10am–4pm in fall."
+      ],
+      "source" : "https://fraserriverdiscovery.org/hours/"
+    },
     "fraserriverpark" : {
       "items" : [
         "Also here: an off-leash dog area."
@@ -517,6 +601,12 @@
       ],
       "scope" : "city",
       "source" : "https://www.coquitlam.ca/outdoorpools"
+    },
+    "garrypoint" : {
+      "items" : [
+        "Also here: picnic tables, a drinking fountain, walking trails and a concession stand."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=17"
     },
     "gatespark" : {
       "items" : [
@@ -640,6 +730,12 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "horseshoebayparkwestvanc" : {
+      "items" : [
+        "Washrooms open year-round 7am–9pm. Parking fills up fast on weekends, so come early."
+      ],
+      "source" : "https://westvancouver.ca/parks-recreation/parks-trails/horseshoe-bay-park"
+    },
     "humepark" : {
       "items" : [
         "New Westminster spray parks run May 16 to Sept 15, daily 9am–8pm."
@@ -667,6 +763,12 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "johnlawson" : {
+      "items" : [
+        "Pirate-ship playground and a summer splash pad. Washrooms open year-round 6am–10pm. No dogs allowed in this park."
+      ],
+      "source" : "https://westvancouver.ca/parks-recreation/parks-trails/john-lawson-park"
+    },
     "jonespark" : {
       "items" : [
         "Also here: an off-leash dog area."
@@ -691,6 +793,12 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "kensingtonpark" : {
+      "items" : [
+        "Also here: an outdoor pool in summer, water play in summer, parking and sports courts."
+      ],
+      "source" : "https://www.burnaby.ca/explore-outdoors/parks/kensington-park"
+    },
     "kensingtonparkoutdoorpoo" : {
       "items" : [
         "Kids under 8 need an adult (16+) within arm’s reach in the outdoor pool, up to 3 kids per adult."
@@ -703,6 +811,12 @@
       ],
       "scope" : "city",
       "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
+    },
+    "kgcambie" : {
+      "items" : [
+        "Also here: water play in summer, covered picnic areas, a drinking fountain and walking trails."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=4"
     },
     "kidsmarket" : {
       "items" : [
@@ -737,6 +851,12 @@
       ],
       "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
     },
+    "lighthouse" : {
+      "items" : [
+        "Pay parking all year at the Beacon Lane lot. Toilets are in the parking lot and inside the park."
+      ],
+      "source" : "https://westvancouver.ca/parks-recreation/parks-trails/lighthouse-park"
+    },
     "lionspark" : {
       "items" : [
         "Also here: water play in summer, covered picnic areas, washrooms and a skate park."
@@ -754,6 +874,12 @@
         "Happy hour Monday to Friday, 1–3pm: lower play admission and 15% off food and drinks."
       ],
       "source" : "https://littlebeansplaycafe.ca/"
+    },
+    "londonfarm" : {
+      "items" : [
+        "Also here: covered picnic areas, walking trails and a community garden."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=83"
     },
     "lonsdalequay" : {
       "items" : [
@@ -823,6 +949,12 @@
       ],
       "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-53"
     },
+    "mcdonaldbeachpark" : {
+      "items" : [
+        "Also here: a drinking fountain, walking trails and an off-leash dog area."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=78"
+    },
     "mcleanpark" : {
       "items" : [
         "Also here: a concession stand."
@@ -853,11 +985,23 @@
       ],
       "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-56"
     },
+    "minoru" : {
+      "items" : [
+        "Also here: covered picnic areas, a drinking fountain, walking trails and sports courts."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=68"
+    },
     "moa" : {
       "items" : [
         "Free for kids 5 and under; youth (6–18) $13. Half price on Thursday evenings after 5pm."
       ],
       "source" : "https://moa.ubc.ca/visit/"
+    },
+    "monovamuseumofnorthvanco" : {
+      "items" : [
+        "Kids 5 and under are free, youth (6–17) $10, and a family pass (2 adults + 3 youth) is $38."
+      ],
+      "source" : "https://monova.ca/visit/"
     },
     "mountainviewpark2" : {
       "items" : [
@@ -908,6 +1052,12 @@
       ],
       "source" : "https://www.nwpl.ca/"
     },
+    "ninjatag" : {
+      "items" : [
+        "Fast 10-minute games under glow lighting. Book a drop-in time slot online."
+      ],
+      "source" : "https://www.ninjatag.ca/"
+    },
     "noonscreekpark" : {
       "items" : [
         "Also here: covered picnic areas and walking trails."
@@ -925,6 +1075,12 @@
         "Also here: water play in summer."
       ],
       "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
+    },
+    "northshorecommunitypark" : {
+      "items" : [
+        "Also here: walking trails and sports courts."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
     },
     "northsurreysporticecompl" : {
       "items" : [
@@ -960,11 +1116,35 @@
       "scope" : "city",
       "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
     },
+    "odlinneighbourhoodpark" : {
+      "items" : [
+        "Also here: walking trails and sports courts."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=62"
+    },
     "ohmyland" : {
       "items" : [
         "Fill in the waiver online before your visit to save time at the door."
       ],
       "source" : "https://ohmylandclub.com/"
+    },
+    "oldorchardpark" : {
+      "items" : [
+        "Also here: covered picnic areas."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
+    "olympicexperienceatrichm" : {
+      "items" : [
+        "Free on the first Thursday of every month, 2–5pm (limited tickets). Sport simulators and challenges for all ages."
+      ],
+      "source" : "https://olympicexperience.ca/"
+    },
+    "pacificmuseumofearth" : {
+      "items" : [
+        "Admission is by donation. Open Monday to Friday, 10am–5pm, on the UBC campus."
+      ],
+      "source" : "https://pme.ubc.ca/visit/"
     },
     "pandorapark" : {
       "items" : [
@@ -986,6 +1166,12 @@
       ],
       "source" : "https://parkroyal.ca/store/castle-royale/"
     },
+    "paulikneighbourhoodpark" : {
+      "items" : [
+        "Also here: walking trails and a community garden."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=74"
+    },
     "peacepark" : {
       "items" : [
         "Also here: walking trails."
@@ -998,6 +1184,12 @@
       ],
       "scope" : "city",
       "source" : "https://www.newwestcity.ca/parks-and-recreation/parks/amenities/sb_expander_articles/961.php"
+    },
+    "playabbylangley" : {
+      "items" : [
+        "Toddler zones, slides and climbs, plus laser tag. No nuts or outside cakes allowed."
+      ],
+      "source" : "https://www.playabby.com/"
     },
     "poiriersportleisurecompl" : {
       "items" : [
@@ -1114,6 +1306,12 @@
       "scope" : "city",
       "source" : "https://www.coquitlam.ca/outdoorpools"
     },
+    "rockypoint" : {
+      "items" : [
+        "Also here: an outdoor pool in summer, water play in summer, covered picnic areas and an off-leash dog area."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
     "rosemarybrownrecreationc" : {
       "items" : [
         "Public skates for all ages. Kids 7 and under need an adult (16+) on the ice, and a helmet is required for 12 and under."
@@ -1196,6 +1394,12 @@
       ],
       "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
     },
+    "stevestonpark" : {
+      "items" : [
+        "Also here: covered picnic areas, a drinking fountain, walking trails and an off-leash dog area."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=46"
+    },
     "stewartfarm" : {
       "items" : [
         "Free heritage farm with hands-on family activities; the kids’ bedrooms have old toys."
@@ -1276,6 +1480,12 @@
       "scope" : "city",
       "source" : "https://surreylibraries.ca/node/16686"
     },
+    "taylorpark" : {
+      "items" : [
+        "Also here: wheelchair access and sports courts."
+      ],
+      "source" : "https://www.burnaby.ca/explore-outdoors/parks/taylor-park"
+    },
     "terranova" : {
       "items" : [
         "Ziplines, big swings and the spiral slide are for ages 8+.",
@@ -1284,11 +1494,23 @@
       ],
       "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=116"
     },
+    "terranovanaturalarea" : {
+      "items" : [
+        "Also here: walking trails."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=41"
+    },
     "tescottpark" : {
       "items" : [
         "Also here: walking trails."
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/te-scott-park"
+    },
+    "thepolygongallery" : {
+      "items" : [
+        "Admission is always by donation. Free parking at the ICBC parkade next to Lonsdale Quay after 6pm and on weekends."
+      ],
+      "source" : "https://thepolygon.ca/visit/"
     },
     "thompsonpark" : {
       "items" : [
@@ -1440,6 +1662,12 @@
       "scope" : "city",
       "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
     },
+    "westhillpark" : {
+      "items" : [
+        "Also here: walking trails, an off-leash dog area, an outdoor fitness circuit and sports courts."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
     "westvancouveraquaticcent" : {
       "items" : [
         "Leisure pool, water slide and family hot tub. Kids under 7 need an adult within arm’s reach in the pool."
@@ -1459,11 +1687,23 @@
       "scope" : "city",
       "source" : "https://metrovancouver.org/services/regional-parks/park/t%C9%99mt%C9%99m%C3%ADx%CA%B7t%C9%99n-belcarra-regional-park"
     },
+    "whiterockmuseumarchives" : {
+      "items" : [
+        "Admission by donation, all ages welcome. The gallery is fully accessible for strollers."
+      ],
+      "source" : "https://www.whiterockmuseum.ca/visit/"
+    },
     "whonnocklakepark" : {
       "items" : [
         "Also here: a sand play area, covered picnic areas, parking and wheelchair access."
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "whytecliff" : {
+      "items" : [
+        "Playground, picnic spots and a swimming beach. Washrooms in the parking lot open 7am–9pm; concession open daily 11am–7pm."
+      ],
+      "source" : "https://westvancouver.ca/parks-recreation/parks-trails/whytecliff-park"
     },
     "willowbrookmall" : {
       "items" : [
