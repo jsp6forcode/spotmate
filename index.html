@@ -860,7 +860,7 @@ class App {
     // 뒤로가기(모바일 포함): 모달이 열려 있으면 닫고, 앞으로가기로 모달 기록에 오면 다시 열어요
     window.addEventListener('popstate', e => {
       const id = e.state && e.state.modal;
-      if (id && byId(id)) { if (this.state.modal !== id) { document.body.style.overflow = 'hidden'; this.set({ modal: id, trendInfo: false, shareMsg: null }); } }
+      if (id && byId(id)) { if (this.state.modal !== id) { document.body.style.overflow = 'hidden'; this.set({ modal: id, trendInfo: false, shareMsg: null, reviewMsg: '', reviewDraft: null }); } }
       else if (this.state.modal) this.hideModal();
     });
     window.addEventListener('hashchange', () => {
@@ -1554,7 +1554,7 @@ class App {
     document.body.style.overflow = 'hidden';
     const url = `${location.pathname}${location.search}#spot=${encodeURIComponent(id)}`;
     try { if (this.state.modal) history.replaceState({ modal: id }, '', url); else history.pushState({ modal: id }, '', url); } catch (e) {}
-    this.set({ modal: id, trendInfo: false, shareMsg: null });
+    this.set({ modal: id, trendInfo: false, shareMsg: null, reviewMsg: '', reviewDraft: null });
   }
   // 닫기 버튼·Esc: 모달이 기록에 한 칸 있으면 뒤로 가서 닫아요 (popstate에서 실제로 닫혀요)
   closeModal() {
@@ -1565,7 +1565,7 @@ class App {
     if (this.aiCtl) this.aiCtl.abort();
     document.body.style.overflow = '';
     try { if (/^#spot=/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
-    this.set({ modal: null, trendInfo: false, shareMsg: null });
+    this.set({ modal: null, trendInfo: false, shareMsg: null, reviewMsg: '', reviewDraft: null });
   }
   // 공유: 휴대폰은 공유 시트, 안 되면 링크를 클립보드에 복사
   async share(id) {
