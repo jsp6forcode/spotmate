@@ -832,6 +832,7 @@ class App {
       browse: false,
       // 부모 리뷰: user = 구글 로그인한 사람, reviewDraft = 쓰는 중인 리뷰 { id, rating, text }
       user: null, reviewsOn: false, reviewDraft: null, reviewBusy: false, reviewMsg: '',
+      feedbackBusy: false, feedbackMsg: '', feedbackSent: false,
       q: '', kw: [], unused: [], free: false, qBusy: false, aiSay: '',
       radius: RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
@@ -843,14 +844,21 @@ class App {
     this.ai = {};
     this.sample = null;
     this.root = document.getElementById('app');
+    this.fbDraft = {};   // About 탭 피드백 폼에 쓰던 글
     this.root.addEventListener('click', e => this.onClick(e));
     this.root.addEventListener('keydown', e => {
       if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('article[data-act]')) { e.preventDefault(); e.target.click(); }
     });
     this.root.addEventListener('change', e => this.onChange(e));
     // 검색창: 입력 중인 글은 다시 그려져도 남도록 따로 들고 있다가, Enter/Search에 검색
-    this.root.addEventListener('input', e => { if (e.target.name === 'q') this.qDraft = e.target.value; if (e.target.dataset.act === 'rvtext' && this.state.reviewDraft) this.state.reviewDraft.text = e.target.value; });
+    this.root.addEventListener('input', e => {
+      if (e.target.name === 'q') this.qDraft = e.target.value;
+      if (e.target.dataset.act === 'rvtext' && this.state.reviewDraft) this.state.reviewDraft.text = e.target.value;
+      // 피드백 폼: 다른 이유로 화면이 다시 그려져도 쓰던 글이 남게
+      if (e.target.form && e.target.form.dataset.act === 'feedback') this.fbDraft[e.target.name] = e.target.value;
+    });
     this.root.addEventListener('submit', e => {
+      if (e.target.matches('form[data-act="feedback"]')) { e.preventDefault(); return this.sendFeedback(); }
       if (!e.target.matches('form[data-act="search"]')) return;
       e.preventDefault();
       this.runSearch(new FormData(e.target).get('q') || '');
@@ -959,6 +967,68 @@ class App {
       snap.forEach(d => { const r = d.data(); (this.reviews[r.spotId] = this.reviews[r.spotId] || []).push({ ...r, id: d.id, date: r.createdAt && r.createdAt.toDate ? r.createdAt.toDate() : new Date() }); });
       this.set({ reviewsOn: true });
     } catch (e) { console.warn('Reviews unavailable', e); }
+  }
+  // ── About 탭의 피드백 폼: Firestore "feedback" 컬렉션에 쓰기만 (읽기는 Firebase 콘솔에서만, firestore.rules 참고) ──
+  async sendFeedback() {
+    const d = this.fbDraft, message = (d.message || '').trim();
+    if (d.website) return this.set({ feedbackSent: true, feedbackMsg: '' });   // 봇이 채우는 숨은 칸
+    if (!message) return this.set({ feedbackMsg: 'Please write a short message first.' });
+    this.set({ feedbackBusy: true, feedbackMsg: '' });
+    try {
+      // Firebase는 첫 화면 뒤에 불러와요. 아직이면 잠깐 기다려요
+      for (let i = 0; !this.fb && i < 40; i++) await new Promise(r => setTimeout(r, 200));
+      if (!this.fb) throw new Error('Firebase not ready');
+      const F = this.fb.F;
+      await F.addDoc(F.collection(this.fb.db, 'feedback'), {
+        type: ['wrong', 'place', 'idea'].includes(d.type) ? d.type : 'idea',
+        place: (d.place || '').trim().slice(0, 100), message: message.slice(0, 1000), email: (d.email || '').trim().slice(0, 100),
+        createdAt: F.serverTimestamp(),
+      });
+      this.fbDraft = {};
+      this.set({ feedbackBusy: false, feedbackSent: true });
+    } catch (e) { console.warn('Feedback failed', e); this.set({ feedbackBusy: false, feedbackMsg: "Sorry, it didn't send. Please try again in a moment." }); }
+  }
+  aboutView() {
+    const d = this.fbDraft, { feedbackBusy, feedbackMsg, feedbackSent } = this.state;
+    const field = 'mt-1 w-full min-h-[44px] px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500';
+    const types = [['wrong', 'Something’s wrong (hours, details, a closed place)'], ['place', 'Suggest a place'], ['idea', 'An idea or other feedback']];
+    return `
+    <section class="mt-8 max-w-2xl mx-auto">
+      <h2 class="text-3xl font-extrabold tracking-tight">Hi, I’m a dad of two <span aria-hidden="true">👋</span></h2>
+      <div class="mt-4 space-y-4 text-base leading-relaxed text-slate-700 dark:text-slate-200">
+        <p>We’re raising our two kids here in Vancouver, and like a lot of parents, our weekends used to start with the same question: <em>where should we take the kids today?</em></p>
+        <p>I’d end up with a dozen tabs open, jumping between Google searches and different websites, trying to piece it all together. I kept wishing there was just one place to find good spots for kids.</p>
+        <p>So I started SpotMate as my own little side project: playgrounds, spray parks, farms, libraries, rainy-day hideouts and more around Metro Vancouver, all in one spot.</p>
+        <p>It’s still a work in progress, and I’m sure I’ve missed things or gotten a few wrong. If you notice a mistake, know a great place that should be here, or just have an idea, please send me a note below. Every message really helps SpotMate grow into something more useful for all of us parents.</p>
+        <p>Thanks for stopping by, and have fun out there with your little ones!</p>
+        <p class="font-semibold">— A Vancouver dad</p>
+      </div>
+    </section>
+    <section id="feedback" class="mt-10 max-w-2xl mx-auto rounded-2xl p-6 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
+      <h3 class="text-xl font-bold">Send feedback</h3>
+      ${feedbackSent ? `
+      <p class="mt-3 text-base text-slate-700 dark:text-slate-200" role="status">Thank you so much! Your note is on its way. <span aria-hidden="true">💜</span></p>
+      <button data-act="fbagain" class="mt-4 min-h-[44px] px-4 rounded-xl font-semibold border border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-200">Send another</button>` : `
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Wrong hours, a place that closed, a spot we should add, or anything else. I read every one.</p>
+      <form data-act="feedback" class="mt-4 space-y-4">
+        <label class="block text-sm font-semibold">What’s it about?
+          <select name="type" class="${field}">${types.map(([v, l]) => `<option value="${v}" ${(d.type || 'wrong') === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>
+        </label>
+        <label class="block text-sm font-semibold">Place name <span class="font-normal text-slate-500 dark:text-slate-400">(optional)</span>
+          <input name="place" maxlength="100" value="${esc(d.place || '')}" class="${field}" placeholder="e.g. Mundy Park">
+        </label>
+        <label class="block text-sm font-semibold">Your message
+          <textarea name="message" required maxlength="1000" rows="5" class="${field}" placeholder="Tell me what you noticed or what you’d like to see">${esc(d.message || '')}</textarea>
+        </label>
+        <label class="block text-sm font-semibold">Email <span class="font-normal text-slate-500 dark:text-slate-400">(optional, only if you’d like a reply)</span>
+          <input name="email" type="email" maxlength="100" value="${esc(d.email || '')}" class="${field}" autocomplete="email">
+        </label>
+        <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden">
+        ${feedbackMsg ? `<p class="text-sm text-rose-700 dark:text-rose-300" role="status">${esc(feedbackMsg)}</p>` : ''}
+        <button type="submit" ${feedbackBusy ? 'disabled aria-busy="true"' : ''} class="min-h-[48px] px-6 rounded-xl font-bold bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-60">${feedbackBusy ? 'Sending…' : 'Send feedback'}</button>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Your email is only used to reply to you. It’s never shown on the site.</p>
+      </form>`}
+    </section>`;
   }
   reviewStats(id) {
     const list = (this.reviews && this.reviews[id]) || [];
@@ -1361,6 +1431,8 @@ class App {
       case 'cat': if (el.tagName === 'SELECT') return; return this.set({ cat: val === 'all' && !hasAll(this.state.view) ? defaultCat(this.state.view) : val });
       case 'retry': return this.loadData();
       case 'view': {
+        // 행사·파머스 마켓 탭: 장소 필터와 상관없는 별도 목록
+        if (val === 'events' || val === 'markets' || val === 'about') { window.scrollTo({ top: 0 }); return this.set({ view: val, tag: '', q: '', kw: [], free: false, aiSay: '', mapPicks: null }); }
         // 새 페이지에 없는 카테고리를 보고 있었다면 그 페이지의 기본 카테고리로 (Eats는 Food, 나머지는 All)
         const keep = catOptions(val).includes(this.state.cat) || (this.state.cat === 'all' && hasAll(val));
         const cat = keep ? this.state.cat : defaultCat(val);
@@ -1377,6 +1449,7 @@ class App {
       case 'save': return this.togglePlan(val);
       // 부모 리뷰
       case 'rvsignin': return this.reviewSignIn();
+      case 'fbagain': return this.set({ feedbackSent: false, feedbackMsg: '' });
       case 'rvsignout': this.fb.A.signOut(this.fb.auth); return this.set({ reviewDraft: null, reviewMsg: '' });
       case 'rvwrite': { const mine = (this.reviews[val] || []).find(r => this.state.user && r.uid === this.state.user.uid); return this.set({ reviewDraft: { id: val, rating: mine ? mine.rating : 0, text: mine ? mine.text : '' }, reviewMsg: '' }); }
       case 'rvstar': return this.set({ reviewDraft: { ...this.state.reviewDraft, rating: +val } });
@@ -1681,13 +1754,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.header()}
         ${this.controls(items)}
         <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
-          ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : this.pickMode() && !this.state.q ? this.wizardView()
+          ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : view === 'about' ? this.aboutView() : view === 'events' || view === 'markets' ? this.eventsView(view) : this.pickMode() && !this.state.q ? this.wizardView()
             : this.pickMode() ? `<button data-act="qclear" class="mt-6 inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">← Back to the picker</button>${this.planBar()}${this.listView(items)}` : this.state.cat === 'events' ? this.eventsView() : `
             ${this.planBar()}
             ${view !== 'map' ? this.seasonChips() : ''}
             ${view === 'eats' && (this.state.hh || this.state.lunch) ? '' : this.criteriaBanner(items)}
       
-            ${view === 'map' ? this.mapView(items) + (this.state.cat === 'all' && !this.state.mapPicks ? this.eventsStrip() : '') : this.listView(items)}
+            ${view === 'map' ? this.mapView(items) : this.listView(items)}
           `}
         </main>
         <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-10 text-xs text-slate-500 dark:text-slate-400">
@@ -1748,7 +1821,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 다크 모드 버튼은 날씨와 헷갈리지 않게 해·달 대신 반쪽 원(명암) 아이콘
     const contrast = `<svg viewBox="0 0 24 24" class="w-5 h-5" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>`;
     // 첫 화면에 추천 카드가 보이도록 헤더를 낮게: 모바일은 부제 없이 로고 + 탭만
-    const tab = (v, label) => `<button data-act="view" data-val="${v}" class="px-4 py-2.5 sm:py-2 rounded-full text-sm font-semibold transition-colors ${view === v ? 'bg-white text-indigo-700 shadow' : 'text-white/90 hover:bg-white/15'}">${label}</button>`;
+    const tab = (v, label) => `<button data-act="view" data-val="${v}" class="shrink-0 px-2 sm:px-4 py-2.5 sm:py-2 rounded-full text-[13px] sm:text-sm font-semibold transition-colors ${view === v ? 'bg-white text-indigo-700 shadow' : 'text-white/90 hover:bg-white/15'}">${label}</button>`;
     return `
     <header class="bg-gradient-to-br from-indigo-600 via-violet-600 to-fuchsia-600 dark:from-indigo-950 dark:via-violet-950 dark:to-fuchsia-950 text-white">
       <div class="max-w-6xl mx-auto px-4 md:px-6 pt-5 pb-4">
@@ -1766,8 +1839,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             ${wx || '<div class="hidden sm:block mt-3 h-12" aria-hidden="true"></div>'}
           </div>
         </div>
-        <nav class="mt-4 inline-flex gap-1 p-1 rounded-full bg-white/10 border border-white/25 backdrop-blur">
-          ${tab('list', 'Explore')}${EATS_ON ? tab('eats', 'Eats') : ''}${tab('map', 'Map')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}
+        <nav class="mt-4 inline-flex max-w-full overflow-x-auto no-scrollbar gap-0 sm:gap-1 p-1 rounded-full bg-white/10 border border-white/25 backdrop-blur">
+          ${tab('list', 'Explore')}${tab('map', 'Map')}${EATS_ON ? tab('eats', 'Eats') : ''}${tab('events', 'Events')}${tab('markets', 'Markets')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}${tab('about', 'About')}
         </nav>
       </div>
     </header>`;
@@ -1775,7 +1848,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
   controls(items) {
     const s = this.state;
-    if (s.view === 'plan' || (s.view === 'map' && s.mapPicks)) return '';   // 추천 장소만 보는 지도엔 필터가 안 맞아서 숨겨요
+    if (s.view === 'plan' || s.view === 'events' || s.view === 'markets' || s.view === 'about' || (s.view === 'map' && s.mapPicks)) return '';   // 추천 장소만 보는 지도엔 필터가 안 맞아서 숨겨요
     // 단계별 추천 화면(Explore)엔 검색창만 (필터 줄은 지도에서). 검색하면 결과 목록과 위치 줄을 보여줘요
     const lite = this.pickMode();
     if (lite && !s.q && !s.wiz.done) return '';   // 질문 화면엔 보여줄 게 없어서 빈 줄도 안 그려요
@@ -1970,56 +2043,20 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       ${tags.length ? `<span class="${fresh ? 'ml-2 ' : ''}text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>${tags.map(chip).join('')}` : ''}
     </div>`;
   }
-  // 목록 위: 이번 주(7일) 행사 미리보기
-  eventsStrip() {
-    const when = this.state.when, evs = when ? this.upcomingEvents(8, whenDates(when)) : this.upcomingEvents(7);
-    const period = when === 'weekend' ? 'this weekend' : when === 'today' ? 'today' : when === 'tomorrow' ? 'tomorrow' : when ? `on ${WHEN[when]}` : 'this week';
-    if (!evs.length) return '';
-    // 매주 열리는 마켓은 묶어서 아래로, 세일·축제·팝업 같은 행사가 먼저 보이게
-    // 며칠만 여는 세일·사인회·팝업을 맨 앞에 (그 안에서는 날짜 순)
-    const markets = evs.filter(ev => ev.type === 'market'), others = evs.filter(ev => ev.type !== 'market')
-      .sort((a, b) => RARE_EVENT.includes(b.type) - RARE_EVENT.includes(a.type) || a.next.localeCompare(b.next));
-    return `
-    <section class="mt-10">
-      <div class="flex items-end justify-between gap-3">
-        <h2 class="text-lg font-bold">Events ${period}${this.nearActive() ? ' near ' + esc(this.originLabel()) : ''}</h2>
-        <button data-act="cat" data-val="events" class="text-sm font-semibold text-violet-700 dark:text-violet-300">See all ${evs.length} →</button>
-      </div>
-      ${others.length ? `<div class="mt-3 grid gap-3 md:grid-cols-2">${others
-        // 날짜 순 그대로 (며칠만 여는 세일·팝업은 "Few days only" 표시로 구별해요)
-        // 모바일에선 3개만 (나머지는 "See all"). 순위 카드 밑에 있어서 첫 화면을 차지하지 않아요
-        .slice(0, 4).map((ev, i) => i < 3 ? this.eventRow(ev, true) : `<div class="hidden md:block">${this.eventRow(ev, true)}</div>`).join('')}</div>` : ''}
-      ${markets.length ? this.marketsRow(markets, period) : ''}
-    </section>`;
-  }
-  // 매주 열리는 파머스 마켓: "Events this week"와 같은 크기의 제목으로 따로 보여줘요 (눈에 잘 띄게). 칩을 누르면 그 장소
-  marketsRow(markets, period = 'this week') {
-    const when = iso => iso === vanDate(0) ? 'Today' : iso === vanDate(1) ? 'Tomorrow' : DOW[dowOf(iso)];
-    const short = name => name.replace(/\s+(Village\s+)?Farmers'?\s+Market$|\s+Saturday Market$/i, '');
-    return `
-      <div class="mt-8 flex items-end justify-between gap-3">
-        <h2 class="text-lg font-bold"><span aria-hidden="true">🥕</span> Farmers markets ${period} <span class="font-normal text-slate-500 dark:text-slate-400">${markets.length}</span></h2>
-      </div>
-      <p class="text-sm text-slate-600 dark:text-slate-300">Weekly markets with local produce and food. Tap one for hours and directions.</p>
-      <div class="mt-3 flex flex-wrap gap-2">${markets.map(ev => {
-        const day = when(ev.next), soon = day === 'Today' || day === 'Tomorrow';
-        const label = `<span>${esc(short(ev.name))}</span><span class="text-xs font-bold px-2 py-0.5 rounded-full ${soon ? 'bg-emerald-600 text-white' : 'bg-white text-emerald-800 dark:bg-slate-900 dark:text-emerald-300'}">${esc(day)}</span>`;
-        const cls = 'min-h-[44px] inline-flex items-center gap-2 px-4 py-2 rounded-xl text-base font-semibold bg-emerald-50 ring-1 ring-emerald-200 text-emerald-900 hover:ring-emerald-400 dark:bg-emerald-500/10 dark:ring-emerald-500/30 dark:text-emerald-200';
-        return ev.spotId && byId(ev.spotId)
-          ? `<button data-act="open" data-val="${ev.spotId}" class="${cls}">${label}</button>`
-          : `<a href="${esc(ev.source)}" target="_blank" rel="noopener" class="${cls}">${label}</a>`;
-      }).join('')}</div>`;
-  }
-  eventsView() {
-    const evs = this.upcomingEvents(45), today = vanDate(0), week = vanDate(6);
+  // Events 탭(마켓 빼고) · Markets 탭(파머스 마켓만). kind 없이 부르면 예전처럼 둘 다 (카테고리 "Events")
+  eventsView(kind) {
+    const tabPage = kind === 'events' || kind === 'markets';
+    const evs = this.upcomingEvents(45).filter(ev => kind === 'markets' ? ev.type === 'market' : kind === 'events' ? ev.type !== 'market' : true), today = vanDate(0), week = vanDate(6);
     const group = (title, list) => list.length ? `<h2 class="mt-8 text-lg font-bold">${title}</h2><div class="mt-3 grid gap-3 md:grid-cols-2">${list.map(ev => this.eventRow(ev)).join('')}</div>` : '';
-    // "See all"로 들어온 행사 목록에서 장소 목록으로 돌아가는 버튼 (카테고리 드롭다운을 몰라도 나갈 수 있게)
-    const note = `
-      <button data-act="cat" data-val="all" class="mt-6 inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">← Back to all spots</button>
-      <p class="mt-4 text-xs text-slate-500 dark:text-slate-400">${esc(EVENTS_META.note)} Last checked ${esc(EVENTS_META.updatedAt)}.</p>`;
+    const note = (tabPage ? `
+      <h2 class="mt-6 text-2xl font-extrabold tracking-tight">${kind === 'markets' ? '<span aria-hidden="true">🥕</span> Farmers markets' : 'Events for families'}</h2>
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">${kind === 'markets' ? 'Weekly markets with local produce, food trucks and treats. A relaxed outing with kids. Tap one for hours and directions.' : 'Festivals, seasonal events and sales in the next 6 weeks.'}</p>`
+      // "See all"로 들어온 행사 목록에서 장소 목록으로 돌아가는 버튼 (카테고리 드롭다운을 몰라도 나갈 수 있게)
+      : `<button data-act="cat" data-val="all" class="mt-6 inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">← Back to all spots</button>`) + `
+      <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">${esc(EVENTS_META.note)} Last checked ${esc(EVENTS_META.updatedAt)}.</p>`;
     if (!evs.length) return `${note}
       <div class="mt-6 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
-        <p class="text-lg font-bold">No events coming up${this.nearActive() ? ` within ${radiusLabel(this.state.radius)}` : ''}</p>
+        <p class="text-lg font-bold">No ${kind === 'markets' ? 'markets' : 'events'} coming up${this.nearActive() ? ` within ${radiusLabel(this.state.radius)}` : ''}</p>
         ${this.nearActive() ? '<button data-act="radius" data-val="any" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show any distance</button>' : ''}
       </div>`;
     return note
@@ -2308,8 +2345,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <div class="mt-10">
         <h3 class="text-xl font-bold">Also worth a try</h3>
         <p class="text-sm text-slate-500 dark:text-slate-400">Close matches that don't fit your ${r.relaxed.map(k => ({ age: 'age', dur: 'time', purpose: 'outing type', place: 'indoor/outdoor', budget: 'budget' })[k]).join(', ').replace(/, ([^,]*)$/, ' or $1')} choice${r.relaxed.length > 1 ? 's' : ''}.</p>
-      </div>${grid(r.also)}` : ''}
-      ${this.eventsStrip()}`;
+      </div>${grid(r.also)}` : ''}`;
   }
 
   listView(items) {
@@ -2374,8 +2410,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <h2 class="text-2xl font-extrabold tracking-tight">${title}</h2>
         <p class="text-sm text-slate-500 dark:text-slate-400">${sub}</p>
       </div>`;
-    // 이번 주 행사는 순위 카드 다음에 (첫 화면엔 추천 카드가 먼저 보이게)
-    const events = this.state.cat === 'all' && this.state.view !== 'eats' ? this.eventsStrip() : '';
+    // 행사·파머스 마켓은 위쪽 Events / Markets 탭으로 옮겼어요 (2026-10-01)
+    const events = '';
     // 나머지(언제 가도 같은 곳)는 12개씩 "Show more"
     const more = rest => {
       const shown = rest.slice(0, this.state.restShown);
