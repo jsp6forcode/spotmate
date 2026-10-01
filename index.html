@@ -383,11 +383,13 @@ const recentLabel = () => {
 };
 // data/spot-guides.json: 스팟별 할 거리(do), 먹을 것(eat), 준비물(bring). 없는 스팟은 자동 준비물만 보여줘요
 let GUIDES = {}, GUIDES_NOTE = '';
+// data/spot-notes.json: SpotMate tip, 공식 페이지에서 확인한 아이 관련 사실 { id: { items: [...], source } } (리뷰가 아니에요)
+let NOTES = {}, NOTES_META = { updatedAt: '', note: '' };
 // data/season.json: 시즌 태그(#FallColours 등)와 스팟별 "지금 가야 하는 이유". 오늘(밴쿠버 날짜)이 from~to 안인 태그만 써요
 let SEASON = [], SEASON_NOTE = '';
 const activeTags = () => { const d = vanDate(0); return SEASON.filter(t => t.from <= d && d <= t.to && t.spots); };
 const spotTags = s => activeTags().filter(t => t.spots[s.id]);
-// data/reddit.json: 최근 2주 Reddit 글 중 제목에 스팟 이름이 들어간 글 (배율 계산 없이 "근거 링크"로만 보여줘요)
+// data/reddit.json: 예전 "On Reddit lately" 근거 링크. 2026-09-30부터 사이트에서 뺐어요 (파일을 불러오지 않아서 아무 것도 안 보여요)
 let REDDIT = { mentions: {}, from: '', to: '' };
 // data/press.json: 스팟 이름이 나온 최근 지역 음식 기사 { id: [{ outlet, title, url, date }] }. 기사 날짜부터 PRESS_DAYS일 동안 "지금 가 볼 이유"
 let PRESS = {};
@@ -841,7 +843,8 @@ class App {
     this.render();
     this.loadData();
     this.loadWeather();
-    this.initReviews();
+    // 리뷰(Firebase, 약 400 KB)는 첫 화면을 다 그린 뒤 한가할 때 불러와요
+    (window.requestIdleCallback || (f => setTimeout(f, 1200)))(() => this.initReviews(), { timeout: 3000 });
     // "Open now"와 오늘 행사는 시간이 지나면 바뀌어서 5분마다 다시 그려요
     setInterval(() => { if (!this.state.loading) this.render(); }, 5 * 60 * 1000);
     if (window.claude && typeof window.claude.use === 'function') {
@@ -852,77 +855,44 @@ class App {
   async loadData() {
     this.set({ loading: true, loadError: '' });
     try {
-      const res = await fetch('data/spots.json', { cache: 'no-cache' });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
+      // 데이터 파일은 한꺼번에(동시에) 받아요. 하나씩 기다리면 파일마다 네트워크 지연이 쌓여 첫 화면이 늦어져요
+      // 꺼 둔 기능(Eats·트렌드·Reddit)의 파일은 아예 받지 않아요. spots.json 말고는 없어도 괜찮아요
+      const get = (path, on = true) => on ? fetch(path, { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null) : Promise.resolve(null);
+      const ohLib = window.opening_hours ? Promise.resolve() : loadScript(OH_LIB).catch(() => null);
+      const [data, ed, status, td, gd, nd, md, pd, hd, ld, prd, sd] = await Promise.all([
+        fetch('data/spots.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
+        get('data/events.json'), get('data/review-status.json'), get('data/trends-weekly.json', TRENDS_ON),
+        get('data/spot-guides.json'), get('data/spot-notes.json'), get('data/parking-meters.json'), get('data/parking.json'),
+        get('data/happy-hours.json', EATS_ON), get('data/lunch-specials.json', EATS_ON), get('data/press.json', EATS_ON), get('data/season.json'),
+      ]);
       SPOTS = data.spots;
-      // 행사 정보: 없어도 스팟은 그대로 보여줘요
-      try {
-        const er = await fetch('data/events.json', { cache: 'no-cache' });
-        if (er.ok) { const ed = await er.json(); EVENTS = ed.events || []; EVENTS_META = { updatedAt: ed.updatedAt || '', note: ed.note || '' }; }
-      } catch (e) {}
-      // 월 1회 점검(tools/refresh-reviews.ps1)에서 폐업하거나 기준에서 벗어난 스팟은 숨겨요. 파일이 없으면 그냥 넘어가요
-      try {
-        const st = await fetch('data/review-status.json', { cache: 'no-cache' });
-        if (st.ok) { const { inactive = {} } = await st.json(); SPOTS = SPOTS.filter(s => !inactive[s.id]); }
-      } catch (e) {}
-      // 평소 대비 증가율: 파일이 없으면 증가율 없이 동작해요. TRENDS_ON이 꺼져 있으면 아예 불러오지 않아요 (지도·카드·모달 어디에도 배율이 안 나와요)
-      try {
-        if (!TRENDS_ON) throw 0;
-        const tr = await fetch('data/trends-weekly.json', { cache: 'no-cache' });
-        if (tr.ok) {
-          const td = await tr.json();
-          SPOTS.forEach(s => { s.rise = riseOf(td.series && td.series[s.id], td.daily && td.daily[s.id], td.through); });
-          RISE_META = { updatedAt: td.updatedAt || '', through: td.through || '', recentFrom: td.recentFrom || '', recentThrough: td.recentThrough || '' };
-          RISE_NOTES = td.notes || {};
-        }
-      } catch (e) {}
-      // 스팟 안내(할 거리·먹을 것·준비물): 없어도 괜찮아요
-      try {
-        const gr = await fetch('data/spot-guides.json', { cache: 'no-cache' });
-        if (gr.ok) { const gd = await gr.json(); GUIDES = gd.guides || {}; GUIDES_NOTE = gd.note || ''; }
-      } catch (e) {}
-      // 밴쿠버시 주차 미터 요금: 없어도 괜찮아요
-      try {
-        const mr = await fetch('data/parking-meters.json', { cache: 'no-cache' });
-        if (mr.ok) { const md = await mr.json(); METERS = { spots: md.spots || {}, radius: md.radius || 200 }; }
-      } catch (e) {}
-      // 주차장: 없어도 괜찮아요
-      try {
-        const pr = await fetch('data/parking.json', { cache: 'no-cache' });
-        if (pr.ok) { const pd = await pr.json(); PARKING = { spots: pd.spots || {}, radius: pd.radius || 400 }; }
-      } catch (e) {}
-      // Reddit 언급: 없어도 괜찮아요
-      try {
-        const rr = await fetch('data/reddit.json', { cache: 'no-cache' });
-        if (rr.ok) { const rd = await rr.json(); REDDIT = { mentions: rd.mentions || {}, from: rd.from || '', to: rd.to || '' }; }
-      } catch (e) {}
-      // 해피아워: 없어도 괜찮아요
-      try {
-        const hr = await fetch('data/happy-hours.json', { cache: 'no-cache' });
-        if (hr.ok) { const hd = await hr.json(); HAPPY = hd.spots || {}; HAPPY_META = { updatedAt: hd.updatedAt || '' }; }
-      } catch (e) {}
-      // 런치 스페셜: 없어도 괜찮아요
-      try {
-        const lr = await fetch('data/lunch-specials.json', { cache: 'no-cache' });
-        if (lr.ok) { const ld = await lr.json(); LUNCH = ld.spots || {}; LUNCH_META = { updatedAt: ld.updatedAt || '' }; }
-      } catch (e) {}
-      // 음식 기사 언급: 없어도 괜찮아요
-      try {
-        const pr = await fetch('data/press.json', { cache: 'no-cache' });
-        if (pr.ok) PRESS = (await pr.json()).items || {};
-      } catch (e) {}
-      // 시즌 태그: 없어도 괜찮아요
-      try {
-        const sr = await fetch('data/season.json', { cache: 'no-cache' });
-        if (sr.ok) { const sd = await sr.json(); SEASON = Array.isArray(sd.tags) ? sd.tags : []; SEASON_NOTE = sd.note || ''; }
-      } catch (e) {}
+      // 행사 정보
+      if (ed) { EVENTS = ed.events || []; EVENTS_META = { updatedAt: ed.updatedAt || '', note: ed.note || '' }; }
+      // 월 1회 점검(tools/refresh-reviews.ps1)에서 폐업하거나 기준에서 벗어난 스팟은 숨겨요
+      if (status) { const { inactive = {} } = status; SPOTS = SPOTS.filter(s => !inactive[s.id]); }
+      // 평소 대비 증가율 (TRENDS_ON일 때만)
+      if (td) {
+        SPOTS.forEach(s => { s.rise = riseOf(td.series && td.series[s.id], td.daily && td.daily[s.id], td.through); });
+        RISE_META = { updatedAt: td.updatedAt || '', through: td.through || '', recentFrom: td.recentFrom || '', recentThrough: td.recentThrough || '' };
+        RISE_NOTES = td.notes || {};
+      }
+      // 스팟 안내(할 거리·먹을 것·준비물), SpotMate tip, 주차 미터·주차장
+      if (gd) { GUIDES = gd.guides || {}; GUIDES_NOTE = gd.note || ''; }
+      if (nd) { NOTES = nd.notes || {}; NOTES_META = { updatedAt: nd.updatedAt || '', note: nd.note || '' }; }
+      if (md) METERS = { spots: md.spots || {}, radius: md.radius || 200 };
+      if (pd) PARKING = { spots: pd.spots || {}, radius: pd.radius || 400 };
+      // 해피아워·런치 스페셜·음식 기사 (EATS_ON일 때만). Reddit 언급은 사이트에서 뺐어요
+      if (hd) { HAPPY = hd.spots || {}; HAPPY_META = { updatedAt: hd.updatedAt || '' }; }
+      if (ld) { LUNCH = ld.spots || {}; LUNCH_META = { updatedAt: ld.updatedAt || '' }; }
+      if (prd) PRESS = prd.items || {};
+      // 시즌 태그
+      if (sd) { SEASON = Array.isArray(sd.tags) ? sd.tags : []; SEASON_NOTE = sd.note || ''; }
       // 영업시간 해석 라이브러리: 못 불러오면 "Open now" 필터 없이 동작해요
-      try {
-        if (!window.opening_hours) await loadScript(OH_LIB);
+      await ohLib;
+      if (window.opening_hours) {
         SPOTS.forEach(s => { if (s.hours && !isDaylight(s) && hoursValid(s)) { try { s._oh = new opening_hours(s.hours, OH_NOMINATIM); } catch (e) { s._oh = null; } } });
         HOURS_READY = true;
-      } catch (e) { HOURS_READY = false; }
+      } else HOURS_READY = false;
       DATA_META = { source: data.source, updatedAt: data.updatedAt, trendNote: data.trendNote || '', coordsNote: data.coordsNote || '' };
       let plan = [];
       try { plan = JSON.parse(load('spotmate-plan') || '[]').filter(id => byId(id)); } catch (e) {}
@@ -951,6 +921,13 @@ class App {
       const fbApp = A0.initializeApp(FIREBASE_CONFIG);
       this.fb = { A, F, auth: A.getAuth(fbApp), db: F.getFirestore(fbApp) };
       A.onAuthStateChanged(this.fb.auth, u => this.set({ user: u ? { uid: u.uid, name: (u.displayName || 'Parent').split(' ')[0].slice(0, 40) } : null }));
+      // 구글 페이지로 이동해서 로그인하고 돌아왔으면, 리뷰를 쓰려던 장소를 다시 열어요
+      A.getRedirectResult(this.fb.auth).then(res => {
+        let spot = ''; try { spot = sessionStorage.getItem('spotmate-review-spot') || ''; sessionStorage.removeItem('spotmate-review-spot'); } catch (x) {}
+        // 장소 데이터가 아직 안 왔으면 올 때까지 기다려요
+        const go = () => { if (this.state.loading) return setTimeout(go, 200); if (!byId(spot)) return; this.openModal(spot); setTimeout(() => { const r = document.getElementById('reviews'); if (r) r.scrollIntoView({ block: 'start' }); }, 300); };
+        if (res && spot) go();
+      }).catch(e => this.set({ reviewMsg: `Sign-in didn't finish (${e.code || 'unknown error'}). Try again.` }));
       const snap = await F.getDocs(F.query(F.collection(this.fb.db, 'reviews'), F.orderBy('createdAt', 'desc'), F.limit(3000)));
       snap.forEach(d => { const r = d.data(); (this.reviews[r.spotId] = this.reviews[r.spotId] || []).push({ ...r, id: d.id, date: r.createdAt && r.createdAt.toDate ? r.createdAt.toDate() : new Date() }); });
       this.set({ reviewsOn: true });
@@ -960,9 +937,18 @@ class App {
     const list = (this.reviews && this.reviews[id]) || [];
     return list.length ? { n: list.length, avg: list.reduce((a, r) => a + r.rating, 0) / list.length } : null;
   }
+  // 구글 로그인: 팝업 창 → 팝업이 막히거나 바로 닫히는 환경(앱 안 브라우저, 일부 휴대폰)에선 구글 페이지로 이동했다 돌아오는 방식
   async reviewSignIn() {
-    try { await this.fb.A.signInWithPopup(this.fb.auth, new this.fb.A.GoogleAuthProvider()); }
-    catch (e) { this.set({ reviewMsg: "Sign-in didn't finish. Try again." }); }
+    const A = this.fb.A, provider = new A.GoogleAuthProvider();
+    try { await A.signInWithPopup(this.fb.auth, provider); }
+    catch (e) {
+      const code = (e && e.code) || '';
+      if (/popup-blocked|popup-closed-by-user|cancelled-popup-request|operation-not-supported|web-storage-unsupported/.test(code)) {
+        try { sessionStorage.setItem('spotmate-review-spot', this.state.modal || ''); } catch (x) {}
+        try { return await A.signInWithRedirect(this.fb.auth, provider); } catch (e2) { e = e2; }
+      }
+      this.set({ reviewMsg: `Sign-in didn't finish (${(e && e.code) || 'unknown error'}). Try again, or open the site in Chrome or Safari.` });
+    }
   }
   async reviewPost(spotId) {
     const { user, reviewDraft: d } = this.state;
@@ -1374,13 +1360,8 @@ class App {
         }, 250);
         return;
       }
-      // 질문 건너뛰기: 이 질문만 "상관없음"으로 두고 다음으로 / 남은 질문을 모두 "상관없음"으로 두고 바로 결과
-      case 'wizskip': {
-        const w = this.state.wiz, ans = { ...w.ans, [WIZ[w.step].key]: w.ans[WIZ[w.step].key] || 'any' };
-        if (w.step < WIZ.length - 1 && !w.editing) { this.set({ wiz: { ...w, ans, step: w.step + 1 } }); window.scrollTo({ top: 0 }); return; }
-        return this.wizFinish({ ...w, ans, editing: false });
-      }
       case 'mode': return this.set({ browse: val === 'browse', q: '', kw: [], unused: [] });
+      // "I'm flexible, show me ideas": 남은 질문을 모두 "상관없음"으로 두고 바로 결과
       case 'wizall': {
         const ans = { ...this.state.wiz.ans }; WIZ.forEach(st => { if (!ans[st.key]) ans[st.key] = 'any'; });
         return this.wizFinish({ ...this.state.wiz, ans, editing: false });
@@ -2079,6 +2060,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ? `<p class="mt-2 text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'web' && s.hoursSource !== 'public' && !isDaylight(s) ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
           : HOURS_READY ? '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
         <p class="mt-2 text-sm text-slate-700 dark:text-slate-300 ${why ? 'clamp2' : ''}">${esc(s.summary)}</p>
+        ${NOTES[s.id] ? `<p class="mt-2 text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2.5 py-1.5 clamp2" title="SpotMate tip, checked on the official site. Open the card for more."><span class="font-semibold"><span aria-hidden="true">💡</span> SpotMate tip:</span> ${esc(NOTES[s.id].items[0])}</p>` : ''}
 
         ${TRENDS_ON && s.rise != null && s.rise >= RISING_MIN && !(why && why.icon === RISE_ICON) ? `<p class="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-300" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
         ${spotTags(s).length ? `<p class="mt-2 flex flex-wrap gap-1.5">${spotTags(s).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300">#${esc(t.label)}</span>`).join('')}</p>` : ''}
@@ -2222,7 +2204,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <span>Step ${w.step + 1} of ${WIZ.length}</span>
           <span class="flex items-center gap-4">
             ${w.step || Object.keys(a).length ? '<button data-act="wizreset" class="underline">Start over</button>' : ''}
-            ${w.editing ? '' : '<button data-act="wizall" class="font-bold text-violet-700 dark:text-violet-300">Show results now →</button>'}
           </span>
         </div>
         <div class="mt-2 h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden" role="progressbar" aria-valuemin="1" aria-valuemax="${WIZ.length}" aria-valuenow="${w.step + 1}" aria-label="Progress">
@@ -2238,7 +2219,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         </div>
         <div class="mt-6 flex items-center justify-between gap-3">
           <button data-act="wizback" ${w.step ? '' : 'disabled'} class="min-h-[48px] px-5 rounded-xl font-semibold border border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-200 disabled:opacity-40">← Back</button>
-          <button data-act="wizskip" class="min-h-[48px] px-3 text-sm font-semibold underline text-slate-600 dark:text-slate-300">Skip this question</button>
+          ${w.editing ? '<span></span>' : '<button data-act="wizall" class="min-h-[48px] px-3 text-sm font-semibold underline text-violet-700 dark:text-violet-300">I’m flexible, show me ideas</button>'}
           <button data-act="wiznext" ${pick ? '' : 'disabled'} class="min-h-[48px] px-6 rounded-xl font-bold bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-40">${w.editing ? 'Update results' : w.step === WIZ.length - 1 ? 'Get recommendations' : 'Next →'}</button>
         </div>
       </section>
@@ -2553,6 +2534,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             ${tags.length ? `<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">${esc(SEASON_NOTE)}</p>` : ''}
           </section>`; })()}
 
+          ${NOTES[s.id] ? (() => {
+            // SpotMate notes: 공식 페이지에서 확인한 아이 관련 사실 (리뷰와 구분되게 "SpotMate tip"으로, 확인 날짜와 출처를 같이)
+            const n = NOTES[s.id], host = (/^https:\/\/(?:www\.)?([^/]+)/.exec(n.source || '') || [])[1] || '';
+            return `
+          <section class="rounded-2xl p-5 bg-sky-50 dark:bg-sky-500/10 ring-1 ring-sky-200 dark:ring-sky-500/25">
+            <h3 class="font-bold text-sky-900 dark:text-sky-200"><span aria-hidden="true">💡</span> SpotMate tip</h3>
+            <ul class="mt-2 space-y-1.5 text-sm text-slate-800 dark:text-slate-200">${n.items.map(x => `<li class="flex gap-2"><span aria-hidden="true" class="text-sky-600 dark:text-sky-300">•</span><span>${esc(x)}</span></li>`).join('')}</ul>
+            <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">Checked ${esc(shortDate(NOTES_META.updatedAt))} on ${/^https:\/\//.test(n.source || '') ? `<a href="${esc(n.source)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'the official site'}. Not a review. Prices and hours change, so check before you go.</p>
+          </section>`; })() : ''}
           ${[[lunchState(s), 'emerald', LUNCH_META], [hhState(s), 'amber', HAPPY_META]]
             // 점심 전에는 런치가 먼저 보이도록 (지금 하는 쪽이 있으면 그쪽을 위로)
             .sort((a, b) => !!(b[0] && b[0].active) - !!(a[0] && a[0].active))
@@ -2671,17 +2661,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           })()}
 
 
-          <section>
-            <h3 class="font-bold">How busy is it?</h3>
-            <p class="mt-1 text-sm text-slate-700 dark:text-slate-300">Google Maps shows popular times and live busyness from real visits.</p>
-            <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="mt-2 inline-block text-sm font-semibold underline text-indigo-700 dark:text-indigo-300">Live busyness and popular times on Google Maps ↗</a>
-          </section>
-
-          ${s.tips.length ? `
-          <section>
-            <h3 class="font-bold">Tips</h3>
-            <ul class="mt-2 space-y-1.5">${s.tips.map(t => `<li class="text-sm text-slate-700 dark:text-slate-300 flex gap-2"><span class="text-violet-600 dark:text-violet-400 font-bold">✓</span>${esc(t)}</li>`).join('')}</ul>
-          </section>` : ''}
+          <!-- "How busy is it?" 칸도 뺐어요: 혼잡도는 위의 Google Maps 링크에서 봐요 (구글은 혼잡도 API를 주지 않아요) -->
+          <!-- "Tips" 칸은 뺐어요: 위의 SpotMate tip과 겹쳐서. 꼭 필요한 안내는 data/spot-notes.json으로 옮겨요 -->
 
 
         </div>
