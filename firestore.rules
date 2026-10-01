@@ -1,0 +1,23 @@
+rules_version = '2';
+// SpotMate 부모 리뷰 (Firebase 콘솔 > Firestore Database > Rules 에 붙여 넣기)
+// - 누구나 읽을 수 있어요
+// - 구글로 로그인한 사람만, 장소마다 한 개씩(문서 id = 장소id_사용자uid) 쓰고 고칠 수 있어요
+// - 별점 1~5 정수, 글 600자, 이름 40자까지. 다른 필드는 못 넣어요. 작성 시간은 서버 시간만
+// - 지우기는 쓴 사람만 (운영자는 콘솔에서 지울 수 있어요)
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /reviews/{id} {
+      allow read: if true;
+      allow create, update: if request.auth != null
+        && id == request.resource.data.spotId + '_' + request.auth.uid
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['spotId', 'uid', 'name', 'rating', 'text', 'createdAt'])
+        && request.resource.data.spotId is string && request.resource.data.spotId.size() <= 40
+        && request.resource.data.name is string && request.resource.data.name.size() <= 40
+        && request.resource.data.rating is int && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
+        && request.resource.data.text is string && request.resource.data.text.size() <= 600
+        && request.resource.data.createdAt == request.time;
+      allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
+    }
+  }
+}

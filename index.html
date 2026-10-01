@@ -189,6 +189,19 @@ const SEARCH_INTENT = {
   weekend: /\bweekend\b/i, sat: /\bsaturday\b/i, sun: /\bsunday\b/i, tomorrow: /\btomorrow\b/i, today: /\btoday\b/i,
 };
 // ── 검색창 2단계: AI (worker/ai-search.js, Claude Haiku 4.5) ──
+// ── 부모 리뷰 (Firebase: 구글 로그인 + Firestore) ──
+// Firebase 콘솔 > 프로젝트 설정 > 웹 앱의 firebaseConfig를 넣으면 리뷰가 켜져요 (이 값은 공개돼도 괜찮아요. 보안은 firestore.rules가 지켜요)
+// 비어 있으면(null) 리뷰 칸을 아예 보여주지 않아요
+const FIREBASE_CONFIG = {
+  apiKey: 'AIzaSyDshlxNn9eFahogBeLGrxvtMwy_ck72Xuc',
+  authDomain: 'spotmate-ed31a.firebaseapp.com',
+  projectId: 'spotmate-ed31a',
+  storageBucket: 'spotmate-ed31a.firebasestorage.app',
+  messagingSenderId: '530281390361',
+  appId: '1:530281390361:web:35da5ea31ff5143ec76588',
+};
+const FB_VER = '10.12.2';
+const REVIEW_MAX = 600;
 // Cloudflare Worker 주소. 비어 있으면 AI 없이 위 규칙으로만 해석해요. API 키는 Worker에만 있어요
 const AI_SEARCH_URL = '';
 // Worker가 돌려준 필터 → parseQuery와 같은 모양. 실패하거나 8초가 지나면 null (규칙 검색으로 대신해요)
@@ -786,6 +799,10 @@ class App {
       filtersOpen: false,
       // wiz: Explore 6단계 추천 (step 0–5, ans = 단계별 고른 값, done = 결과 보기), wizMore: 결과를 몇 곳 보여줄지
       wiz: { step: 0, ans: {}, done: false }, wizMore: 10,
+      // browse: Explore를 질문 없이 전체 목록(필터)으로 보기. 열 때는 늘 Pick for me(질문)부터 시작해요
+      browse: false,
+      // 부모 리뷰: user = 구글 로그인한 사람, reviewDraft = 쓰는 중인 리뷰 { id, rating, text }
+      user: null, reviewsOn: false, reviewDraft: null, reviewBusy: false, reviewMsg: '',
       q: '', kw: [], unused: [], free: false, qBusy: false, aiSay: '',
       radius: RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
@@ -803,7 +820,7 @@ class App {
     });
     this.root.addEventListener('change', e => this.onChange(e));
     // 검색창: 입력 중인 글은 다시 그려져도 남도록 따로 들고 있다가, Enter/Search에 검색
-    this.root.addEventListener('input', e => { if (e.target.name === 'q') this.qDraft = e.target.value; });
+    this.root.addEventListener('input', e => { if (e.target.name === 'q') this.qDraft = e.target.value; if (e.target.dataset.act === 'rvtext' && this.state.reviewDraft) this.state.reviewDraft.text = e.target.value; });
     this.root.addEventListener('submit', e => {
       if (!e.target.matches('form[data-act="search"]')) return;
       e.preventDefault();
@@ -824,6 +841,7 @@ class App {
     this.render();
     this.loadData();
     this.loadWeather();
+    this.initReviews();
     // "Open now"와 오늘 행사는 시간이 지나면 바뀌어서 5분마다 다시 그려요
     setInterval(() => { if (!this.state.loading) this.render(); }, 5 * 60 * 1000);
     if (window.claude && typeof window.claude.use === 'function') {
@@ -909,7 +927,7 @@ class App {
       let plan = [];
       try { plan = JSON.parse(load('spotmate-plan') || '[]').filter(id => byId(id)); } catch (e) {}
       // "Know it"(아는 곳 숨기기)은 없앴어요. 예전에 숨겨 둔 목록은 지워서 모든 곳이 다시 보이게 해요
-      try { ['spotmate-known', 'spotmate-opennow', 'spotmate-price', 'spotmate-kids', 'spotmate-indoor'].forEach(k => localStorage.removeItem(k)); } catch (e) {}
+      try { ['spotmate-known', 'spotmate-opennow', 'spotmate-price', 'spotmate-kids', 'spotmate-indoor', 'spotmate-browse'].forEach(k => localStorage.removeItem(k)); } catch (e) {}
       this.newIds = this.trackSeen();
       this.set({ loading: false, plan });
       // 검색 링크(?q=)로 들어오면 그 검색을 바로 해요
@@ -922,6 +940,87 @@ class App {
       this.set({ loading: false, loadError: "We couldn't load the spots. Check your connection and try again." });
     }
   }
+  // ── 부모 리뷰 ──
+  // Firebase SDK는 설정이 있을 때만 불러와요. 리뷰는 한 번에 받아서 장소별로 묶어 둬요 (많아지면 장소를 열 때 받는 방식으로 바꿔요)
+  async initReviews() {
+    this.reviews = {};
+    if (!FIREBASE_CONFIG) return;
+    try {
+      const base = `https://www.gstatic.com/firebasejs/${FB_VER}`;
+      const [A0, A, F] = await Promise.all([import(`${base}/firebase-app.js`), import(`${base}/firebase-auth.js`), import(`${base}/firebase-firestore.js`)]);
+      const fbApp = A0.initializeApp(FIREBASE_CONFIG);
+      this.fb = { A, F, auth: A.getAuth(fbApp), db: F.getFirestore(fbApp) };
+      A.onAuthStateChanged(this.fb.auth, u => this.set({ user: u ? { uid: u.uid, name: (u.displayName || 'Parent').split(' ')[0].slice(0, 40) } : null }));
+      const snap = await F.getDocs(F.query(F.collection(this.fb.db, 'reviews'), F.orderBy('createdAt', 'desc'), F.limit(3000)));
+      snap.forEach(d => { const r = d.data(); (this.reviews[r.spotId] = this.reviews[r.spotId] || []).push({ ...r, id: d.id, date: r.createdAt && r.createdAt.toDate ? r.createdAt.toDate() : new Date() }); });
+      this.set({ reviewsOn: true });
+    } catch (e) { console.warn('Reviews unavailable', e); }
+  }
+  reviewStats(id) {
+    const list = (this.reviews && this.reviews[id]) || [];
+    return list.length ? { n: list.length, avg: list.reduce((a, r) => a + r.rating, 0) / list.length } : null;
+  }
+  async reviewSignIn() {
+    try { await this.fb.A.signInWithPopup(this.fb.auth, new this.fb.A.GoogleAuthProvider()); }
+    catch (e) { this.set({ reviewMsg: "Sign-in didn't finish. Try again." }); }
+  }
+  async reviewPost(spotId) {
+    const { user, reviewDraft: d } = this.state;
+    if (!user || !d || !d.rating) return this.set({ reviewMsg: 'Pick 1 to 5 stars first.' });
+    const text = (d.text || '').trim().slice(0, REVIEW_MAX), F = this.fb.F, id = `${spotId}_${user.uid}`;
+    this.set({ reviewBusy: true, reviewMsg: '' });
+    try {
+      await F.setDoc(F.doc(this.fb.db, 'reviews', id), { spotId, uid: user.uid, name: user.name, rating: d.rating, text, createdAt: F.serverTimestamp() });
+      const list = (this.reviews[spotId] || []).filter(r => r.id !== id);
+      this.reviews[spotId] = [{ id, spotId, uid: user.uid, name: user.name, rating: d.rating, text, date: new Date() }, ...list];
+      this.set({ reviewBusy: false, reviewDraft: null, reviewMsg: 'Thanks! Your review is up.' });
+    } catch (e) { this.set({ reviewBusy: false, reviewMsg: "Couldn't save your review. Try again." }); }
+  }
+  async reviewDelete(spotId) {
+    const { user } = this.state; if (!user) return;
+    const id = `${spotId}_${user.uid}`;
+    try { await this.fb.F.deleteDoc(this.fb.F.doc(this.fb.db, 'reviews', id)); this.reviews[spotId] = (this.reviews[spotId] || []).filter(r => r.id !== id); this.set({ reviewMsg: 'Review deleted.', reviewDraft: null }); }
+    catch (e) { this.set({ reviewMsg: "Couldn't delete it. Try again." }); }
+  }
+  // 모달 안 "Parent reviews" 칸: 평균 별점, 리뷰 목록, 쓰기(로그인 필요)
+  reviewSection(s) {
+    if (!this.state.reviewsOn) return '';
+    const list = this.reviews[s.id] || [], st = this.reviewStats(s.id), { user, reviewDraft, reviewBusy, reviewMsg } = this.state;
+    const mine = user && list.find(r => r.uid === user.uid);
+    const d = reviewDraft && reviewDraft.id === s.id ? reviewDraft : null;
+    const stars = n => `<span class="text-amber-500" aria-label="${n} out of 5 stars">${'★'.repeat(n)}<span class="text-slate-300 dark:text-slate-600">${'★'.repeat(5 - n)}</span></span>`;
+    const form = d ? `
+            <div class="mt-3 rounded-xl p-4 ring-1 ring-slate-200 dark:ring-slate-700">
+              <div class="flex items-center gap-1" role="radiogroup" aria-label="Your rating">${[1, 2, 3, 4, 5].map(n => `<button data-act="rvstar" data-val="${n}" role="radio" aria-checked="${d.rating === n}" aria-label="${n} star${n > 1 ? 's' : ''}" class="text-3xl leading-none ${n <= (d.rating || 0) ? 'text-amber-500' : 'text-slate-300 dark:text-slate-600'}">★</button>`).join('')}</div>
+              <textarea data-act="rvtext" maxlength="${REVIEW_MAX}" rows="3" placeholder="What did your kids like? Anything parents should know (washrooms, stroller access, busy times)?" class="mt-3 w-full rounded-lg border border-slate-300 bg-white p-3 text-sm dark:border-slate-700 dark:bg-slate-800">${esc(d.text || '')}</textarea>
+              <div class="mt-2 flex flex-wrap items-center gap-3">
+                <button data-act="rvpost" data-val="${s.id}" ${reviewBusy ? 'disabled' : ''} class="min-h-[40px] px-4 rounded-lg font-semibold bg-violet-600 text-white disabled:opacity-60">${reviewBusy ? 'Posting…' : mine ? 'Update review' : 'Post review'}</button>
+                <button data-act="rvcancel" class="text-sm underline text-slate-600 dark:text-slate-300">Cancel</button>
+                <span class="text-xs text-slate-500 dark:text-slate-400">Shown with your first name.</span>
+              </div>
+            </div>` : '';
+    return `
+          <section id="reviews" class="scroll-mt-4">
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <h3 class="font-bold">Parent reviews</h3>
+              ${st ? `<p class="text-sm">${stars(Math.round(st.avg))} <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'review')}</span></p>` : ''}
+            </div>
+            ${!d ? `<div class="mt-2 flex flex-wrap items-center gap-3 text-sm">
+              ${user ? `<button data-act="rvwrite" data-val="${s.id}" class="min-h-[40px] px-4 rounded-lg font-semibold border border-violet-300 text-violet-700 dark:border-violet-500/50 dark:text-violet-300">${mine ? 'Edit your review' : 'Write a review'}</button>
+              ${mine ? `<button data-act="rvdelete" data-val="${s.id}" class="underline text-slate-600 dark:text-slate-300">Delete</button>` : ''}
+              <button data-act="rvsignout" class="underline text-slate-500 dark:text-slate-400">Sign out (${esc(user.name)})</button>`
+              : `<button data-act="rvsignin" class="min-h-[40px] px-4 rounded-lg font-semibold border border-violet-300 text-violet-700 dark:border-violet-500/50 dark:text-violet-300">Sign in with Google to write a review</button>`}
+            </div>` : ''}
+            ${form}
+            ${reviewMsg ? `<p class="mt-2 text-sm text-slate-600 dark:text-slate-300" role="status">${esc(reviewMsg)}</p>` : ''}
+            ${list.length ? `<ul class="mt-4 space-y-3">${list.slice(0, 20).map(r => `
+              <li class="rounded-xl p-3 bg-slate-50 dark:bg-slate-800/60">
+                <p class="text-sm">${stars(r.rating)} <span class="font-semibold">${esc(r.name)}</span> <span class="text-xs text-slate-500 dark:text-slate-400">· ${esc(`${MON[r.date.getMonth()]} ${r.date.getDate()}, ${r.date.getFullYear()}`)}</span></p>
+                ${r.text ? `<p class="mt-1 text-sm text-slate-700 dark:text-slate-200 whitespace-pre-line">${esc(r.text)}</p>` : ''}
+              </li>`).join('')}</ul>` : '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">No reviews yet. Be the first parent to share how it went.</p>'}
+          </section>`;
+  }
+
   async loadWeather() {
     try {
       const res = await fetch(WEATHER_URL);
@@ -956,7 +1055,9 @@ class App {
     SPOTS.forEach(s => { if (!(s.id in seen)) seen[s.id] = first ? 0 : today; });
     store('spotmate-seen', JSON.stringify(seen));
     const cutoff = vanDate(-NEW_DAYS);
-    return new Set(SPOTS.filter(s => seen[s.id] && seen[s.id] > cutoff).map(s => s.id));
+    // 한 번에 30곳 넘게 새로 생기면(데이터를 크게 늘린 경우) "새로 생긴 곳"으로 치지 않아요 (카드 수백 개에 New가 붙고 맨 앞을 차지하지 않게)
+    const fresh = SPOTS.filter(s => seen[s.id] && seen[s.id] > cutoff).map(s => s.id);
+    return new Set(fresh.length > 30 ? [] : fresh);
   }
   // 행사 장소(venue)는 행사가 있을 때만 잠깐 뜨는 곳이라 "New"로 치지 않아요
   isNew(s) { return !s.venue && !!(this.newIds && this.newIds.has(s.id)); }
@@ -1245,6 +1346,16 @@ class App {
       case 'open': this.opener = this.focusKey(el); return this.openModal(val);
       case 'close': return this.closeModal();
       case 'save': return this.togglePlan(val);
+      // 부모 리뷰
+      case 'rvsignin': return this.reviewSignIn();
+      case 'rvsignout': this.fb.A.signOut(this.fb.auth); return this.set({ reviewDraft: null, reviewMsg: '' });
+      case 'rvwrite': { const mine = (this.reviews[val] || []).find(r => this.state.user && r.uid === this.state.user.uid); return this.set({ reviewDraft: { id: val, rating: mine ? mine.rating : 0, text: mine ? mine.text : '' }, reviewMsg: '' }); }
+      case 'rvstar': return this.set({ reviewDraft: { ...this.state.reviewDraft, rating: +val } });
+      case 'rvcancel': return this.set({ reviewDraft: null, reviewMsg: '' });
+      case 'rvpost': return this.reviewPost(val);
+      case 'rvdelete': return this.reviewDelete(val);
+      // 카드의 "Review" 버튼: 장소를 열고 리뷰 칸으로
+      case 'rvcard': { this.opener = this.focusKey(el); this.openModal(val); setTimeout(() => { const r = document.getElementById('reviews'); if (r) r.scrollIntoView({ block: 'start' }); }, 50); return; }
       case 'ai': return this.runAI(val);
       case 'aistop': if (this.aiCtl) this.aiCtl.abort(); return;
       case 'geo': return this.locate();
@@ -1262,6 +1373,17 @@ class App {
           else this.wizFinish({ ...w, editing: false });
         }, 250);
         return;
+      }
+      // 질문 건너뛰기: 이 질문만 "상관없음"으로 두고 다음으로 / 남은 질문을 모두 "상관없음"으로 두고 바로 결과
+      case 'wizskip': {
+        const w = this.state.wiz, ans = { ...w.ans, [WIZ[w.step].key]: w.ans[WIZ[w.step].key] || 'any' };
+        if (w.step < WIZ.length - 1 && !w.editing) { this.set({ wiz: { ...w, ans, step: w.step + 1 } }); window.scrollTo({ top: 0 }); return; }
+        return this.wizFinish({ ...w, ans, editing: false });
+      }
+      case 'mode': return this.set({ browse: val === 'browse', q: '', kw: [], unused: [] });
+      case 'wizall': {
+        const ans = { ...this.state.wiz.ans }; WIZ.forEach(st => { if (!ans[st.key]) ans[st.key] = 'any'; });
+        return this.wizFinish({ ...this.state.wiz, ans, editing: false });
       }
       case 'wizback': return this.set({ wiz: { ...this.state.wiz, step: Math.max(0, this.state.wiz.step - 1) } });
       case 'wiznext': {
@@ -1294,7 +1416,7 @@ class App {
       case 'tag': {
         const tag = this.state.tag === val ? '' : val;
         // 6단계 질문 중에 시즌 태그를 누르면, 안 고른 질문은 "상관없음"으로 두고 그 시즌 장소를 바로 보여줘요
-        if (WIZARD && this.state.view === 'list' && !this.state.q && !this.state.wiz.done && tag) {
+        if (this.pickMode() && !this.state.q && !this.state.wiz.done && tag) {
           const ans = { ...this.state.wiz.ans }; WIZ.forEach(st => { if (!ans[st.key]) ans[st.key] = 'any'; });
           this.state.tag = tag; return this.wizFinish({ ...this.state.wiz, ans });
         }
@@ -1526,8 +1648,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.header()}
         ${this.controls(items)}
         <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
-          ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : view === 'list' && WIZARD && !this.state.q ? this.wizardView()
-            : view === 'list' && WIZARD ? `<button data-act="qclear" class="mt-6 inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">← Back to the picker</button>${this.planBar()}${this.listView(items)}` : this.state.cat === 'events' ? this.eventsView() : `
+          ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : this.pickMode() && !this.state.q ? this.wizardView()
+            : this.pickMode() ? `<button data-act="qclear" class="mt-6 inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">← Back to the picker</button>${this.planBar()}${this.listView(items)}` : this.state.cat === 'events' ? this.eventsView() : `
             ${this.planBar()}
             ${view !== 'map' ? this.seasonChips() : ''}
             ${view === 'eats' && (this.state.hh || this.state.lunch) ? '' : this.criteriaBanner(items)}
@@ -1621,16 +1743,22 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const s = this.state;
     if (s.view === 'plan') return '';
     // 6단계 추천 화면(Explore)엔 검색창만 (필터 줄은 지도에서). 검색하면 결과 목록과 위치 줄을 보여줘요
-    const lite = s.view === 'list' && WIZARD;
+    const lite = this.pickMode();
     return `
     <section class="bg-white/80 dark:bg-slate-900/80 border-b border-slate-200/70 dark:border-slate-800">
       <div class="max-w-6xl mx-auto px-4 md:px-6 py-3 space-y-2">
+        ${WIZARD && s.view === 'list' ? `
+        <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="How to explore">
+          ${[['pick', 'Pick for me'], ['browse', 'Browse all']].map(([v, label]) => { const on = (v === 'browse') === !!s.browse; return `<button data-act="mode" data-val="${v}" aria-pressed="${on}" class="min-h-[40px] px-4 rounded-lg text-sm font-bold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`; }).join('')}
+        </div>` : ''}
+        ${lite && !s.q && !s.wiz.done ? '' : `
         <form data-act="search" role="search" class="flex gap-2">
           <input name="q" type="search" value="${esc(this.qDraft ?? s.q)}" autocomplete="off" enterkeyhint="search" aria-label="Search"
             placeholder="${s.view === 'eats' ? (innerWidth < 640 ? 'Try “brunch this Saturday”' : 'Try “brunch this Saturday in Richmond”') : innerWidth < 640 ? 'Try “spray park near me”' : innerWidth < 1024 ? 'Try “free this weekend in Coquitlam”' : 'Try “free things to do this weekend in Coquitlam”'}"
             class="flex-1 min-w-0 min-h-[44px] px-4 rounded-xl border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500">
           <button type="submit" ${s.qBusy ? 'disabled aria-busy="true"' : ''} class="min-h-[44px] px-4 rounded-xl font-semibold bg-violet-600 hover:bg-violet-700 disabled:opacity-70 text-white">${s.qBusy ? 'Thinking…' : AI_SEARCH_URL ? '✨ Search' : 'Search'}</button>
         </form>
+        `}
         ${s.q && s.aiSay ? `<p class="text-sm font-semibold text-violet-700 dark:text-violet-300"><span aria-hidden="true">✨</span> ${esc(s.aiSay)}</p>` : ''}
         ${s.q ? (() => {
           // 검색에서 찾는 말만 칩으로 (× 누르면 그 조건만 꺼요). 날짜·영업·아이·실내·가격·딜은 아래 버튼이 켜진 색으로 보여줘서 칩으로 반복하지 않아요.
@@ -1986,7 +2114,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${KIDS_ONLY && isKid(s) ? `<span>${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span>${esc(s.price)}</span>` : ''}` : `${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>`}${parkShort(s) ? `<span>${esc(parkShort(s))}</span>` : ''}
           ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
         </div>
-        <div class="mt-auto pt-4">
+        ${this.state.reviewsOn && this.reviewStats(s.id) ? (() => { const st = this.reviewStats(s.id); return `<p class="mt-2 text-sm"><span class="text-amber-500" aria-hidden="true">★</span> <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'parent review')}</span></p>`; })() : ''}
+        <div class="mt-auto pt-4 ${this.state.reviewsOn ? 'flex gap-2' : ''}">
+        ${this.state.reviewsOn ? `<button data-act="rvcard" data-val="${s.id}" class="shrink-0 px-4 py-2.5 rounded-xl font-semibold text-sm border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">★ Review</button>` : ''}
           <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="w-full py-2.5 rounded-xl font-semibold text-sm border ${saved ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-300' : 'border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200'}">${saved ? '♥ Saved' : '♡ Save'}</button>
 
         </div>
@@ -2020,14 +2150,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (on('age') && !kp.ages.includes(a.age[0])) return false;
     return true;
   }
+  // Explore를 질문(6단계 추천)으로 보는 중인지 (Browse all이면 예전처럼 전체 목록과 필터)
+  pickMode() { return WIZARD && this.state.view === 'list' && !this.state.browse; }
   // 추천 결과에서 위치를 고르면: 그 지역에 맞는 반경(도시 5 km, 동네 2 km, 내 위치 5 km)으로 10곳부터 다시 보여줘요
   wizLocPatch(key) {
-    if (!(WIZARD && this.state.view === 'list' && this.state.wiz.done)) return {};
+    if (!(this.pickMode() && this.state.wiz.done)) return {};
     return { radius: key === 'here' ? 5 : ORIGINS[key] ? placeRadius(key) : this.state.radius, wizMore: 10 };
   }
   // 다시 그린 뒤 새 목록 제목으로 스크롤
   wizLocScroll() {
-    if (!(WIZARD && this.state.view === 'list' && this.state.wiz.done)) return;
+    if (!(this.pickMode() && this.state.wiz.done)) return;
     setTimeout(() => { const t = document.getElementById('list-top'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 0);
   }
   // 결과 보기: "언제"를 날짜 계획(when)으로 옮겨서 카드가 그날 영업시간·행사를 보여주게 해요
@@ -2088,7 +2220,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <section class="mt-6 max-w-2xl mx-auto" aria-label="Find a place">
         <div class="flex items-center justify-between text-sm font-semibold text-slate-600 dark:text-slate-300">
           <span>Step ${w.step + 1} of ${WIZ.length}</span>
-          ${w.step || Object.keys(a).length ? '<button data-act="wizreset" class="underline">Start over</button>' : ''}
+          <span class="flex items-center gap-4">
+            ${w.step || Object.keys(a).length ? '<button data-act="wizreset" class="underline">Start over</button>' : ''}
+            ${w.editing ? '' : '<button data-act="wizall" class="font-bold text-violet-700 dark:text-violet-300">Show results now →</button>'}
+          </span>
         </div>
         <div class="mt-2 h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden" role="progressbar" aria-valuemin="1" aria-valuemax="${WIZ.length}" aria-valuenow="${w.step + 1}" aria-label="Progress">
           <div class="h-full rounded-full bg-violet-600 transition-all" style="width:${((w.step + 1) / WIZ.length) * 100}%"></div>
@@ -2103,6 +2238,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         </div>
         <div class="mt-6 flex items-center justify-between gap-3">
           <button data-act="wizback" ${w.step ? '' : 'disabled'} class="min-h-[48px] px-5 rounded-xl font-semibold border border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-200 disabled:opacity-40">← Back</button>
+          <button data-act="wizskip" class="min-h-[48px] px-3 text-sm font-semibold underline text-slate-600 dark:text-slate-300">Skip this question</button>
           <button data-act="wiznext" ${pick ? '' : 'disabled'} class="min-h-[48px] px-6 rounded-xl font-bold bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-40">${w.editing ? 'Update results' : w.step === WIZ.length - 1 ? 'Get recommendations' : 'Next →'}</button>
         </div>
       </section>
@@ -2469,6 +2605,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </section>`; })()}
 
 
+          ${this.reviewSection(s)}
           ${(() => {
             // 주차: 근처(400m) 주차장이 무료인지 유료인지, 요금(OSM에 있으면)과 요금을 확인할 링크. 거리는 보여주지 않아요
             const p = parkingOf(s);
