@@ -20,6 +20,12 @@
       "scope" : "city",
       "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
     },
+    "albioncommunitycentreacc" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.mapleridge.ca/2536/Albion-Community-Centre"
+    },
     "albionpark" : {
       "items" : [
         "Also here: a bike skills park, covered picnic areas, washrooms and walking trails."
@@ -302,6 +308,12 @@
       "scope" : "city",
       "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
     },
+    "champlainheightscommunit" : {
+      "items" : [
+        "Kids’ programs here include toddler programs and preschool classes. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://champlainheightscc.ca/"
+    },
     "charlesonpark" : {
       "items" : [
         "Also here: an off-leash dog area and sports courts."
@@ -321,12 +333,25 @@
       ],
       "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/chelsea-park"
     },
+    "christinesinclaircommuni" : {
+      "items" : [
+        "Kids’ programs here include toddler programs. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.burnaby.ca/recreation-and-arts/recreation-facilities/christine-sinclair-community-centre"
+    },
     "cityoflangleylibrary" : {
       "items" : [
         "Free Babytime (0–2) and Storytime at Fraser Valley Regional Library branches. Check the branch calendar for times."
       ],
       "scope" : "city",
       "source" : "https://www.fvrl.bc.ca/"
+    },
+    "claytoncommunitycentre" : {
+      "items" : [
+        "Kids’ programs here include preschool classes and childminding. Check the centre’s page for times and sign-up.",
+        "The public library branch is inside the centre."
+      ],
+      "source" : "https://www.surrey.ca/about-surrey/our-communities/cloverdale/clayton-community-centre"
     },
     "cliffpark" : {
       "items" : [
@@ -347,6 +372,12 @@
       "scope" : "city",
       "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
     },
+    "cloverdalerecreationcent" : {
+      "items" : [
+        "Kids’ programs here include preschool classes and childminding. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.surrey.ca/culture-recreation/8524.aspx"
+    },
     "coalharbourcommunitycent" : {
       "items" : [
         "Playground on site and an occasional care preschool program."
@@ -358,6 +389,12 @@
         "Also here: washrooms, a drinking fountain and fishing."
       ],
       "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-26"
+    },
+    "confederationcommunityce" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.burnaby.ca/confederation55+"
     },
     "confederationpark" : {
       "items" : [
@@ -405,6 +442,12 @@
       ],
       "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/coutts-park"
     },
+    "creeksidecommunityrecrea" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://vancouver.ca/parks-recreation-culture/creekside-community-recreation-centre.aspx"
+    },
     "crescentbeach" : {
       "items" : [
         "Two roped-off swim areas, with lifeguards at Sullivan Point in summer."
@@ -447,11 +490,29 @@
       ],
       "source" : "https://www.burnaby.ca/explore-outdoors/parks/deer-lake-park"
     },
+    "delbrookcommunityrecreat" : {
+      "items" : [
+        "Kids’ programs here include preschool classes and drop-in playtime. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.nvrc.ca/delbrook"
+    },
     "diefenbaker" : {
       "items" : [
         "The Rotary Waterworks spray park runs from May long weekend to September long weekend, water on 10am–9pm."
       ],
       "source" : "https://admin.delta.ca/node/203"
+    },
+    "donchristianrecreationce" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.surrey.ca/"
+    },
+    "douglasrecreationcentre" : {
+      "items" : [
+        "Kids’ programs here include preschool classes. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.langleycity.ca/parks-recreation/recreation-facilities/douglas-recreation-child-care-centre"
     },
     "dundaraveparkwestvancouv" : {
       "items" : [
@@ -483,6 +544,12 @@
         "Also here: picnic tables, walking trails and sports courts."
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/edgewood-park"
+    },
+    "edmondscommunitycentre" : {
+      "items" : [
+        "Kids’ programs here include toddler programs and childminding. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.burnaby.ca/edmonds"
     },
     "elkspark" : {
       "items" : [
@@ -534,6 +601,12 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "falsecreekcommunitycentr" : {
+      "items" : [
+        "Kids’ programs here include day camps. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.falsecreekcc.ca/"
+    },
     "firefighterspark" : {
       "items" : [
         "Also here: a pump track, a sand play area, water play in summer and a drinking fountain."
@@ -570,6 +643,12 @@
         "Youth 17 and under get in free at Parks Canada sites."
       ],
       "source" : "https://parks.canada.ca/lhn-nhs/bc/langley"
+    },
+    "fraserheightsrecreationc" : {
+      "items" : [
+        "Kids’ programs here include preschool classes. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.surrey.ca/culture-recreation/1928.aspx"
     },
     "fraserriverdiscoverycent" : {
       "items" : [
@@ -621,6 +700,24 @@
       "scope" : "city",
       "source" : "https://www.fvrl.bc.ca/"
     },
+    "georgeprestonrecreationc" : {
+      "items" : [
+        "Kids’ programs here include preschool classes. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.tol.ca/en/parks-recreation/george-preston-recreation-centre.aspx"
+    },
+    "glenayrecommunitycentre" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.portmoody.ca/index.aspx?page=219"
+    },
+    "gleneaglescommunitycentr" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://westvancouver.ca/parks-recreation/facilities/gleneagles-community-centre"
+    },
     "gobananas" : {
       "items" : [
         "Socks are required to play, for kids and grown-ups."
@@ -668,6 +765,12 @@
       ],
       "source" : "https://parks.canada.ca/voyage-travel/admission"
     },
+    "hamiltoncommunitycentre" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.richmond.ca/hamilton"
+    },
     "hammondplayground" : {
       "items" : [
         "Also here: a sand play area, picnic tables, a drinking fountain and parking."
@@ -685,6 +788,12 @@
         "Also here: walking trails, parking and an outdoor fitness circuit."
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "harryjeromecommunityrecr" : {
+      "items" : [
+        "Kids’ programs here include toddler programs and preschool classes. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.nvrc.ca/new-harry-jerome"
     },
     "hastingscommunitycentre" : {
       "items" : [
@@ -743,6 +852,12 @@
       "scope" : "city",
       "source" : "https://www.newwestcity.ca/parks-and-recreation/parks/amenities/sb_expander_articles/961.php"
     },
+    "hydecreekrecreationcentr" : {
+      "items" : [
+        "Kids’ programs here include preschool classes and day camps. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.portcoquitlam.ca/services/city-facilities/hyde-creek-recreation-centre"
+    },
     "ikeacoquitlam" : {
       "items" : [
         "The Småland kids' playroom is closed for renovation for now.",
@@ -762,6 +877,12 @@
         "Also here: walking trails, parking, an off-leash dog area and water access."
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "johnbraithwaitecommunity" : {
+      "items" : [
+        "Kids’ programs here include drop-in playtime. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.nvrc.ca/john-braithwaite"
     },
     "johnlawson" : {
       "items" : [
@@ -792,6 +913,12 @@
         "Also here: washrooms, a drinking fountain, parking and wheelchair access."
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "kensingtoncommunitycentr" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://vancouver.ca/parks-recreation-culture/kensington-community-centre.aspx"
     },
     "kensingtonpark" : {
       "items" : [
@@ -851,11 +978,23 @@
       ],
       "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
     },
+    "ladnercommunitycentre" : {
+      "items" : [
+        "Kids’ programs here include preschool classes, drop-in playtime and day camps. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/sport-recreation/indoor-facilities/ladner-community-centre"
+    },
     "lighthouse" : {
       "items" : [
         "Pay parking all year at the Beacon Lane lot. Toilets are in the parking lot and inside the park."
       ],
       "source" : "https://westvancouver.ca/parks-recreation/parks-trails/lighthouse-park"
+    },
+    "lionsgatecommunityrecrea" : {
+      "items" : [
+        "Kids’ programs here include drop-in playtime. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.nvrc.ca/lions-gate"
     },
     "lionspark" : {
       "items" : [
@@ -901,6 +1040,18 @@
       ],
       "source" : "https://ecologycentre.ca/plan-your-visit"
     },
+    "lynncreekcommunityrecrea" : {
+      "items" : [
+        "Kids’ programs here include drop-in playtime. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.nvrc.ca/facilities-fields/locations-hours/community-recreation-centres/lynn-creek-community-recreation"
+    },
+    "lynnvalleycommunityrecre" : {
+      "items" : [
+        "Kids’ programs here include toddler programs and preschool classes. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.nvrc.ca/facilities-fields/locations-hours/community-recreation-centres/lynn-valley-community-recreation"
+    },
     "mackiepark" : {
       "items" : [
         "Also here: an off-leash dog area."
@@ -927,6 +1078,12 @@
       ],
       "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
     },
+    "mapleridgeleisurecentre" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/recreation-facilities/maple-ridge-leisure-centre"
+    },
     "mapleridgepark" : {
       "items" : [
         "Maple Ridge spray parks open daily from mid-May, 10am–8pm, weather permitting."
@@ -948,6 +1105,12 @@
         "Also here: a drinking fountain."
       ],
       "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-53"
+    },
+    "marpoleoakridgecommunity" : {
+      "items" : [
+        "Kids’ programs here include toddler programs and day camps. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://marpoleoakridge.org/"
     },
     "mcdonaldbeachpark" : {
       "items" : [
@@ -1009,6 +1172,13 @@
       ],
       "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-58"
     },
+    "mountpleasantcommunityce" : {
+      "items" : [
+        "Kids’ programs here include parent-and-tot classes, toddler programs, preschool classes and day camps. Check the centre’s page for times and sign-up.",
+        "The public library branch is inside the centre."
+      ],
+      "source" : "https://mountpleasantcc.ca/"
+    },
     "mudbaypark" : {
       "items" : [
         "Also here: walking trails."
@@ -1046,6 +1216,12 @@
       ],
       "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
     },
+    "newtonrecreationcentre" : {
+      "items" : [
+        "Kids’ programs here include preschool classes. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.surrey.ca/culture-recreation/7325.aspx"
+    },
     "newwestminsterpubliclibr" : {
       "items" : [
         "Free Babytime (0–12 months) and Baby Social (0–23 months)."
@@ -1075,6 +1251,12 @@
         "Also here: water play in summer."
       ],
       "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
+    },
+    "northdeltarecreationcent" : {
+      "items" : [
+        "Kids’ programs here include preschool classes, drop-in playtime and day camps. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/north-delta-recreation-centre"
     },
     "northshorecommunitypark" : {
       "items" : [
@@ -1160,6 +1342,12 @@
       "scope" : "city",
       "source" : "https://www.coquitlam.ca/outdoorpools"
     },
+    "parkgatecommunitycentre" : {
+      "items" : [
+        "Kids’ programs here include drop-in playtime. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.nvrc.ca/parkgate"
+    },
     "parkroyal" : {
       "items" : [
         "Castle Royale inside the mall has active play for kids of all ages."
@@ -1184,6 +1372,18 @@
       ],
       "scope" : "city",
       "source" : "https://www.newwestcity.ca/parks-and-recreation/parks/amenities/sb_expander_articles/961.php"
+    },
+    "pinetreecommunitycentre" : {
+      "items" : [
+        "Kids’ programs here include preschool classes. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://coquitlam.ca/438/Pinetree-Community-Centre"
+    },
+    "pittmeadowsfamilyrecreat" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.pittmeadows.ca/parksandrec"
     },
     "playabbylangley" : {
       "items" : [
@@ -1216,6 +1416,13 @@
         "Also here: washrooms, an off-leash dog area and sports courts."
       ],
       "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
+    },
+    "queensboroughcommunityce" : {
+      "items" : [
+        "Kids’ programs here include drop-in playtime, day camps and childminding. Check the centre’s page for times and sign-up.",
+        "The public library branch is inside the centre."
+      ],
+      "source" : "https://www.newwestcity.ca/facilities"
     },
     "queenspark" : {
       "items" : [
@@ -1318,6 +1525,12 @@
       ],
       "source" : "https://www.burnaby.ca/recreation-and-arts/recreation-facilities/rosemary-brown-recreation-centre"
     },
+    "roundhousecommunityartsr" : {
+      "items" : [
+        "Kids’ programs here include parent-and-tot classes and preschool classes. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.roundhouse.ca/"
+    },
     "royalheightspark" : {
       "items" : [
         "Also here: walking trails."
@@ -1352,6 +1565,12 @@
       ],
       "source" : "https://www.scienceworld.ca/your-visit/"
     },
+    "seaislandcommunitycentre" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.richmond.ca/seaisland"
+    },
     "serpentinewildlifemanage" : {
       "items" : [
         "Also here: picnic tables, walking trails and fishing."
@@ -1364,11 +1583,29 @@
       ],
       "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/settlers-park"
     },
+    "smilingcreekactivitycent" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://coquitlam.ca/469/Smiling-Creek-Activity-Centre"
+    },
     "southarmoutdoorpool" : {
       "items" : [
         "Summer outdoor pool with two twisting slides and a wading pool."
       ],
       "source" : "https://www.richmond.ca/parks-recreation/centres/outdoor.htm"
+    },
+    "southbonsoncommunitycent" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.pittmeadows.ca/parks-recreation/parks-fields-facilities/parks-list/south-bonson-community-centre"
+    },
+    "southdeltarecreationcent" : {
+      "items" : [
+        "Kids’ programs here include preschool classes, drop-in playtime and day camps. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/sport-recreation/indoor-facilities/south-delta-recreation-centre"
     },
     "southsurreyarena" : {
       "items" : [
@@ -1394,6 +1631,12 @@
       ],
       "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
     },
+    "stevestoncommunitycentre" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.richmond.ca/steveston"
+    },
     "stevestonpark" : {
       "items" : [
         "Also here: covered picnic areas, a drinking fountain, walking trails and an off-leash dog area."
@@ -1413,6 +1656,18 @@
       "scope" : "city",
       "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
     },
+    "strathconacommunitycentr" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://vancouver.ca/parks-recreation-culture/strathcona-community-centre.aspx"
+    },
+    "summitcommunitycentre" : {
+      "items" : [
+        "Lists children's programs. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.coquitlam.ca/487/Summit-Community-Centre"
+    },
     "suncrestpark" : {
       "items" : [
         "Burnaby spray parks run from mid-May to the end of September, 9am–9pm (push the button to start the water)."
@@ -1425,6 +1680,12 @@
         "Also here: walking trails."
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/sunnyside-acres-urban-forest-park"
+    },
+    "sunsetcommunitycentre" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://vancouver.ca/parks-recreation-culture/sunset-community-centre.aspx"
     },
     "sunsetrink" : {
       "items" : [
@@ -1444,13 +1705,6 @@
         "Also here: walking trails."
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/surrey-lake-park"
-    },
-    "surreylibrariesclaytonbr" : {
-      "items" : [
-        "Free drop-in Babytime (0–12 months) and Toddler Storytime with DUPLO (ages 1–3). No registration needed."
-      ],
-      "scope" : "city",
-      "source" : "https://surreylibraries.ca/node/16686"
     },
     "surreylibrariescloverdal" : {
       "items" : [
@@ -1486,6 +1740,12 @@
       ],
       "source" : "https://www.burnaby.ca/explore-outdoors/parks/taylor-park"
     },
+    "temporarycameroncommunit" : {
+      "items" : [
+        "Kids’ programs here include childminding. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://burnaby.ca/CameronLougheed"
+    },
     "terranova" : {
       "items" : [
         "Ziplines, big swings and the spiral slide are for ages 8+.",
@@ -1518,6 +1778,12 @@
       ],
       "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/thompson-park"
     },
+    "timmscommunitycentre" : {
+      "items" : [
+        "Kids’ programs here include preschool classes. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.langleycity.ca/parks-recreation/recreation-facilities/timms-community-centre"
+    },
     "towncentre" : {
       "items" : [
         "Push-button spray park, open in summer. There’s no lifeguard at Coquitlam spray parks, so stay close."
@@ -1525,11 +1791,23 @@
       "scope" : "city",
       "source" : "https://www.coquitlam.ca/outdoorpools"
     },
+    "towncentreparkcommunityc" : {
+      "items" : [
+        "Kids’ programs here include preschool classes. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://coquitlam.ca/1169/Town-Centre-Park-Community-Centre"
+    },
     "troutlake" : {
       "items" : [
         "Trout Lake isn’t on the City’s list of lifeguarded beaches, so keep a close eye on swimmers."
       ],
       "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
+    },
+    "troutlakecommunitycentre" : {
+      "items" : [
+        "Kids’ programs here include preschool classes. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://troutlakecc.com/"
     },
     "tsuyukipark" : {
       "items" : [
@@ -1597,13 +1875,6 @@
       "scope" : "city",
       "source" : "https://vpl.bibliocommons.com/events/search/fq=types:(53e94ec21fdd78680200591e)"
     },
-    "vancouverpubliclibrarymo" : {
-      "items" : [
-        "Free storytimes for babies, toddlers and families. Check the branch calendar for times."
-      ],
-      "scope" : "city",
-      "source" : "https://vpl.bibliocommons.com/events/search/fq=types:(53e94ec21fdd78680200591e)"
-    },
     "vancouverpubliclibraryre" : {
       "items" : [
         "Free storytimes for babies, toddlers and families. Check the branch calendar for times."
@@ -1635,6 +1906,13 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "walnutgrovecommunitycent" : {
+      "items" : [
+        "Kids’ programs here include preschool classes. Check the centre’s page for times and sign-up.",
+        "The public library branch is inside the centre."
+      ],
+      "source" : "https://www.tol.ca/en/parks-recreation/walnut-grove-community-centre.aspx"
+    },
     "watermania" : {
       "items" : [
         "Wave pool with a tot slide, sprayers and water wheels. The two waterslides are for ages 7+ who are at least 1.2 m tall.",
@@ -1662,17 +1940,41 @@
       "scope" : "city",
       "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
     },
+    "wesburncommunitycentre" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.burnaby.ca/wesburn"
+    },
+    "westendcommunitycentre" : {
+      "items" : [
+        "Kids’ programs here include toddler programs, preschool classes and drop-in playtime. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://westendcc.ca/"
+    },
     "westhillpark" : {
       "items" : [
         "Also here: walking trails, an off-leash dog area, an outdoor fitness circuit and sports courts."
       ],
       "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
     },
+    "westpointgreycommunityce" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://vancouver.ca/parks-recreation-culture/west-point-grey-community-centre.aspx"
+    },
     "westvancouveraquaticcent" : {
       "items" : [
         "Leisure pool, water slide and family hot tub. Kids under 7 need an adult within arm’s reach in the pool."
       ],
       "source" : "https://westvancouver.ca/parks-recreation/recreation-programs-services/recreation-activities/swimming"
+    },
+    "westvancouvercommunityce" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://westvancouver.ca/parks-recreation/facilities/community-centre"
     },
     "westwoodpark" : {
       "items" : [
@@ -1686,6 +1988,12 @@
       ],
       "scope" : "city",
       "source" : "https://metrovancouver.org/services/regional-parks/park/t%C9%99mt%C9%99m%C3%ADx%CA%B7t%C9%99n-belcarra-regional-park"
+    },
+    "whiterockcommunitycentre" : {
+      "items" : [
+        "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
+      ],
+      "source" : "https://www.whiterockcity.ca/Facilities/Facility/Details/White-Rock-Community-Centre-1"
     },
     "whiterockmuseumarchives" : {
       "items" : [

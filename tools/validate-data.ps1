@@ -44,7 +44,9 @@ $sameOk = @(
   'mundyparktotlot|mundy', 'mundyparkpool|mundy', 'kensingtonparkoutdoorpoo|kensingtonpark', 'confederationparkwaterpa|confederationpark',
   'kitsilanobeachplayground|kits', 'robertburnabyparkplaygro|robertburnabypark', 'stanleyparkplayground|stanley', 'diefenbakerparkplaygroun|diefenbaker',
   # 커뮤니티 센터 안(옆)의 도서관: 따로 운영하는 시설
-  'kerrisdalecommunitycentr|vancouverpubliclibraryke2', 'renfrewparkcommunitycent|vancouverpubliclibraryre'
+  'kerrisdalecommunitycentr|vancouverpubliclibraryke2', 'renfrewparkcommunitycent|vancouverpubliclibraryre',
+  # 동네 커뮤니티센터 (사용자 요청, 2026-10-01): 옆 공원·수영장·마을과는 따로
+  'stevestoncommunitycentre|steveston', 'wesburncommunitycentre|wesburn', 'douglasrecreationcentre|douglaspark', 'ladnercommunitycentre|ladneroutdoorpool'
 )
 $okSet = @{}; foreach ($p in $sameOk) { $a, $b = $p -split '\|'; $okSet["$a|$b"] = 1; $okSet["$b|$a"] = 1 }
 function Words($n) { @((NormName $n) -split ' ' | Where-Object { $_.Length -ge 4 -and $_ -notmatch '^(park|parks|centre|center|community|public|library|branch|playground|regional|beach|lake|trail|pool|outdoor|indoor|kids|family|bistro|kitchen|restaurant|grill|diner|cafe|house|west|north|south|east|vancouver|burnaby|richmond|surrey|coquitlam|langley|delta|the)$' }) }

@@ -28,6 +28,9 @@ tailwind.config = {
   /* 지도 핀 (Leaflet divIcon): 카테고리 색 원 + 번호 */
   .spot-pin { width: 30px; height: 30px; border-radius: 9999px; border: 3px solid #fff; color: #fff; font: 800 12px/24px system-ui, sans-serif; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.4); }
   .spot-pin.origin { width: 18px; height: 18px; background: #111827; }
+  /* 행사(보라 테두리)·파머스 마켓(초록 테두리) 핀: 흰 바탕에 이모지 */
+  .spot-pin.ev { background: #fff; border-color: #a21caf; font: 16px/24px system-ui, sans-serif; }
+  .spot-pin.ev.mk { border-color: #059669; }
   /* isolation: 지도 레이어(z-index 400~1000)가 지도 상자 안에서만 쌓이게. 안 그러면 장소 창이 지도 뒤로 가려져요 */
   .leaflet-container { font-family: inherit; isolation: isolate; z-index: 0; }
   /* 다크 모드: OSM 지도는 밝은 그림뿐이라 타일만 어둡게 (핀·글자는 그대로) */
@@ -1478,6 +1481,9 @@ class App {
         return;
       }
       case 'mapall': return this.set({ mapPicks: null });
+      // 지도 위 행사·마켓 핀 켜고 끄기
+      case 'mapevents': return this.set({ mapEvents: this.state.mapEvents === false });
+      case 'mapmarkets': return this.set({ mapMarkets: this.state.mapMarkets === false });
       case 'mode': return this.set({ browse: val === 'browse', q: '', kw: [], unused: [] });
       // "I'm flexible, show me ideas": 남은 질문을 모두 "상관없음"으로 두고 바로 결과
       // "Anything works for us": 5개 질문 모두 "상관없음"으로 바로 결과
@@ -1955,7 +1961,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   }
 
   // 위치 기반 필터: 기준 위치(현재 위치 또는 지역) + 반경. 개수·위치 문구는 countLine 한 줄로 합쳤어요
-  locationBar(items) {
+  // withIndoor: 추천 결과 화면에선 위치 옆에 "Indoor only" 버튼도 (비 오는 날 실내만 보기)
+  locationBar(items, withIndoor) {
     const s = this.state, near = this.nearActive();
     const seg = (val, label, on) => `<button data-act="radius" data-val="${val}" aria-pressed="${on}" class="whitespace-nowrap min-h-[36px] px-2.5 sm:px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
     return `
@@ -1968,6 +1975,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               ${Object.entries(ORIGINS).filter(([k, o]) => !o.extra || s.nearKey === k).map(([k, o]) => `<option value="${k}" ${s.nearKey === k ? 'selected' : ''}>Near ${o.label}</option>`).join('')}
             </select>
           </label>
+          ${withIndoor ? `<button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="min-h-[44px] px-3 py-2 rounded-lg font-semibold border transition-colors ${s.indoor ? 'bg-sky-600 border-sky-600 text-white' : 'border-sky-300 text-sky-800 hover:bg-sky-50 dark:border-sky-500/50 dark:text-sky-300 dark:hover:bg-sky-500/10'}">${s.indoor ? 'Indoor only ✓' : 'Indoor only'}</button>` : ''}
           ${near ? `
           <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Radius">
             ${RADII.map(r => seg(r, radiusLabel(r), s.radius === r)).join('')}
@@ -2051,7 +2059,17 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const group = (title, list) => list.length ? `<h2 class="mt-8 text-lg font-bold">${title}</h2><div class="mt-3 grid gap-3 md:grid-cols-2">${list.map(ev => this.eventRow(ev)).join('')}</div>` : '';
     const note = (tabPage ? `
       <h2 class="mt-6 text-2xl font-extrabold tracking-tight">${kind === 'markets' ? '<span aria-hidden="true">🥕</span> Farmers markets' : 'Events for families'}</h2>
-      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">${kind === 'markets' ? 'Weekly markets with local produce, food trucks and treats. A relaxed outing with kids. Tap one for hours and directions.' : 'Festivals, seasonal events and sales in the next 6 weeks.'}</p>`
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">${kind === 'markets' ? 'Weekly markets with local produce, food trucks and treats. A relaxed outing with kids. Tap one for hours and directions.' : 'Festivals, seasonal events and sales in the next 6 weeks.'}</p>
+      ${(() => {
+        // 이 목록이 어떤 기준으로 걸러졌는지 한 줄로 (종류 · 기간 · 위치 · 정렬), 위치는 바로 바꿀 수 있게
+        const chip = t => `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">${t}</span>`;
+        const where = this.nearActive() ? (this.state.radius === 'any' ? `Near ${esc(this.originLabel())}, any distance` : `Within ${esc(radiusLabel(this.state.radius))} of ${esc(this.originLabel())}`) : 'Anywhere in Metro Vancouver';
+        return `
+      <div class="mt-4 rounded-2xl p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
+        <p class="flex flex-wrap items-center gap-2 text-sm"><span class="font-semibold text-slate-600 dark:text-slate-300">Showing ${plural(evs.length, kind === 'markets' ? 'market' : 'event')}:</span>
+          ${chip(kind === 'markets' ? 'Farmers markets only' : 'Festivals, seasonal events, pop-ups and sales')}${chip('Next 6 weeks')}${chip(where)}${chip(this.nearActive() ? 'Soonest first, then nearest' : 'Soonest first')}</p>
+        <div class="mt-3">${this.locationBar([])}</div>
+      </div>`; })()}`
       // "See all"로 들어온 행사 목록에서 장소 목록으로 돌아가는 버튼 (카테고리 드롭다운을 몰라도 나갈 수 있게)
       : `<button data-act="cat" data-val="all" class="mt-6 inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">← Back to all spots</button>`) + `
       <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">${esc(EVENTS_META.note)} Last checked ${esc(EVENTS_META.updatedAt)}.</p>`;
@@ -2262,6 +2280,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     let pool = SPOTS.filter(s => isKid(s) && !['food', 'dessert'].includes(s.cat) && (!s.venue || EVENTS.some(ev => ev.spotId === s.id && upcomingDates(ev, 14).length)))   // 행사 장소(호박밭 등)는 2주 안에 그곳 행사가 있으면
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
     if (this.nearActive() && radius !== 'any') pool = pool.filter(s => s.dist <= radius || (inArea && inArea.test(s.area || '')));
+    if (this.state.indoor) pool = pool.filter(s => s.env === 'indoor' || s.env === 'both');
     pool.forEach(s => { s.score = this.wizScore(s); });
     pool.sort((x, y) => y.score - x.score);
     // 시즌 태그(#FallColours 등)나 New Rising Spots를 골랐으면 그 장소만
@@ -2331,7 +2350,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <button data-act="wizreset" class="ml-1 min-h-[36px] text-sm font-semibold underline text-slate-600 dark:text-slate-300">Start over</button>
         </div>
         ${this.seasonChips()}
-        <div class="mt-3">${this.locationBar([])}</div>
+        <div class="mt-3">${this.locationBar([], true)}</div>
         ${this.state.geoMsg ? `<p class="mt-1 text-xs text-slate-600 dark:text-slate-300" role="status">${esc(this.state.geoMsg)}</p>` : ''}
       </section>
       ${this.planBar()}
@@ -2470,7 +2489,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (picks) items = picks.map(byId).filter(Boolean).map((s, i) => ({ ...s, pickNo: i + 1, dist: origin ? km(origin, s) : null }));
     const mark = s => s.pickNo || this.rankOf(s) || (isVanClassic(s) ? '◆' : '★');
     // 실제 지도는 다 그린 뒤 drawMap()이 #lmap에 그려요 (핀·기준 위치·반경 원)
-    this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: CATS[s.cat].dot, mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks };
+    // 행사·파머스 마켓 핀: Events·Markets 탭과 같은 기준(앞으로 6주, 위치 필터). 추천 장소만 보는 지도엔 안 그려요
+    const evAll = picks ? [] : this.upcomingEvents(45).map(ev => { const sp = ev.spotId && byId(ev.spotId); return ev.lat != null ? ev : sp ? { ...ev, lat: sp.lat, lng: sp.lng } : null; }).filter(Boolean);
+    const evMarkets = evAll.filter(ev => ev.type === 'market'), evOthers = evAll.filter(ev => ev.type !== 'market');
+    const showEv = this.state.mapEvents !== false, showMk = this.state.mapMarkets !== false;
+    const evPin = ev => ({ name: ev.name, lat: ev.lat, lng: ev.lng, market: ev.type === 'market', icon: ev.icon || (ev.type === 'market' ? '🥕' : '🎪'), when: `${dayLabel(ev.next)} · ${eventHours(ev)}`, spotId: ev.spotId && byId(ev.spotId) ? ev.spotId : '', source: ev.source || '' });
+    this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: CATS[s.cat].dot, mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks,
+      events: [...(showEv ? evOthers : []), ...(showMk ? evMarkets : [])].map(evPin) };
+    const evToggle = (act, on, label, n) => `<button data-act="${act}" aria-pressed="${on}" class="flex items-center gap-1 px-2 py-0.5 rounded-full border ${on ? 'bg-amber-100 border-amber-300 text-amber-900 dark:bg-amber-500/20 dark:border-amber-500/40 dark:text-amber-100' : 'border-slate-300 text-slate-500 dark:border-slate-600 dark:text-slate-400'}">${label} <span class="font-normal">${n}</span></button>`;
     const picksBar = picks ? `
     <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl p-4 bg-violet-50 ring-1 ring-violet-200 dark:bg-violet-500/10 dark:ring-violet-500/30">
       <p class="font-semibold text-violet-900 dark:text-violet-100">Showing your ${items.length} picks from Explore</p>
@@ -2483,6 +2509,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="px-5 py-3 flex flex-wrap gap-3 text-xs font-semibold border-b border-slate-100 dark:border-slate-800">
           ${Object.entries(CATS).filter(([k]) => EATS_ON || !PAGES.eats.includes(k)).map(([, c]) => `<span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full" style="background:${c.dot}"></span>${c.label}</span>`).join('')}
           <span class="text-slate-500 dark:text-slate-400">${picks ? 'Number = your pick order' : `${this.state.sort === 'fresh' ? 'Number = rank by reasons to go now, ' : ''}★ = review pick, ◆ = Vancouver classic`}</span>
+          ${picks ? '' : `${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}<span class="text-slate-500 dark:text-slate-400">next 6 weeks</span>`}
         </div>
         <div id="lmap" class="h-[60vh] min-h-[360px] lg:h-[600px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
       </div>
@@ -2511,6 +2538,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     items.forEach(s => {
       const icon = L.divIcon({ className: '', html: `<div class="spot-pin" style="background:${s.color}">${esc(String(s.mark))}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] });
       L.marker([s.lat, s.lng], { icon, title: s.name, keyboard: true, zIndexOffset: z(s.mark) }).addTo(map).on('click', () => { this.opener = null; this.openModal(s.id); });
+    });
+    // 행사·마켓 핀: 누르면 다음 날짜·시간과 장소/공식 정보 링크
+    (this._map.events || []).forEach(ev => {
+      const icon = L.divIcon({ className: '', html: `<div class="spot-pin ev${ev.market ? ' mk' : ''}">${esc(ev.icon)}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] });
+      const html = `<div style="min-width:180px"><p style="font-weight:700;margin:0">${esc(ev.name)}</p><p style="margin:4px 0">${esc(ev.when)}</p>
+        <p style="margin:0">${ev.spotId ? `<button data-act="open" data-val="${esc(ev.spotId)}" style="text-decoration:underline;font-weight:600;margin-right:10px">Place details</button>` : ''}${/^https:\/\//.test(ev.source) ? `<a href="${esc(ev.source)}" target="_blank" rel="noopener" style="text-decoration:underline">Official info ↗</a>` : ''}</p></div>`;
+      L.marker([ev.lat, ev.lng], { icon, title: ev.name, keyboard: true, zIndexOffset: 2000 }).addTo(map).bindPopup(html);
     });
     // 기준 위치(내 위치·지역)와 반경 원
     const o = this.origin();
