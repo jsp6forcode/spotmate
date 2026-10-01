@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SpotMate</title>
+<title>Tiny Trips</title>
 <meta name="description" content="Places to take the kids around Metro Vancouver: playgrounds, spray parks, farms, museums and indoor play, with hours, weather and weekend events.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -389,12 +389,12 @@ const recentLabel = () => {
 // data/spot-guides.json: 스팟별 할 거리(do), 먹을 것(eat), 준비물(bring). 없는 스팟은 자동 준비물만 보여줘요
 let GUIDES = {}, GUIDES_NOTE = '';
 // ── 같은 내용이 한 화면(카드·장소 창)에 두 번 나오지 않게 ──
-// 규칙: 위에 먼저 나오는 내용(Why go now의 행사·시즌, 장소 설명, 배지)이 우선이고, SpotMate tip의 각 줄은
+// 규칙: 위에 먼저 나오는 내용(Why go now의 행사·시즌, 장소 설명, 배지)이 우선이고, Tiny Trips tip의 각 줄은
 // 핵심 단어(4글자 이상 영어 단어와 숫자, 흔한 말 제외)의 절반 이상이 이미 위에 나왔으면 숨겨요
 const DUP_STOP = /^(with|from|that|this|they|their|there|have|your|open|daily|place|until|before|about|also|each|only|more|than|into|over|plus|just|when|what|here|some|kids|check|year|round)$/;
 const keyWords = t => new Set((String(t).toLowerCase().match(/[a-z]{4,}|\d+/g) || []).filter(w => !DUP_STOP.test(w)));
 const overlapsSeen = (t, seen) => { const w = [...keyWords(t)]; return w.length > 0 && w.filter(x => seen.has(x)).length / w.length >= 0.5; };
-// data/spot-notes.json: SpotMate tip, 공식 페이지에서 확인한 아이 관련 사실 { id: { items: [...], source } } (리뷰가 아니에요)
+// data/spot-notes.json: Tiny Trips tip, 공식 페이지에서 확인한 아이 관련 사실 { id: { items: [...], source } } (리뷰가 아니에요)
 let NOTES = {}, NOTES_META = { updatedAt: '', note: '' };
 // data/season.json: 시즌 태그(#FallColours 등)와 스팟별 "지금 가야 하는 이유". 오늘(밴쿠버 날짜)이 from~to 안인 태그만 써요
 let SEASON = [], SEASON_NOTE = '';
@@ -911,7 +911,7 @@ class App {
         RISE_META = { updatedAt: td.updatedAt || '', through: td.through || '', recentFrom: td.recentFrom || '', recentThrough: td.recentThrough || '' };
         RISE_NOTES = td.notes || {};
       }
-      // 스팟 안내(할 거리·먹을 것·준비물), SpotMate tip, 주차 미터·주차장
+      // 스팟 안내(할 거리·먹을 것·준비물), Tiny Trips tip, 주차 미터·주차장
       if (gd) { GUIDES = gd.guides || {}; GUIDES_NOTE = gd.note || ''; }
       if (nd) { NOTES = nd.notes || {}; NOTES_META = { updatedAt: nd.updatedAt || '', note: nd.note || '' }; }
       if (md) METERS = { spots: md.spots || {}, radius: md.radius || 200 };
@@ -994,12 +994,13 @@ class App {
     const types = [['wrong', 'Something’s wrong (hours, details, a closed place)'], ['place', 'Suggest a place'], ['idea', 'An idea or other feedback']];
     return `
     <section class="mt-8 max-w-2xl mx-auto">
-      <h2 class="text-3xl font-extrabold tracking-tight">Hi, I’m a dad of two <span aria-hidden="true">👋</span></h2>
+      <h2 class="text-3xl font-extrabold tracking-tight">Hi, I’m a dad raising the loveliest little ones <span aria-hidden="true">👋</span></h2>
       <div class="mt-4 space-y-4 text-base leading-relaxed text-slate-700 dark:text-slate-200">
-        <p>We’re raising our two kids here in Vancouver, and like a lot of parents, our weekends used to start with the same question: <em>where should we take the kids today?</em></p>
-        <p>I’d end up with a dozen tabs open, jumping between Google searches and different websites, trying to piece it all together. I kept wishing there was just one place to find good spots for kids.</p>
-        <p>So I started SpotMate as my own little side project: playgrounds, spray parks, farms, libraries, rainy-day hideouts and more around Metro Vancouver, all in one spot.</p>
-        <p>It’s still a work in progress, and I’m sure I’ve missed things or gotten a few wrong. If you notice a mistake, know a great place that should be here, or just have an idea, please send me a note below. Every message really helps SpotMate grow into something more useful for all of us parents.</p>
+        <p>We’re raising our kids here in Vancouver, and like a lot of parents, our weekends used to start with the same question: <em>where should we take the kids today?</em></p>
+        <p>I’d end up with a dozen tabs open, jumping between Google searches and different websites, trying to piece it all together. I didn’t want to take them just anywhere. I wanted to find the very best places for them, and I kept wishing there was one place to find them all.</p>
+        <p>So I started Tiny Trips as my own little side project: playgrounds, spray parks, farms, libraries, rainy-day hideouts and more around Metro Vancouver, all in one spot.</p>
+        <p>To keep it to the good ones, I lean on what other families already think. Most places here are rated 4.0 or higher on Google, so you’re seeing spots lots of parents have already tried and loved.</p>
+        <p>It’s still a work in progress, and I’m sure I’ve missed things or gotten a few wrong. If you notice a mistake, know a great place that should be here, or just have an idea, please send me a note below. Every message really helps Tiny Trips grow into something more useful for all of us parents.</p>
         <p>Thanks for stopping by, and have fun out there with your little ones!</p>
         <p class="font-semibold">— A Vancouver dad</p>
       </div>
@@ -1226,7 +1227,7 @@ class App {
     if ((hr >= 21 || hr < 3) && (hr < 3 || openAt(s, 23))) add(1.2, `Open late tonight${until}`);
     return [...happy, ...out];
   }
-  // SpotMate tip 중 화면에 아직 안 나온 줄만 (where: 'card'면 카드의 설명·이유·행사 줄, 'modal'이면 장소 창의 Why go now·설명과 비교)
+  // Tiny Trips tip 중 화면에 아직 안 나온 줄만 (where: 'card'면 카드의 설명·이유·행사 줄, 'modal'이면 장소 창의 Why go now·설명과 비교)
   tipItems(s, where) {
     const n = NOTES[s.id]; if (!n) return [];
     const texts = [s.summary];
@@ -1647,7 +1648,7 @@ class App {
     const url = location.origin + location.pathname + '#spot=' + encodeURIComponent(id);
     const done = text => { this.set({ shareMsg: { id, text } }); clearTimeout(this.shareTimer); this.shareTimer = setTimeout(() => { if (this.state.shareMsg) this.set({ shareMsg: null }); }, 2500); };
     if (navigator.share) {
-      try { await navigator.share({ title: `${s.name} · SpotMate`, text: `${s.name} (${s.area})`, url }); return; }
+      try { await navigator.share({ title: `${s.name} · Tiny Trips`, text: `${s.name} (${s.area})`, url }); return; }
       catch (e) { if (e && e.name === 'AbortError') return; }
     }
     try { await navigator.clipboard.writeText(url); done('Link copied'); }
@@ -1684,7 +1685,7 @@ class App {
   }
   async copyPlan() {
     const spots = this.state.plan.map(byId);
-    const text = 'My saved spots on SpotMate\n\n' + spots.map((s, i) => `${i + 1}. ${s.name} (${s.area})\n   ${mapsUrl(s)}`).join('\n');
+    const text = 'My saved spots on Tiny Trips\n\n' + spots.map((s, i) => `${i + 1}. ${s.name} (${s.area})\n   ${mapsUrl(s)}`).join('\n');
     try {
       await navigator.clipboard.writeText(text);
       this.set({ copyMsg: 'List copied. Paste it into a chat to share.', copyText: '' });
@@ -1827,8 +1828,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <div class="max-w-6xl mx-auto px-4 md:px-6 pt-5 pb-4">
         <div class="flex items-start justify-between gap-4">
           <div>
-            <h1 class="font-brand text-3xl md:text-5xl font-extrabold tracking-tight leading-none">SpotMate</h1>
-            <p class="hidden sm:block mt-2 text-white/85 text-base">Places to take the kids around Metro Vancouver</p>
+            <h1 class="font-brand text-3xl md:text-5xl font-extrabold tracking-tight leading-none">Tiny Trips</h1>
+            <p class="hidden sm:block mt-2 text-white/85 text-base">Happy places for little ones around Metro Vancouver</p>
           </div>
           <div class="flex flex-col items-end">
             <div class="flex items-center gap-2">
@@ -2136,10 +2137,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="text-xs font-bold uppercase tracking-wide text-amber-800 dark:text-amber-300">${esc(why.label)}</p>
           <p class="mt-0.5 text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
         </div>` : `
-        <div class="mt-3 border-l-4 border-sky-500 rounded-r-lg bg-sky-50 dark:bg-sky-500/10 pl-3 pr-3 py-2" title="SpotMate tip from official sources. Open the card for more.">
-          <p class="text-xs font-bold uppercase tracking-wide text-sky-800 dark:text-sky-300"><span aria-hidden="true">💡</span> SpotMate tip</p>
+        <div class="mt-3 border-l-4 border-sky-500 rounded-r-lg bg-sky-50 dark:bg-sky-500/10 pl-3 pr-3 py-2" title="Tiny Trips tip from official sources. Open the card for more.">
+          <p class="text-xs font-bold uppercase tracking-wide text-sky-800 dark:text-sky-300"><span aria-hidden="true">💡</span> Tiny Trips tip</p>
           <p class="mt-0.5 text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
-          ${/* "Why go now"와 SpotMate tip을 한 상자로 합쳤어요 (2026-10-01). 공식 팁이 있으면 한 줄 더 */ this.tipItems(s, 'card').length ? `<p class="mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(this.tipItems(s, 'card')[0])}</p>` : ''}
+          ${/* "Why go now"와 Tiny Trips tip을 한 상자로 합쳤어요 (2026-10-01). 공식 팁이 있으면 한 줄 더 */ this.tipItems(s, 'card').length ? `<p class="mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(this.tipItems(s, 'card')[0])}</p>` : ''}
         </div>` : ''}
         ${this.planLater() && HOURS_READY ? (() => {
           // 날짜 계획: 그날(들) 영업시간
@@ -2150,7 +2151,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ? `<p class="mt-2 text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'web' && s.hoursSource !== 'public' && !isDaylight(s) ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
           : HOURS_READY ? '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
         <p class="mt-2 text-sm text-slate-700 dark:text-slate-300 ${why ? 'clamp2' : ''}">${esc(s.summary)}</p>
-        ${(!why || why.lunch || why.pick || why.hh) && this.tipItems(s, 'card').length ? `<p class="mt-2 text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2.5 py-1.5 clamp2" title="SpotMate tip, checked on the official site. Open the card for more."><span class="font-semibold"><span aria-hidden="true">💡</span> SpotMate tip:</span> ${esc(this.tipItems(s, 'card')[0])}</p>` : ''}
+        ${(!why || why.lunch || why.pick || why.hh) && this.tipItems(s, 'card').length ? `<p class="mt-2 text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2.5 py-1.5 clamp2" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold"><span aria-hidden="true">💡</span> Tiny Trips tip:</span> ${esc(this.tipItems(s, 'card')[0])}</p>` : ''}
 
         ${TRENDS_ON && s.rise != null && s.rise >= RISING_MIN && !(why && why.icon === RISE_ICON) ? `<p class="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-300" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
         ${spotTags(s).length ? `<p class="mt-2 flex flex-wrap gap-1.5">${spotTags(s).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300">#${esc(t.label)}</span>`).join('')}</p>` : ''}
@@ -2622,12 +2623,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const tags = spotTags(s);
             // 먹거리: 최근 기사(링크)·Reddit 글·지금 시간대·날씨에 맞는 이유
             const press = recentPress(s), food = this.nowReasons(s).filter(r => r.label === 'Good right now' || r.label === 'Talked about lately');
-            // "Why go now"(행사·시즌)와 SpotMate tip(공식 정보)을 한 상자로 합쳤어요 (2026-10-01)
+            // "Why go now"(행사·시즌)와 Tiny Trips tip(공식 정보)을 한 상자로 합쳤어요 (2026-10-01)
             const notes = NOTES[s.id] ? this.tipItems(s, 'modal') : [], src = (NOTES[s.id] || {}).source || '', host = (/^https:\/\/(?:www\.)?([^/]+)/.exec(src) || [])[1] || '';
             if (!evs.length && !tags.length && !press.length && !food.length && !notes.length) return '';
             return `
           <section class="rounded-2xl p-5 bg-sky-50 dark:bg-sky-500/10 ring-1 ring-sky-200 dark:ring-sky-500/25">
-            <h3 class="font-bold text-sky-900 dark:text-sky-200"><span aria-hidden="true">💡</span> SpotMate tip</h3>
+            <h3 class="font-bold text-sky-900 dark:text-sky-200"><span aria-hidden="true">💡</span> Tiny Trips tip</h3>
             ${food.map(r => `<p class="mt-2 text-sm text-slate-800 dark:text-slate-200"><span class="font-semibold">${esc(r.label)}</span> · ${esc(r.text)}</p>`).join('')}
             ${press.map(p => `<p class="mt-2 text-sm text-slate-800 dark:text-slate-200"><span class="font-semibold">In the news</span> · ${esc(p.outlet)}, ${esc(shortDate(p.date))}: <a href="${esc(p.url)}" target="_blank" rel="noopener" class="underline">${esc(p.title)} ↗</a></p>`).join('')}
             ${evs.map(ev => `
@@ -2754,7 +2755,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
 
           <!-- "How busy is it?" 칸도 뺐어요: 혼잡도는 위의 Google Maps 링크에서 봐요 (구글은 혼잡도 API를 주지 않아요) -->
-          <!-- "Tips" 칸은 뺐어요: 위의 SpotMate tip과 겹쳐서. 꼭 필요한 안내는 data/spot-notes.json으로 옮겨요 -->
+          <!-- "Tips" 칸은 뺐어요: 위의 Tiny Trips tip과 겹쳐서. 꼭 필요한 안내는 data/spot-notes.json으로 옮겨요 -->
 
 
         </div>
