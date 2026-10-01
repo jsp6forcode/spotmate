@@ -1,6 +1,25 @@
 {
   "note" : "SpotMate notes: kid-related facts checked on each place's official page (or the city or tourism board page). Not reviews. Prices and hours change, so check the source before you go.",
   "notes" : {
+    "aggiepark" : {
+      "items" : [
+        "Also here: picnic tables and washrooms."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/aggie-park"
+    },
+    "ailsapark" : {
+      "items" : [
+        "Port Moody spray parks usually open May long weekend to the end of September, 9am–8pm, weather permitting."
+      ],
+      "scope" : "city",
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
+    "albionpark" : {
+      "items" : [
+        "Also here: a bike skills park, covered picnic areas, washrooms and walking trails."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
     "albionsportscomplex" : {
       "items" : [
         "Maple Ridge spray parks open daily from mid-May, 10am–8pm, weather permitting."
@@ -15,6 +34,18 @@
       ],
       "source" : "https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026"
     },
+    "alexanderrobinsonpark" : {
+      "items" : [
+        "Also here: parking and sports courts."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "allcopark" : {
+      "items" : [
+        "Also here: covered picnic areas, walking trails, parking and water access."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
     "aquarium" : {
       "items" : [
         "Kids under 3 get in free.",
@@ -23,6 +54,54 @@
       ],
       "source" : "https://www.vanaqua.org/"
     },
+    "bakerviewpark" : {
+      "items" : [
+        "Also here: picnic tables."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/bakerview-park"
+    },
+    "bearcreek" : {
+      "items" : [
+        "Also here: a bike skills park, an outdoor pool in summer, water play in summer and picnic tables."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/bear-creek-park"
+    },
+    "beatybiodiversitymuseum" : {
+      "items" : [
+        "Family tickets $35–55. Nature Club for kids 5–12 on the first Saturday of the month."
+      ],
+      "source" : "https://beatymuseum.ubc.ca/visit/"
+    },
+    "beckettpark" : {
+      "items" : [
+        "Also here: a pump track, a bike skills park, a drinking fountain and an off-leash dog area."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "bellemorsepark" : {
+      "items" : [
+        "Also here: walking trails, wheelchair access and sports courts."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "blakeburnlagoonspark" : {
+      "items" : [
+        "Also here: walking trails and wildlife viewing."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/blakeburn-lagoons-park"
+    },
+    "blakeburnpark" : {
+      "items" : [
+        "Also here: washrooms."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/blakeburn-park"
+    },
+    "blaneyhamletpark" : {
+      "items" : [
+        "Also here: a pump track, a bike skills park, a sand play area and water play in summer."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
     "bloedelconservatory" : {
       "items" : [
         "Kids 4 and under are free; ages 5–12 are $4.90 in fall and winter.",
@@ -30,12 +109,50 @@
       ],
       "source" : "https://www.vandusengarden.org/?p=69"
     },
+    "bluemountain" : {
+      "items" : [
+        "Push-button spray park, open in summer. There’s no lifeguard at Coquitlam spray parks, so stay close."
+      ],
+      "scope" : "city",
+      "source" : "https://www.coquitlam.ca/outdoorpools"
+    },
+    "bluemountainspraypark" : {
+      "items" : [
+        "Push-button spray park, open in summer. There’s no lifeguard at Coquitlam spray parks, so stay close."
+      ],
+      "scope" : "city",
+      "source" : "https://www.coquitlam.ca/outdoorpools"
+    },
+    "boseforestpark" : {
+      "items" : [
+        "Also here: walking trails."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/bose-forest-park"
+    },
+    "brewerspark" : {
+      "items" : [
+        "Also here: water play in summer and sports courts."
+      ],
+      "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
+    },
+    "brickwoodpark" : {
+      "items" : [
+        "Also here: a drinking fountain, wheelchair access and sports courts."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
     "bridgeviewcommunitycentr" : {
       "items" : [
         "Surrey spray parks run May 16 to late September, 11am–6pm. Push the button to start the water when it’s above 20°C."
       ],
       "scope" : "city",
       "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
+    },
+    "brookmerepark" : {
+      "items" : [
+        "Also here: walking trails and sports courts."
+      ],
+      "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-20"
     },
     "burkevilleneighbourhoodp" : {
       "items" : [
@@ -52,6 +169,12 @@
       ],
       "source" : "https://miss604.com/2026/03/ride-the-train-at-the-burnaby-central-railway/"
     },
+    "burnabypubliclibrarybobp" : {
+      "items" : [
+        "Picture books in 25+ languages, including My First Language Kits, and children’s librarians who can help find the right books."
+      ],
+      "source" : "https://bpl.bc.ca/people-help/bpl-for-kids/"
+    },
     "bvm" : {
       "items" : [
         "Free admission (Haunted Village is ticketed).",
@@ -59,6 +182,12 @@
         "Open in seasons, so check the hours page before you go."
       ],
       "source" : "https://www.burnabyvillagemuseum.ca/EN/main/visit/hours-rates.html"
+    },
+    "callaghanpark" : {
+      "items" : [
+        "Also here: a sand play area."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
     "canlansportsnorthshore" : {
       "items" : [
@@ -87,6 +216,38 @@
       ],
       "source" : "https://www.pac.dfo-mpo.gc.ca/sep-pmvs/hatcheries-ecloseries/capilano-eng.html"
     },
+    "castlepark" : {
+      "items" : [
+        "Port Coquitlam spray parks are open 9am–8pm daily in summer."
+      ],
+      "scope" : "city",
+      "source" : "https://www.portcoquitlam.ca/node/5318"
+    },
+    "cedarpark" : {
+      "items" : [
+        "Also here: a sand play area, water play in summer, walking trails and an outdoor fitness circuit."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "centralpark2" : {
+      "items" : [
+        "Also here: a community garden."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/central-park"
+    },
+    "chaldecottpark" : {
+      "items" : [
+        "Vancouver spray parks run May 16 to Sept 30, 9am–9pm daily. Staff supervise at busy times from late June to early September."
+      ],
+      "scope" : "city",
+      "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
+    },
+    "charlesonpark" : {
+      "items" : [
+        "Also here: an off-leash dog area and sports courts."
+      ],
+      "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
+    },
     "charlesrummelpark" : {
       "items" : [
         "Burnaby spray parks run from mid-May to the end of September, 9am–9pm (push the button to start the water)."
@@ -94,12 +255,24 @@
       "scope" : "city",
       "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
     },
+    "chelseapark" : {
+      "items" : [
+        "Also here: walking trails and an off-leash dog area."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/chelsea-park"
+    },
     "cityoflangleylibrary" : {
       "items" : [
         "Free Babytime (0–2) and Storytime at Fraser Valley Regional Library branches. Check the branch calendar for times."
       ],
       "scope" : "city",
       "source" : "https://www.fvrl.bc.ca/"
+    },
+    "cliffpark" : {
+      "items" : [
+        "Also here: a drinking fountain, walking trails, parking and wheelchair access."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
     "cloverdalearena" : {
       "items" : [
@@ -120,12 +293,25 @@
       ],
       "source" : "https://vancouver.ca/parks-recreation-culture/coal-harbour-community-centre.aspx"
     },
+    "comolake" : {
+      "items" : [
+        "Also here: washrooms, a drinking fountain and fishing."
+      ],
+      "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-26"
+    },
     "confederationparkwaterpa" : {
       "items" : [
         "Burnaby spray parks run from mid-May to the end of September, 9am–9pm (push the button to start the water)."
       ],
       "scope" : "city",
       "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
+    },
+    "connaughtpark" : {
+      "items" : [
+        "Vancouver spray parks run May 16 to Sept 30, 9am–9pm daily. Staff supervise at busy times from late June to early September."
+      ],
+      "scope" : "city",
+      "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
     },
     "coquitlamcentre" : {
       "items" : [
@@ -140,11 +326,97 @@
       "scope" : "city",
       "source" : "https://coqlibrary.ca/programguide"
     },
+    "cottonwoodpark" : {
+      "items" : [
+        "Push-button spray park, open in summer. There’s no lifeguard at Coquitlam spray parks, so stay close."
+      ],
+      "scope" : "city",
+      "source" : "https://www.coquitlam.ca/outdoorpools"
+    },
+    "couttspark" : {
+      "items" : [
+        "Also here: sports courts."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/coutts-park"
+    },
     "crescentbeach" : {
       "items" : [
         "Two roped-off swim areas, with lifeguards at Sullivan Point in summer."
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/crescent-beach"
+    },
+    "crescentpark" : {
+      "items" : [
+        "Also here: sports courts."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/crescent-park"
+    },
+    "crestwoodpark" : {
+      "items" : [
+        "Also here: sports courts."
+      ],
+      "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-31"
+    },
+    "crossscabinspark" : {
+      "items" : [
+        "Also here: walking trails, parking, wheelchair access and water access."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "davidsonspoolpark" : {
+      "items" : [
+        "Also here: picnic tables, portable washrooms, parking and water access."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "deerfernpark" : {
+      "items" : [
+        "Also here: a sand play area, water play in summer, walking trails and an outdoor fitness circuit."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "diefenbaker" : {
+      "items" : [
+        "The Rotary Waterworks spray park runs from May long weekend to September long weekend, water on 10am–9pm."
+      ],
+      "source" : "https://admin.delta.ca/node/203"
+    },
+    "eagleridgepoolgroundsand" : {
+      "items" : [
+        "Also here: picnic tables, a drinking fountain and sports courts."
+      ],
+      "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-37"
+    },
+    "easterndrivepark" : {
+      "items" : [
+        "Also here: sports courts."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/eastern-drive-park"
+    },
+    "easthillpark" : {
+      "items" : [
+        "Port Moody spray parks usually open May long weekend to the end of September, 9am–8pm, weather permitting."
+      ],
+      "scope" : "city",
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
+    "edgewoodpark" : {
+      "items" : [
+        "Also here: picnic tables, walking trails and sports courts."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/edgewood-park"
+    },
+    "elkspark" : {
+      "items" : [
+        "Also here: a community garden."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/elks-park"
+    },
+    "englishbay" : {
+      "items" : [
+        "Lifeguards watch the flagged swim area May 16 to Sept 7, 2026, 12pm–8pm daily."
+      ],
+      "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
     },
     "ermastephensonpark" : {
       "items" : [
@@ -160,11 +432,59 @@
       "scope" : "city",
       "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
     },
+    "everettcrowleypark" : {
+      "items" : [
+        "Also here: an off-leash dog area."
+      ],
+      "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
+    },
+    "evergreenpark" : {
+      "items" : [
+        "Also here: sports courts."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/evergreen-park"
+    },
+    "evergreenparkplayground" : {
+      "items" : [
+        "Also here: washrooms and sports courts."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/evergreen-park"
+    },
+    "fairviewpark" : {
+      "items" : [
+        "Also here: walking trails, wheelchair access and sports courts."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "firefighterspark" : {
+      "items" : [
+        "Also here: a pump track, a sand play area, water play in summer and a drinking fountain."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
     "fleetwoodcommunitycentre" : {
       "items" : [
         "Three licensed preschool rooms and preschool programs."
       ],
       "source" : "https://www.surrey.ca/parks-recreation/recreation-facilities/fleetwood-community-centre"
+    },
+    "fleetwoodpark" : {
+      "items" : [
+        "Also here: water play in summer, picnic tables, washrooms and walking trails."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/fleetwood-park"
+    },
+    "fletcherpark" : {
+      "items" : [
+        "Also here: wheelchair access."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "forsythpark" : {
+      "items" : [
+        "Also here: an off-leash dog area."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/forsyth-park"
     },
     "fortlangleynationalhisto" : {
       "items" : [
@@ -173,12 +493,55 @@
       ],
       "source" : "https://parks.canada.ca/lhn-nhs/bc/langley"
     },
+    "fraserriverpark" : {
+      "items" : [
+        "Also here: an off-leash dog area."
+      ],
+      "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
+    },
+    "funcircleindoorplaygroun" : {
+      "items" : [
+        "For ages 0–12, with a separate baby and toddler area, a ball pit and an on-site café."
+      ],
+      "source" : "https://media.surreyschools.ca/media/Default/medialib/fun-circle-indoor-playground-activity-centre.706b77193029.pdf"
+    },
+    "fundays365" : {
+      "items" : [
+        "Reserve play spots online and sign the waiver before you go."
+      ],
+      "source" : "https://365fundays.ca/en/"
+    },
+    "gallowaypark" : {
+      "items" : [
+        "Push-button spray park, open in summer. There’s no lifeguard at Coquitlam spray parks, so stay close."
+      ],
+      "scope" : "city",
+      "source" : "https://www.coquitlam.ca/outdoorpools"
+    },
+    "gatespark" : {
+      "items" : [
+        "Also here: washrooms, a drinking fountain and walking trails."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/gates-park"
+    },
     "georgemackielibrarynorth" : {
       "items" : [
         "Free Babytime (0–2) and Storytime at Fraser Valley Regional Library branches. Check the branch calendar for times."
       ],
       "scope" : "city",
       "source" : "https://www.fvrl.bc.ca/"
+    },
+    "gobananas" : {
+      "items" : [
+        "Socks are required to play, for kids and grown-ups."
+      ],
+      "source" : "https://www.gobananaslangley.com/"
+    },
+    "godwinfarmbiodiversitypr" : {
+      "items" : [
+        "Also here: washrooms and walking trails."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/godwin-farm-biodiversity-preserve-park"
     },
     "goldstonepark" : {
       "items" : [
@@ -195,6 +558,12 @@
       ],
       "source" : "https://www.gvzoo.com/visit/hours-rates-getting-here/"
     },
+    "greentimbers" : {
+      "items" : [
+        "Also here: picnic tables and fishing."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/green-timbers-urban-forest"
+    },
     "grouse" : {
       "items" : [
         "Grizzly bear habitat with ranger talks, plus owl talks and a bird show.",
@@ -202,6 +571,30 @@
         "Several places to eat up top, from a coffee bar to a bistro."
       ],
       "source" : "https://www.grousemountain.com/plan-your-visit"
+    },
+    "gulfofgeorgiacannerynati" : {
+      "items" : [
+        "Free for kids and youth 17 and under, like all Parks Canada sites."
+      ],
+      "source" : "https://parks.canada.ca/voyage-travel/admission"
+    },
+    "hammondplayground" : {
+      "items" : [
+        "Also here: a sand play area, picnic tables, a drinking fountain and parking."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "haneynokaipark" : {
+      "items" : [
+        "Also here: a drinking fountain, wheelchair access, an outdoor fitness circuit and sports courts."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "harryhoogepark" : {
+      "items" : [
+        "Also here: walking trails, parking and an outdoor fitness circuit."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
     "hastingscommunitycentre" : {
       "items" : [
@@ -223,11 +616,29 @@
       "scope" : "city",
       "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
     },
+    "hazelnutmeadowscommunity" : {
+      "items" : [
+        "Also here: walking trails and sports courts."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/hazelnut-meadows-community-park"
+    },
     "holland" : {
       "items" : [
         "Playground (renovated in 2020), fountains and big lawns."
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/holland-park"
+    },
+    "hollypark2" : {
+      "items" : [
+        "Also here: picnic tables."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "horsemanspark" : {
+      "items" : [
+        "Also here: walking trails and parking."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
     "humepark" : {
       "items" : [
@@ -249,6 +660,42 @@
         "Baby care rooms, strollers to borrow, and a kids' menu in the restaurant."
       ],
       "source" : "https://www.ikea.com/ca/en/stores/richmond/"
+    },
+    "jerrysulinapark" : {
+      "items" : [
+        "Also here: walking trails, parking, an off-leash dog area and water access."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "jonespark" : {
+      "items" : [
+        "Also here: an off-leash dog area."
+      ],
+      "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
+    },
+    "jordanpark" : {
+      "items" : [
+        "Also here: washrooms, parking and sports courts."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "junglejacs" : {
+      "items" : [
+        "Socks are required for play. Open 7 days a week."
+      ],
+      "source" : "https://junglejacs.com/"
+    },
+    "kanaka" : {
+      "items" : [
+        "Also here: washrooms, a drinking fountain, parking and wheelchair access."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "kensingtonparkoutdoorpoo" : {
+      "items" : [
+        "Kids under 8 need an adult (16+) within arm’s reach in the outdoor pool, up to 3 kids per adult."
+      ],
+      "source" : "https://burnaby.ca/sites/default/files/acquiadam/2024-05/Outdoor-Pools-%20Booking-Request-Form.pdf"
     },
     "keswickpark" : {
       "items" : [
@@ -278,12 +725,35 @@
       ],
       "source" : "https://vancouver.ca/parks-recreation-culture/killarney-pool.aspx"
     },
+    "kinpark" : {
+      "items" : [
+        "Also here: sports courts."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
     "kits" : {
       "items" : [
-        "Lifeguards on duty May 16 to Sept 7, 2026, 11:30am–8:30pm."
+        "Lifeguards watch the flagged swim area May 16 to Sept 7, 2026, 12pm–8pm daily."
       ],
-      "scope" : "city",
-      "source" : "https://www.ctvnews.ca/vancouver/article/vancouver-to-remove-lifeguards-from-some-beaches-for-2026-season/"
+      "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
+    },
+    "lionspark" : {
+      "items" : [
+        "Also here: water play in summer, covered picnic areas, washrooms and a skate park."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/lions-park"
+    },
+    "lionspark2" : {
+      "items" : [
+        "Also here: a pump track and sports courts."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "littlebeans" : {
+      "items" : [
+        "Happy hour Monday to Friday, 1–3pm: lower play admission and 15% off food and drinks."
+      ],
+      "source" : "https://littlebeansplaycafe.ca/"
     },
     "lonsdalequay" : {
       "items" : [
@@ -305,6 +775,32 @@
       ],
       "source" : "https://ecologycentre.ca/plan-your-visit"
     },
+    "mackiepark" : {
+      "items" : [
+        "Also here: an off-leash dog area."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search"
+    },
+    "mackinpark" : {
+      "items" : [
+        "Push-button spray park, open in summer. There’s no lifeguard at Coquitlam spray parks, so stay close."
+      ],
+      "scope" : "city",
+      "source" : "https://www.coquitlam.ca/outdoorpools"
+    },
+    "macleanpark" : {
+      "items" : [
+        "Vancouver spray parks run May 16 to Sept 30, 9am–9pm daily. Staff supervise at busy times from late June to early September."
+      ],
+      "scope" : "city",
+      "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
+    },
+    "maplegrovepool" : {
+      "items" : [
+        "Outdoor pool, open June 15 to Sept 7 in 2026. Book swim times online up to 3 days ahead; about a quarter of spots are kept for drop-in."
+      ],
+      "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
+    },
     "mapleridgepark" : {
       "items" : [
         "Maple Ridge spray parks open daily from mid-May, 10am–8pm, weather permitting."
@@ -321,11 +817,59 @@
       ],
       "source" : "https://destinationvancouver.com/things-to-do/maplewood-farm"
     },
+    "margueritepark" : {
+      "items" : [
+        "Also here: a drinking fountain."
+      ],
+      "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-53"
+    },
+    "mcleanpark" : {
+      "items" : [
+        "Also here: a concession stand."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/mclean-park"
+    },
+    "memorialpark" : {
+      "items" : [
+        "The Ladner Rotary Splash Park runs from May long weekend to September long weekend, water usually on 10am–9pm."
+      ],
+      "source" : "https://admin.delta.ca/node/233"
+    },
+    "memorialpeace" : {
+      "items" : [
+        "Also here: picnic tables, parking and wheelchair access."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
     "metrotown" : {
       "items" : [
         "Free stroller rentals at Guest Services (Ground Level, next to Walmart). Bring government ID."
       ],
       "source" : "https://www.metropolisatmetrotown.com/services/"
+    },
+    "millardorchardpark" : {
+      "items" : [
+        "Also here: sports courts."
+      ],
+      "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-56"
+    },
+    "moa" : {
+      "items" : [
+        "Free for kids 5 and under; youth (6–18) $13. Half price on Thursday evenings after 5pm."
+      ],
+      "source" : "https://moa.ubc.ca/visit/"
+    },
+    "mountainviewpark2" : {
+      "items" : [
+        "Also here: a drinking fountain, an outdoor fitness circuit and sports courts."
+      ],
+      "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-58"
+    },
+    "mudbaypark" : {
+      "items" : [
+        "Also here: walking trails."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/mud-bay-park"
     },
     "murielarnasonlibrary" : {
       "items" : [
@@ -334,11 +878,53 @@
       "scope" : "city",
       "source" : "https://www.fvrl.bc.ca/"
     },
+    "museumofvancouver" : {
+      "items" : [
+        "Kids 12 and under get in free with an adult (up to 6 kids per adult)."
+      ],
+      "source" : "https://museumofvancouver.ca/visit"
+    },
+    "museumsurrey" : {
+      "items" : [
+        "Free admission. Sensory-friendly hours on the first Sunday of most months, 10am–12pm. Kids under 12 need an adult with them."
+      ],
+      "source" : "https://www.surrey.ca/arts-culture/museum-of-surrey/visit-museum-of-surrey"
+    },
+    "nelsonpark" : {
+      "items" : [
+        "Also here: an off-leash dog area."
+      ],
+      "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
+    },
+    "newbrightonpool" : {
+      "items" : [
+        "Outdoor pool, open May 16 to Sept 13 in 2026. Book swim times online up to 3 days ahead; about a quarter of spots are kept for drop-in."
+      ],
+      "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
+    },
     "newwestminsterpubliclibr" : {
       "items" : [
         "Free Babytime (0–12 months) and Baby Social (0–23 months)."
       ],
       "source" : "https://www.nwpl.ca/"
+    },
+    "noonscreekpark" : {
+      "items" : [
+        "Also here: covered picnic areas and walking trails."
+      ],
+      "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-61"
+    },
+    "normstaffpark" : {
+      "items" : [
+        "Also here: water play in summer, a drinking fountain and sports courts."
+      ],
+      "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-62"
+    },
+    "norquaypark" : {
+      "items" : [
+        "Also here: water play in summer."
+      ],
+      "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
     },
     "northsurreysporticecompl" : {
       "items" : [
@@ -367,11 +953,44 @@
       "scope" : "city",
       "source" : "https://www.nvdpl.ca/children"
     },
+    "oakpark" : {
+      "items" : [
+        "Vancouver spray parks run May 16 to Sept 30, 9am–9pm daily. Staff supervise at busy times from late June to early September."
+      ],
+      "scope" : "city",
+      "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
+    },
+    "ohmyland" : {
+      "items" : [
+        "Fill in the waiver online before your visit to save time at the door."
+      ],
+      "source" : "https://ohmylandclub.com/"
+    },
+    "pandorapark" : {
+      "items" : [
+        "Vancouver spray parks run May 16 to Sept 30, 9am–9pm daily. Staff supervise at busy times from late June to early September."
+      ],
+      "scope" : "city",
+      "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
+    },
+    "panoramapark2" : {
+      "items" : [
+        "Push-button spray park, open in summer. There’s no lifeguard at Coquitlam spray parks, so stay close."
+      ],
+      "scope" : "city",
+      "source" : "https://www.coquitlam.ca/outdoorpools"
+    },
     "parkroyal" : {
       "items" : [
         "Castle Royale inside the mall has active play for kids of all ages."
       ],
       "source" : "https://parkroyal.ca/store/castle-royale/"
+    },
+    "peacepark" : {
+      "items" : [
+        "Also here: walking trails."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/peace-park"
     },
     "pierpark" : {
       "items" : [
@@ -380,12 +999,56 @@
       "scope" : "city",
       "source" : "https://www.newwestcity.ca/parks-and-recreation/parks/amenities/sb_expander_articles/961.php"
     },
+    "poiriersportleisurecompl" : {
+      "items" : [
+        "Free drop-in Baby Story Time (0–2) and Toddler Plus Story Time (2–5) at the Poirier library. No registration needed."
+      ],
+      "source" : "https://coqlibrary.ca/programguide"
+    },
+    "portcoquitlamcommunityce" : {
+      "items" : [
+        "Port Coquitlam spray parks are open 9am–8pm daily in summer."
+      ],
+      "scope" : "city",
+      "source" : "https://www.portcoquitlam.ca/node/5318"
+    },
+    "princeedwardpark" : {
+      "items" : [
+        "Vancouver spray parks run May 16 to Sept 30, 9am–9pm daily. Staff supervise at busy times from late June to early September."
+      ],
+      "scope" : "city",
+      "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
+    },
+    "qepark" : {
+      "items" : [
+        "Also here: washrooms, an off-leash dog area and sports courts."
+      ],
+      "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
+    },
     "queenspark" : {
       "items" : [
         "The petting farm (goats, rabbits, peacocks) is open in summer only, Victoria Day to Labour Day, 10am–5:30pm, by donation.",
         "It's next to Rainbow Playground."
       ],
       "source" : "https://newwestrecord.ca/in-the-community/queens-park-petting-farm-delights-visitors-of-all-ages-3055425"
+    },
+    "queenstonpark" : {
+      "items" : [
+        "Also here: walking trails and sports courts."
+      ],
+      "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-70"
+    },
+    "ranchpark" : {
+      "items" : [
+        "Also here: an outdoor fitness circuit."
+      ],
+      "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-71"
+    },
+    "redwood" : {
+      "items" : [
+        "Also here: picnic tables and walking trails."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/redwood-park"
     },
     "renememorialpark" : {
       "items" : [
@@ -414,11 +1077,60 @@
       ],
       "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=64"
     },
+    "richmondpubliclibrarybri" : {
+      "items" : [
+        "Free drop-in Family Storytime and DUPLO free play for little ones. Check the library calendar for days and times."
+      ],
+      "source" : "https://www.yourlibrary.ca/kids/"
+    },
+    "richmondpubliclibraryiro" : {
+      "items" : [
+        "Free drop-in Babytime. Check the library calendar for days and times."
+      ],
+      "source" : "https://www.yourlibrary.ca/kids/"
+    },
+    "riverfrontpark" : {
+      "items" : [
+        "Also here: sports courts."
+      ],
+      "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
+    },
+    "robertburnabypark" : {
+      "items" : [
+        "Kids under 8 need an adult (16+) within arm’s reach in the outdoor pool, up to 3 kids per adult."
+      ],
+      "source" : "https://burnaby.ca/sites/default/files/acquiadam/2024-05/Outdoor-Pools-%20Booking-Request-Form.pdf"
+    },
+    "robsonpark" : {
+      "items" : [
+        "Also here: picnic tables and sports courts."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/robson-park"
+    },
+    "rochesterpark" : {
+      "items" : [
+        "Push-button spray park, open in summer. There’s no lifeguard at Coquitlam spray parks, so stay close."
+      ],
+      "scope" : "city",
+      "source" : "https://www.coquitlam.ca/outdoorpools"
+    },
     "rosemarybrownrecreationc" : {
       "items" : [
         "Public skates for all ages. Kids 7 and under need an adult (16+) on the ice, and a helmet is required for 12 and under."
       ],
       "source" : "https://www.burnaby.ca/recreation-and-arts/recreation-facilities/rosemary-brown-recreation-centre"
+    },
+    "royalheightspark" : {
+      "items" : [
+        "Also here: walking trails."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/royal-heights-park"
+    },
+    "royalkwantlenpark" : {
+      "items" : [
+        "Also here: a bike skills park, walking trails, a skate park and sports courts."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/royal-kwantlen-park"
     },
     "ryallpark" : {
       "items" : [
@@ -442,6 +1154,18 @@
       ],
       "source" : "https://www.scienceworld.ca/your-visit/"
     },
+    "serpentinewildlifemanage" : {
+      "items" : [
+        "Also here: picnic tables, walking trails and fishing."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/serpentine-wildlife-management-area"
+    },
+    "settlerspark" : {
+      "items" : [
+        "Also here: covered picnic areas and washrooms."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/settlers-park"
+    },
     "southarmoutdoorpool" : {
       "items" : [
         "Summer outdoor pool with two twisting slides and a wading pool."
@@ -453,6 +1177,24 @@
         "Public skating drop-ins. Kids in strollers are welcome on the ice at open skates (helmets for everyone)."
       ],
       "source" : "https://www.surrey.ca/parks-recreation/recreation-facilities/arenas"
+    },
+    "southsurreyathleticpark" : {
+      "items" : [
+        "Also here: a bike skills park, water play in summer, picnic tables and walking trails."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/south-surrey-athletic-park"
+    },
+    "spanishbanks" : {
+      "items" : [
+        "Lifeguards watch the flagged swim area May 16 to Sept 7, 2026, 12pm–8pm daily."
+      ],
+      "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
+    },
+    "stanley" : {
+      "items" : [
+        "Also here: water play in summer, picnic tables, washrooms and walking trails."
+      ],
+      "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
     },
     "stewartfarm" : {
       "items" : [
@@ -474,11 +1216,30 @@
       "scope" : "city",
       "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
     },
+    "sunnysideacresurbanfores" : {
+      "items" : [
+        "Also here: walking trails."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/sunnyside-acres-urban-forest-park"
+    },
     "sunsetrink" : {
       "items" : [
         "Preschoolers (0–4) skate free with an adult. Sunset Community Centre next door has a playground."
       ],
       "source" : "https://vancouver.ca/parks-recreation-culture/sunset-rink.aspx"
+    },
+    "sunvalleypark" : {
+      "items" : [
+        "Port Coquitlam spray parks are open 9am–8pm daily in summer."
+      ],
+      "scope" : "city",
+      "source" : "https://www.portcoquitlam.ca/node/5318"
+    },
+    "surreylakepark" : {
+      "items" : [
+        "Also here: walking trails."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/surrey-lake-park"
     },
     "surreylibrariesclaytonbr" : {
       "items" : [
@@ -523,12 +1284,48 @@
       ],
       "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=116"
     },
-    "troutlake" : {
+    "tescottpark" : {
       "items" : [
-        "No lifeguards at the Trout Lake beach in 2026, so keep a close eye on swimmers."
+        "Also here: walking trails."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/te-scott-park"
+    },
+    "thompsonpark" : {
+      "items" : [
+        "Also here: washrooms and a concession stand."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/thompson-park"
+    },
+    "towncentre" : {
+      "items" : [
+        "Push-button spray park, open in summer. There’s no lifeguard at Coquitlam spray parks, so stay close."
       ],
       "scope" : "city",
-      "source" : "https://www.ctvnews.ca/vancouver/article/vancouver-to-remove-lifeguards-from-some-beaches-for-2026-season/"
+      "source" : "https://www.coquitlam.ca/outdoorpools"
+    },
+    "troutlake" : {
+      "items" : [
+        "Trout Lake isn’t on the City’s list of lifeguarded beaches, so keep a close eye on swimmers."
+      ],
+      "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
+    },
+    "tsuyukipark" : {
+      "items" : [
+        "Also here: a zipline, a pump track, water play in summer and covered picnic areas."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "unwin" : {
+      "items" : [
+        "Also here: an outdoor pool in summer, picnic tables, washrooms and an off-leash dog area."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/unwin-park"
+    },
+    "vag" : {
+      "items" : [
+        "Free for everyone 18 and under. Free for all on the first Friday of the month, 4–8pm (reserve ahead)."
+      ],
+      "source" : "https://www.vanartgallery.bc.ca/visit"
     },
     "vancouverpubliclibrarybr" : {
       "items" : [
@@ -598,6 +1395,24 @@
       "scope" : "city",
       "source" : "https://vpl.bibliocommons.com/events/search/fq=types:(53e94ec21fdd78680200591e)"
     },
+    "vandusen" : {
+      "items" : [
+        "Also here: washrooms."
+      ],
+      "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
+    },
+    "victoriapark2" : {
+      "items" : [
+        "Also here: a drinking fountain and a skate park."
+      ],
+      "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-87"
+    },
+    "volkerpark" : {
+      "items" : [
+        "Also here: a zipline, water play in summer, covered picnic areas and washrooms."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
     "watermania" : {
       "items" : [
         "Wave pool with a tot slide, sprayers and water wheels. The two waterslides are for ages 7+ who are at least 1.2 m tall.",
@@ -605,6 +1420,18 @@
         "Drop-in for kids 2–12 is $4.95."
       ],
       "source" : "https://www.richmond.ca/parks-recreation/centres/watermania.htm"
+    },
+    "websterscornerspark" : {
+      "items" : [
+        "Also here: a drinking fountain, parking, wheelchair access and an outdoor fitness circuit."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "wellingtonpark" : {
+      "items" : [
+        "Also here: walking trails."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/wellington-park"
     },
     "wesburn" : {
       "items" : [
@@ -619,6 +1446,12 @@
       ],
       "source" : "https://westvancouver.ca/parks-recreation/recreation-programs-services/recreation-activities/swimming"
     },
+    "westwoodpark" : {
+      "items" : [
+        "Also here: walking trails and sports courts."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/westwood-park"
+    },
     "whitepinebeach" : {
       "items" : [
         "Swimming here is unsupervised: no lifeguards."
@@ -626,11 +1459,23 @@
       "scope" : "city",
       "source" : "https://metrovancouver.org/services/regional-parks/park/t%C9%99mt%C9%99m%C3%ADx%CA%B7t%C9%99n-belcarra-regional-park"
     },
+    "whonnocklakepark" : {
+      "items" : [
+        "Also here: a sand play area, covered picnic areas, parking and wheelchair access."
+      ],
+      "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
     "willowbrookmall" : {
       "items" : [
         "8 family parking spaces by the main entrances, and a Toys“R”Us inside."
       ],
       "source" : "https://shopwillowbrook.com/visit/"
+    },
+    "wonderland" : {
+      "items" : [
+        "For ages 1–12, with an adventure maze, trampoline and foam pool. Sign the waiver online before you go."
+      ],
+      "source" : "https://www.wonderlands.ca/"
     }
   },
   "updatedAt" : "2026-10-01"
