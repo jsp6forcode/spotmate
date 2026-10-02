@@ -1758,7 +1758,7 @@ class App {
     if (!s) return;
     const url = location.origin + location.pathname + '#spot=' + encodeURIComponent(id);
     const done = text => { this.set({ shareMsg: { id, text } }); clearTimeout(this.shareTimer); this.shareTimer = setTimeout(() => { if (this.state.shareMsg) this.set({ shareMsg: null }); }, 2500); };
-    if (navigator.share) {
+    if (navigator.share && matchMedia('(pointer: coarse)').matches) {   // 공유 시트는 휴대폰에서만. 컴퓨터 브라우저는 공유 창이 안 뜨거나 반응이 없을 수 있어서 바로 복사해요
       try { await navigator.share({ title: `${s.name} · Tiny Trips`, text: `${s.name} (${s.area})`, url }); return; }
       catch (e) { if (e && e.name === 'AbortError') return; }
     }
@@ -1786,7 +1786,7 @@ class App {
     const url = location.origin + location.pathname + '#event=' + encodeURIComponent(id);
     const text = `${ev.name} · ${eventWhen(ev)}, ${eventHours(ev)} · ${ev.venue}`;
     const done = t => { this.set({ shareMsg: { id, text: t } }); clearTimeout(this.shareTimer); this.shareTimer = setTimeout(() => { if (this.state.shareMsg) this.set({ shareMsg: null }); }, 2500); };
-    if (navigator.share) {
+    if (navigator.share && matchMedia('(pointer: coarse)').matches) {   // 공유 시트는 휴대폰에서만. 컴퓨터 브라우저는 공유 창이 안 뜨거나 반응이 없을 수 있어서 바로 복사해요
       try { await navigator.share({ title: `${ev.name} · Tiny Trips`, text, url }); return; }
       catch (e) { if (e && e.name === 'AbortError') return; }
     }
