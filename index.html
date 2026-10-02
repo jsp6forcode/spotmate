@@ -951,6 +951,7 @@ class App {
     window.addEventListener('hashchange', () => {
       const m = /^#spot=([^&]+)/.exec(location.hash), s = m && SPOTS.length && byId(decodeURIComponent(m[1]));
       if (s && this.state.modal !== s.id) this.openModal(s.id);
+      this.openSharedEvent();
     });
     this.render();
     this.loadData();
@@ -1019,6 +1020,7 @@ class App {
       // 공유받은 링크(#spot=id)로 들어오면 그 장소를 바로 열어요
       const m = /^#spot=([^&]+)/.exec(location.hash), shared = m && byId(decodeURIComponent(m[1]));
       if (shared) this.openModal(shared.id);
+      this.openSharedEvent();
     } catch (e) {
       this.set({ loading: false, loadError: "We couldn't load the spots. Check your connection and try again." });
     }
@@ -1763,18 +1765,33 @@ class App {
     try { await navigator.clipboard.writeText(url); done('Link copied'); }
     catch (e) { window.prompt('Copy this link', url); }
   }
-  // 행사·마켓 공유: 공식 안내 링크와 이름·날짜를 보내요 (휴대폰은 공유 시트, 안 되면 클립보드)
+  // 공유받은 행사 링크(#event=id): 행사/마켓 탭으로 가서 그 행사를 잠깐 강조해요
+  openSharedEvent() {
+    const m = /^#event=([^&]+)/.exec(location.hash), id = m && decodeURIComponent(m[1]), ev = id && EVENTS.find(e => e.id === id);
+    if (!ev) return;
+    this.set({ view: ev.type === 'market' ? 'markets' : 'events', tag: '', q: '', kw: [], free: false, aiSay: '', mapPicks: null, modal: null });
+    // 화면이 다시 그려져도 강조가 남도록 몇 번 나눠서 붙여요
+    [150, 700, 1400].forEach((ms, i) => setTimeout(() => {
+      const el = document.getElementById('ev-' + id);
+      if (!el) return;
+      if (i === 0) el.scrollIntoView({ block: 'center' });
+      el.classList.add('ring-2', 'ring-violet-500');
+      setTimeout(() => el.classList.remove('ring-2', 'ring-violet-500'), 3000 - ms);
+    }, ms));
+  }
+  // 행사·마켓 공유: 이 사이트의 행사 링크(#event=id)와 이름·날짜를 보내요 (휴대폰은 공유 시트, 안 되면 클립보드)
   async shareEvent(id) {
     const ev = this.upcomingEvents(400).find(e => e.id === id);
     if (!ev) return;
+    const url = location.origin + location.pathname + '#event=' + encodeURIComponent(id);
     const text = `${ev.name} · ${eventWhen(ev)}, ${eventHours(ev)} · ${ev.venue}`;
     const done = t => { this.set({ shareMsg: { id, text: t } }); clearTimeout(this.shareTimer); this.shareTimer = setTimeout(() => { if (this.state.shareMsg) this.set({ shareMsg: null }); }, 2500); };
     if (navigator.share) {
-      try { await navigator.share({ title: `${ev.name} · Tiny Trips`, text, url: ev.source }); return; }
+      try { await navigator.share({ title: `${ev.name} · Tiny Trips`, text, url }); return; }
       catch (e) { if (e && e.name === 'AbortError') return; }
     }
-    try { await navigator.clipboard.writeText(`${text}\n${ev.source}`); done('Link copied'); }
-    catch (e) { window.prompt('Copy this', `${text}\n${ev.source}`); }
+    try { await navigator.clipboard.writeText(`${text}\n${url}`); done('Link copied'); }
+    catch (e) { window.prompt('Copy this', `${text}\n${url}`); }
   }
   togglePlan(id) {
     const plan = this.state.plan.includes(id) ? this.state.plan.filter(x => x !== id) : [...this.state.plan, id];
@@ -2116,7 +2133,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   eventRow(ev, compact = false, hideDay = false) {
     const spot = ev.spotId && byId(ev.spotId);
     return `
-      <div class="flex gap-3 rounded-xl p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
+      <div id="ev-${esc(ev.id)}" class="flex gap-3 rounded-xl p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
         <div class="w-16 shrink-0 text-center">
           <p class="text-2xl" aria-hidden="true">${esc(ev.icon || '🎪')}</p>
           <p class="mt-1 text-xs font-bold text-violet-700 dark:text-violet-300 leading-tight">${hideDay ? '' : esc(dayLabel(ev.next))}</p>
@@ -2633,7 +2650,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const evAll = picks ? [] : this.upcomingEvents(45).map(ev => { const sp = ev.spotId && byId(ev.spotId); return ev.lat != null ? ev : sp ? { ...ev, lat: sp.lat, lng: sp.lng } : null; }).filter(Boolean).filter(ev => !this.state.kw.length || this.state.kw.some(k => k.re.test(`${ev.name} ${ev.summary || ""} ${ev.venue || ""} ${ev.area || ""} ${ev.type === "market" ? "market farmers market" : ev.type}`)));   // 검색 중이면 검색어에 맞는 행사·마켓만
     const evMarkets = evAll.filter(ev => ev.type === 'market'), evOthers = evAll.filter(ev => ev.type !== 'market');
     const showEv = this.state.mapEvents !== false, showMk = this.state.mapMarkets !== false;
-    const evPin = ev => ({ name: ev.name, forParents: !!ev.forParents, lat: ev.lat, lng: ev.lng, market: ev.type === 'market', icon: ev.icon || (ev.type === 'market' ? '🥕' : '🎪'), when: `${dayLabel(ev.next)} · ${eventHours(ev)}`, spotId: ev.spotId && byId(ev.spotId) ? ev.spotId : '', source: ev.source || '' });
+    const evPin = ev => ({ id: ev.id, name: ev.name, forParents: !!ev.forParents, lat: ev.lat, lng: ev.lng, market: ev.type === 'market', icon: ev.icon || (ev.type === 'market' ? '🥕' : '🎪'), when: `${dayLabel(ev.next)} · ${eventHours(ev)}`, spotId: ev.spotId && byId(ev.spotId) ? ev.spotId : '', source: ev.source || '' });
     this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: CATS[s.cat].dot, mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks,
       events: [...(showEv ? evOthers : []), ...(showMk ? evMarkets : [])].map(evPin) };
     const evToggle = (act, on, label, n) => `<button data-act="${act}" aria-pressed="${on}" class="flex items-center gap-1 px-2 py-0.5 rounded-full border ${on ? 'bg-amber-100 border-amber-300 text-amber-900 dark:bg-amber-500/20 dark:border-amber-500/40 dark:text-amber-100' : 'border-slate-300 text-slate-500 dark:border-slate-600 dark:text-slate-400'}">${label} <span class="font-normal">${n}</span></button>`;
@@ -2655,13 +2672,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       </div>
       <div data-keep-scroll="maplist" class="space-y-1.5 sm:space-y-3 max-h-[36vh] overflow-y-auto sm:max-h-[40vh] md:max-h-[calc(100vh-14rem)] lg:max-h-[650px]">
         ${this._map.events.length ? `<p class="px-1 pt-0.5 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Events & markets · next 6 weeks</p>${this._map.events.map((ev, i) => `
-          <button data-act="evfocus" data-val="${i}" data-maphl="ev:${i}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-violet-300 dark:hover:ring-violet-700 flex gap-3">
+          <div class="relative"><button data-act="evfocus" data-val="${i}" data-maphl="ev:${i}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-violet-300 dark:hover:ring-violet-700 flex gap-3">
             <span class="w-7 h-7 shrink-0 rounded-full bg-white text-base flex items-center justify-center border-2 ${ev.market ? 'border-emerald-600' : 'border-fuchsia-700'}" aria-hidden="true">${esc(ev.icon)}</span>
-            <span class="flex-1 min-w-0">
+            <span class="flex-1 min-w-0 pr-14">
               <span class="block font-bold truncate">${esc(ev.name)}${ev.forParents ? ' <span class="text-[11px] font-bold text-amber-700 dark:text-amber-300">😉 For parents</span>' : ''}</span>
               <span class="block text-xs text-slate-500 dark:text-slate-400 truncate">${ev.market ? 'Market' : 'Event'}, ${esc(ev.when)}</span>
             </span>
-          </button>`).join('')}<p class="px-1 pt-1 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Places</p>` : ''}
+          </button><button data-act="shareev" data-val="${esc(ev.id)}" aria-label="Share ${esc(ev.name)}" class="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">${this.state.shareMsg && this.state.shareMsg.id === ev.id ? esc(this.state.shareMsg.text) : 'Share'}</button></div>`).join('')}<p class="px-1 pt-1 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Places</p>` : ''}
         ${items.map(s => `
           <button data-act="open" data-val="${s.id}" data-maphl="${s.id}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-violet-300 dark:hover:ring-violet-700 flex gap-3">
             <span class="w-7 h-7 shrink-0 rounded-full text-white text-xs font-extrabold flex items-center justify-center" style="background:${CATS[s.cat].dot}">${mark(s)}</span>
