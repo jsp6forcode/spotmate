@@ -2920,6 +2920,8 @@
     { "id": "crossleypark", "hours": "sunrise-sunset", "hoursSource": "park", "cat": "nature", "name": "Crossley Park", "area": "Abbotsford", "lat": 49.0495, "lng": -122.2638, "emoji": "🌳", "placeId": "ChIJXTvBon1KhFQRezJ6jTspDO4", "kids": true, "family": true, "play": true,
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"], "summary": "Park with a splash pad and a playground", "signals": [], "why": "", "tips": [] },
     { "id": "cottonwoodcentre", "cat": "city", "name": "Cottonwood Centre", "area": "Chilliwack", "lat": 49.1427, "lng": -121.9640, "emoji": "🛍️", "placeId": "ChIJQcV-fKRAhFQRNeMH0p90UNA", "family": true,
-      "trend": null, "env": "indoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"], "summary": "Chilliwack's biggest enclosed shopping mall", "signals": [], "why": "", "tips": [] }
+      "trend": null, "env": "indoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"], "summary": "Chilliwack's biggest enclosed shopping mall", "signals": [], "why": "", "tips": [] },
+    { "id": "kensingtoncomplex", "cat": "city", "name": "Kensington Complex", "area": "Burnaby", "lat": 49.2756, "lng": -122.9741, "emoji": "⛸️", "placeId": "ChIJzTM3wFF3hlQRFyWX9lvt5vk", "family": true,
+      "trend": null, "env": "indoor", "price": "$", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"], "summary": "Arena with public skating sessions", "signals": [], "why": "", "tips": [] }
   ]
 }
