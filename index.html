@@ -92,6 +92,32 @@ const KINDS = [
   ['trail', 'Trail', /trail|hike|canyon|falls|lookout|mountain|forest|pathway/i, 'family', 'ps'],
   ['park', 'Park', /park/i, 'both', 'bps'],
 ];
+// 실제 사진이 없는 장소의 대표 이미지: 장소 종류(KINDS 키) → [Pexels 사진 번호, 촬영자]. 사람 얼굴이 나오지 않는 사진만 골랐어요. Pexels 라이선스는 무료 사용이고, 카드에 "그 장소가 아닐 수 있다"고 표시해요
+const STOCK_ON = true, stockPick = {}, stockUse = {};
+const STOCK = {
+  water: [[36467177, 'Kristopher Hines'], [33688143, 'Ian Panelo'], [19161771, 'Sukoon Hotels and Resorts'], [39135419, 'WorldOfMtc'], [33326733, 'Quang Nguyen Vinh']],
+  play: [[133458, 'inspiredimages'], [17274506, 'Joaquin Carfagna'], [12586010, 'Tracy Elford'], [35206773, 'Leandro Henrique'], [28939519, 'dinaziz2462'], [13190802, 'alfomedeiros'], [15150716, 'Jyjyjyjy']],
+  rides: [[17467601, 'alimuart'], [12794397, 'baphi'], [17665574, 'ninobur'], [31693189, 'Pexels contributor'], [18403853, 'miami302'], [18403915, 'miami302'], [15445262, 'tugba-ozsoy']],
+  indoorplay: [[19734995, 'DaddySky'], [14286943, 'Asia Culture Center'], [29752372, 'kall'], [11295737, 'Vidal Balielo Jr'], [8088099, 'Artem Podrez'], [8923987, 'Mikhail Nilov']],
+  active: [[6677376, 'cottonbro'], [6676172, 'cottonbro'], [7590891, 'Pavel Danilyuk'], [6674132, 'cottonbro'], [6674135, 'cottonbro']],
+  games: [[19191084, 'Boys in Bristol Smokz'], [5952949, 'Shvetsa'], [5952998, 'Shvetsa'], [36609679, 'Thangnguyen'], [7429604, 'Pavel Danilyuk'], [7429597, 'Pavel Danilyuk'], [7429395, 'Pavel Danilyuk']],
+  arcade: [[5767373, 'cottonbro'], [18403883, 'miami302'], [35693239, 'daniel-gomez'], [18403861, 'miami302']],
+  wheels: [[5388528, 'Pexels contributor'], [5388525, 'Pexels contributor'], [7231153, 'GraphicsDump'], [7446400, 'Kelly'], [13292221, 'alfomedeiros']],
+  arts: [[38807889, 'Sokil'], [7257019, 'Anete Lusina'], [17324369, 'Alina Skazka'], [5076768, 'Ann Tarazevich'], [6925029, 'Pavel Danilyuk'], [6358831, 'Ann Tarazevich'], [9032443, 'Kevin Malik']],
+  mall: [[39962496, 'Jerry Zhang'], [19287629, 'Seher Dogan'], [19332579, 'Mecit Yssf'], [13425897, 'Mxkrv'], [13100935, 'Tkirkgoz'], [37661503, 'Michael D. Beckwith']],
+  library: [[37165246, 'Melike'], [5225982, 'Ibnulharezmi'], [30744505, 'Nerosable'], [37888976, 'Beyzz'], [30752162, 'Mographe'], [8045884, 'Introspectivedsgn'], [11222031, 'Bilakis'], [9572664, 'Tima Miroshnichenko']],
+  pool: [[39200992, 'Pexels contributor'], [8028423, 'Shvets Production'], [8028466, 'Shvets Production'], [32569769, 'Maarten van Asten'], [19073612, 'Jan van der Wolf'], [9030294, 'KindelMedia'], [8688149, 'KindelMedia'], [6110597, 'Jonathan Borba'], [8028662, 'Shvets Production']],
+  rec: [[7186312, 'Cottonbro'], [9787275, 'Victor Parra'], [7513413, 'Bence Szemerey'], [9138716, 'Introspectivedsgn'], [9739462, 'Kindelmedia'], [9500159, 'Introspectivedsgn'], [2815155, 'Kelly']],
+  rink: [[6539485, 'Pavel Danilyuk'], [6539486, 'Pavel Danilyuk'], [6539488, 'Pavel Danilyuk'], [6539268, 'Pavel Danilyuk'], [6539276, 'Pavel Danilyuk']],
+  farm: [[39568354, 'Aysegul Aytoren'], [1113652, 'themomentier'], [37692161, 'lucasdc'], [31622292, 'Ehaan Dewa'], [15875215, 'NC Farm Bureau Mark'], [39472244, 'Olena Lola'], [14014802, 'Cristian Frohlich'], [17909253, 'Veronika Bykovich'], [5538417, 'Vlada Karpovich'], [11024445, 'Graham Hayward'], [10084233, 'Chris F'], [18211888, 'BabijaPhoto'], [34282667, 'jillyjillystudio'], [28833536, 'juan-c-palacios'], [28387809, 'NC Farm Bureau Mark']],
+  museum: [[33990550, 'theshuttervision'], [35870231, 'ekrulila'], [39241845, 'railgunbreaker'], [34909191, 'nguyendesigner'], [19689322, 'israyosoy'], [4595778, 'taha-balta'], [16287997, 'radubradu']],
+  beach: [[28494568, 'Kelly'], [28450039, 'Ryan Latimer'], [28450037, 'Ryan Latimer'], [35014304, 'Katherine Elliott'], [39295494, 'Bruno Storchi Bergmann'], [35014321, 'Katherine Elliott'], [9172867, 'Jeffrey Eisen']],
+  garden: [[29014982, 'Alex Ohan'], [6639890, 'Gu Bra'], [38390268, 'Wilough'], [33456232, 'Stepkoanna'], [33216181, 'Barna Morvai'], [13275568, 'Melis'], [27898383, 'Ieva Brinkmane'], [5984652, 'Milivigerova']],
+  trail: [[38826747, 'Gaurav Aeri'], [33311332, 'Niki Clark'], [33311337, 'Niki Clark'], [9280846, 'Chudin Alexey'], [31985745, 'Niki Clark'], [31985746, 'Niki Clark'], [38426513, 'Ann H'], [94828, 'asPhotography'], [39482893, 'Bara Art'], [14500829, 'Rafal Olbromski']],
+  park: [[13514461, 'the-ahnafpiash'], [19175811, 'mibernaa'], [34929939, 'ali-2289586'], [18425557, 'leeandra-cantrell'], [18221583, 'aysenaz-bilgin'], [17177610, 'Vadutskevich'], [29335669, 'AJ4XO'], [34880803, 'Strannik SK'], [39903501, 'david-saurik']],
+  sight: [[28494568, 'Kelly'], [27667695, 'Nanda Gopal Lakshman'], [163915, 'bkrustev'], [39859805, 'Necip Duman'], [15499497, 'Cecile Hournau'], [28636808, 'Mladen Janic'], [27630474, 'Fatihmutaf'], [163912, 'bkrustev']],
+};
+
 const AGE_LABEL = { b: '0–3', p: '3–5', s: '5–12' };
 // 스팟의 종류·태그·목적·나이 (한 번 계산해서 s._kp에 둬요)
 function kidProfile(s) {
@@ -2141,7 +2167,25 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <a data-act="noop" href="${esc(s.photo.source)}" target="_blank" rel="noopener" title="Photo: ${esc(s.photo.credit)} (${esc(s.photo.license)}), via Wikimedia Commons"
           class="absolute right-2 bottom-2 max-w-[45%] truncate text-[10px] leading-tight px-1.5 py-0.5 rounded bg-black/45 text-white/85 hover:text-white">${esc(s.photo.credit)} · ${esc(s.photo.license)}</a>
       </div>`;
-    // 실제 사진이 없으면 장소 종류에 맞는 일러스트 (사진처럼 보이지 않게 "Illustration" 표시)
+    // 실제 사진이 없으면 장소 종류에 맞는 무료 스톡 사진 (Pexels). 그 장소가 아닐 수 있다고 사진 구석에 꼭 밝혀요 (사용자 결정, 2026-10-02)
+    if (STOCK_ON && s.cat !== 'food' && s.cat !== 'dessert') {
+      // 종류마다 사진 여러 장 중, 아직 덜 쓰인 사진을 골라 같은 종류여도 장소마다 다르게 보여요. 한 번 정한 사진은 카드와 장소 창에서 같게 (stockPick)
+      let st = stockPick[s.id];
+      if (!st) {
+        const list = STOCK[kidProfile(s).kind] || STOCK.sight, start = [...s.id].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7) % list.length;
+        st = list[start];
+        for (let k = 0; k < list.length; k++) { const c = list[(start + k) % list.length]; if ((stockUse[c[0]] || 0) < (stockUse[st[0]] || 0)) st = c; }
+        stockUse[st[0]] = (stockUse[st[0]] || 0) + 1; stockPick[s.id] = st;
+      }
+      const big = h.includes('h-56');
+      return `<div class="w-full ${h} relative overflow-hidden bg-slate-200 dark:bg-slate-800" role="img" aria-label="${esc(s.name)} (stock photo, may differ from the actual place)">
+        <img src="https://images.pexels.com/photos/${st[0]}/pexels-photo-${st[0]}.jpeg?auto=compress&cs=tinysrgb&w=${big ? 960 : 640}" alt="" loading="lazy" class="w-full h-full object-cover">
+        <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+        <span class="absolute left-2 bottom-2 max-w-[70%] truncate text-[10px] leading-tight px-1.5 py-0.5 rounded bg-black/55 text-white/90"><span class="sm:hidden">Stock photo, may differ</span><span class="hidden sm:inline">Stock photo · may differ from the actual place</span></span>
+        ${big ? `<a data-act="noop" href="https://www.pexels.com/photo/${st[0]}/" target="_blank" rel="noopener" class="absolute right-2 bottom-2 max-w-[40%] truncate text-[10px] leading-tight px-1.5 py-0.5 rounded bg-black/45 text-white/85 hover:text-white">Photo: ${esc(st[1])} · Pexels</a>` : ''}
+      </div>`;
+    }
+    // 스톡 사진을 끄면 장소 종류에 맞는 일러스트 (사진처럼 보이지 않게 "Illustration" 표시)
     const sc = sceneSvg(s), center = sc.kind === 'food' || sc.kind === 'dessert';
     return `<div class="w-full ${h} relative overflow-hidden" role="img" aria-label="${esc(s.name)} (illustration)">
         ${sc.svg}
