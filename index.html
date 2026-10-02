@@ -1661,8 +1661,10 @@ class App {
       Object.assign(p, { view: 'list', cat: 'all', hh: false, lunch: false, price: '', cheap: false, fancy: false });
     }
     if (KIDS_ONLY) p.kids = false;
+    // 지도 탭에서 검색하면 Explore로 가지 않고 지도에 머물러요 (결과는 지도·오른쪽 목록에 바로 반영)
+    const stay = this.state.view === 'map';
     const patch = {
-      q, kw: p.kw, unused: p.unused || [], free: p.free && p.view === 'list', view: p.view, cat: p.cat, cuisine: '', tag: '', when,
+      q, kw: p.kw, unused: p.unused || [], free: p.free && p.view === 'list', view: stay ? 'map' : p.view, mapPicks: stay ? null : this.state.mapPicks, cat: p.cat, cuisine: '', tag: '', when,
       openNow: p.now && HOURS_READY && !later, kidsOnly: p.kids && p.view === 'list', indoor: p.indoor && p.view === 'list',
       price: p.view === 'eats' ? (p.price ?? (p.cheap ? '$' : p.fancy ? '$$$' : '')) : '',
       hh: p.hh && p.view === 'eats', lunch: p.lunch && !p.hh && p.view === 'eats', modal: null,
@@ -2587,7 +2589,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const mark = s => (isVanClassic(s) ? '◆' : '★');
     // 실제 지도는 다 그린 뒤 drawMap()이 #lmap에 그려요 (핀·기준 위치·반경 원)
     // 행사·파머스 마켓 핀: Events·Markets 탭과 같은 기준(앞으로 6주, 위치 필터). 추천 장소만 보는 지도엔 안 그려요
-    const evAll = picks ? [] : this.upcomingEvents(45).map(ev => { const sp = ev.spotId && byId(ev.spotId); return ev.lat != null ? ev : sp ? { ...ev, lat: sp.lat, lng: sp.lng } : null; }).filter(Boolean);
+    const evAll = picks ? [] : this.upcomingEvents(45).map(ev => { const sp = ev.spotId && byId(ev.spotId); return ev.lat != null ? ev : sp ? { ...ev, lat: sp.lat, lng: sp.lng } : null; }).filter(Boolean).filter(ev => !this.state.kw.length || this.state.kw.some(k => k.re.test(`${ev.name} ${ev.summary || ""} ${ev.venue || ""} ${ev.area || ""} ${ev.type === "market" ? "market farmers market" : ev.type}`)));   // 검색 중이면 검색어에 맞는 행사·마켓만
     const evMarkets = evAll.filter(ev => ev.type === 'market'), evOthers = evAll.filter(ev => ev.type !== 'market');
     const showEv = this.state.mapEvents !== false, showMk = this.state.mapMarkets !== false;
     const evPin = ev => ({ name: ev.name, forParents: !!ev.forParents, lat: ev.lat, lng: ev.lng, market: ev.type === 'market', icon: ev.icon || (ev.type === 'market' ? '🥕' : '🎪'), when: `${dayLabel(ev.next)} · ${eventHours(ev)}`, spotId: ev.spotId && byId(ev.spotId) ? ev.spotId : '', source: ev.source || '' });
