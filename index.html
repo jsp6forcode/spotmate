@@ -1627,6 +1627,7 @@ class App {
       case 'copyplan': return this.copyPlan();
       case 'more': return this.set({ restShown: this.state.restShown + REST_STEP });
       case 'share': return this.share(val);
+      case 'shareev': return this.shareEvent(val);
       case 'clearplan': store('spotmate-plan', '[]'); return this.set({ plan: [], copyMsg: '', copyText: '' });
     }
   }
@@ -1761,6 +1762,19 @@ class App {
     }
     try { await navigator.clipboard.writeText(url); done('Link copied'); }
     catch (e) { window.prompt('Copy this link', url); }
+  }
+  // 행사·마켓 공유: 공식 안내 링크와 이름·날짜를 보내요 (휴대폰은 공유 시트, 안 되면 클립보드)
+  async shareEvent(id) {
+    const ev = this.upcomingEvents(400).find(e => e.id === id);
+    if (!ev) return;
+    const text = `${ev.name} · ${eventWhen(ev)}, ${eventHours(ev)} · ${ev.venue}`;
+    const done = t => { this.set({ shareMsg: { id, text: t } }); clearTimeout(this.shareTimer); this.shareTimer = setTimeout(() => { if (this.state.shareMsg) this.set({ shareMsg: null }); }, 2500); };
+    if (navigator.share) {
+      try { await navigator.share({ title: `${ev.name} · Tiny Trips`, text, url: ev.source }); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    try { await navigator.clipboard.writeText(`${text}\n${ev.source}`); done('Link copied'); }
+    catch (e) { window.prompt('Copy this', `${text}\n${ev.source}`); }
   }
   togglePlan(id) {
     const plan = this.state.plan.includes(id) ? this.state.plan.filter(x => x !== id) : [...this.state.plan, id];
@@ -2116,6 +2130,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             ${ev.lat != null ? `<a href="${eventMapsUrl(ev)}" target="_blank" rel="noopener" class="inline-flex items-center py-2 text-indigo-700 dark:text-indigo-300">Directions</a>` : ''}
             <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="inline-flex items-center py-2 text-slate-600 dark:text-slate-300 underline">Official info ↗</a>
             ${spot ? `<button data-act="open" data-val="${spot.id}" class="inline-flex items-center py-2 text-violet-700 dark:text-violet-300 text-left">See ${esc(spot.name)} →</button>` : ''}
+            <button data-act="shareev" data-val="${esc(ev.id)}" class="inline-flex items-center py-2 text-slate-600 dark:text-slate-300">${this.state.shareMsg && this.state.shareMsg.id === ev.id ? esc(this.state.shareMsg.text) : 'Share'}</button>
           </p>
         </div>
       </div>`;
