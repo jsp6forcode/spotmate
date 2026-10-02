@@ -540,6 +540,10 @@ const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 // sale: 브랜드 웨어하우스·팩토리 세일, meet: 사인회·팬미팅, popup: 팝업·박람회처럼 며칠만 열리는 행사
 const EVENT_TYPES = { market: 'Farmers market', festival: 'Festival', seasonal: 'Seasonal', sale: 'Warehouse sale', meet: 'Signing & meet-up', popup: 'Pop-up & show' };
+// 카드 이유 박스 제목: 행사 종류·시즌 태그 이름에 맞게 (Coming up 대신)
+const EVENT_LABEL = { market: "Market", festival: "Festival", seasonal: "Seasonal", sale: "Warehouse sale", meet: "Meet-up", popup: "Pop-up" };
+const eventLabel = ev => EVENT_LABEL[ev.type] || "Event";
+const tagLabel = t => String(t.label || "").replace(/([a-z])([A-Z])/g, "$1 $2") || "Season";
 const RARE_EVENT = ['sale', 'meet', 'popup'];
 const REST_STEP = 12;
 // Worth going now에 늘 보여줄 추천 수 (이유가 있는 곳이 모자라면 클래식·리뷰 추천으로 채워요)
@@ -1153,21 +1157,26 @@ class App {
   isNew(s) { return !s.venue && !!(this.newIds && this.newIds.has(s.id)); }
   // "지금 가 볼 이유": 이 장소에서 곧 열리는 행사 > 시즌(단풍·연어·핼러윈 등) > 평소보다 많이 검색됨.
   // 매주 열리는 파머스 마켓은 언제든 있는 일이라 점수를 조금만 줘요. 이유가 강한 순서로 돌려줘요.
+  // 이유 박스 제목: 시즌 행사(호박밭 등)는 고른 해시태그(없으면 그 곳의 첫 태그) 이름으로, 나머지는 행사 종류로
+  eventTitle(ev, s) {
+    const tags = spotTags(s), t = tags.find(x => x.id === this.state.tag) || (ev.type === 'seasonal' ? tags[0] : null);
+    return t ? tagLabel(t) : eventLabel(ev);
+  }
   nowReasons(s) {
     const out = [], e = this._spotEvents && this._spotEvents[s.id];
     if (e) {
       const days = Math.round((Date.parse(e.next) - Date.parse(vanDate(0))) / 864e5);
-      out.push({ score: e.ev.type === 'market' ? 0.5 : 4 - Math.min(days, 3) * 0.3, icon: e.ev.icon || '🎪', text: eventReason(e.ev, s, e.next) });
+      out.push({ score: e.ev.type === 'market' ? 0.5 : 4 - Math.min(days, 3) * 0.3, label: this.eventTitle(e.ev, s), icon: e.ev.icon || '🎪', text: eventReason(e.ev, s, e.next) });
     }
     // 시즌: 스팟별 start(단풍 절정·첫 연어·개막일)가 지났으면 "지금" 2.5, 아직이면 예고라 0.5 (그것만으로는 순위 X, 닫힌 Playland가 순위에 오르지 않게)
     // 새로 연 곳: 연 지 1개월 안이면 2.5, 3개월 안이면 2, 그 뒤 6개월까지 1.2
     if (isJustOpened(s)) {
       const months = (Date.now() - openedDate(s).getTime()) / (30.4 * 864e5);
-      out.push({ score: months <= 1.5 ? 2.5 : months <= 3.5 ? 2 : 1.2, icon: '🆕', text: `Opened in ${openedLabel(s)} and already rated 4.9+ on Google (30+ reviews).` });
+      out.push({ score: months <= 1.5 ? 2.5 : months <= 3.5 ? 2 : 1.2, label: 'New spot', icon: '🆕', text: `Opened in ${openedLabel(s)} and already rated 4.9+ on Google (30+ reviews).` });
     }
     spotTags(s).forEach(t => {
       const x = t.spots[s.id], wait = x.start ? Math.round((Date.parse(x.start) - Date.parse(vanDate(0))) / 864e5) : 0;
-      out.push({ score: wait <= 0 ? 2.5 : 0.5, icon: t.emoji, text: x.why });
+      out.push({ score: wait <= 0 ? 2.5 : 0.5, label: tagLabel(t), icon: t.emoji, text: x.why });
     });
     // 먹거리가 최근 기사(30일)나 Reddit(2주)에 나왔으면 "요즘 화제"
     if (s.cat === 'food' || s.cat === 'dessert') {
@@ -1178,7 +1187,7 @@ class App {
     // 시간대·날씨 이유는 가장 강한 하나만 (둘이 겹쳐 점수가 부풀지 않게). 내일·주말 계획일 땐 "지금" 이유라 빼요
     const food = this.planLater() ? null : this.foodNow(s).sort((a, b) => b.score - a.score)[0];
     if (food) out.push(food);
-    if (isRising(s)) out.push({ score: 1 + Math.min(s.rise - 1, 1) * 2, icon: '📈', text: (RISE_NOTES[s.id] && RISE_NOTES[s.id].why) || `Searched ${fmtRise(s.rise)} its usual amount` });
+    if (isRising(s)) out.push({ score: 1 + Math.min(s.rise - 1, 1) * 2, label: 'Trending', icon: '📈', text: (RISE_NOTES[s.id] && RISE_NOTES[s.id].why) || `Searched ${fmtRise(s.rise)} its usual amount` });
     return out.sort((a, b) => b.score - a.score);
   }
   // 모달의 해피아워·런치 스페셜 칸: 오늘 상태(지금·이따·오늘 없음) → 요일별 시간 → 가격·딜 → 메모와 출처
@@ -1263,7 +1272,7 @@ class App {
   // 10곳을 채우려고 넣은 곳의 카드 이유: 곧 있을 일(약한 이유)이 있을 때만. 클래식·리뷰 추천은 배지와 모달에서 설명해요
   pickReason(s) {
     const weak = this.nowReasons(s)[0];
-    return weak ? { pick: true, label: 'Coming up', text: weak.text } : null;
+    return weak ? { pick: true, label: weak.label || 'Why now', text: weak.text } : null;
   }
   // Worth going now(정렬 값 fresh) 순서: 새로 생긴 곳 → 지금 가 볼 이유가 있는 곳(점수 높은 순, 순위 번호) → 숨은 명소 → 나머지(언제 가도 같은 곳)
   freshRank(s) {
@@ -2136,11 +2145,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 순위 배지는 크게, 1~3위는 금색으로 (New 배지일 땐 순위가 아니에요)
     const rank = badge && badge !== 'New' && this.rankOf(s);
     // 지금 가 볼 이유 중 가장 강한 것 하나 (행사·시즌·검색 증가). 순위의 근거라 제목 바로 밑에 둬요
-    const tagWhy = spotTags(s).length ? { pick: true, label: 'Coming up', text: spotTags(s)[0].spots[s.id].why } : null;   // 해시태그가 있으면 이유 박스는 항상 (점수와 상관없이 모든 태그를 같게)
+    const tagWhy = spotTags(s).length ? { pick: true, label: tagLabel(spotTags(s).find(x => x.id === this.state.tag) || spotTags(s)[0]), text: (spotTags(s).find(x => x.id === this.state.tag) || spotTags(s)[0]).spots[s.id].why } : null;   // 해시태그가 있으면 이유 박스는 항상 (점수와 상관없이 모든 태그를 같게)
     const baseWhy = this.nowReasons(s).filter(x => x.score >= NOW_MIN)[0] || (s.filler ? this.pickReason(s) : null) || tagWhy;
     // 행사가 있으면 같은 이유 박스 안에 (따로 떠 있는 줄 없이 모든 카드가 같은 구조로)
     const evText = evHere ? eventReason(evHere.ev, s, evHere.next) : '';
-    const why = baseWhy || (evText ? { pick: true, label: 'Coming up', text: evText } : null);
+    const why = baseWhy || (evText ? { pick: true, label: this.eventTitle(evHere.ev, s), text: evText } : null);
     const evExtra = evText && why && !why.lunch && why.text !== evText ? evText : '';
     return `
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-2 hover:ring-violet-400 dark:hover:ring-violet-600 hover:shadow-lg transition overflow-hidden">
@@ -2170,7 +2179,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="mt-0.5 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
         </div>` : `
         <div class="mt-1.5 sm:mt-3 border-l-4 ${why.hh ? 'border-amber-500' : 'border-amber-400'} rounded-r-lg bg-amber-50 dark:bg-amber-500/10 pl-2 pr-2 sm:pl-3 sm:pr-3 py-1 sm:py-2">
-          <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wide text-amber-800 dark:text-amber-300">${esc(why.pick || why.hh ? why.label : 'Coming up')}</p>
+          <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wide text-amber-800 dark:text-amber-300">${esc(why.label || 'Why now')}</p>
           <p class="mt-0.5 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
           ${evExtra ? `<p class="mt-1 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(evExtra)}</p>` : ''}
         </div>` : ''}
