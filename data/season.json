@@ -233,6 +233,20 @@
           "source" : "https://www.whiterockcity.ca/Calendar.aspx",
           "start" : "2026-10-31",
           "why" : "Halloween Skate is on Oct 31, 5:30 to 6:45pm."
+        },
+        "maanfarms" : {
+          "source" : "https://www.maanfarms.com",
+          "why" : "Forest Pumpkin Patch, two enchanted corn mazes and a corn play pit. Open daily 9am-6pm."
+        },
+        "krauseberryfarms" : {
+          "source" : "https://www.krauseberryfarms.com",
+          "start" : "2026-10-03",
+          "why" : "The BC Giant Pumpkin Weigh-Off is on Saturday, Oct 3."
+        },
+        "laitypumpkinpatchnorth" : {
+          "source" : "https://laitypumpkinpatch.com/north/",
+          "start" : "2026-09-26",
+          "why" : "Pumpkin patch for ages 0-6 with a farm play centre and a small corn maze. Open until Oct 31."
         }
       },
       "to" : "2026-10-31"

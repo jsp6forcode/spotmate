@@ -1631,6 +1631,18 @@ class App {
       this.wizLocScroll();
     }
   }
+  // 검색창 예시: 날씨(비 오면 실내)와 계절에 맞는 질문. 화면이 좁으면 짧게
+  exampleQ() {
+    const m = new Date().getMonth() + 1, wide = innerWidth >= 1024, mid = innerWidth >= 640;
+    const pick = (long, mid2, short) => wide ? long : mid ? mid2 : short;
+    if (this.state.weather === 'rain') return pick('indoor play on a rainy day', 'indoor play on a rainy day', 'indoor play');
+    if (m >= 9 && m <= 10) return pick('pumpkin patch this weekend', 'pumpkin patch this weekend', 'pumpkin patch');
+    if (m === 11) return pick('salmon run this weekend', 'salmon run this weekend', 'salmon run');
+    if (m === 12) return pick('Christmas lights this weekend', 'Christmas lights this weekend', 'Christmas lights');
+    if (m <= 2) return pick('skiing in North Vancouver', 'skiing in North Vancouver', 'skiing');
+    if (m <= 5) return pick('spring flowers this weekend', 'spring flowers this weekend', 'spring flowers');
+    return pick('spray park near me this weekend', 'spray park near me', 'spray park near me');
+  }
   // 검색: 질문을 해석해서 기존 필터(페이지·지금 영업·아이·실내·가격·해피아워·런치·가까운 곳)를 켜고, 키워드로 좁혀요
   // AI 주소가 있으면 AI가 먼저 해석하고, 안 되면 규칙으로 (늦게 온 이전 검색 결과는 버려요)
   async runSearch(q) {
@@ -1943,7 +1955,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${lite && !s.q && !s.wiz.done ? '' : `
         <form data-act="search" role="search" class="flex gap-1.5 sm:gap-2">
           <input name="q" type="search" value="${esc(this.qDraft ?? s.q)}" autocomplete="off" enterkeyhint="search" aria-label="Search"
-            placeholder="${s.view === 'eats' ? (innerWidth < 640 ? 'Try “brunch this Saturday”' : 'Try “brunch this Saturday in Richmond”') : innerWidth < 640 ? 'Try “spray park near me”' : innerWidth < 1024 ? 'Try “free this weekend in Coquitlam”' : 'Try “free things to do this weekend in Coquitlam”'}"
+            placeholder="${s.view === 'eats' ? (innerWidth < 640 ? 'Try “brunch this Saturday”' : 'Try “brunch this Saturday in Richmond”') : 'Try “' + this.exampleQ() + '”'}"
             class="flex-1 min-w-0 min-h-[36px] sm:min-h-[44px] px-3 sm:px-4 text-sm sm:text-base rounded-lg sm:rounded-xl border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500">
           <button type="submit" ${s.qBusy ? 'disabled aria-busy="true"' : ''} class="min-h-[36px] sm:min-h-[44px] px-3 sm:px-4 text-sm sm:text-base rounded-lg sm:rounded-xl font-semibold bg-violet-600 hover:bg-violet-700 disabled:opacity-70 text-white">${s.qBusy ? 'Thinking…' : AI_SEARCH_URL ? '✨ Search' : 'Search'}</button>
         </form>

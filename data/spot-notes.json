@@ -3282,6 +3282,42 @@
         "A free nature trail along the river is open every day and is wheelchair accessible. Adult coho, steelhead and chinook are best seen from October to January, and the hatchery runs family smolt release events."
       ],
       "source" : "https://psf.ca/blog/salmon-spotting-metro-vancouver/"
+    },
+    "maanfarms" : {
+      "items" : [
+        "Fall 2026 has a Forest Pumpkin Patch, two enchanted corn mazes, Highland cattle and other animal encounters, and Barnyard Adventureland with a corn play pit. Open daily 9am-6pm; book tickets online."
+      ],
+      "source" : "https://www.maanfarms.com"
+    },
+    "krauseberryfarms" : {
+      "items" : [
+        "U-pick berry fields (in season), a waffle bar, a bakery and market. The BC Giant Pumpkin Weigh-Off is on Sat, Oct 3, 2026. Open Wed-Sun 9:30am-5pm; pets are not allowed."
+      ],
+      "source" : "https://www.krauseberryfarms.com"
+    },
+    "laitypumpkinpatchnorth" : {
+      "items" : [
+        "Open Sept 26 to Oct 31, 2026. Built for ages 0-6: Farmer Play Centre, hay wagon rides, a one-acre corn maze for little ones, farm animals and gold panning. $16 on weekends and $13 on weekdays (ages 3+); under 2 free. Families with older kids can try the South location."
+      ],
+      "source" : "https://laitypumpkinpatch.com/north/"
+    },
+    "academyfarms" : {
+      "items" : [
+        "Wagon tours see 350+ water buffalo and 100+ bison. Fall brings pumpkin picking and a festival with BBQ, face painting and live performances. There is no petting zoo."
+      ],
+      "source" : "https://academyfarms.org/"
+    },
+    "lavenderland" : {
+      "items" : [
+        "Wander the lavender fields and gardens; workshops such as lavender wax hangers and candle-making are ticketed. Open Mon, Tue, Fri 10am-5pm and Sat-Sun 10am-6pm; closed Wed and Thu."
+      ],
+      "source" : "https://www.lavenderland.ca/"
+    },
+    "owlrehab" : {
+      "items" : [
+        "Public visits to see rescued eagles, hawks, owls and falcons are on Saturdays and Sundays by online reservation only; no walk-ins. Donations are accepted."
+      ],
+      "source" : "https://www.owlrehab.org/tours/"
     }
   },
   "updatedAt" : "2026-10-02"
