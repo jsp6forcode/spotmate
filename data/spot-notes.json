@@ -276,6 +276,12 @@
       "scope" : "city",
       "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
     },
+    "britanniashipyardsnation" : {
+      "items" : [
+        "Admission is free. It's an eight-acre outdoor historic site on the Fraser River, with heritage buildings along a wooden boardwalk, just minutes from Steveston village."
+      ],
+      "source" : "https://stevestonheritage.ca/visit/britannia-shipyards-national-historic-site/"
+    },
     "brookmerepark" : {
       "items" : [
         "Also here: walking trails and sports courts."
@@ -429,6 +435,13 @@
       ],
       "source" : "https://metrovancouver.org/services/regional-parks/park/boundary-bay-regional-park"
     },
+    "centralcity" : {
+      "items" : [
+        "Attractions include arcade games, roller skating, mini golf, bowling, laser tag, a carousel, karaoke, VR and go karts. Family Go Karts on the electric track next door are for racers 10 and up.",
+        "Open Wednesday to Sunday and closed Mondays and Tuesdays. Party options include party tables (up to 15 guests) and private rooms (15–40 guests)."
+      ],
+      "source" : "https://centralcityfunpark.com/"
+    },
     "centralpark" : {
       "items" : [
         "Also here: an outdoor pool in summer, picnic tables and an outdoor fitness circuit."
@@ -497,6 +510,20 @@
       ],
       "source" : "https://www.surrey.ca/culture-recreation/1914.aspx"
     },
+    "cipherxcoquitlamescapero" : {
+      "items" : [
+        "Group sizes: escape rooms 2–6 players, VR 1–6, X-Grid 2–10, splatter room 2–6, rage room 1–6. The Slime Party workshop is for ages 5–16 (4–20 guests) and every guest takes home 2 slimes.",
+        "Coquitlam hours: Monday to Thursday 2–10pm and Friday to Sunday 12pm–midnight. Birthday packages come with private rooms and a dedicated event host."
+      ],
+      "source" : "https://cipherx.ca/"
+    },
+    "cipherxsurreydeltaescape" : {
+      "items" : [
+        "Group sizes: escape rooms 2–6 players, VR 1–6, X-Grid 2–10, splatter room 2–6, rage room 1–6. The Slime Party workshop is for ages 5–16 (4–20 guests) and every guest takes home 2 slimes.",
+        "Delta hours: Monday to Thursday 12–11pm, Friday 12pm–midnight, Saturday 11am–midnight and Sunday 11am–11pm."
+      ],
+      "source" : "https://cipherx.ca/"
+    },
     "citycentrecommunitycentr" : {
       "items" : [
         "Programs for all ages, including preschool, dance, arts and day camps."
@@ -529,6 +556,19 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "cliffwalk" : {
+      "items" : [
+        "Part of Capilano Suspension Bridge Park: an elevated pathway that winds high above the canyon. The park is open 9am–7pm daily and runs a free shuttle."
+      ],
+      "source" : "https://www.capbridge.com/"
+    },
+    "climbbase5" : {
+      "items" : [
+        "Offers youth programs and camps, school bookings, birthday parties and belay sessions. Group bookings are a 1 hour 35 minute climbing session with staff handling equipment and ropes.",
+        "North Vancouver hours: Sunday 10am–8pm, Monday and Tuesday 2–10pm, Wednesday to Saturday 10am–10pm. Waivers must be completed before you climb."
+      ],
+      "source" : "https://www.climbbase5.com/"
+    },
     "cloverdalearena" : {
       "items" : [
         "Public skating drop-ins. Kids in strollers are welcome on the ice at open skates (helmets for everyone)."
@@ -559,6 +599,12 @@
         "Playground on site and an occasional care preschool program."
       ],
       "source" : "https://vancouver.ca/parks-recreation-culture/coal-harbour-community-centre.aspx"
+    },
+    "coastalclimbingcentre" : {
+      "items" : [
+        "Has youth climbing programs you can book online. Waivers are required, and climbing shoes are required for entry (rentals are available)."
+      ],
+      "source" : "https://www.coastalclimbing.com/"
     },
     "comolake" : {
       "items" : [
@@ -648,6 +694,13 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "cypress" : {
+      "items" : [
+        "Winter family options include tubing (6 chutes about 100 m long, with a tube tow), 11 km of snowshoe trails and Child & Youth Snow School programs.",
+        "The Lights of Hollyburn is a 1 km snowshoe walk to the historic Hollyburn Lodge. Summer activities are closed for the season."
+      ],
+      "source" : "https://cypressmountain.com/"
+    },
     "davidsonspoolpark" : {
       "items" : [
         "Also here: picnic tables, portable washrooms, parking and water access."
@@ -728,6 +781,13 @@
       ],
       "source" : "https://www.langleycity.ca/parks-recreation/recreation-facilities/douglas-recreation-child-care-centre"
     },
+    "drsunyatsenclassicalchin" : {
+      "items" : [
+        "Open Tuesday to Sunday, 9:30am–4pm (hours can vary).",
+        "Guided tours and Family Visits with scavenger hunts are offered, and public tea ceremonies run Saturdays and Sundays at 10:30am, 11:45am and 1pm (up to 8 people per slot)."
+      ],
+      "source" : "https://vancouverchinesegarden.com/"
+    },
     "dundaraveparkwestvancouv" : {
       "items" : [
         "Lifeguards watch the swim area in summer. Washrooms open year-round 6am–10pm; the concession is open daily 11am–7pm."
@@ -782,6 +842,13 @@
         "Also here: a community garden."
       ],
       "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/elks-park"
+    },
+    "emmaleafarms" : {
+      "items" : [
+        "The farm market is open Thursday to Sunday 9am–5pm and the ice cream shoppe Friday to Sunday 9am–5pm. From November it's 10am–3pm on Saturdays and Sundays.",
+        "The pumpkin patch opens October 1, with events including Apple Fest (Oct 17–18) and Pumpkin Fest (Oct 24–25)."
+      ],
+      "source" : "https://emmaleafarms.com/"
     },
     "englishbay" : {
       "items" : [
@@ -900,6 +967,13 @@
       ],
       "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
     },
+    "fraservalleyheritagerail" : {
+      "items" : [
+        "Weekend rides ran May 2 to September 26 and the regular rides are closed for the rest of 2026. Electric Express (Christmas) tickets go on sale October 15, and the Monster Express Halloween train is sold out.",
+        "Trains leave from Cloverdale Station at Hwy 10 and 176A Street, behind the Clydesdale Inn."
+      ],
+      "source" : "https://fvhrs.org/"
+    },
     "funcircleindoorplaygroun" : {
       "items" : [
         "For ages 0–12, with a separate baby and toddler area, a ball pit and an on-site café."
@@ -936,6 +1010,13 @@
         "Also here: washrooms, a drinking fountain and walking trails."
       ],
       "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/gates-park"
+    },
+    "georgecreifelmigratorybi" : {
+      "items" : [
+        "All visitors need a reservation. Bookings open three days ahead and close at 8am on the day of your visit.",
+        "Dogs aren't allowed anywhere in the sanctuary, including the parking lot, and the lot has no shade. Nearly 300 bird species have been recorded, with the most variety from fall to spring, and winter is peak season for snow geese."
+      ],
+      "source" : "https://www.reifelbirdsanctuary.com/"
     },
     "georgemackielibrarynorth" : {
       "items" : [
@@ -980,12 +1061,25 @@
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/godwin-farm-biodiversity-preserve-park"
     },
+    "goldenears" : {
+      "items" : [
+        "You may need a day-use vehicle pass in peak season. Designated swimming areas at Alouette (South Beach) and Campers' Beach are open June 17 to September 5, with no lifeguards on duty.",
+        "Dogs are not allowed in picnic areas or marked swimming zones. It's bear country with poor cell service, so keep food stored."
+      ],
+      "source" : "https://bcparks.ca/golden-ears-park/"
+    },
     "goldstonepark" : {
       "items" : [
         "Surrey spray parks run May 16 to late September, 11am–6pm. Push the button to start the water when it’s above 20°C."
       ],
       "scope" : "city",
       "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
+    },
+    "granville" : {
+      "items" : [
+        "The Public Market is open 9am–6pm, and the Kids Market is one of the listed stops."
+      ],
+      "source" : "https://granvilleisland.com/"
     },
     "grauerpark" : {
       "items" : [
@@ -1108,6 +1202,13 @@
       "scope" : "city",
       "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
     },
+    "hazelmere" : {
+      "items" : [
+        "Open weekends from Sept 19–20 to Oct 31, 10am–5pm (enter by 4pm), and weekday afternoons Oct 1–30, 2–5pm. Everyone age 2 and older pays admission.",
+        "Admission includes wagon rides, farm animals (goats, sheep, cows, rabbits, pigs), a mini corn maze, a play area and the 10-acre pumpkin field. Pumpkins cost extra."
+      ],
+      "source" : "https://hazelmerepumpkinpatch.ca/"
+    },
     "hazelnutmeadowscommunity" : {
       "items" : [
         "Also here: walking trails and sports courts."
@@ -1202,6 +1303,12 @@
         "Also here: a playground, a washroom, a drinking fountain and misting poles."
       ],
       "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
+    "innoplay" : {
+      "items" : [
+        "For kids from 6 months to 12 years, and one child and one adult are included with admission. Open Monday to Thursday and Sunday 10am–6pm, Friday and Saturday 10am–8pm, and a staff-supervised drop-off option is offered."
+      ],
+      "source" : "https://www.innoplay.ca/"
     },
     "iona" : {
       "items" : [
@@ -1686,11 +1793,24 @@
       ],
       "source" : "https://www.langleycity.ca/parks-recreation/parks-trails/nicomekl-park"
     },
+    "nikkeinationalmuseumcult" : {
+      "items" : [
+        "Free admission. Open Tuesday to Sunday, 10am–5pm from September to February, and closed Mondays and statutory holidays.",
+        "Offers children and youth programs, and the TAIKEN: Generations of Resilience exhibit is on permanently."
+      ],
+      "source" : "https://centre.nikkeiplace.org/"
+    },
     "ninjatag" : {
       "items" : [
         "Fast 10-minute games under glow lighting. Book a drop-in time slot online."
       ],
       "source" : "https://www.ninjatag.ca/"
+    },
+    "nitobe" : {
+      "items" : [
+        "Open Tuesday to Sunday, 10am–4:30pm from Sept 8 to Oct 31, and 10am–2pm in winter."
+      ],
+      "source" : "https://botanicalgarden.ubc.ca/visit/nitobe-memorial-garden/"
     },
     "noonscreekpark" : {
       "items" : [
@@ -1881,6 +2001,12 @@
       ],
       "source" : "https://www.playabby.com/"
     },
+    "playland" : {
+      "items" : [
+        "Playland is closed for the season, but rides, attractions, games and food are part of Fright Nights admission."
+      ],
+      "source" : "https://www.pne.ca/playland/"
+    },
     "poiriersportleisurecompl" : {
       "items" : [
         "Free drop-in Baby Story Time (0–2) and Toddler Plus Story Time (2–5) at the Poirier library. No registration needed."
@@ -1899,6 +2025,13 @@
       ],
       "scope" : "city",
       "source" : "https://www.portcoquitlam.ca/node/5318"
+    },
+    "portkells" : {
+      "items" : [
+        "The pumpkin patch is open October 1 to 31, 9am–6pm, including holidays. Kids 2 and under are free, and admission includes one pumpkin (marked XL pumpkins excluded).",
+        "Has an indoor play area with a sandbox and games, a cedar hedge maze, a playground and a pumpkin house. Face painting and pumpkin painting run every weekend, and it's stroller and wheelchair friendly with leashed pets welcome."
+      ],
+      "source" : "https://www.portkellsnurseries.com/"
     },
     "princeedwardpark" : {
       "items" : [
@@ -2096,6 +2229,12 @@
         "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
       ],
       "source" : "https://www.richmond.ca/seaisland"
+    },
+    "seatosky" : {
+      "items" : [
+        "Open 9am–6pm with the last ride down at 7pm (current hours)."
+      ],
+      "source" : "https://www.seatoskygondola.com/"
     },
     "seaviewpark" : {
       "items" : [
@@ -2435,6 +2574,12 @@
       ],
       "source" : "https://coquitlam.ca/1169/Town-Centre-Park-Community-Centre"
     },
+    "treetopsadventure" : {
+      "items" : [
+        "Part of Capilano Suspension Bridge Park: a rainforest walkway through the treetops. The park is open 9am–7pm daily and has Cap Kids activities and a free shuttle."
+      ],
+      "source" : "https://www.capbridge.com/"
+    },
     "troutlake" : {
       "items" : [
         "Trout Lake isn’t on the City’s list of lifeguarded beaches, so keep a close eye on swimmers."
@@ -2465,6 +2610,13 @@
       ],
       "source" : "https://metrovancouver.org/services/regional-parks/park/tynehead-regional-park"
     },
+    "ubcbotanicalgarden" : {
+      "items" : [
+        "Open Tuesday to Sunday, 10am–4:30pm from Sept 8 to Oct 31 and 10am–2pm in winter. Bring a picnic or use the Garden Cafe for coffee, snacks and ice cream.",
+        "Other than service dogs, the garden is pet-free. Parking is paid through UBC Parking."
+      ],
+      "source" : "https://botanicalgarden.ubc.ca/visit/"
+    },
     "unwin" : {
       "items" : [
         "Also here: an outdoor pool in summer, picnic tables, washrooms and an off-leash dog area."
@@ -2476,6 +2628,13 @@
         "Free for everyone 18 and under. Free for all on the first Friday of the month, 4–8pm (reserve ahead)."
       ],
       "source" : "https://www.vanartgallery.bc.ca/visit"
+    },
+    "vancouverpolicemuseumarc" : {
+      "items" : [
+        "Open Thursday to Saturday 10am–5pm and Sunday 12–5pm, closed Monday to Wednesday and statutory holidays. Friends & Family Forensics offers hands-on forensics activities.",
+        "The last day at 240 East Cordova is October 31, and the museum reopens in mid-November at a new location with elevator access. The current heritage building has 4 steps outside and 2.5 flights of stairs inside, with no wheelchair access."
+      ],
+      "source" : "https://vancouverpolicemuseum.ca/"
     },
     "vancouverpubliclibrarybr" : {
       "items" : [
@@ -2576,6 +2735,13 @@
         "Drop-in for kids 2–12 is $4.95."
       ],
       "source" : "https://www.richmond.ca/parks-recreation/centres/watermania.htm"
+    },
+    "watershed" : {
+      "items" : [
+        "Eleven kilometres of gravel trails for walking, cycling, jogging and horseback riding. The Meadow in the middle of the park has picnic areas with views of Mud Bay.",
+        "A pavilion can be booked for day use (a reservation fee applies). Open daily 8am–10pm."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/watershed-park"
     },
     "websterscornerspark" : {
       "items" : [
@@ -2687,6 +2853,20 @@
         "Playground, picnic spots and a swimming beach. Washrooms in the parking lot open 7am–9pm; concession open daily 11am–7pm."
       ],
       "source" : "https://westvancouver.ca/parks-recreation/parks-trails/whytecliff-park"
+    },
+    "wildbirdtrustofbc" : {
+      "items" : [
+        "Maplewood Flats is a 311-acre conservation area that's open 24 hours, with a self-guided tour map and trail-use guidelines.",
+        "The annual Osprey Festival has a children's zone, and there's a Coast Salish Plant Nursery."
+      ],
+      "source" : "https://www.wildbirdtrust.org/"
+    },
+    "wildplaymr" : {
+      "items" : [
+        "The Kids Course is for ages 5 to 12 (minimum height 3'9\" / 114 cm), is a single level up to 15 ft high and takes 45–90 minutes. The Classic and Extreme courses need a minimum height of 4'8\" / 142 cm. The What's to Fear Jump is for ages 5 and up and at least 44 lbs (20 kg).",
+        "Fall hours: Sept 8 to Oct 5 Thursday to Monday 10am–6pm, Oct 6 to Oct 31 Friday to Monday 10am–6pm, Nov 1 to Dec 13 Saturday and Sunday 10am–4pm. Book online."
+      ],
+      "source" : "https://wildplay.com/maple-ridge"
     },
     "willingdoncommunitycentr" : {
       "items" : [
