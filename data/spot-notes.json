@@ -3318,6 +3318,30 @@
         "Public visits to see rescued eagles, hawks, owls and falcons are on Saturdays and Sundays by online reservation only; no walk-ins. Donations are accepted."
       ],
       "source" : "https://www.owlrehab.org/tours/"
+    },
+    "clevelanddam" : {
+      "items" : [
+        "Free parking and flush toilets by the picnic area near the dam. The 1 km Coho Loop near the hatchery has two bridges, and the Second Canyon Viewpoint trail is wheelchair accessible."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/capilano-river-regional-park"
+    },
+    "lowerseymourconservation" : {
+      "items" : [
+        "Two wheelchair-accessible routes: the 10 km paved Seymour Valley Trailway and the 2 km Rice Lake Loop on compacted gravel. Picnic areas have tables and shelters, and the Seymour River Hatchery and Education Centre is on site. Gates open at 6am and close earlier in winter, so check the closing time."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/lower-seymour-conservation-reserve"
+    },
+    "mountseymourpark" : {
+      "items" : [
+        "Tobogganing is only allowed in the designated area near parking lot 2. Winter snow activities at the resort run from mid-December to March 31. In summer, the First Lake Trail is an easy to moderate 2-hour return hike."
+      ],
+      "source" : "https://bcparks.ca/mount-seymour-park/"
+    },
+    "shipyards" : {
+      "items" : [
+        "The splash park is open daily 10am-8pm from May to September, weather permitting. It can close for events or during water restrictions."
+      ],
+      "source" : "https://www.cnv.org/parks-recreation/the-shipyards/splash-park"
     }
   },
   "updatedAt" : "2026-10-02"
