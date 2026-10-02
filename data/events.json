@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-27",
+  "updatedAt": "2026-10-02",
   "note": "Compiled by hand from official market/organizer pages (see each source). Times can change, so check the source before you go.",
   "events": [
     { "id": "troutlake-market", "type": "market", "icon": "🥕", "name": "Trout Lake Farmers Market", "area": "East Vancouver",
@@ -153,6 +153,35 @@
     { "id": "gotcraft-2026", "type": "popup", "icon": "🧶", "name": "Got Craft Holiday Market", "area": "East Vancouver",
       "venue": "Croatian Cultural Centre (3250 Commercial Dr)", "lat": 49.2555, "lng": -123.0694, "spotId": null,
       "schedule": { "from": "2026-11-21", "to": "2026-11-22", "start": "10:00", "end": "17:00" },
-      "summary": "Indie makers and small businesses, plus food and live music. Tickets required", "source": "https://www.gotcraft.com/" }
+      "summary": "Indie makers and small businesses, plus food and live music. Tickets required", "source": "https://www.gotcraft.com/" },
+    { "id": "abbotsford-market", "type": "market", "icon": "🥕", "name": "Abbotsford Farm & Country Market", "area": "Abbotsford",
+      "venue": "Jubilee Park (2552 McCallum Rd)", "lat": 49.0478, "lng": -122.2928, "spotId": "jubileepark",
+      "schedule": { "weekdays": [6], "start": "09:00", "end": "13:00", "from": "2026-05-02", "to": "2026-10-31" },
+      "summary": "Abbotsford's longest-running farmers' market, with local vendors and fresh food", "source": "https://afcm.ca" },
+    { "id": "chilliwack-market", "type": "market", "icon": "🥕", "name": "Downtown Chilliwack Community Market", "area": "Chilliwack",
+      "venue": "Central Community Park (45951 Victoria Ave)", "lat": 49.1728, "lng": -121.9531, "spotId": "centralcommunitypark",
+      "schedule": { "weekdays": [6], "start": "10:00", "end": "14:00", "from": "2026-05-23", "to": "2026-10-24" },
+      "summary": "Local farmers, bakers and makers. Everything is local and handmade", "source": "https://tourismchilliwack.com/events/" },
+    { "id": "taves-magicoffall", "type": "seasonal", "icon": "🎃", "name": "Magic of Fall at Taves Farms", "area": "Abbotsford",
+      "venue": "Taves Farms (333 Gladwin Rd)", "lat": 49.0089, "lng": -122.3161, "spotId": "tavesfarms",
+      "schedule": { "from": "2026-09-12", "to": "2026-10-31", "hoursText": "Check Taves Farms for hours" },
+      "summary": "Pumpkin garden, corn mazes, hayrides, jumping pillows, playgrounds and farm animals. Tickets from about $30", "source": "https://www.todocanada.ca/city/vancouver/event/magic-of-fall/" },
+    { "id": "greendale-maze", "type": "seasonal", "icon": "🌽", "name": "Corn Maze at Greendale Acres", "area": "Chilliwack",
+      "venue": "Greendale Acres (41905 Yale Rd W)", "lat": 49.1313, "lng": -122.0645, "spotId": "greendaleacreschilliwack",
+      "schedule": { "from": "2026-07-29", "to": "2026-10-31", "hoursText": "Hours vary, check before you go" },
+      "summary": "A 12-acre corn maze for all ages, open through October", "source": "https://dailyhive.com/vancouver/chilliwack-corn-maze-2026" },
+    { "id": "greendale-princess", "type": "festival", "icon": "👑", "name": "Princess and Superhero Day at Greendale Acres", "area": "Chilliwack",
+      "venue": "Greendale Acres (41905 Yale Rd W)", "lat": 49.1313, "lng": -122.0645, "spotId": "greendaleacreschilliwack",
+      "schedule": { "from": "2026-10-03", "to": "2026-10-03", "start": "11:00", "end": "16:00" },
+      "summary": "Dress up as a princess or superhero for a day on the farm", "source": "https://tourismchilliwack.com/events/" },
+    { "id": "greendale-weighoff", "type": "festival", "icon": "🎃", "name": "Pumpkin Weigh Off at Greendale Acres", "area": "Chilliwack",
+      "venue": "Greendale Acres (41905 Yale Rd W)", "lat": 49.1313, "lng": -122.0645, "spotId": "greendaleacreschilliwack",
+      "schedule": { "from": "2026-10-17", "to": "2026-10-17", "start": "10:00", "end": "14:00" },
+      "summary": "Giant pumpkins get weighed in at the farm", "source": "https://tourismchilliwack.com/events/" },
+    { "id": "chilliwack-trainshow", "type": "popup", "icon": "🚂", "name": "Train & Hobby Show", "area": "Chilliwack",
+      "venue": "Chilliwack Heritage Park (44140 Luckakuck Way)", "lat": 49.1416, "lng": -122.0037, "spotId": null,
+      "schedule": { "from": "2026-10-24", "to": "2026-10-25", "start": "10:00", "end": "16:00" },
+      "summary": "Model trains and hobby tables. $6 for both days, 5 and under free", "source": "https://tourismchilliwack.com/events/" }
+
   ]
 }

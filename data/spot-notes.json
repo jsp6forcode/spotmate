@@ -2892,6 +2892,42 @@
         "For ages 1–12, with an adventure maze, trampoline and foam pool. Sign the waiver online before you go."
       ],
       "source" : "https://www.wonderlands.ca/"
+    },
+    "abbotsfordrecreationcent" : {
+      "items" : [
+        "Public swim sessions and swim lessons run here. Check the City of Abbotsford aquatics page for the schedule. Crossley Park and its new splash pad are across the road."
+      ],
+      "source" : "https://abbotsford.ca/Aquatics"
+    },
+    "castlefunpark" : {
+      "items" : [
+        "Wonder Farm Kids Zone is the area made for little ones. There is no entry fee: you load a Playcard with time or dollars and tap it at each attraction. Open daily 10am-10pm."
+      ],
+      "source" : "https://www.castlefunpark.com"
+    },
+    "crossleypark" : {
+      "items" : [
+        "New splash pad opened June 20, 2026, with spray nozzles, tipping buckets, spray jets and fountains, plus stroller-friendly seating. It sits next to the playground."
+      ],
+      "source" : "https://www.abbotsford.ca/node/12055"
+    },
+    "matsquirecreationcentre" : {
+      "items" : [
+        "Public swim sessions and swim lessons run here. Check the City of Abbotsford aquatics page for the schedule."
+      ],
+      "source" : "https://abbotsford.ca/Aquatics"
+    },
+    "playabbyabbotsford" : {
+      "items" : [
+        "Has safe toddler zones plus slides and climbs for older kids. You can bring a picnic (no nuts, alcohol or cakes/cupcakes)."
+      ],
+      "source" : "https://www.playabby.com"
+    },
+    "playabbychilliwack" : {
+      "items" : [
+        "Has safe toddler zones plus slides and climbs for older kids. You can bring a picnic (no nuts, alcohol or cakes/cupcakes)."
+      ],
+      "source" : "https://www.playabby.com"
     }
   },
   "updatedAt" : "2026-10-02"
