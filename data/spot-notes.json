@@ -282,6 +282,12 @@
       ],
       "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-20"
     },
+    "brydonlagoon" : {
+      "items" : [
+        "A short stroll around the lagoon's edge lets you watch a variety of wildfowl, southwest of Brydon Park."
+      ],
+      "source" : "https://www.langleycity.ca/parks-recreation/parks-trails/brydon-lagoon"
+    },
     "buckleypark" : {
       "items" : [
         "Also here: walking trails."
@@ -765,6 +771,12 @@
       ],
       "source" : "https://www.burnaby.ca/edmonds"
     },
+    "edmondspark" : {
+      "items" : [
+        "The spray park here closed for the season on September 8."
+      ],
+      "source" : "https://www.burnaby.ca/Things-To-Do/Explore-Outdoors/Play-Areas/Wading-and-Spray-Pads.html"
+    },
     "elkspark" : {
       "items" : [
         "Also here: a community garden."
@@ -1000,6 +1012,12 @@
         "Also here: picnic tables and fishing."
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/green-timbers-urban-forest"
+    },
+    "grimstonpark" : {
+      "items" : [
+        "Has a wading pool for little ones in season."
+      ],
+      "source" : "https://www.newwestcity.ca/parks-and-recreation/parks/amenities/sb_expander_articles/961.php"
     },
     "grouse" : {
       "items" : [
@@ -1564,6 +1582,12 @@
       ],
       "source" : "https://monova.ca/visit/"
     },
+    "moodypark" : {
+      "items" : [
+        "The spray park runs daily 9am–8pm in season."
+      ],
+      "source" : "https://www.newwestcity.ca/parks-and-recreation/parks/amenities/sb_expander_articles/961.php"
+    },
     "mountainviewpark" : {
       "items" : [
         "Also here: pickleball, tennis and sport courts, sports fields, picnic tables and trails."
@@ -2045,6 +2069,12 @@
         "Also here: a neighbourhood playground and a bench."
       ],
       "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
+    "sappertonpark" : {
+      "items" : [
+        "The spray park runs daily 9am–8pm in season."
+      ],
+      "source" : "https://www.newwestcity.ca/parks-and-recreation/parks/amenities/sb_expander_articles/961.php"
     },
     "sasamat" : {
       "items" : [
