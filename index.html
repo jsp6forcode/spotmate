@@ -571,6 +571,8 @@ const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 // sale: 브랜드 웨어하우스·팩토리 세일, meet: 사인회·팬미팅, popup: 팝업·박람회처럼 며칠만 열리는 행사
 const EVENT_TYPES = { market: 'Farmers market', festival: 'Festival', seasonal: 'Seasonal', sale: 'Warehouse sale', meet: 'Signing & meet-up', popup: 'Pop-up & show' };
+// 어른 위주 행사(맥주 축제, 샘플 세일, 영화제 등)에 붙이는 표시: 보여주되 부모용이라고 윙크로 알려줘요 (events.json의 forParents)
+const PARENTS_BADGE = '<span class="ml-1 align-middle whitespace-nowrap text-[11px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 dark:bg-amber-500/20 dark:text-amber-200">For parents 😉</span>';
 // 카드 이유 박스 제목: 행사 종류·시즌 태그 이름에 맞게 (Coming up 대신)
 const EVENT_LABEL = { market: "Market", festival: "Festival", seasonal: "Seasonal", sale: "Warehouse sale", meet: "Meet-up", popup: "Pop-up" };
 const eventLabel = ev => EVENT_LABEL[ev.type] || "Event";
@@ -2060,7 +2062,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="mt-1 text-xs font-bold text-violet-700 dark:text-violet-300 leading-tight">${esc(dayLabel(ev.next))}</p>
         </div>
         <div class="flex-1 min-w-0">
-          <p class="font-bold leading-snug">${esc(ev.name)}${RARE_EVENT.includes(ev.type) ? ' <span class="ml-1 align-middle text-[11px] font-bold px-1.5 py-0.5 rounded bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-500/20 dark:text-fuchsia-200">Few days only</span>' : ''}</p>
+          <p class="font-bold leading-snug">${esc(ev.name)}${ev.forParents ? ` ${PARENTS_BADGE}` : ''}${RARE_EVENT.includes(ev.type) ? ' <span class="ml-1 align-middle text-[11px] font-bold px-1.5 py-0.5 rounded bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-500/20 dark:text-fuchsia-200">Few days only</span>' : ''}</p>
           <p class="text-sm text-slate-600 dark:text-slate-300">${esc(eventHours(ev))} · ${esc(eventWhen(ev))}</p>
           <p class="text-xs text-slate-500 dark:text-slate-400">${esc(EVENT_TYPES[ev.type] || 'Event')} · ${esc(ev.venue)}${ev.dist != null ? ` · ${fmtDist(ev.dist)}` : ''}</p>
           ${compact ? '' : `<p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(ev.summary)}</p>`}
@@ -2570,7 +2572,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const evAll = picks ? [] : this.upcomingEvents(45).map(ev => { const sp = ev.spotId && byId(ev.spotId); return ev.lat != null ? ev : sp ? { ...ev, lat: sp.lat, lng: sp.lng } : null; }).filter(Boolean);
     const evMarkets = evAll.filter(ev => ev.type === 'market'), evOthers = evAll.filter(ev => ev.type !== 'market');
     const showEv = this.state.mapEvents !== false, showMk = this.state.mapMarkets !== false;
-    const evPin = ev => ({ name: ev.name, lat: ev.lat, lng: ev.lng, market: ev.type === 'market', icon: ev.icon || (ev.type === 'market' ? '🥕' : '🎪'), when: `${dayLabel(ev.next)} · ${eventHours(ev)}`, spotId: ev.spotId && byId(ev.spotId) ? ev.spotId : '', source: ev.source || '' });
+    const evPin = ev => ({ name: ev.name, forParents: !!ev.forParents, lat: ev.lat, lng: ev.lng, market: ev.type === 'market', icon: ev.icon || (ev.type === 'market' ? '🥕' : '🎪'), when: `${dayLabel(ev.next)} · ${eventHours(ev)}`, spotId: ev.spotId && byId(ev.spotId) ? ev.spotId : '', source: ev.source || '' });
     this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: CATS[s.cat].dot, mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks,
       events: [...(showEv ? evOthers : []), ...(showMk ? evMarkets : [])].map(evPin) };
     const evToggle = (act, on, label, n) => `<button data-act="${act}" aria-pressed="${on}" class="flex items-center gap-1 px-2 py-0.5 rounded-full border ${on ? 'bg-amber-100 border-amber-300 text-amber-900 dark:bg-amber-500/20 dark:border-amber-500/40 dark:text-amber-100' : 'border-slate-300 text-slate-500 dark:border-slate-600 dark:text-slate-400'}">${label} <span class="font-normal">${n}</span></button>`;
@@ -2595,7 +2597,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <button data-act="evfocus" data-val="${i}" data-maphl="ev:${i}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-violet-300 dark:hover:ring-violet-700 flex gap-3">
             <span class="w-7 h-7 shrink-0 rounded-full bg-white text-base flex items-center justify-center border-2 ${ev.market ? 'border-emerald-600' : 'border-fuchsia-700'}" aria-hidden="true">${esc(ev.icon)}</span>
             <span class="flex-1 min-w-0">
-              <span class="block font-bold truncate">${esc(ev.name)}</span>
+              <span class="block font-bold truncate">${esc(ev.name)}${ev.forParents ? ' <span class="text-[11px] font-bold text-amber-700 dark:text-amber-300">😉 For parents</span>' : ''}</span>
               <span class="block text-xs text-slate-500 dark:text-slate-400 truncate">${ev.market ? 'Market' : 'Event'}, ${esc(ev.when)}</span>
             </span>
           </button>`).join('')}<p class="px-1 pt-1 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Places</p>` : ''}
@@ -2637,7 +2639,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 행사·마켓 핀: 누르면 다음 날짜·시간과 장소/공식 정보 링크
     (this._map.events || []).forEach((ev, ei) => {
       const icon = L.divIcon({ className: '', html: `<div class="spot-pin ev${ev.market ? ' mk' : ''}">${esc(ev.icon)}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] });
-      const html = `<div style="min-width:180px"><p style="font-weight:700;margin:0">${esc(ev.name)}</p><p style="margin:4px 0">${esc(ev.when)}</p>
+      const html = `<div style="min-width:180px"><p style="font-weight:700;margin:0">${esc(ev.name)}${ev.forParents ? ' <span style="font-size:11px;font-weight:700;background:#fef3c7;color:#78350f;padding:1px 6px;border-radius:4px;white-space:nowrap">For parents 😉</span>' : ''}</p><p style="margin:4px 0">${esc(ev.when)}</p>
         <p style="margin:0">${ev.spotId ? `<button data-act="open" data-val="${esc(ev.spotId)}" style="text-decoration:underline;font-weight:600;margin-right:10px">Place details</button>` : ''}${/^https:\/\//.test(ev.source) ? `<a href="${esc(ev.source)}" target="_blank" rel="noopener" style="text-decoration:underline">Official info ↗</a>` : ''}</p></div>`;
       const emk = L.marker([ev.lat, ev.lng], { icon, title: ev.name, keyboard: true, zIndexOffset: 2000 }).addTo(map).bindPopup(html);
       this._pins['ev:' + ei] = { mk: emk, base: 2000 };
