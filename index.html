@@ -12,7 +12,10 @@
 <script>
 tailwind.config = {
   darkMode: 'class',
-  theme: { extend: { fontFamily: {
+  theme: { extend: { colors: {
+    // 포인트 색: 보라(violet) 자리를 틸(청록)로 바꿔요 (2026-10-02, 사용자 결정). 코드 곳곳의 violet-* 클래스가 그대로 틸이 돼요
+    violet: { 50: "#f0fdfa", 100: "#ccfbf1", 200: "#99f6e4", 300: "#5eead4", 400: "#2dd4bf", 500: "#14b8a6", 600: "#0d9488", 700: "#0f766e", 800: "#115e59", 900: "#134e4a", 950: "#042f2e" }
+  }, fontFamily: {
     sans: ['"IBM Plex Sans"', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
     brand: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif']
   } } }
@@ -21,11 +24,23 @@ tailwind.config = {
 <style>
   :root { box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
   html { scroll-padding-top: env(safe-area-inset-top, 0px); }
-  body { background: #f5f6fb; }
+  body { background: #fbfbfa; }
   html.dark body { background: #0b1120; }
   .clamp2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .no-scrollbar { scrollbar-width: none; } .no-scrollbar::-webkit-scrollbar { display: none; }
   /* 지도 핀 (Leaflet divIcon): 카테고리 색 원 + 번호 */
+  /* 헤더: 나들이 가는 가족 사진 (Pexels, Kampus). 글자가 읽히게 위아래를 어둡게 덮어요 */
+  .hero { background: linear-gradient(180deg, rgba(15,23,42,.52) 0%, rgba(15,23,42,.2) 50%, rgba(15,23,42,.58) 100%), url("https://images.pexels.com/photos/7669218/pexels-photo-7669218.jpeg?auto=compress&cs=tinysrgb&w=1600") center 35% / cover, #3b2a6b; }
+  .dark .hero { background: linear-gradient(180deg, rgba(2,6,23,.72) 0%, rgba(2,6,23,.46) 50%, rgba(2,6,23,.78) 100%), url("https://images.pexels.com/photos/7669218/pexels-photo-7669218.jpeg?auto=compress&cs=tinysrgb&w=1600") center 35% / cover, #1b1238; }
+  /* 퀴즈 화면: 은은한 색 번짐 배경 + 헤더에 살짝 걸친 둥근 카드, 모서리에 작은 아이콘 (2026-10-02, 사용자 결정 A+C) */
+  .wiz-wrap { background: radial-gradient(circle at 12% 18%, #d3f5ee 0, transparent 38%), radial-gradient(circle at 88% 55%, #fff0d2 0, transparent 42%), radial-gradient(circle at 35% 100%, #ffe1e8 0, transparent 40%); border-radius: 28px; padding: 0 0 28px; }
+  .dark .wiz-wrap { background: radial-gradient(circle at 12% 18%, rgba(13,148,136,.22) 0, transparent 38%), radial-gradient(circle at 88% 55%, rgba(245,158,11,.12) 0, transparent 42%), radial-gradient(circle at 35% 100%, rgba(244,114,182,.12) 0, transparent 40%); }
+  .wiz-card { position: relative; background: rgba(255,255,255,.93); border-radius: 22px; padding: 18px 16px; box-shadow: 0 2px 4px rgba(15,23,42,.04), 0 18px 48px rgba(13,148,136,.14); }
+  .dark .wiz-card { background: rgba(15,23,42,.88); box-shadow: 0 18px 48px rgba(0,0,0,.4); }
+   (min-width: 640px) { .wiz-card { border-radius: 28px; padding: 28px 30px; margin-top: -24px; } }
+  .wiz-deco { position: absolute; opacity: .6; pointer-events: none; user-select: none; }
+  .hero h1 { text-shadow: 0 2px 16px rgba(0,0,0,.45); }
+  .hero p, .hero span { text-shadow: 0 1px 8px rgba(0,0,0,.5); }
   .spot-pin { width: 30px; height: 30px; border-radius: 9999px; border: 3px solid #fff; color: #fff; font: 800 12px/24px system-ui, sans-serif; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.4); }
   .spot-pin.origin { width: 18px; height: 18px; background: #111827; }
   /* 행사(보라 테두리)·파머스 마켓(초록 테두리) 핀: 흰 바탕에 이모지 */
@@ -33,13 +48,13 @@ tailwind.config = {
   .spot-pin.ev.mk { border-color: #059669; }
   /* 오른쪽 목록에 마우스를 올리면 그 장소 핀을 크게 + 보라 테두리 */
   .spot-pin { transition: transform .12s, box-shadow .12s; }
-  .spot-pin.hl { transform: scale(1.45); border-color: #7c3aed; box-shadow: 0 0 0 4px rgba(124,58,237,.35), 0 2px 8px rgba(0,0,0,.5); }
+  .spot-pin.hl { transform: scale(1.45); border-color: #0d9488; box-shadow: 0 0 0 4px rgba(13,148,136,.35), 0 2px 8px rgba(0,0,0,.5); }
   /* isolation: 지도 레이어(z-index 400~1000)가 지도 상자 안에서만 쌓이게. 안 그러면 장소 창이 지도 뒤로 가려져요 */
   .leaflet-container { font-family: inherit; isolation: isolate; z-index: 0; }
   /* 다크 모드: OSM 지도는 밝은 그림뿐이라 타일만 어둡게 (핀·글자는 그대로) */
   .dark .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.95) contrast(.9); }
   .sticky-bar { position: sticky; top: env(safe-area-inset-top, 0px); }
-  button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid #8b5cf6; outline-offset: 2px; }
+  button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid #14b8a6; outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
@@ -1890,8 +1905,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 첫 화면에 추천 카드가 보이도록 헤더를 낮게: 모바일은 부제 없이 로고 + 탭만
     const tab = (v, label) => `<button data-act="view" data-val="${v}" class="shrink-0 px-2 sm:px-4 py-2.5 sm:py-2 rounded-full text-[13px] sm:text-sm font-semibold transition-colors ${view === v ? 'bg-white text-indigo-700 shadow' : 'text-white/90 hover:bg-white/15'}">${label}</button>`;
     return `
-    <header class="bg-gradient-to-br from-indigo-600 via-violet-600 to-fuchsia-600 dark:from-indigo-950 dark:via-violet-950 dark:to-fuchsia-950 text-white">
-      <div class="max-w-6xl mx-auto px-4 md:px-6 pt-5 pb-4">
+    <header class="hero relative text-white">
+      <div class="max-w-6xl mx-auto px-4 md:px-6 pt-6 pb-5 md:pt-9 md:pb-7">
         <div class="flex items-start justify-between gap-4">
           <div>
             <h1 class="font-brand text-3xl md:text-5xl font-extrabold tracking-tight leading-none">Tiny Trips</h1>
@@ -1910,6 +1925,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${tab('list', 'Explore')}${tab('map', 'Map')}${EATS_ON ? tab('eats', 'Eats') : ''}${tab('events', 'Events')}${tab('markets', 'Markets')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}${tab('about', 'About')}
         </nav>
       </div>
+      <a href="https://www.pexels.com/photo/7669218/" target="_blank" rel="noopener" class="absolute right-3 bottom-1.5 text-[10px] leading-none text-white/70 hover:text-white underline-offset-2 hover:underline">Photo: Kampus · Pexels</a>
     </header>`;
   }
 
@@ -2216,7 +2232,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const why = baseWhy || (evText ? { pick: true, label: this.eventTitle(evHere.ev, s), text: evText } : null);
     const evExtra = evText && why && !why.lunch && why.text !== evText ? evText : '';
     return `
-    <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-2 hover:ring-violet-400 dark:hover:ring-violet-600 hover:shadow-lg transition overflow-hidden">
+    <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl sm:rounded-[20px] bg-white dark:bg-slate-900 ring-1 ring-slate-100 dark:ring-slate-800 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:ring-2 hover:ring-violet-400 dark:hover:ring-violet-600 hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition overflow-hidden">
       <div class="relative">
         ${this.cover(s, 'h-24 sm:h-40')}
         <span class="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 text-[10px] sm:text-xs font-bold px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full max-w-[60%] truncate bg-white/90 text-slate-900 shadow-sm">${esc(s.cuisine || c.label)}</span>
@@ -2389,7 +2405,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (!w.done) {
       const st = WIZ[w.step], pick = a[st.key];
       return `
-      <section class="mt-4 sm:mt-6 max-w-2xl mx-auto" aria-label="Find a place">
+      <div class="wiz-wrap"><section class="wiz-card mt-4 sm:mt-6 max-w-2xl mx-auto" aria-label="Find a place">
+        <span class="wiz-deco" style="right:-6px;top:-16px;font-size:34px;transform:rotate(12deg)" aria-hidden="true">🎈</span><span class="wiz-deco" style="left:-8px;bottom:-24px;font-size:32px;transform:rotate(-8deg)" aria-hidden="true">🧺</span><span class="wiz-deco max-sm:hidden" style="left:-26px;top:84px;font-size:28px;transform:rotate(-14deg)" aria-hidden="true">🍂</span><span class="wiz-deco max-sm:hidden" style="right:-18px;bottom:46px;font-size:28px;transform:rotate(10deg)" aria-hidden="true">🌳</span>
         <div class="flex items-center justify-between text-sm font-semibold text-slate-600 dark:text-slate-300">
           <span>Step ${w.step + 1} of ${WIZ.length}</span>
           <span class="flex items-center gap-4">
@@ -2417,7 +2434,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">We’ll pick from every age, time, length and kind of outing.</p>
         </div>`}
       </section>
-      ${w.editing ? '' : `<div class="max-w-2xl mx-auto mt-8 pt-5 border-t border-slate-200 dark:border-slate-800"><p class="text-sm text-slate-600 dark:text-slate-300">Or jump straight to what's in season:</p>${this.seasonChips()}</div>`}`;
+      ${w.editing ? '' : `<div class="max-w-2xl mx-auto mt-8 pt-5 border-t border-slate-200 dark:border-slate-800"><p class="text-sm text-slate-600 dark:text-slate-300">Or jump straight to what's in season:</p>${this.seasonChips()}</div>`}</div>`;
     }
     const r = this.wizResults();
     const grid = list => `<div class="mt-5 grid grid-cols-2 gap-2.5 sm:gap-5 md:grid-cols-3">${list.map(s => this.card(s)).join('')}</div>`;
@@ -2649,7 +2666,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const o = this.origin();
     if (o) {
       const r = this.state.radius;
-      if (this.nearActive() && r !== 'any') L.circle([o.lat, o.lng], { radius: r * 1000, color: '#7c3aed', weight: 2, dashArray: '6 4', fillOpacity: 0.08 }).addTo(map);
+      if (this.nearActive() && r !== 'any') L.circle([o.lat, o.lng], { radius: r * 1000, color: '#0d9488', weight: 2, dashArray: '6 4', fillOpacity: 0.08 }).addTo(map);
       L.marker([o.lat, o.lng], { icon: L.divIcon({ className: '', html: '<div class="spot-pin origin"></div>', iconSize: [18, 18], iconAnchor: [9, 9] }), title: this.state.nearKey === 'here' ? 'You' : o.label, interactive: false }).addTo(map);
     }
     // 보던 위치 이어가기: 같은 목록이면 저장한 위치로, 아니면 추천 장소에 맞춰 확대(전체 목록은 메트로 밴쿠버 범위)
