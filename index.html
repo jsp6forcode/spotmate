@@ -2136,7 +2136,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 순위 배지는 크게, 1~3위는 금색으로 (New 배지일 땐 순위가 아니에요)
     const rank = badge && badge !== 'New' && this.rankOf(s);
     // 지금 가 볼 이유 중 가장 강한 것 하나 (행사·시즌·검색 증가). 순위의 근거라 제목 바로 밑에 둬요
-    const why = this.nowReasons(s).filter(x => x.score >= NOW_MIN)[0] || (s.filler ? this.pickReason(s) : null);
+    const tagWhy = spotTags(s).length ? { pick: true, label: 'Coming up', text: spotTags(s)[0].spots[s.id].why } : null;   // 해시태그가 있으면 이유 박스는 항상 (점수와 상관없이 모든 태그를 같게)
+    const baseWhy = this.nowReasons(s).filter(x => x.score >= NOW_MIN)[0] || (s.filler ? this.pickReason(s) : null) || tagWhy;
+    // 행사가 있으면 같은 이유 박스 안에 (따로 떠 있는 줄 없이 모든 카드가 같은 구조로)
+    const evText = evHere ? eventReason(evHere.ev, s, evHere.next) : '';
+    const why = baseWhy || (evText ? { pick: true, label: 'Coming up', text: evText } : null);
+    const evExtra = evText && why && !why.lunch && why.text !== evText ? evText : '';
     return `
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-2 hover:ring-violet-400 dark:hover:ring-violet-600 hover:shadow-lg transition overflow-hidden">
       <div class="relative">
@@ -2156,30 +2161,29 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           if (!ph) return '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>';
           return `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)}</p>`; })()
         : (() => { const oi = openInfo(s); return oi
-          ? `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'web' && s.hoursSource !== 'public' && !isDaylight(s) ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
+          ? `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>`
           : HOURS_READY ? '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
-        <p class="hidden sm:block mt-2 text-sm text-slate-700 dark:text-slate-300 ${why ? 'clamp2' : ''}">${esc(s.summary)}</p>
+        <p class="hidden sm:block mt-2 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(s.summary)}</p>
         ${why ? why.lunch ? `
         <div class="mt-1.5 sm:mt-3 border-l-4 border-emerald-500 rounded-r-lg bg-emerald-50 dark:bg-emerald-500/10 pl-2 pr-2 sm:pl-3 sm:pr-3 py-1 sm:py-2">
           <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wide text-emerald-800 dark:text-emerald-300">${esc(why.label)}</p>
           <p class="mt-0.5 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
-        </div>` : why.pick || why.hh ? `
-        <div class="mt-1.5 sm:mt-3 border-l-4 ${why.hh ? 'border-amber-500' : 'border-amber-400'} rounded-r-lg bg-amber-50 dark:bg-amber-500/10 pl-2 pr-2 sm:pl-3 sm:pr-3 py-1 sm:py-2">
-          <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wide text-amber-800 dark:text-amber-300">${esc(why.label)}</p>
-          <p class="mt-0.5 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
         </div>` : `
-        <div class="mt-1.5 sm:mt-3 border-l-4 border-sky-500 rounded-r-lg bg-sky-50 dark:bg-sky-500/10 pl-2 pr-2 sm:pl-3 sm:pr-3 py-1 sm:py-2" title="Tiny Trips tip from official sources. Open the card for more.">
-          <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wide text-sky-800 dark:text-sky-300"><span aria-hidden="true">💡</span> Tiny Trips tip</p>
+        <div class="mt-1.5 sm:mt-3 border-l-4 ${why.hh ? 'border-amber-500' : 'border-amber-400'} rounded-r-lg bg-amber-50 dark:bg-amber-500/10 pl-2 pr-2 sm:pl-3 sm:pr-3 py-1 sm:py-2">
+          <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wide text-amber-800 dark:text-amber-300">${esc(why.pick || why.hh ? why.label : 'Coming up')}</p>
           <p class="mt-0.5 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
-          ${/* "Why go now"와 Tiny Trips tip을 한 상자로 합쳤어요 (2026-10-01). 공식 팁이 있으면 한 줄 더 */ this.tipItems(s, 'card').length ? `<p class="hidden sm:block mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(this.tipItems(s, 'card')[0])}</p>` : ''}
-          ${SAYS[s.id] ? `<p class="hidden sm:block mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2"><span class="font-semibold">What parents say</span> · ${esc(SAYS[s.id])}</p>` : ''}
+          ${evExtra ? `<p class="mt-1 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(evExtra)}</p>` : ''}
         </div>` : ''}
-        ${(!why || why.lunch || why.pick || why.hh) && this.tipItems(s, 'card').length ? `<p class="hidden sm:block mt-2 text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2.5 py-1.5 clamp2" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold"><span aria-hidden="true">💡</span> Tiny Trips tip:</span> ${esc(this.tipItems(s, 'card')[0])}${SAYS[s.id] ? `<span class="block mt-1"><span class="font-semibold">What parents say</span> · ${esc(SAYS[s.id])}</span>` : ''}</p>` : ''}
+        ${(() => {
+          // 이유 박스(Coming up 등)와 별개로, 공식 Tiny Trips tip과 What parents say는 항상 같은 상자에 (2026-10-02)
+          const tip = this.tipItems(s, 'card')[0];
+          if (!tip && !SAYS[s.id]) return '';
+          return `<div class="hidden sm:block mt-2 text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2.5 py-1.5">${tip ? `<p title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold"><span aria-hidden="true">💡</span> Tiny Trips tip:</span> ${esc(tip)}</p>` : ''}${SAYS[s.id] ? `<p class="${tip ? 'mt-1' : ''}"><span class="font-semibold">What parents say</span> · ${esc(SAYS[s.id])}</p>` : ''}</div>`;
+        })()}
 
         ${TRENDS_ON && s.rise != null && s.rise >= RISING_MIN && !(why && why.icon === RISE_ICON) ? `<p class="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-300" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
         ${spotTags(s).length ? `<p class="hidden sm:flex mt-2 flex-wrap gap-1.5">${spotTags(s).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300">#${esc(t.label)}</span>`).join('')}</p>` : ''}
         ${(() => { const m = GUIDES[s.id] && GUIDES[s.id].menu; return m && m.length ? `<p class="hidden sm:block mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold">Popular:</span> ${m.slice(0, 3).map(esc).join(' · ')}</p>` : ''; })()}
-        ${evHere && eventReason(evHere.ev, s, evHere.next) !== (why || {}).text ? `<p class="mt-2 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${esc(eventReason(evHere.ev, s, evHere.next))}</p>` : ''}
         ${(() => {
           // 해피아워: 지금이면 눈에 띄는 배지(위 이유 박스가 이미 해피아워면 생략), 오늘 이따면 시작 시간, 아니면 주간 일정 한 줄
           // 런치 스페셜도 같은 방식. 한 줄만: 지금 해피아워 → 지금 런치 → 오늘 이따(해피아워 → 런치) → 주간 일정
@@ -2210,7 +2214,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${KIDS_ONLY && isKid(s) ? `<span>${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span>${esc(s.price)}</span>` : ''}` : `${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>`}${parkShort(s) ? `<span>${esc(parkShort(s))}</span>` : ''}
           ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
         </div>
-        ${SAYS[s.id] && !(why && !why.lunch && !why.pick && !why.hh) && !((!why || why.lunch || why.pick || why.hh) && this.tipItems(s, 'card').length) ? `<p class="hidden sm:block mt-2 text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2.5 py-1.5 clamp2"><span class="font-semibold"><span aria-hidden="true">💡</span> Tiny Trips tip:</span> What parents say · ${esc(SAYS[s.id])}</p>` : ''}
         ${this.state.reviewsOn && this.reviewStats(s.id) ? (() => { const st = this.reviewStats(s.id); return `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm"><span class="text-amber-500" aria-hidden="true">★</span> <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'parent review')}</span></p>`; })() : ''}
         <div class="mt-auto pt-2.5 sm:pt-4 ${this.state.reviewsOn ? 'flex gap-2' : ''}">
         ${this.state.reviewsOn ? `<button data-act="rvcard" data-val="${s.id}" class="shrink-0 px-2.5 sm:px-4 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">★ Review</button>` : ''}
