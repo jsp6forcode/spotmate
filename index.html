@@ -2341,7 +2341,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       ${w.editing ? '' : `<div class="max-w-2xl mx-auto mt-8 pt-5 border-t border-slate-200 dark:border-slate-800"><p class="text-sm text-slate-600 dark:text-slate-300">Or jump straight to what's in season:</p>${this.seasonChips()}</div>`}`;
     }
     const r = this.wizResults();
-    const grid = list => `<div class="mt-5 grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3">${list.map(s => this.card(s)).join('')}</div>`;
+    const grid = list => `<div class="mt-5 grid grid-cols-2 gap-2.5 sm:gap-5 md:grid-cols-3">${list.map(s => this.card(s)).join('')}</div>`;
     const late = a.when === 'now' && (() => { const h = vanWallClock().getHours(); return h >= 20 || h < 7; })();
     return `
       <section class="mt-6" aria-label="Your choices">
@@ -2424,7 +2424,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Try another category.</p>
         <button data-act="cat" data-val="all" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show all spots</button>`}
       </div>`;
-    const grid = list => `<div class="mt-6 grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3">${list.map(s => this.card(s)).join('')}</div>`;
+    const grid = list => `<div class="mt-6 grid grid-cols-2 gap-2.5 sm:gap-5 md:grid-cols-3">${list.map(s => this.card(s)).join('')}</div>`;
     // 카드 목록 제목: "Events this week"(행사)와 구별되게 크게
     const heading = (id, title, sub) => `
       <div id="${id}" class="mt-8 scroll-mt-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
@@ -2505,16 +2505,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <button data-act="mapall" class="ml-auto text-sm font-semibold underline text-slate-600 dark:text-slate-300">Show all places</button>
     </div>` : '';
     return `${picksBar}
-    <div class="mt-3 sm:mt-6 grid grid-cols-1 gap-2 sm:gap-5 lg:grid-cols-3">
-      <div class="min-w-0 lg:col-span-2 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden">
+    <div class="mt-3 sm:mt-6 grid grid-cols-1 gap-2 sm:gap-4 md:grid-cols-3">
+      <div class="min-w-0 md:col-span-2 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden">
         <div class="px-3 sm:px-5 py-1.5 sm:py-3 flex flex-wrap gap-x-2.5 gap-y-0.5 sm:gap-3 text-[11px] sm:text-xs font-semibold border-b border-slate-100 dark:border-slate-800">
           ${Object.entries(CATS).filter(([k]) => EATS_ON || !PAGES.eats.includes(k)).map(([, c]) => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-3 h-3 rounded-full" style="background:${c.dot}"></span>${c.label}</span>`).join('')}
           <span class="hidden sm:inline text-slate-500 dark:text-slate-400">${picks ? 'Number = your pick order' : `${this.state.sort === 'fresh' ? 'Number = rank by reasons to go now, ' : ''}★ = review pick, ◆ = Vancouver classic`}</span>
           ${picks ? '' : `${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}<span class="hidden sm:inline text-slate-500 dark:text-slate-400">next 6 weeks</span>`}
         </div>
-        <div id="lmap" class="h-[32vh] min-h-[200px] sm:h-[60vh] sm:min-h-[360px] lg:h-[600px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
+        <div id="lmap" class="h-[32vh] min-h-[200px] sm:h-[50vh] sm:min-h-[320px] md:h-[calc(100vh-14rem)] md:min-h-[420px] lg:h-[600px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
       </div>
-      <div data-keep-scroll="maplist" class="space-y-1.5 sm:space-y-3 max-h-[36vh] overflow-y-auto sm:max-h-none sm:overflow-visible lg:max-h-[650px] lg:overflow-y-auto">
+      <div data-keep-scroll="maplist" class="space-y-1.5 sm:space-y-3 max-h-[36vh] overflow-y-auto sm:max-h-[40vh] md:max-h-[calc(100vh-14rem)] lg:max-h-[650px]">
         ${items.map(s => `
           <button data-act="open" data-val="${s.id}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-violet-300 dark:hover:ring-violet-700 flex gap-3">
             <span class="w-7 h-7 shrink-0 rounded-full text-white text-xs font-extrabold flex items-center justify-center" style="background:${CATS[s.cat].dot}">${mark(s)}</span>
