@@ -2895,9 +2895,9 @@
     },
     "abbotsfordrecreationcent" : {
       "items" : [
-        "Public swim sessions and swim lessons run here. Check the City of Abbotsford aquatics page for the schedule. Crossley Park and its new splash pad are across the road."
+        "Has an Olympic-size ice rink with a leisure skating pond, plus a 25 m pool with a hot tub and a tots pool. Public skating runs on weekday mornings and evenings and weekend mornings, so check the City's arena schedule. Crossley Park and its new splash pad are across the road."
       ],
-      "source" : "https://abbotsford.ca/Aquatics"
+      "source" : "https://www.abbotsford.ca/prc-facilities-hours"
     },
     "castlefunpark" : {
       "items" : [
@@ -2913,9 +2913,9 @@
     },
     "matsquirecreationcentre" : {
       "items" : [
-        "Public swim sessions and swim lessons run here. Check the City of Abbotsford aquatics page for the schedule."
+        "Pool with a wave machine, zero-depth beach entry, an indoor water slide and a tots pool. There is also an ice rink."
       ],
-      "source" : "https://abbotsford.ca/Aquatics"
+      "source" : "https://www.abbotsford.ca/prc-facilities-hours"
     },
     "playabbyabbotsford" : {
       "items" : [
@@ -2934,6 +2934,342 @@
         "Has safe toddler zones plus slides and climbs for older kids. You can bring a picnic (no nuts, alcohol or cakes/cupcakes)."
       ],
       "source" : "https://www.playabby.com"
+    },
+    "milllakepark" : {
+      "items" : [
+        "Has a spray park and playground on the west side near Centennial Outdoor Pool, another playground near the Bevan Road parking lot, and John Mahoney Playground near Ware Street. A 2.2 km path with a boardwalk loops the lake."
+      ],
+      "source" : "https://www.abbotsford.ca/parks-playgrounds"
+    },
+    "shadboltpark" : {
+      "items" : [
+        "Has a splash pad and green space."
+      ],
+      "source" : "https://www.abbotsford.ca/parks-playgrounds"
+    },
+    "matsquivillagepark" : {
+      "items" : [
+        "Has a playground."
+      ],
+      "source" : "https://www.abbotsford.ca/parks-playgrounds"
+    },
+    "chilliwacklandingleisure" : {
+      "items" : [
+        "The family leisure pool is a wave pool with a water slide, a lazy river and a tot pool. Outside there is a water playground, a pump track and a skate park."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=46"
+    },
+    "cheamleisurecentre" : {
+      "items" : [
+        "Has a 25 m pool with a shallow, family-friendly leisure pool, a lazy river and a hot tub. Cheam Centre Spray Park is on the same grounds (closed for the 2026 season)."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=223"
+    },
+    "sardispark" : {
+      "items" : [
+        "Playgrounds for ages 2–5 and 5–12, picnic tables, washrooms, a pond walk and outdoor fitness equipment. Newly remodelled in 2024, and the park's heritage turtle was repainted to look like a western painted turtle."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "vedderpark" : {
+      "items" : [
+        "Playground for ages 5–12 with a pump track, washrooms and a food vendor. There is also a dog off-leash area."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "peachpark" : {
+      "items" : [
+        "Has a brand-new playground for all ages, washrooms, drinking water and a picnic area. It sits right on the Vedder Rotary Trail."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "townsendpark" : {
+      "items" : [
+        "Playgrounds for ages 2–5 and 5–12, washrooms, picnic tables, ball fields and basketball and ball hockey courts."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "island22regionalpark" : {
+      "items" : [
+        "Fishing, kayaking and canoeing, plus a boat launch, washrooms and picnic tables. A dog off-leash area is here too."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "jinkersonpark" : {
+      "items" : [
+        "Playgrounds for ages 2–5 and 5–12 (including an accessible one), a pump track, drinking water and picnic tables. The Jinkerson Stairs trail starts here."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "centralcommunitypark" : {
+      "items" : [
+        "Has a water park, washrooms, picnic tables and a food vendor. The Saturday Downtown Chilliwack Community Market runs here from May 23 to Oct 24, 2026. The City's spray parks are closed for the 2026 season."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=2785"
+    },
+    "salishpark" : {
+      "items" : [
+        "Has a playground, picnic tables, washrooms and open grass."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "barberpark" : {
+      "items" : [
+        "Playground for ages 2–5 and 5–12, basketball and ball hockey courts, and picnic tables."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "waldenpark" : {
+      "items" : [
+        "Playground for ages 5–12, picnic tables and open grass."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "philippsonfamilypark" : {
+      "items" : [
+        "Playground for ages 5–12 and drinking water. The nautical-themed spray zone has three spray structures (closed for the 2026 season)."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=2785"
+    },
+    "albertdyckpark" : {
+      "items" : [
+        "Has a playground and walking paths."
+      ],
+      "source" : "https://www.abbotsford.ca/sites/default/files/2021-02/Park%20Amenities.pdf"
+    },
+    "batemanpark" : {
+      "items" : [
+        "Has a playground and washrooms."
+      ],
+      "source" : "https://www.abbotsford.ca/sites/default/files/2021-02/Park%20Amenities.pdf"
+    },
+    "fishtrapcreekpark" : {
+      "items" : [
+        "Has a playground."
+      ],
+      "source" : "https://www.abbotsford.ca/sites/default/files/2021-02/Park%20Amenities.pdf"
+    },
+    "grantpark" : {
+      "items" : [
+        "Has a playground, a water spray park, picnic shelters, washrooms, basketball courts and walking paths."
+      ],
+      "source" : "https://www.abbotsford.ca/sites/default/files/2021-02/Park%20Amenities.pdf"
+    },
+    "kalgidharpark" : {
+      "items" : [
+        "Has a playground, soccer fields, tennis courts and walking paths."
+      ],
+      "source" : "https://www.abbotsford.ca/sites/default/files/2021-02/Park%20Amenities.pdf"
+    },
+    "abbotsfordcommunitylibra" : {
+      "items" : [
+        "Regular Babytime (Mondays) and Storytime (Wednesdays) sessions. There are baby changing stations and it is a ground-level building. Check the library's event listings for the current schedule."
+      ],
+      "source" : "https://www.fvrl.bc.ca/locations/abbotsford-community-library"
+    },
+    "clearbrooklibrary" : {
+      "items" : [
+        "Regular Babytime (Tuesdays), Family Storytime and Wiggle Time sessions. Check the library's event listings for the current schedule."
+      ],
+      "source" : "https://www.fvrl.bc.ca/locations/clearbrook-library"
+    },
+    "chilliwacklibrary" : {
+      "items" : [
+        "Regular Babytime (Tuesdays), Storytime (Thursdays) and a Toddler Dance Party (Mondays). Check the library's event listings for the current schedule."
+      ],
+      "source" : "https://www.fvrl.bc.ca/locations/chilliwack-library"
+    },
+    "sardislibrary" : {
+      "items" : [
+        "Regular Storytime (Mondays), Babytime (Wednesdays) and Family Place Storytime sessions. Check the library's event listings for the current schedule."
+      ],
+      "source" : "https://www.fvrl.bc.ca/locations/sardis-library"
+    },
+    "chilliwackmuseum" : {
+      "items" : [
+        "Children 12 and under are free. Drop-in family art activities run on weekends, 11am–1pm, with no registration. Check the museum's page for the current schedule."
+      ],
+      "source" : "https://www.chilliwackmuseum.ca/admissions/"
+    },
+    "greatblueheronnaturerese" : {
+      "items" : [
+        "Has an interpretive centre, an observation tower, bird blinds, washrooms and picnic tables. The easy gravel loops are short, from 0.5 to 1.2 km, with more than 90 heron nests in the colony."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=210"
+    },
+    "thompsonregionalpark" : {
+      "items" : [
+        "Has a playground with a wooden obstacle course, swings and a climbing rock, plus a covered picnic shelter. An easy 1 km loop trail follows a salmon enhancement channel."
+      ],
+      "source" : "https://www.fvrd.ca/EN/main/parks-recreation/parks-trails/thompson.html"
+    },
+    "chilliwackcommunityfores" : {
+      "items" : [
+        "A 2.5 km beginner-level loop with interpretive signs and benches at viewpoints, an easy grade, picnic facilities and an outhouse."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754\u0026dowhat=locationView\u0026plID=183"
+    },
+    "chilliwackpumptrack" : {
+      "items" : [
+        "The outdoor pump track is beside Chilliwack Landing Leisure Centre, which also has a skate park and a water playground."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=46"
+    },
+    "birchwooddairyfarm" : {
+      "items" : [
+        "Has 50+ flavours of ice cream made on the farm, a playground, picnic areas and heated indoor seating. The petting zoo is seasonal, from May to early September. Hours change by season and the farm is closed on Sundays in fall and winter, so check before you go."
+      ],
+      "source" : "https://www.birchwooddairy.com"
+    },
+    "bobchankentfamilyymca" : {
+      "items" : [
+        "Has a swimming pool and swim lessons for children, including parent and tot classes, plus child, youth and family programs."
+      ],
+      "source" : "https://www.gv.ymca.ca/chilliwack-ymca"
+    },
+    "thereachgallerymuseum" : {
+      "items" : [
+        "Admission is pay what you can, by donation. It runs programs for all ages, including family art classes. Check the programs page for the schedule."
+      ],
+      "source" : "https://thereach.ca/programs-events/"
+    },
+    "tavesfarms" : {
+      "items" : [
+        "The fall Magic of Fall (Sept 12 to Oct 31, 2026) has a pumpkin patch with a princess carriage, three corn mazes of different difficulty, a 150-foot slide, jumping pillows, a petting barn and u-pick apples. The Fun Pass covers the slide, petting barn and mazes; hayrides need the SuperFUN pass. Open 10am-5:30pm on weekdays and 9:30am-6pm on weekends."
+      ],
+      "source" : "https://tavesfamilyfarms.com"
+    },
+    "peteyspumpkinpatch" : {
+      "items" : [
+        "The 2026 season opens Saturday, Oct 3. There is a family fun zone with train rides, a petting zoo, a bouncy castle and a kids' corn maze. Admission is paid at the gate and kids under 2 are free."
+      ],
+      "source" : "https://www.peteyspumpkinpatch.ca"
+    },
+    "greendaleacreschilliwack" : {
+      "items" : [
+        "The corn maze has free tractor rides on weekends. You can also pick pumpkins, see the farm animals and the live bee exhibit called The Hive, and walk the Pollinator Trail. There is a bonfire experience in the fall."
+      ],
+      "source" : "https://www.greendaleacres.ca"
+    },
+    "klaassenfarms" : {
+      "items" : [
+        "In fall there is an Adventure Zone with farm animals, a bouncy pillow and train rides ( a ride, free for ages 3 and under), open through Oct 4, plus u-pick apples. Fall hours are Fridays and Saturdays, 10am-6pm."
+      ],
+      "source" : "http://www.chilliwackblueberries.com/"
+    },
+    "leppfarmmarket" : {
+      "items" : [
+        "Year-round farm market with a cafe and ice cream, open daily 9am-6pm. Applelooza on Oct 3-4 has apple sales, special ice cream flavours and fresh-pressed apple juice."
+      ],
+      "source" : "https://leppfarmmarket.com"
+    },
+    "matsquitrailregionalpark" : {
+      "items" : [
+        "A paved multi-use trail along the Fraser River with picnic tables, benches and public washrooms."
+      ],
+      "source" : "https://www.abbotsford.ca/trails"
+    },
+    "spudmurphypark" : {
+      "items" : [
+        "Has a splash pad and a playground."
+      ],
+      "source" : "https://www.abbotsford.ca/parks-playgrounds"
+    },
+    "lowersumasmountainpark" : {
+      "items" : [
+        "Has a playground and sports courts."
+      ],
+      "source" : "https://www.abbotsford.ca/parks-playgrounds"
+    },
+    "fairfieldpark" : {
+      "items" : [
+        "Playground for ages 5–12, washrooms, a concession, a ball field and courts. The spray zone has four spray structures (closed for the 2026 season). There is a dog off-leash area."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=2785"
+    },
+    "kinsmenpark" : {
+      "items" : [
+        "Playgrounds for ages 2–5 and 5–12, picnic tables, drinking water, washrooms, tennis courts and walking trails."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "websterpark" : {
+      "items" : [
+        "Playground for ages 2–5 and 5–12 (including an accessible one), a skate park and picnic tables. The spray zone has four water features you start with a push plunger (closed for the 2026 season)."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=2785"
+    },
+    "chehalispark" : {
+      "items" : [
+        "Playground for ages 5–12, picnic tables, parking and open grass."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "yarrowpioneerpark" : {
+      "items" : [
+        "Playgrounds for ages 2–5 and 5–12, a picnic shelter, outdoor fitness equipment, a skate park and washrooms."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "jubileepark" : {
+      "items" : [
+        "Has a playground and washrooms, and was recently upgraded for safety, visibility and parking. The Saturday Abbotsford Farm \u0026 Country Market is held here (May 2 to Oct 31, 2026)."
+      ],
+      "source" : "https://www.abbotsford.ca/city-hall/projects-go/jubilee-park-improvements"
+    },
+    "eaglemountainpark" : {
+      "items" : [
+        "Has a playground."
+      ],
+      "source" : "https://www.abbotsford.ca/sites/default/files/2021-02/Park%20Amenities.pdf"
+    },
+    "clearbrookpark" : {
+      "items" : [
+        "Has a playground and walking paths."
+      ],
+      "source" : "https://www.abbotsford.ca/sites/default/files/2021-02/Park%20Amenities.pdf"
+    },
+    "abbotsfordexhibitionpark" : {
+      "items" : [
+        "Has a playground (including an accessible one), an outdoor swimming pool, a water spray park, picnic shelters and washrooms. Washrooms, water and power are seasonal."
+      ],
+      "source" : "https://www.abbotsford.ca/sites/default/files/2021-02/Park%20Amenities.pdf"
+    },
+    "exitabbotsford" : {
+      "items" : [
+        "Escape rooms for ages 6 and up, with a different theme and difficulty for each room."
+      ],
+      "source" : "https://tourismabbotsford.ca/listing/exit-abbotsford/"
+    },
+    "mennoniteheritagemuseum" : {
+      "items" : [
+        "Admission is by donation. The museum is open weekdays, 10am–3pm, except statutory holidays. Check before you go."
+      ],
+      "source" : "https://tourismabbotsford.ca/listing/mennonite-heritage-museum/"
+    },
+    "gwynnevaughanpark" : {
+      "items" : [
+        "Has a picnic shelter, community gardens and landscaped areas."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "hillkeepregionalpark" : {
+      "items" : [
+        "Hiking trails with viewpoints and parking."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "qoqolempark" : {
+      "items" : [
+        "A hiking trail with a viewpoint, picnic tables and parking."
+      ],
+      "source" : "https://www.chilliwack.com/main/page.cfm?id=1754"
+    },
+    "willowviewfarms" : {
+      "items" : [
+        "The Big Red Barn with goats and chickens is open in September and October. You can pick your own apples. In Sept and Oct the farm is open Tuesday to Sunday, 10am-5:30pm (u-pick entry closes at 4:45pm) and closed Mondays."
+      ],
+      "source" : "http://www.willowviewfarms.com/location"
     }
   },
   "updatedAt" : "2026-10-02"

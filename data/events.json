@@ -277,7 +277,11 @@
     { "id": "pm-halloweenfirehall", "type": "festival", "icon": "🎃", "name": "Halloween at the Fire Hall", "area": "Pitt Meadows",
       "venue": "Pitt Meadows Fire Hall (19240 122A Ave)", "lat": 49.2244, "lng": -122.688, "spotId": null,
       "schedule": { "from": "2026-10-31", "to": "2026-10-31", "start": "18:00", "end": "20:00" },
-      "summary": "Firefighters hand out candy to trick-or-treaters on Halloween night", "source": "https://www.pittmeadows.ca/events" }
+      "summary": "Firefighters hand out candy to trick-or-treaters on Halloween night", "source": "https://www.pittmeadows.ca/events" },
+    { "id": "lepp-applelooza", "type": "festival", "icon": "🍎", "name": "Applelooza at Lepp Farm Market", "area": "Abbotsford",
+      "venue": "Lepp Farm Market (33955 Clayburn Rd)", "lat": 49.0824, "lng": -122.2843, "spotId": "leppfarmmarket",
+      "schedule": { "from": "2026-10-03", "to": "2026-10-04", "hoursText": "Market open daily 9am–6pm" },
+      "summary": "Apple sales, special ice cream flavours and fresh-pressed apple juice from a mobile juice factory", "source": "https://leppfarmmarket.com" }
 
   ]
 }
