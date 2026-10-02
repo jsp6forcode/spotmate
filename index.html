@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tiny Trips</title>
-<meta name="description" content="Places to take the kids around Metro Vancouver: playgrounds, spray parks, farms, museums and indoor play, with hours, weather and weekend events.">
+<meta name="description" content="Big fun for little ones across Metro Vancouver, Abbotsford and Chilliwack: playgrounds, spray parks, farms, museums and indoor play, with hours, weather and weekend events.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -31,6 +31,9 @@ tailwind.config = {
   /* 행사(보라 테두리)·파머스 마켓(초록 테두리) 핀: 흰 바탕에 이모지 */
   .spot-pin.ev { background: #fff; border-color: #a21caf; font: 16px/24px system-ui, sans-serif; }
   .spot-pin.ev.mk { border-color: #059669; }
+  /* 오른쪽 목록에 마우스를 올리면 그 장소 핀을 크게 + 보라 테두리 */
+  .spot-pin { transition: transform .12s, box-shadow .12s; }
+  .spot-pin.hl { transform: scale(1.45); border-color: #7c3aed; box-shadow: 0 0 0 4px rgba(124,58,237,.35), 0 2px 8px rgba(0,0,0,.5); }
   /* isolation: 지도 레이어(z-index 400~1000)가 지도 상자 안에서만 쌓이게. 안 그러면 장소 창이 지도 뒤로 가려져요 */
   .leaflet-container { font-family: inherit; isolation: isolate; z-index: 0; }
   /* 다크 모드: OSM 지도는 밝은 그림뿐이라 타일만 어둡게 (핀·글자는 그대로) */
@@ -346,6 +349,8 @@ const ORIGINS = {
   delta:     { label: 'Delta',           lat: 49.0847, lng: -123.0587 },
   langley:   { label: 'Langley',         lat: 49.1044, lng: -122.6600 },
   mapleridge:{ label: 'Maple Ridge',     lat: 49.2194, lng: -122.5984 },
+  abbotsford:{ label: 'Abbotsford',      lat: 49.0504, lng: -122.3045, r: 8 },
+  chilliwack:{ label: 'Chilliwack',      lat: 49.1579, lng: -121.9514, r: 8 },
   // 검색 전용 (드롭다운에는 고른 경우에만 보여요). r = 검색으로 골랐을 때 반경(km)
   portcoquitlam: { label: 'Port Coquitlam', lat: 49.2625, lng: -122.7811, extra: true },
   portmoody:  { label: 'Port Moody',      lat: 49.2838, lng: -122.8317, extra: true },
@@ -373,6 +378,7 @@ const SEARCH_PLACES = [
   [/\bdowntown\b|\byaletown\b|\bgastown\b|\bwest end\b|\bcoal harbou?r\b/i, 'downtown'],
   [/\bcoquitlam\b/i, 'coquitlam'], [/\bburnaby\b/i, 'burnaby'], [/\brichmond\b/i, 'richmond'], [/\bnew west(minster)?\b/i, 'newwest'],
   [/\bsurrey\b/i, 'surrey'], [/\bdelta\b|\bladner\b/i, 'delta'], [/\blangley\b/i, 'langley'], [/\bmaple ridge\b/i, 'mapleridge'],
+  [/\babbotsford\b|\bmatsqui\b/i, 'abbotsford'], [/\bchilliwack\b|\bsardis\b/i, 'chilliwack'],
 ];
 // 검색으로 고른 지역의 반경: 도시는 5 km, 동네는 2 km (downtown 포함)
 const placeRadius = k => ORIGINS[k].r || (k === 'downtown' ? 2 : 5);
@@ -590,7 +596,7 @@ const LEAFLET = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet';
 const TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILE_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 // 메트로 밴쿠버 전체가 보이는 기본 범위
-const METRO_BOUNDS = [[49.00, -123.30], [49.42, -122.48]];
+const METRO_BOUNDS = [[48.98, -123.30], [49.42, -121.85]];
 let leafletReady = null;
 function loadLeaflet() {
   if (window.L) return Promise.resolve();
@@ -854,6 +860,12 @@ class App {
     this.root = document.getElementById('app');
     this.fbDraft = {};   // About 탭 피드백 폼에 쓰던 글
     this.root.addEventListener('click', e => this.onClick(e));
+    // 지도 탭: 오른쪽 목록 위에 마우스(또는 키보드 포커스)를 올리면 왼쪽 지도에서 그 장소를 강조
+    const hl = (e, on) => { const b = e.target.closest && e.target.closest('[data-maphl]'); if (b && (!e.relatedTarget || !b.contains(e.relatedTarget))) this.highlightPin(b.dataset.maphl, on); };
+    this.root.addEventListener('mouseover', e => hl(e, true));
+    this.root.addEventListener('mouseout', e => hl(e, false));
+    this.root.addEventListener('focusin', e => hl(e, true));
+    this.root.addEventListener('focusout', e => hl(e, false));
     this.root.addEventListener('keydown', e => {
       if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('article[data-act]')) { e.preventDefault(); e.target.click(); }
     });
@@ -1007,7 +1019,7 @@ class App {
       <div class="mt-3 sm:mt-4 space-y-2.5 sm:space-y-4 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-200">
         <p>I’m a dad raising our lovely kids here in Vancouver, and like a lot of parents, our weekends used to start with the same question: <em>where should we take the kids today?</em></p>
         <p>I’d end up with a dozen tabs open, jumping between Google searches and different websites, trying to piece it all together. I didn’t want to take them just anywhere. I wanted to find the very best places for them, and I kept wishing there was one place to find them all.</p>
-        <p>So I started Tiny Trips as my own little side project: playgrounds, spray parks, farms, libraries, rainy-day hideouts and more around Metro Vancouver, all in one spot.</p>
+        <p>So I started Tiny Trips as my own little side project: playgrounds, spray parks, farms, libraries, rainy-day hideouts and more around Metro Vancouver and the Fraser Valley, all in one spot.</p>
         <p>To keep it to the good ones, I lean on what other families already think. Most places here are rated 4.0 or higher on Google, so you’re seeing spots lots of parents have already tried and loved.</p>
         <p>It’s still a work in progress, and I’m sure I’ve missed things or gotten a few wrong. If you notice a mistake, know a great place that should be here, or just have an idea, please send me a note below. Every message really helps Tiny Trips grow into something more useful for all of us parents.</p>
         <p>Thanks for stopping by, and have fun out there with your little ones!</p>
@@ -1494,7 +1506,12 @@ class App {
       }
       case 'mapall': return this.set({ mapPicks: null });
       // 지도 위 행사·마켓 핀 켜고 끄기
-      case 'mapevents': return this.set({ mapEvents: this.state.mapEvents === false });
+      case 'evfocus': {   // 지도 목록의 행사·마켓 → 지도에서 그 핀으로 가서 팝업 열기
+        const p = this._pins && this._pins['ev:' + val], map = this._leaflet;
+        if (p && map) { map.setView(p.mk.getLatLng(), Math.max(map.getZoom(), 13), { animate: true }); p.mk.openPopup(); }
+        return;
+      }
+      case 'mapevents':return this.set({ mapEvents: this.state.mapEvents === false });
       case 'mapmarkets': return this.set({ mapMarkets: this.state.mapMarkets === false });
       case 'mode': return this.set({ browse: val === 'browse', q: '', kw: [], unused: [] });
       // "I'm flexible, show me ideas": 남은 질문을 모두 "상관없음"으로 두고 바로 결과
@@ -1645,7 +1662,8 @@ class App {
   openModal(id) {
     document.body.style.overflow = 'hidden';
     const url = `${location.pathname}${location.search}#spot=${encodeURIComponent(id)}`;
-    try { if (this.state.modal) history.replaceState({ modal: id }, '', url); else history.pushState({ modal: id }, '', url); } catch (e) {}
+    // 외부 링크(Google Maps·가격)에 갔다 뒤로 와서 페이지가 다시 열리면 이 기록 칸이 이미 모달 칸이에요. 또 쌓지 않고 덮어써서 X 한 번에 닫히게 해요
+    try { if (this.state.modal || (history.state && history.state.modal)) history.replaceState({ modal: id }, '', url); else history.pushState({ modal: id }, '', url); } catch (e) {}
     this.set({ modal: id, trendInfo: false, shareMsg: null, reviewMsg: '', reviewDraft: null });
   }
   // 닫기 버튼·Esc: 모달이 기록에 한 칸 있으면 뒤로 가서 닫아요 (popstate에서 실제로 닫혀요)
@@ -1689,7 +1707,7 @@ class App {
         if (nearest > OUT_OF_AREA_KM) {
           this.wizLocScroll();
           return this.set({ nearKey: 'downtown', origin: null, geoBusy: false, ...this.wizLocPatch('downtown'),
-            geoMsg: `You look to be about ${Math.round(nearest).toLocaleString()} km from our nearest spot, outside Metro Vancouver. Showing spots near Downtown instead.` });
+            geoMsg: `You look to be about ${Math.round(nearest).toLocaleString()} km from our nearest spot, outside our area. Showing spots near Downtown instead.` });
         }
         this.set({ nearKey: 'here', origin: here, geoMsg: '', geoBusy: false, ...this.wizLocPatch('here') });
         this.wizLocScroll();
@@ -1847,7 +1865,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="flex items-start justify-between gap-4">
           <div>
             <h1 class="font-brand text-3xl md:text-5xl font-extrabold tracking-tight leading-none">Tiny Trips</h1>
-            <p class="hidden sm:block mt-2 text-white/85 text-base">Happy places for little ones around Metro Vancouver</p>
+            <p class="hidden sm:block mt-2 text-white/85 text-base">Big fun for little ones, and the reason to go today</p>
           </div>
           <div class="flex flex-col items-end">
             <div class="flex items-center gap-2">
@@ -2529,8 +2547,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div id="lmap" class="h-[32vh] min-h-[200px] sm:h-[50vh] sm:min-h-[320px] md:h-[calc(100vh-14rem)] md:min-h-[420px] lg:h-[600px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
       </div>
       <div data-keep-scroll="maplist" class="space-y-1.5 sm:space-y-3 max-h-[36vh] overflow-y-auto sm:max-h-[40vh] md:max-h-[calc(100vh-14rem)] lg:max-h-[650px]">
+        ${this._map.events.length ? `<p class="px-1 pt-0.5 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Events & markets · next 6 weeks</p>${this._map.events.map((ev, i) => `
+          <button data-act="evfocus" data-val="${i}" data-maphl="ev:${i}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-violet-300 dark:hover:ring-violet-700 flex gap-3">
+            <span class="w-7 h-7 shrink-0 rounded-full bg-white text-base flex items-center justify-center border-2 ${ev.market ? 'border-emerald-600' : 'border-fuchsia-700'}" aria-hidden="true">${esc(ev.icon)}</span>
+            <span class="flex-1 min-w-0">
+              <span class="block font-bold truncate">${esc(ev.name)}</span>
+              <span class="block text-xs text-slate-500 dark:text-slate-400 truncate">${ev.market ? 'Market' : 'Event'}, ${esc(ev.when)}</span>
+            </span>
+          </button>`).join('')}<p class="px-1 pt-1 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Places</p>` : ''}
         ${items.map(s => `
-          <button data-act="open" data-val="${s.id}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-violet-300 dark:hover:ring-violet-700 flex gap-3">
+          <button data-act="open" data-val="${s.id}" data-maphl="${s.id}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-violet-300 dark:hover:ring-violet-700 flex gap-3">
             <span class="w-7 h-7 shrink-0 rounded-full text-white text-xs font-extrabold flex items-center justify-center" style="background:${CATS[s.cat].dot}">${mark(s)}</span>
             <span class="flex-1 min-w-0">
               <span class="block font-bold truncate">${esc(s.name)}</span>
@@ -2539,6 +2565,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </button>`).join('') || '<p class="text-sm text-slate-500">No spots match these filters.</p>'}
       </div>
     </div>`;
+  }
+  // 목록에서 가리킨 장소의 핀 강조 (맨 위로 올리고, 지도 밖이면 살짝 옮겨 보이게)
+  highlightPin(id, on) {
+    const p = this._pins && this._pins[id], map = this._leaflet; if (!p || !map || !map._container || !map._container.isConnected) return;
+    const el = p.mk.getElement(), pin = el && el.querySelector('.spot-pin');
+    if (pin) pin.classList.toggle('hl', on);
+    p.mk.setZIndexOffset(on ? 5000 : p.base);
+    if (on && !map.getBounds().pad(-0.1).contains(p.mk.getLatLng())) map.panTo(p.mk.getLatLng(), { animate: true });
   }
   // 실제 지도 그리기: 화면을 통째로 다시 그릴 때마다 새로 만들되, 보던 위치·확대는 이어가요
   async drawMap() {
@@ -2550,16 +2584,19 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     L.tileLayer(TILES, { attribution: TILE_ATTR, maxZoom: 19 }).addTo(map);
     // 핀: 번호가 작을수록(순위가 높을수록) 위에 오게
     const z = m => typeof m === 'number' ? 1000 - m : 0;
+    this._pins = {};
     items.forEach(s => {
       const icon = L.divIcon({ className: '', html: `<div class="spot-pin" style="background:${s.color}">${esc(String(s.mark))}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] });
-      L.marker([s.lat, s.lng], { icon, title: s.name, keyboard: true, zIndexOffset: z(s.mark) }).addTo(map).on('click', () => { this.opener = null; this.openModal(s.id); });
+      const mk = L.marker([s.lat, s.lng], { icon, title: s.name, keyboard: true, zIndexOffset: z(s.mark) }).addTo(map).on('click', () => { this.opener = null; this.openModal(s.id); });
+      this._pins[s.id] = { mk, base: z(s.mark) };
     });
     // 행사·마켓 핀: 누르면 다음 날짜·시간과 장소/공식 정보 링크
-    (this._map.events || []).forEach(ev => {
+    (this._map.events || []).forEach((ev, ei) => {
       const icon = L.divIcon({ className: '', html: `<div class="spot-pin ev${ev.market ? ' mk' : ''}">${esc(ev.icon)}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] });
       const html = `<div style="min-width:180px"><p style="font-weight:700;margin:0">${esc(ev.name)}</p><p style="margin:4px 0">${esc(ev.when)}</p>
         <p style="margin:0">${ev.spotId ? `<button data-act="open" data-val="${esc(ev.spotId)}" style="text-decoration:underline;font-weight:600;margin-right:10px">Place details</button>` : ''}${/^https:\/\//.test(ev.source) ? `<a href="${esc(ev.source)}" target="_blank" rel="noopener" style="text-decoration:underline">Official info ↗</a>` : ''}</p></div>`;
-      L.marker([ev.lat, ev.lng], { icon, title: ev.name, keyboard: true, zIndexOffset: 2000 }).addTo(map).bindPopup(html);
+      const emk = L.marker([ev.lat, ev.lng], { icon, title: ev.name, keyboard: true, zIndexOffset: 2000 }).addTo(map).bindPopup(html);
+      this._pins['ev:' + ei] = { mk: emk, base: 2000 };
     });
     // 기준 위치(내 위치·지역)와 반경 원
     const o = this.origin();
