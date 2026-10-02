@@ -471,10 +471,8 @@ const recentReddit = s => ((REDDIT.mentions[s.id] || {}).posts || []).filter(p =
 // 데이터 기준일 → "today", "yesterday", "3 days ago"
 // data/parking.json: 스팟 근처 400m 안 주차장 (OpenStreetMap). { id: [{ m, fee?, kind?, name?, customers? }] }
 let PARKING = { spots: {}, radius: 400 };
-// 구글 평점·리뷰 수 (tools/ratings-collect.ps1 → data/ratings.json, [평점, 리뷰 수])
-let RATINGS = {}, SAYS = {};
-const gRating = s => { const r = RATINGS[s.id]; return r ? { avg: r[0], n: r[1] } : null; };
-const kFmt = n => n >= 10000 ? Math.round(n / 1000) + "k" : n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + "k" : String(n);
+// "What parents say" 요약 (data/parent-says.json, 구글 리뷰를 우리 말로 요약한 한두 문장)
+let SAYS = {};
 const PARK_KIND = { surface: 'Surface lot', 'multi-storey': 'Parkade', underground: 'Underground', rooftop: 'Rooftop', street_side: 'Street parking', lane: 'Street parking', layby: 'Pull-out' };
 const parkingOf = s => PARKING.spots[s.id];
 // 카드용 한 줄: 가장 가까운 주차장 거리와 유료 여부
@@ -901,11 +899,11 @@ class App {
       // 꺼 둔 기능(Eats·트렌드·Reddit)의 파일은 아예 받지 않아요. spots.json 말고는 없어도 괜찮아요
       const get = (path, on = true) => on ? fetch(path, { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null) : Promise.resolve(null);
       const ohLib = window.opening_hours ? Promise.resolve() : loadScript(OH_LIB).catch(() => null);
-      const [data, ed, status, td, gd, nd, md, pd, hd, ld, prd, sd, rd, pk] = await Promise.all([
+      const [data, ed, status, td, gd, nd, md, pd, hd, ld, prd, sd, pk] = await Promise.all([
         fetch('data/spots.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
         get('data/events.json'), get('data/review-status.json'), get('data/trends-weekly.json', TRENDS_ON),
         get('data/spot-guides.json'), get('data/spot-notes.json'), get('data/parking-meters.json'), get('data/parking.json'),
-        get('data/happy-hours.json', EATS_ON), get('data/lunch-specials.json', EATS_ON), get('data/press.json', EATS_ON), get('data/season.json'), get('data/ratings.json'), get('data/parent-says.json'),
+        get('data/happy-hours.json', EATS_ON), get('data/lunch-specials.json', EATS_ON), get('data/press.json', EATS_ON), get('data/season.json'), get('data/parent-says.json'),
       ]);
       SPOTS = data.spots;
       // 행사 정보
@@ -928,7 +926,6 @@ class App {
       if (ld) { LUNCH = ld.spots || {}; LUNCH_META = { updatedAt: ld.updatedAt || '' }; }
       if (prd) PRESS = prd.items || {};
       // 시즌 태그
-      if (rd) RATINGS = rd.spots || {};
       if (pk) SAYS = pk.spots || {};
       if (sd) { SEASON = Array.isArray(sd.tags) ? sd.tags : []; SEASON_NOTE = sd.note || ''; }
       // 영업시간 해석 라이브러리: 못 불러오면 "Open now" 필터 없이 동작해요
@@ -2153,6 +2150,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <div class="p-2.5 sm:p-5 flex flex-col flex-1">
         <h3 class="text-sm sm:text-lg font-bold leading-snug group-hover:text-violet-700 dark:group-hover:text-violet-300">${esc(s.name)}</h3>
         <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 truncate">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p>
+        ${this.planLater() && HOURS_READY ? (() => {
+          // 날짜 계획: 그날(들) 영업시간
+          const ph = this.planHours(s);
+          if (!ph) return '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>';
+          return `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)}</p>`; })()
+        : (() => { const oi = openInfo(s); return oi
+          ? `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'web' && s.hoursSource !== 'public' && !isDaylight(s) ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
+          : HOURS_READY ? '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
+        <p class="hidden sm:block mt-2 text-sm text-slate-700 dark:text-slate-300 ${why ? 'clamp2' : ''}">${esc(s.summary)}</p>
         ${why ? why.lunch ? `
         <div class="mt-1.5 sm:mt-3 border-l-4 border-emerald-500 rounded-r-lg bg-emerald-50 dark:bg-emerald-500/10 pl-2 pr-2 sm:pl-3 sm:pr-3 py-1 sm:py-2">
           <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wide text-emerald-800 dark:text-emerald-300">${esc(why.label)}</p>
@@ -2168,15 +2174,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${/* "Why go now"와 Tiny Trips tip을 한 상자로 합쳤어요 (2026-10-01). 공식 팁이 있으면 한 줄 더 */ this.tipItems(s, 'card').length ? `<p class="hidden sm:block mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(this.tipItems(s, 'card')[0])}</p>` : ''}
           ${SAYS[s.id] ? `<p class="hidden sm:block mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2"><span class="font-semibold">What parents say</span> · ${esc(SAYS[s.id])}</p>` : ''}
         </div>` : ''}
-        ${this.planLater() && HOURS_READY ? (() => {
-          // 날짜 계획: 그날(들) 영업시간
-          const ph = this.planHours(s);
-          if (!ph) return '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>';
-          return `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)}</p>`; })()
-        : (() => { const oi = openInfo(s); return oi
-          ? `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}${s.hoursSource && s.hoursSource !== 'osm' && s.hoursSource !== 'web' && s.hoursSource !== 'public' && !isDaylight(s) ? ` <span class="font-normal text-slate-500 dark:text-slate-400">(${esc(HOURS_NOTE[s.hoursSource])})</span>` : ''}</p>`
-          : HOURS_READY ? '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
-        <p class="hidden sm:block mt-2 text-sm text-slate-700 dark:text-slate-300 ${why ? 'clamp2' : ''}">${esc(s.summary)}</p>
         ${(!why || why.lunch || why.pick || why.hh) && this.tipItems(s, 'card').length ? `<p class="hidden sm:block mt-2 text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2.5 py-1.5 clamp2" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold"><span aria-hidden="true">💡</span> Tiny Trips tip:</span> ${esc(this.tipItems(s, 'card')[0])}${SAYS[s.id] ? `<span class="block mt-1"><span class="font-semibold">What parents say</span> · ${esc(SAYS[s.id])}</span>` : ''}</p>` : ''}
 
         ${TRENDS_ON && s.rise != null && s.rise >= RISING_MIN && !(why && why.icon === RISE_ICON) ? `<p class="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-300" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
@@ -2213,7 +2210,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${KIDS_ONLY && isKid(s) ? `<span>${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span>${esc(s.price)}</span>` : ''}` : `${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>`}${parkShort(s) ? `<span>${esc(parkShort(s))}</span>` : ''}
           ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
         </div>
-        ${(() => { const g = gRating(s); return g ? `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm" title="Rating on Google Maps"><span class="text-sky-500" aria-hidden="true">★</span> <span class="font-semibold">${g.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${kFmt(g.n)} Google reviews</span></p>` : ''; })()}
         ${SAYS[s.id] && !(why && !why.lunch && !why.pick && !why.hh) && !((!why || why.lunch || why.pick || why.hh) && this.tipItems(s, 'card').length) ? `<p class="hidden sm:block mt-2 text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2.5 py-1.5 clamp2"><span class="font-semibold"><span aria-hidden="true">💡</span> Tiny Trips tip:</span> What parents say · ${esc(SAYS[s.id])}</p>` : ''}
         ${this.state.reviewsOn && this.reviewStats(s.id) ? (() => { const st = this.reviewStats(s.id); return `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm"><span class="text-amber-500" aria-hidden="true">★</span> <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'parent review')}</span></p>`; })() : ''}
         <div class="mt-auto pt-2.5 sm:pt-4 ${this.state.reviewsOn ? 'flex gap-2' : ''}">
@@ -2678,7 +2674,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.label}${s.cuisine ? ` · ${esc(s.cuisine)}` : ''}${rank ? ` · #${rank} worth going now` : ''}</p>
           <h2 class="mt-1 text-3xl font-bold leading-tight pr-2">${esc(s.name)}</h2>
           <p class="mt-1 text-slate-600 dark:text-slate-300">${esc(s.area)}${cur && cur.dist != null ? `, ${fmtDist(cur.dist)}` : ''}</p>
-          ${(() => { const g = gRating(s); return g ? `<p class="mt-1 text-sm"><span class="text-sky-500" aria-hidden="true">★</span> <span class="font-semibold">${g.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${g.n.toLocaleString('en-CA')} reviews on Google Maps</span></p>` : ''; })()}
           ${this.planLater() && HOURS_READY && this.planHours(s) ? (() => { const ph = this.planHours(s); return `
           <p class="mt-1 text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)} <span class="font-normal text-slate-500 dark:text-slate-400">(${WHEN_PHRASE[this.state.when]})</span></p>`; })()
           : (() => { const oi = openInfo(s); return oi ? `
@@ -2705,7 +2700,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             return `
           <section class="rounded-2xl p-5 bg-sky-50 dark:bg-sky-500/10 ring-1 ring-sky-200 dark:ring-sky-500/25">
             <h3 class="font-bold text-sky-900 dark:text-sky-200"><span aria-hidden="true">💡</span> Tiny Trips tip</h3>
-            ${says ? `<p class="mt-2 text-sm text-slate-800 dark:text-slate-200"><span class="font-semibold">What parents say</span> · ${esc(says)} <span class="block text-xs text-slate-500 dark:text-slate-400">Summary of Google reviews, in our own words. Not parent reviews written on Tiny Trips.</span></p>` : ''}
+            ${says ? `<p class="mt-2 text-sm text-slate-800 dark:text-slate-200"><span class="font-semibold">What parents say</span> · ${esc(says)}</p>` : ''}
             ${food.map(r => `<p class="mt-2 text-sm text-slate-800 dark:text-slate-200"><span class="font-semibold">${esc(r.label)}</span> · ${esc(r.text)}</p>`).join('')}
             ${press.map(p => `<p class="mt-2 text-sm text-slate-800 dark:text-slate-200"><span class="font-semibold">In the news</span> · ${esc(p.outlet)}, ${esc(shortDate(p.date))}: <a href="${esc(p.url)}" target="_blank" rel="noopener" class="underline">${esc(p.title)} ↗</a></p>`).join('')}
             ${evs.map(ev => `
@@ -2716,7 +2711,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             ${tags.map(t => { const x = t.spots[s.id]; return `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200"><span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('')}
             ${notes.length ? `<ul class="mt-2 space-y-1.5 text-sm text-slate-800 dark:text-slate-200">${notes.map(x => `<li class="flex gap-2"><span aria-hidden="true" class="text-sky-600 dark:text-sky-300">•</span><span>${esc(x)}</span></li>`).join('')}</ul>
             <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Checked ${esc(shortDate(NOTES_META.updatedAt))} on ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'the official site'}. Not a review. Prices and hours change, so check before you go.</p>` : ''}
-            ${tags.length ? `<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">${esc(SEASON_NOTE)}</p>` : ''}
           </section>`; })()}
           ${[[lunchState(s), 'emerald', LUNCH_META], [hhState(s), 'amber', HAPPY_META]]
             // 점심 전에는 런치가 먼저 보이도록 (지금 하는 쪽이 있으면 그쪽을 위로)
