@@ -1321,7 +1321,8 @@ class App {
   }
   // 카드·지도·모달에 보여줄 순위 번호: Worth going now 정렬에서만, 지금 가 볼 이유 순위
   // 키워드 검색 결과는 관련도 순이라 순위 번호를 달지 않아요 (두 번째 카드에 #1이 붙지 않게)
-  rankOf(s) { return this.state.sort === 'fresh' && !this.state.kw.length ? s.freshNo : null; }
+  // 순위 번호는 없앴어요 (2026-10-02, 사용자 결정). 정렬 "Worth going now"만 남아요
+  rankOf(s) { return null; }
   rankLabel(s) { return `#${s.freshNo}`; }
 
 
@@ -1828,9 +1829,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             ${view === 'map' ? this.mapView(items) : this.listView(items)}
           `}
         </main>
-        <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-10 text-xs text-slate-500 dark:text-slate-400">
-          Weather: Open-Meteo · Coordinates and parking: © <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Parking meter rates: City of Vancouver Open Data, <a class="underline" href="https://opendata.vancouver.ca/pages/licence/" target="_blank" rel="noopener">Open Government Licence – Vancouver</a> · Opening hours: OpenStreetMap where available, otherwise typical park hours · Events: compiled from official market and organizer pages (check before you go) · Photos: <a class="underline" href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (credit and license on each photo)
+        <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-6 text-[11px] text-slate-400 dark:text-slate-500">
+          Data: <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a> · <a class="underline" href="https://opendata.vancouver.ca/pages/licence/" target="_blank" rel="noopener">City of Vancouver Open Data</a> · Open-Meteo · Photos: Wikimedia Commons, Pexels
         </footer>
+
       </div>
       ${modal ? this.modal(byId(modal), items) : ''}
     `;
@@ -2053,13 +2055,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   }
 
   // ── 행사 ──
-  eventRow(ev, compact = false) {
+  eventRow(ev, compact = false, hideDay = false) {
     const spot = ev.spotId && byId(ev.spotId);
     return `
       <div class="flex gap-3 rounded-xl p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
         <div class="w-16 shrink-0 text-center">
           <p class="text-2xl" aria-hidden="true">${esc(ev.icon || '🎪')}</p>
-          <p class="mt-1 text-xs font-bold text-violet-700 dark:text-violet-300 leading-tight">${esc(dayLabel(ev.next))}</p>
+          <p class="mt-1 text-xs font-bold text-violet-700 dark:text-violet-300 leading-tight">${hideDay ? '' : esc(dayLabel(ev.next))}</p>
         </div>
         <div class="flex-1 min-w-0">
           <p class="font-bold leading-snug">${esc(ev.name)}${ev.forParents ? ` ${PARENTS_BADGE}` : ''}${RARE_EVENT.includes(ev.type) ? ' <span class="ml-1 align-middle text-[11px] font-bold px-1.5 py-0.5 rounded bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-500/20 dark:text-fuchsia-200">Few days only</span>' : ''}</p>
@@ -2114,32 +2116,31 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   eventsView(kind) {
     const tabPage = kind === 'events' || kind === 'markets';
     const evs = this.upcomingEvents(45).filter(ev => kind === 'markets' ? ev.type === 'market' : kind === 'events' ? ev.type !== 'market' : true), today = vanDate(0), week = vanDate(6);
-    const group = (title, list) => list.length ? `<h2 class="mt-8 text-lg font-bold">${title}</h2><div class="mt-3 grid gap-3 md:grid-cols-2">${list.map(ev => this.eventRow(ev)).join('')}</div>` : '';
+    const group = (title, list, hideDay) => list.length ? `<h2 class="mt-8 text-lg font-bold">${title}</h2><div class="mt-3 grid gap-3 md:grid-cols-2">${list.map(ev => this.eventRow(ev, false, hideDay)).join('')}</div>` : '';
     const note = (tabPage ? `
       <h2 class="mt-6 text-2xl font-extrabold tracking-tight">${kind === 'markets' ? '<span aria-hidden="true">🥕</span> Farmers markets' : 'Events for families'}</h2>
-      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">${kind === 'markets' ? 'Weekly markets with local produce, food trucks and treats. A relaxed outing with kids. Tap one for hours and directions.' : 'Festivals, seasonal events and sales in the next 6 weeks.'}</p>
-      ${(() => {
-        // 이 목록이 어떤 기준으로 걸러졌는지 한 줄로 (종류 · 기간 · 위치 · 정렬), 위치는 바로 바꿀 수 있게
-        const chip = (t, x = "") => `<span class="${x} px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">${t}</span>`;
-        const where = this.nearActive() ? (this.state.radius === 'any' ? `Near ${esc(this.originLabel())}, any distance` : `Within ${esc(radiusLabel(this.state.radius))} of ${esc(this.originLabel())}`) : 'Anywhere in Metro Vancouver';
-        return `
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">${kind === 'markets' ? 'Weekly markets with local produce and food trucks.' : 'Festivals, seasonal events and sales in the next 6 weeks.'}</p>
       <div class="mt-4 rounded-2xl p-3 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
-        <p class="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"><span class="font-semibold text-slate-600 dark:text-slate-300">Showing ${plural(evs.length, kind === 'markets' ? 'market' : 'event')}:</span>
-          ${chip(kind === 'markets' ? 'Farmers markets only' : 'Festivals, seasonal events, pop-ups and sales')}${chip('Next 6 weeks', 'hidden sm:inline')}${chip(where)}${chip(this.nearActive() ? 'Soonest first, then nearest' : 'Soonest first', 'hidden sm:inline')}</p>
+        <p class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">${plural(evs.length, kind === 'markets' ? 'market' : 'event')}${this.nearActive() ? `, near ${esc(this.originLabel())}` : ''}</p>
         <div class="mt-2 sm:mt-3">${this.locationBar([])}</div>
-      </div>`; })()}`
+      </div>`
       // "See all"로 들어온 행사 목록에서 장소 목록으로 돌아가는 버튼 (카테고리 드롭다운을 몰라도 나갈 수 있게)
       : `<button data-act="cat" data-val="all" class="mt-6 inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">← Back to all spots</button>`) + `
-      <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">${esc(EVENTS_META.note)} Last checked ${esc(EVENTS_META.updatedAt)}.</p>`;
+      <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Check each source before you go.</p>`;
+
     if (!evs.length) return `${note}
       <div class="mt-6 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
         <p class="text-lg font-bold">No ${kind === 'markets' ? 'markets' : 'events'} coming up${this.nearActive() ? ` within ${radiusLabel(this.state.radius)}` : ''}</p>
         ${this.nearActive() ? '<button data-act="radius" data-val="any" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show any distance</button>' : ''}
       </div>`;
+    // 몇 주 동안 이어지는 행사(옥수수 미로, 시즌 행사)는 하루짜리 행사와 섞이지 않게 따로 묶어요
+    const ongoing = e => e.type !== 'market' && e.schedule.from && e.schedule.to && (Date.parse(e.schedule.to) - Date.parse(e.schedule.from)) / 864e5 > 14;
+    const short = evs.filter(e => !ongoing(e));
     return note
-      + group('Today', evs.filter(e => e.next === today))
-      + group('This week', evs.filter(e => e.next > today && e.next <= week))
-      + group('Coming up', evs.filter(e => e.next > week));
+      + group('Today', short.filter(e => e.next === today), true)
+      + group('This week', short.filter(e => e.next > today && e.next <= week))
+      + group('Coming up', short.filter(e => e.next > week))
+      + group('Running all season', evs.filter(ongoing), true);
   }
 
   // 리뷰 기준(먹거리)과 히든젬 표시의 기준을 카드마다 반복하지 않고 목록 위에 한 번만 보여줘요
@@ -2239,18 +2240,18 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${why ? why.lunch ? `
         <div class="mt-1.5 sm:mt-3 border-l-4 border-emerald-500 rounded-r-lg bg-emerald-50 dark:bg-emerald-500/10 pl-2 pr-2 sm:pl-3 sm:pr-3 py-1 sm:py-2">
           <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wide text-emerald-800 dark:text-emerald-300">${esc(why.label)}</p>
-          <p class="mt-0.5 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
+          <p class="mt-0.5 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2 max-sm:[-webkit-line-clamp:4]">${esc(why.text)}</p>
         </div>` : `
         <div class="mt-1.5 sm:mt-3 border-l-4 ${why.hh ? 'border-amber-500' : 'border-amber-400'} rounded-r-lg bg-amber-50 dark:bg-amber-500/10 pl-2 pr-2 sm:pl-3 sm:pr-3 py-1 sm:py-2">
           <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wide text-amber-800 dark:text-amber-300">${esc(why.label || 'Why now')}</p>
-          <p class="mt-0.5 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(why.text)}</p>
+          <p class="mt-0.5 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2 max-sm:[-webkit-line-clamp:4]">${esc(why.text)}</p>
           ${evExtra ? `<p class="mt-1 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(evExtra)}</p>` : ''}
         </div>` : ''}
         ${(() => {
           // 이유 박스(Coming up 등)와 별개로, 공식 Tiny Trips tip과 What parents say는 항상 같은 상자에 (2026-10-02)
           const tip = this.tipItems(s, 'card')[0];
           if (!tip && !SAYS[s.id]) return '';
-          return `<div class="mt-1.5 sm:mt-2 text-xs sm:text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2 sm:px-2.5 py-1 sm:py-1.5">${tip ? `<p class="max-sm:[display:-webkit-box] max-sm:[-webkit-line-clamp:3] max-sm:[-webkit-box-orient:vertical] max-sm:overflow-hidden" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold"><span aria-hidden="true">💡</span> Tiny Trips tip:</span> ${esc(tip)}</p>` : ''}${SAYS[s.id] ? `<p class="${tip ? 'mt-1 ' : ''}max-sm:[display:-webkit-box] max-sm:[-webkit-line-clamp:3] max-sm:[-webkit-box-orient:vertical] max-sm:overflow-hidden"><span class="font-semibold">What parents say</span> · ${esc(SAYS[s.id])}</p>` : ''}</div>`;
+          return `<div class="max-sm:hidden mt-1.5 sm:mt-2 text-xs sm:text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2 sm:px-2.5 py-1 sm:py-1.5">${tip ? `<p class="max-sm:[display:-webkit-box] max-sm:[-webkit-line-clamp:3] max-sm:[-webkit-box-orient:vertical] max-sm:overflow-hidden" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold"><span aria-hidden="true">💡</span> Tiny Trips tip:</span> ${esc(tip)}</p>` : ''}${SAYS[s.id] ? `<p class="${tip ? 'mt-1 ' : ''}max-sm:[display:-webkit-box] max-sm:[-webkit-line-clamp:3] max-sm:[-webkit-box-orient:vertical] max-sm:overflow-hidden"><span class="font-semibold">What parents say</span> · ${esc(SAYS[s.id])}</p>` : ''}</div>`;
         })()}
 
         ${TRENDS_ON && s.rise != null && s.rise >= RISING_MIN && !(why && why.icon === RISE_ICON) ? `<p class="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-300" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
@@ -2281,9 +2282,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           const kp = kidProfile(s);
           return `
         <p class="mt-1.5 sm:mt-3 flex flex-wrap gap-1 sm:gap-1.5">${kp.tags.map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full ${t === 'Free' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'}">${esc(t)}</span>`).join('')}</p>
-        <p class="mt-1 sm:mt-2 text-xs sm:text-sm font-semibold text-teal-700 dark:text-teal-300">${esc(kp.agesText)}</p>`; })() : ''}
+        <p class="max-sm:hidden mt-1 sm:mt-2 text-xs sm:text-sm font-semibold text-teal-700 dark:text-teal-300">${esc(kp.agesText)}</p>`; })() : ''}
         <div class="mt-1.5 sm:mt-3 flex flex-wrap gap-x-2 sm:gap-x-3 gap-y-0.5 sm:gap-y-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-          ${KIDS_ONLY && isKid(s) ? `<span>${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span>${esc(s.price)}</span>` : ''}` : `${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>`}${parkShort(s) ? `<span>${esc(parkShort(s))}</span>` : ''}
+          ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}${parkShort(s) ? `<span class="max-sm:hidden">${esc(parkShort(s))}</span>` : ''}
           ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
         </div>
         ${this.state.reviewsOn && this.reviewStats(s.id) ? (() => { const st = this.reviewStats(s.id); return `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm"><span class="text-amber-500" aria-hidden="true">★</span> <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'parent review')}</span></p>`; })() : ''}
@@ -2566,7 +2567,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // Explore 추천 결과에서 왔으면 그 장소들만, 추천 순서 번호(1, 2, 3…)로
     const picks = this.state.mapPicks;
     if (picks) items = picks.map(byId).filter(Boolean).map((s, i) => ({ ...s, pickNo: i + 1, dist: origin ? km(origin, s) : null }));
-    const mark = s => s.pickNo || this.rankOf(s) || (isVanClassic(s) ? '◆' : '★');
+    const mark = s => (isVanClassic(s) ? '◆' : '★');
     // 실제 지도는 다 그린 뒤 drawMap()이 #lmap에 그려요 (핀·기준 위치·반경 원)
     // 행사·파머스 마켓 핀: Events·Markets 탭과 같은 기준(앞으로 6주, 위치 필터). 추천 장소만 보는 지도엔 안 그려요
     const evAll = picks ? [] : this.upcomingEvents(45).map(ev => { const sp = ev.spotId && byId(ev.spotId); return ev.lat != null ? ev : sp ? { ...ev, lat: sp.lat, lng: sp.lng } : null; }).filter(Boolean);
@@ -2587,7 +2588,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <div class="min-w-0 md:col-span-2 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden">
         <div class="px-3 sm:px-5 py-1.5 sm:py-3 flex flex-wrap gap-x-2.5 gap-y-0.5 sm:gap-3 text-[11px] sm:text-xs font-semibold border-b border-slate-100 dark:border-slate-800">
           ${Object.entries(CATS).filter(([k]) => EATS_ON || !PAGES.eats.includes(k)).map(([, c]) => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-3 h-3 rounded-full" style="background:${c.dot}"></span>${c.label}</span>`).join('')}
-          <span class="hidden sm:inline text-slate-500 dark:text-slate-400">${picks ? 'Number = your pick order' : `${this.state.sort === 'fresh' ? 'Number = rank by reasons to go now, ' : ''}★ = review pick, ◆ = Vancouver classic`}</span>
+          <span class="hidden sm:inline text-slate-500 dark:text-slate-400">★ review pick · ◆ classic</span>
           ${picks ? '' : `${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}<span class="hidden sm:inline text-slate-500 dark:text-slate-400">next 6 weeks</span>`}
         </div>
         <div id="lmap" class="h-[32vh] min-h-[200px] sm:h-[50vh] sm:min-h-[320px] md:h-[calc(100vh-14rem)] md:min-h-[420px] lg:h-[600px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
@@ -2763,7 +2764,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
         </div>
         <div class="px-6 pt-5">
-          <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.label}${s.cuisine ? ` · ${esc(s.cuisine)}` : ''}${rank ? ` · #${rank} worth going now` : ''}</p>
+          <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.label}${s.cuisine ? ` · ${esc(s.cuisine)}` : ''}</p>
           <h2 class="mt-1 text-3xl font-bold leading-tight pr-2">${esc(s.name)}</h2>
           <p class="mt-1 text-slate-600 dark:text-slate-300">${esc(s.area)}${cur && cur.dist != null ? `, ${fmtDist(cur.dist)}` : ''}</p>
           ${this.planLater() && HOURS_READY && this.planHours(s) ? (() => { const ph = this.planHours(s); return `
@@ -2789,21 +2790,35 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const notes = NOTES[s.id] ? this.tipItems(s, 'modal') : [], src = (NOTES[s.id] || {}).source || '', host = (/^https:\/\/(?:www\.)?([^/]+)/.exec(src) || [])[1] || '';
             const says = SAYS[s.id];
             if (!evs.length && !tags.length && !press.length && !food.length && !notes.length && !says) return '';
-            return `
+            // 정리 (사용자 결정, 2026-10-02): 파란 창에는 공식 정보인 Tiny Trips tip만. "지금"(행사·시즌)은 칩 한 줄로, 부모 후기는 파란 창 밖으로. 앞에 나온 말과 겹치는 문장은 숨겨요
+            const seen = new Set(); [s.summary, says || '', ...notes].forEach(t => keyWords(t).forEach(w => seen.add(w)));
+            const chip = h => `<span class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-900 ring-1 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-200 dark:ring-amber-500/30">${h}</span>`;
+            const line = h => `<p class="mt-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${h}</p>`;
+            const chips = [
+              ...evs.map(ev => chip(`<span aria-hidden="true">${esc(ev.icon || '🎪')}</span> ${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}`)),
+              ...tags.map(t => chip(`#${esc(t.label)}`)),
+            ].join('');
+            const extra = [
+              ...food.map(r => line(`<span class="font-semibold">${esc(r.label)}</span> · ${esc(r.text)}`)),
+              ...press.map(p => line(`<span class="font-semibold">In the news</span> · ${esc(p.outlet)}, ${esc(shortDate(p.date))}: <a href="${esc(p.url)}" target="_blank" rel="noopener" class="underline">${esc(p.title)} ↗</a>`)),
+              ...tags.map(t => { const x = t.spots[s.id]; return overlapsSeen(x.why, seen) ? '' : line(`<span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}`); }),
+            ].join('');
+            const tipHtml = notes.length ? `<ul class="mt-2 space-y-1.5 text-sm text-slate-800 dark:text-slate-200">${notes.slice(0, 2).map(x => `<li class="flex gap-2"><span aria-hidden="true" class="text-sky-600 dark:text-sky-300">•</span><span>${esc(x)}</span></li>`).join('')}</ul>
+            <p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">Checked ${esc(shortDate(NOTES_META.updatedAt))} · ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'official site'}. Hours can change.</p>` : '';
+            return `${chips || extra ? `
+          <div>
+            ${chips ? `<div class="flex flex-wrap gap-2">${chips}</div>` : ''}${extra}
+          </div>` : ''}${tipHtml ? `
           <section class="rounded-2xl p-5 bg-sky-50 dark:bg-sky-500/10 ring-1 ring-sky-200 dark:ring-sky-500/25">
             <h3 class="font-bold text-sky-900 dark:text-sky-200"><span aria-hidden="true">💡</span> Tiny Trips tip</h3>
-            ${says ? `<p class="mt-2 text-sm text-slate-800 dark:text-slate-200"><span class="font-semibold">What parents say</span> · ${esc(says)}</p>` : ''}
-            ${food.map(r => `<p class="mt-2 text-sm text-slate-800 dark:text-slate-200"><span class="font-semibold">${esc(r.label)}</span> · ${esc(r.text)}</p>`).join('')}
-            ${press.map(p => `<p class="mt-2 text-sm text-slate-800 dark:text-slate-200"><span class="font-semibold">In the news</span> · ${esc(p.outlet)}, ${esc(shortDate(p.date))}: <a href="${esc(p.url)}" target="_blank" rel="noopener" class="underline">${esc(p.title)} ↗</a></p>`).join('')}
-            ${evs.map(ev => `
-            <div class="mt-2 text-sm">
-              <p class="font-semibold text-slate-900 dark:text-slate-100">${esc(ev.name)}</p>
-              <p class="text-slate-600 dark:text-slate-300">Next: ${esc(dayLabel(ev.next))} · ${esc(eventHours(ev))} · ${esc(eventWhen(ev))} <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Official info ↗</a></p>
-            </div>`).join('')}
-            ${tags.map(t => { const x = t.spots[s.id]; return `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200"><span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('')}
-            ${notes.length ? `<ul class="mt-2 space-y-1.5 text-sm text-slate-800 dark:text-slate-200">${notes.map(x => `<li class="flex gap-2"><span aria-hidden="true" class="text-sky-600 dark:text-sky-300">•</span><span>${esc(x)}</span></li>`).join('')}</ul>
-            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Checked ${esc(shortDate(NOTES_META.updatedAt))} on ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'the official site'}. Not a review. Prices and hours change, so check before you go.</p>` : ''}
-          </section>`; })()}
+            ${tipHtml}
+          </section>` : ''}${says ? `
+          <section class="rounded-2xl p-5 bg-pink-50 dark:bg-pink-500/10 ring-1 ring-pink-200 dark:ring-pink-500/25">
+            <h3 class="font-bold text-pink-900 dark:text-pink-200"><span aria-hidden="true">💬</span> What parents say</h3>
+            <p class="mt-2 text-sm text-slate-800 dark:text-slate-200">${esc(says)}</p>
+          </section>` : ''}`; })()}
+
+
           ${[[lunchState(s), 'emerald', LUNCH_META], [hhState(s), 'amber', HAPPY_META]]
             // 점심 전에는 런치가 먼저 보이도록 (지금 하는 쪽이 있으면 그쪽을 위로)
             .sort((a, b) => !!(b[0] && b[0].active) - !!(a[0] && a[0].active))
@@ -2888,7 +2903,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             </div>` : '';
             // 음식점·카페는 조사한 인기 메뉴(menu)를 우선 보여주고, 없으면 기존 메모(eat)
             const eats = s.cat === 'food' || s.cat === 'dessert';
-            const body = list('Things to do', g.do, '•') + list(eats ? 'Popular menu' : 'What to eat', eats ? (g.menu || g.eat) : g.eat, '•') + list('What to bring', bring, '•');
+            const body = list('Things to do', g.do, '•') + list(eats ? 'Popular menu' : 'What to eat', eats ? (g.menu || g.eat) : g.eat, '•');
             const src = eats && g.menu && /^https:\/\//i.test(g.menuSource || '') ? g.menuSource : '';
             return body ? `
           <section class="space-y-5">
