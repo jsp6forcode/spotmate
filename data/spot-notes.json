@@ -7,6 +7,12 @@
       ],
       "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=119"
     },
+    "adventpark" : {
+      "items" : [
+        "Also here: a playground and park benches."
+      ],
+      "source" : "https://www.pittmeadows.ca/parks-recreation/parks-fields-facilities/parks-list/advent-park"
+    },
     "aggiepark" : {
       "items" : [
         "Also here: picnic tables and washrooms."
@@ -82,6 +88,13 @@
       ],
       "source" : "https://westvancouver.ca/parks-recreation/parks-trails/ambleside-park"
     },
+    "annievillelionspark" : {
+      "items" : [
+        "The water park is open from the Victoria Day weekend to the Labour Day weekend, 10am–9pm, and hours can change with the weather.",
+        "A large picnic shelter can be reserved online for a fee. Also here: tennis courts, sports fields and trails."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/annieville-lions-park"
+    },
     "aquarium" : {
       "items" : [
         "Kids under 3 get in free.",
@@ -108,6 +121,12 @@
       ],
       "source" : "https://www.burnaby.ca/explore-outdoors/parks/barnet-marine-park"
     },
+    "beachgrovepark" : {
+      "items" : [
+        "Also here: an off-leash area, picnic tables, sport and tennis courts, trails and washrooms."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/beach-grove-park"
+    },
     "bearcreek" : {
       "items" : [
         "Also here: a bike skills park, an outdoor pool in summer, water play in summer and picnic tables."
@@ -132,11 +151,36 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "bellpark" : {
+      "items" : [
+        "Also here: sports fields and washrooms. Open daily 8am–10pm."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/bell-park"
+    },
+    "bentleydrivekiwanispark" : {
+      "items" : [
+        "Also here: picnic tables and sport courts."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/bentley-drive-kiwanis-park"
+    },
     "bertflinnpark" : {
       "items" : [
         "Also here: an off-leash dog area."
       ],
       "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
+    "birchlandpark" : {
+      "items" : [
+        "Also here: open grass areas, a picnic table and a playground."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory"
+    },
+    "blackiespit" : {
+      "items" : [
+        "The nature trail around the park is about 5 km, so allow around 2 hours. The parking lot gate closes at 10pm.",
+        "Two fully fenced off-leash dog areas. Dogs and bikes aren't allowed in the sensitive dune area."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/blackie-spit-park"
     },
     "blakeburnlagoonspark" : {
       "items" : [
@@ -177,6 +221,12 @@
       "scope" : "city",
       "source" : "https://www.coquitlam.ca/outdoorpools"
     },
+    "bonsonpark" : {
+      "items" : [
+        "Also here: a playground, a disc golf course and portable washrooms."
+      ],
+      "source" : "https://www.pittmeadows.ca/parks-recreation/parks-fields-facilities/parks-list/bonson-park"
+    },
     "bonsorrecreationcomplex" : {
       "items" : [
         "Toddler drop-in with ride-on toys and climbers. The leisure pool has a rope swing during public and family swims; kids 7 and under (under 48\") need an adult in the water."
@@ -200,6 +250,12 @@
         "Riverside walking trails and picnic spots by Fort Langley; the bus stop in Fort Langley is about a 10-minute walk. Gates close at 7pm from Oct 6 to Nov 2."
       ],
       "source" : "https://metrovancouver.org/services/regional-parks/park/brae-island-regional-park"
+    },
+    "brandrithpark" : {
+      "items" : [
+        "Pickleball, tennis and sport courts, sports fields, picnic tables and washrooms. No playground is listed."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/brandrith-park"
     },
     "brewerspark" : {
       "items" : [
@@ -285,6 +341,12 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "cameronpark" : {
+      "items" : [
+        "Also here: a playground and an open grassy area."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/cameron-park"
+    },
     "campbellvalley" : {
       "items" : [
         "Little River Loop is a flat, wheelchair-accessible 2.3 km return trail with boardwalks. Gates close at 7pm from Oct 6 to Nov 2."
@@ -349,6 +411,12 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "cedarwoodpark" : {
+      "items" : [
+        "Also here: a neighbourhood playground and a picnic table."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
     "centennial" : {
       "items" : [
         "Part of Boundary Bay Regional Park: flat Savannah and Raptor trails start here (about 4 km return). Gates close at 7pm from Oct 6 to Nov 2."
@@ -374,6 +442,12 @@
       "scope" : "city",
       "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
     },
+    "chalmerspark" : {
+      "items" : [
+        "Pickleball, tennis and sport courts, sports fields, trails and washrooms."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/chalmers-park"
+    },
     "champlainheightscommunit" : {
       "items" : [
         "Kids’ programs here include toddler programs and preschool classes. Check the centre’s page for times and sign-up."
@@ -398,6 +472,12 @@
         "Also here: walking trails and an off-leash dog area."
       ],
       "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/chelsea-park"
+    },
+    "chipkerrpark" : {
+      "items" : [
+        "Also here: a playground, a bench and pollinator gardens."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
     },
     "christinesinclaircommuni" : {
       "items" : [
@@ -592,6 +672,13 @@
       ],
       "source" : "https://www.nvrc.ca/delbrook"
     },
+    "delviewpark" : {
+      "items" : [
+        "Also here: an off-leash area, sport courts, sports fields, picnic tables and washrooms.",
+        "A large picnic shelter can be reserved online for a fee."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/delview-park"
+    },
     "derbyreach" : {
       "items" : [
         "Edge Farm Trail is a flat 3.2 km return walk past the heritage barn and old apple trees. Gates close at 7pm from Oct 6 to Nov 2."
@@ -603,6 +690,13 @@
         "The Rotary Waterworks spray park runs from May long weekend to September long weekend, water on 10am–9pm."
       ],
       "source" : "https://admin.delta.ca/node/203"
+    },
+    "diefenbakerparkplaygroun" : {
+      "items" : [
+        "The Rotary Waterworks Playground water park is open from the Victoria Day weekend to the Labour Day weekend, 10am–9pm, and hours can change with the weather.",
+        "A musical garden has five outdoor instruments (drums, chimes, xylophones). The park also has a man-made waterfall and pond, and a large picnic shelter can be reserved online for a fee."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/diefenbaker-park"
     },
     "donchristianrecreationce" : {
       "items" : [
@@ -633,6 +727,12 @@
         "Lifeguards watch the swim area in summer. Washrooms open year-round 6am–10pm; the concession is open daily 11am–7pm."
       ],
       "source" : "https://westvancouver.ca/parks-recreation/parks-trails/dundarave-park"
+    },
+    "eaglepark" : {
+      "items" : [
+        "Also here: a playground, open green space and park benches."
+      ],
+      "source" : "https://www.pittmeadows.ca/parks-recreation/parks-fields-facilities/parks-list/eagle-park"
     },
     "eagleridgepoolgroundsand" : {
       "items" : [
@@ -727,6 +827,12 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "flavellepark" : {
+      "items" : [
+        "Also here: a neighbourhood playground, a drinking fountain and a picnic table."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
     "fleetwoodcommunitycentre" : {
       "items" : [
         "Three licensed preschool rooms and preschool programs."
@@ -757,6 +863,12 @@
         "Youth 17 and under get in free at Parks Canada sites."
       ],
       "source" : "https://parks.canada.ca/lhn-nhs/bc/langley"
+    },
+    "fortresspark" : {
+      "items" : [
+        "Also here: a playground and a dog waste bag station."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/fortress-park"
     },
     "fraserheightsrecreationc" : {
       "items" : [
@@ -863,6 +975,12 @@
       "scope" : "city",
       "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
     },
+    "grauerpark" : {
+      "items" : [
+        "Also here: a skate park, sport courts and washrooms."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/grauer-park"
+    },
     "greatervancouverzoo" : {
       "items" : [
         "Kids 2 and under are free, including the train.",
@@ -870,6 +988,12 @@
         "Bring your own wagon for little ones if you have one."
       ],
       "source" : "https://www.gvzoo.com/visit/hours-rates-getting-here/"
+    },
+    "greenleafdrivepark" : {
+      "items" : [
+        "Also here: a playground, a drinking fountain and a picnic table."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
     },
     "greentimbers" : {
       "items" : [
@@ -897,6 +1021,12 @@
       ],
       "source" : "https://parks.canada.ca/voyage-travel/admission"
     },
+    "gundersonpark" : {
+      "items" : [
+        "Also here: sport courts, sports fields and washrooms."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/gunderson-park"
+    },
     "hamiltoncommunitycentre" : {
       "items" : [
         "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
@@ -914,6 +1044,13 @@
         "Also here: a drinking fountain, wheelchair access, an outdoor fitness circuit and sports courts."
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "harrisroad" : {
+      "items" : [
+        "Has a playground, spray park, outdoor pool and skate park, plus change rooms, a concession stand, picnic tables, benches and a walking trail.",
+        "Hours for the spray park, pool and concession are posted at pittmeadows.ca/spraypark."
+      ],
+      "source" : "https://www.pittmeadows.ca/parks-recreation/parks-fields-facilities/parks-list/harris-road-park"
     },
     "harryhoogepark" : {
       "items" : [
@@ -940,6 +1077,12 @@
       "scope" : "city",
       "source" : "https://www.surrey.ca/parks-recreation/surrey-parks/park-features-amenities/spray-parks-water-playgrounds"
     },
+    "hawthornepark2" : {
+      "items" : [
+        "Next to Hawthorne Elementary School and home to the Ladner Tennis Club. Also here: tennis courts, sports fields, picnic tables and washrooms."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/hawthorne-park"
+    },
     "hazelgrove" : {
       "items" : [
         "Surrey spray parks run May 16 to late September, 11am–6pm. Push the button to start the water when it’s above 20°C."
@@ -953,6 +1096,19 @@
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/hazelnut-meadows-community-park"
     },
+    "heritagemountainpark" : {
+      "items" : [
+        "Also here: a playground, a drinking fountain and a picnic table."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
+    "hiknollpark" : {
+      "items" : [
+        "A 1.5 km trail through forest and meadow takes about 30 minutes.",
+        "During the rainy season the area north of the Nicomekl bridge floods and can't be used."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/hi-knoll-park"
+    },
     "hillcrest" : {
       "items" : [
         "The leisure pool is closed for repairs Oct 5–7, 2026. Public skating and kids’ swim lessons run here too."
@@ -964,6 +1120,13 @@
         "Playground (renovated in 2020), fountains and big lawns."
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/holland-park"
+    },
+    "hollypark" : {
+      "items" : [
+        "A walking circuit suitable for all ages and mobility levels, plus a lawn for pick-up sports such as bocce, croquet and frisbee.",
+        "Also here: sports fields and washrooms."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/holly-park"
     },
     "hollypark2" : {
       "items" : [
@@ -1009,6 +1172,18 @@
         "Baby care rooms, strollers to borrow, and a kids' menu in the restaurant."
       ],
       "source" : "https://www.ikea.com/ca/en/stores/richmond/"
+    },
+    "imperialvillagepark" : {
+      "items" : [
+        "Also here: picnic tables, sport courts and trails."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/imperial-village-park"
+    },
+    "inletpark" : {
+      "items" : [
+        "Also here: a playground, a washroom, a drinking fountain and misting poles."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
     },
     "iona" : {
       "items" : [
@@ -1140,17 +1315,36 @@
       ],
       "source" : "https://www.kitscc.com/"
     },
+    "kylepark" : {
+      "items" : [
+        "Also here: a neighbourhood playground, a picnic table and a bench."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
     "ladnercommunitycentre" : {
       "items" : [
         "Kids’ programs here include preschool classes, drop-in playtime and day camps. Check the centre’s page for times and sign-up."
       ],
       "source" : "https://www.delta.ca/parks-recreation/sport-recreation/indoor-facilities/ladner-community-centre"
     },
+    "ladnerharbourpark" : {
+      "items" : [
+        "A view of the working harbour, with picnic tables, a playground, washrooms and a viewpoint. It connects to the Millennium Trail at its north end.",
+        "A large picnic shelter can be reserved online for a fee."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/ladner-harbour-park"
+    },
     "ladnerpioneerlibrary" : {
       "items" : [
         "Borrow toys, tools and tech from The Playground collection with a library card."
       ],
       "source" : "https://www.fvrl.bc.ca/"
+    },
+    "lesliepark" : {
+      "items" : [
+        "Also here: picnic tables."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/leslie-park"
     },
     "lighthouse" : {
       "items" : [
@@ -1370,6 +1564,12 @@
       ],
       "source" : "https://monova.ca/visit/"
     },
+    "mountainviewpark" : {
+      "items" : [
+        "Also here: pickleball, tennis and sport courts, sports fields, picnic tables and trails."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/mountain-view-park"
+    },
     "mountainviewpark2" : {
       "items" : [
         "Also here: a drinking fountain, an outdoor fitness circuit and sports courts."
@@ -1485,6 +1685,19 @@
         "Also here: water play in summer."
       ],
       "source" : "https://opendata.vancouver.ca/explore/dataset/parks-facilities/"
+    },
+    "north40parkreserve" : {
+      "items" : [
+        "Has off-leash areas and trails. Open daily 8am–10pm."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/north-40-park-reserve"
+    },
+    "northdeltacommunitypark" : {
+      "items" : [
+        "The Dennis Elsom multi-sport synthetic turf field is here, and the park is a major centre for softball.",
+        "Also here: a skate park, tennis and pickleball courts, playgrounds, trails and washrooms. A large picnic shelter can be reserved online for a fee."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/north-delta-community-park"
     },
     "northdeltarecreationcent" : {
       "items" : [
@@ -1618,6 +1831,13 @@
         "Kids’ programs here include preschool classes. Check the centre’s page for times and sign-up."
       ],
       "source" : "https://coquitlam.ca/438/Pinetree-Community-Centre"
+    },
+    "pittmeadowsathleticpark" : {
+      "items" : [
+        "Five regular and two mini soccer fields, four baseball and softball diamonds, tennis and sport courts, and a playground. Parking for 344 vehicles, washrooms, drinking water and concession stands.",
+        "A picnic shelter with two accessible 8 ft tables seats 16."
+      ],
+      "source" : "https://www.pittmeadows.ca/parks-recreation/parks-fields-facilities/parks-list/pitt-meadows-athletic-park"
     },
     "pittmeadowsfamilyrecreat" : {
       "items" : [
@@ -1758,6 +1978,12 @@
       ],
       "source" : "https://burnaby.ca/sites/default/files/acquiadam/2024-05/Outdoor-Pools-%20Booking-Request-Form.pdf"
     },
+    "roberthopepark" : {
+      "items" : [
+        "Also here: a public swimming pool, a playground and a dog waste bag station."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/robert-hope-park"
+    },
     "robsonpark" : {
       "items" : [
         "Also here: picnic tables and sports courts."
@@ -1789,6 +2015,12 @@
       ],
       "source" : "https://www.roundhouse.ca/"
     },
+    "routleypark" : {
+      "items" : [
+        "Also here: a public swimming pool, sports courts and a playground."
+      ],
+      "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/routley-park"
+    },
     "royalheightspark" : {
       "items" : [
         "Also here: walking trails."
@@ -1807,6 +2039,12 @@
       ],
       "scope" : "city",
       "source" : "https://www.newwestcity.ca/parks-and-recreation/parks/amenities/sb_expander_articles/961.php"
+    },
+    "saintgeorgestreetpark" : {
+      "items" : [
+        "Also here: a neighbourhood playground and a bench."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
     },
     "sasamat" : {
       "items" : [
@@ -1829,11 +2067,24 @@
       ],
       "source" : "https://www.richmond.ca/seaisland"
     },
+    "seaviewpark" : {
+      "items" : [
+        "Also here: a playground and a picnic table."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
+    },
     "sendall" : {
       "items" : [
         "Also here: picnic tables, washrooms and walking trails."
       ],
       "source" : "https://www.langleycity.ca/parks-recreation/parks-trails/sendall-gardens"
+    },
+    "serpentinefen" : {
+      "items" : [
+        "The nature trail around the reserve is about 3.5 km, so allow around 1.5 hours.",
+        "Open dawn until dusk. September and October are the busiest months for spotting birds."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/serpentine-wildlife-management-area"
     },
     "serpentinewildlifemanage" : {
       "items" : [
@@ -1846,6 +2097,18 @@
         "Also here: covered picnic areas and washrooms."
       ],
       "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/settlers-park"
+    },
+    "shorelinepark" : {
+      "items" : [
+        "Wetlands with wildlife viewing, walking and pedestrian trails, open green space, benches and parking."
+      ],
+      "source" : "https://www.pittmeadows.ca/parks-recreation/parks-fields-facilities/parks-list/shoreline-park"
+    },
+    "shorelinetrail" : {
+      "items" : [
+        "Bicycles and scooters aren't allowed on the lower gravel and boardwalk path."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
     },
     "smilingcreekactivitycent" : {
       "items" : [
@@ -1895,6 +2158,13 @@
       ],
       "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
     },
+    "spiritsquare" : {
+      "items" : [
+        "In the civic centre near City Hall, the Family Recreation Centre and the library, and the venue for many of the city's special events.",
+        "Wheelchair accessible, with picnic areas, benches, pedestrian trails and parking."
+      ],
+      "source" : "https://www.pittmeadows.ca/parks-recreation/parks-fields-facilities/parks-list/spirit-square"
+    },
     "stanley" : {
       "items" : [
         "Also here: water play in summer, picnic tables, washrooms and walking trails."
@@ -1938,6 +2208,12 @@
       ],
       "source" : "https://www.coquitlam.ca/487/Summit-Community-Centre"
     },
+    "sunburypark" : {
+      "items" : [
+        "Beside Sunbury Hall. Also here: picnic tables, sports fields, trails and washrooms."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/sunbury-park"
+    },
     "suncrestpark" : {
       "items" : [
         "Burnaby spray parks run from mid-May to the end of September, 9am–9pm (push the button to start the water)."
@@ -1962,6 +2238,19 @@
         "Preschoolers (0–4) skate free with an adult. Sunset Community Centre next door has a playground."
       ],
       "source" : "https://vancouver.ca/parks-recreation-culture/sunset-rink.aspx"
+    },
+    "sunshinehillspark" : {
+      "items" : [
+        "Also here: pickleball and tennis courts, picnic tables and trails."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/sunshine-hills-park"
+    },
+    "sunstonepark" : {
+      "items" : [
+        "The pond doubles as a stormwater feature for the Sunstone neighbourhood, and the Luminary Festival is held here in September.",
+        "Also here: sport courts, trails and a viewpoint."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/sunstone-park"
     },
     "sunvalleypark" : {
       "items" : [
@@ -2010,11 +2299,24 @@
       "scope" : "city",
       "source" : "https://surreylibraries.ca/node/16686"
     },
+    "surreynaturecentre" : {
+      "items" : [
+        "Free entry, open Monday to Saturday 8:30am–4pm (closed Sundays and statutory holidays).",
+        "Kids can borrow activity backpacks and fishing rods at the front desk, and there's a family space with books and a puppet theatre. Story Time in the Park is for ages 0–5 with a caregiver."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/parks/surrey-nature-centre"
+    },
     "surreysportleisurecomple" : {
       "items" : [
         "Leisure pool and wading pool, plus public swims and skates. No 72-hour sign-up needed for those."
       ],
       "source" : "https://www.surrey.ca/culture-recreation/1888.aspx"
+    },
+    "sycamorepark" : {
+      "items" : [
+        "Also here: a playground and a bench."
+      ],
+      "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
     },
     "taylorpark" : {
       "items" : [
@@ -2224,6 +2526,12 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "waderoadpark" : {
+      "items" : [
+        "Also here: picnic tables, sports fields, trails and washrooms."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/wade-road-park"
+    },
     "walnutgrovecommunitycent" : {
       "items" : [
         "Kids’ programs here include preschool classes. Check the centre’s page for times and sign-up.",
@@ -2250,6 +2558,13 @@
         "Also here: walking trails."
       ],
       "source" : "https://www.portcoquitlam.ca/recreation-parks/parks-trails/parks-directory/wellington-park"
+    },
+    "wellingtonpointpark" : {
+      "items" : [
+        "Vistas along the south arm of the Fraser River, often visited by kayakers and canoeists.",
+        "Also here: a boat launch, picnic tables and a viewpoint."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/wellington-point-park"
     },
     "wesburn" : {
       "items" : [
@@ -2300,6 +2615,12 @@
       ],
       "source" : "https://westvancouver.ca/parks-recreation/facilities/community-centre"
     },
+    "westviewpark" : {
+      "items" : [
+        "Also here: picnic tables, sports fields, trails and washrooms."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/westview-park"
+    },
     "westwoodpark" : {
       "items" : [
         "Also here: walking trails and sports courts."
@@ -2349,6 +2670,13 @@
       ],
       "source" : "https://shopwillowbrook.com/visit/"
     },
+    "winskillpark" : {
+      "items" : [
+        "The Lions Wellness Park here is B.C.'s first playground for older adults, with outdoor fitness equipment.",
+        "Also here: sports fields, picnic tables, trails and washrooms, next to the Winskill Aquatic and Fitness Centre."
+      ],
+      "source" : "https://www.delta.ca/parks-recreation/parks-trails/park-and-amenity-search/winskill-park"
+    },
     "wonderland" : {
       "items" : [
         "For ages 1–12, with an adventure maze, trampoline and foam pool. Sign the waiver online before you go."
@@ -2356,5 +2684,5 @@
       "source" : "https://www.wonderlands.ca/"
     }
   },
-  "updatedAt" : "2026-10-01"
+  "updatedAt" : "2026-10-02"
 }
