@@ -20,6 +20,12 @@
       "scope" : "city",
       "source" : "https://www.portmoody.ca/parks-recreation-and-environment/parks/"
     },
+    "alandersonmemorialpool" : {
+      "items" : [
+        "Outdoor pool with a slide, diving board and family washroom. Closed for the season from Sept 28, 2026."
+      ],
+      "source" : "https://www.langleycity.ca/parks-recreation/recreation-facilities/al-anderson-memorial-pool"
+    },
     "albioncommunitycentreacc" : {
       "items" : [
         "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
@@ -38,6 +44,18 @@
       ],
       "scope" : "city",
       "source" : "https://www.mapleridge.ca/node/4966"
+    },
+    "aldergrovecommunitycentr" : {
+      "items" : [
+        "Pools, a waterpark, an ice arena and a playground all on one site."
+      ],
+      "source" : "https://www.tol.ca/en/parks-recreation/aldergrove-community-centre.aspx"
+    },
+    "aldergroveregionalpark" : {
+      "items" : [
+        "Pepin Brook Trail is a 3.5 km loop, mostly flat and rolling. Good picnic spots. Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/aldergrove-regional-park"
     },
     "aldor" : {
       "items" : [
@@ -159,11 +177,29 @@
       "scope" : "city",
       "source" : "https://www.coquitlam.ca/outdoorpools"
     },
+    "bonsorrecreationcomplex" : {
+      "items" : [
+        "Toddler drop-in with ride-on toys and climbers. The leisure pool has a rope swing during public and family swims; kids 7 and under (under 48\") need an adult in the water."
+      ],
+      "source" : "https://www.burnaby.ca/bonsor"
+    },
     "boseforestpark" : {
       "items" : [
         "Also here: walking trails."
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/bose-forest-park"
+    },
+    "boundarybayregionalpark" : {
+      "items" : [
+        "Savannah and Raptor trails are flat, walk-only routes (about 4 km return from Centennial Beach). Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/boundary-bay-regional-park"
+    },
+    "braeislandregionalpark" : {
+      "items" : [
+        "Riverside walking trails and picnic spots by Fort Langley; the bus stop in Fort Langley is about a 10-minute walk. Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/brae-island-regional-park"
     },
     "brewerspark" : {
       "items" : [
@@ -190,6 +226,12 @@
       ],
       "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-20"
     },
+    "buckleypark" : {
+      "items" : [
+        "Also here: walking trails."
+      ],
+      "source" : "https://www.langleycity.ca/parks-recreation/parks-trails/buckley-park"
+    },
     "burkevilleneighbourhoodp" : {
       "items" : [
         "Richmond spray parks run from mid-May to early September, 9am–9pm, and can close during water restrictions."
@@ -210,6 +252,12 @@
         "Also here: washrooms, walking trails, parking and wheelchair access."
       ],
       "source" : "https://www.burnaby.ca/explore-outdoors/parks/burnaby-fraser-foreshore-park"
+    },
+    "burnabylakeregionalpark" : {
+      "items" : [
+        "Level walking trails, like Cottonwood Trail (5.2 km return from the Piper Avenue entrance). Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/burnaby-lake-regional-park"
     },
     "burnabymountainconservat" : {
       "items" : [
@@ -236,6 +284,12 @@
         "Also here: a sand play area."
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "campbellvalley" : {
+      "items" : [
+        "Little River Loop is a flat, wheelchair-accessible 2.3 km return trail with boardwalks. Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/campbell-valley-regional-park"
     },
     "canadianmuseumofflight" : {
       "items" : [
@@ -264,6 +318,12 @@
       ],
       "source" : "https://gobananasnorthvan.com/"
     },
+    "capilanoriver" : {
+      "items" : [
+        "Coho Loop is a scenic 1 km loop from the hatchery across two bridges. Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/capilano-river-regional-park"
+    },
     "capilanoriverhatchery" : {
       "items" : [
         "Free. Watch salmon climb the fish ladder from the viewing gallery."
@@ -288,6 +348,12 @@
         "Also here: a sand play area, water play in summer, walking trails and an outdoor fitness circuit."
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "centennial" : {
+      "items" : [
+        "Part of Boundary Bay Regional Park: flat Savannah and Raptor trails start here (about 4 km return). Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/boundary-bay-regional-park"
     },
     "centralpark" : {
       "items" : [
@@ -339,12 +405,30 @@
       ],
       "source" : "https://www.burnaby.ca/recreation-and-arts/recreation-facilities/christine-sinclair-community-centre"
     },
+    "chuckbaileyrecreationcen" : {
+      "items" : [
+        "Preschool programs and drop-in gym sports for kids."
+      ],
+      "source" : "https://www.surrey.ca/culture-recreation/1914.aspx"
+    },
+    "citycentrecommunitycentr" : {
+      "items" : [
+        "Programs for all ages, including preschool, dance, arts and day camps."
+      ],
+      "source" : "https://citycentrecc.ca/"
+    },
     "cityoflangleylibrary" : {
       "items" : [
         "Free Babytime (0–2) and Storytime at Fraser Valley Regional Library branches. Check the branch calendar for times."
       ],
       "scope" : "city",
       "source" : "https://www.fvrl.bc.ca/"
+    },
+    "citypark" : {
+      "items" : [
+        "Also here: water play in summer, covered picnic areas, washrooms and walking trails."
+      ],
+      "source" : "https://www.langleycity.ca/parks-recreation/parks-trails/city-park"
     },
     "claytoncommunitycentre" : {
       "items" : [
@@ -377,6 +461,12 @@
         "Kids’ programs here include preschool classes and childminding. Check the centre’s page for times and sign-up."
       ],
       "source" : "https://www.surrey.ca/culture-recreation/8524.aspx"
+    },
+    "cloverdalesporticecomple" : {
+      "items" : [
+        "Drop-in public skating; check the online schedule for times."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/recreation-facilities/cloverdale-sport-ice-complex"
     },
     "coalharbourcommunitycent" : {
       "items" : [
@@ -478,6 +568,12 @@
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
     },
+    "deasisland" : {
+      "items" : [
+        "Easy, flat trails like Tinmaker’s Walk (1.2 km return between the picnic areas). Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/deas-island-regional-park"
+    },
     "deerfernpark" : {
       "items" : [
         "Also here: a sand play area, water play in summer, walking trails and an outdoor fitness circuit."
@@ -496,6 +592,12 @@
       ],
       "source" : "https://www.nvrc.ca/delbrook"
     },
+    "derbyreach" : {
+      "items" : [
+        "Edge Farm Trail is a flat 3.2 km return walk past the heritage barn and old apple trees. Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/derby-reach-regional-park"
+    },
     "diefenbaker" : {
       "items" : [
         "The Rotary Waterworks spray park runs from May long weekend to September long weekend, water on 10am–9pm."
@@ -507,6 +609,18 @@
         "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
       ],
       "source" : "https://www.surrey.ca/"
+    },
+    "douglaspark" : {
+      "items" : [
+        "Also here: washrooms, walking trails, a community garden and an outdoor fitness circuit."
+      ],
+      "source" : "https://www.langleycity.ca/parks-recreation/parks-trails/douglas-park"
+    },
+    "douglasparkcommunitycent" : {
+      "items" : [
+        "Preschool and out-of-school care programs, and a wading pool outside."
+      ],
+      "source" : "https://vancouver.ca/parks-recreation-culture/douglas-park-community-centre.aspx"
     },
     "douglasrecreationcentre" : {
       "items" : [
@@ -681,6 +795,12 @@
       "scope" : "city",
       "source" : "https://www.coquitlam.ca/outdoorpools"
     },
+    "gardencity" : {
+      "items" : [
+        "All-ages playground with natural play features alongside the classic ones."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=94"
+    },
     "garrypoint" : {
       "items" : [
         "Also here: picnic tables, a drinking fountain, walking trails and a concession stand."
@@ -717,6 +837,12 @@
         "Runs drop-in and registered programs for kids and families. Check the centre’s page for times and sign-up."
       ],
       "source" : "https://westvancouver.ca/parks-recreation/facilities/gleneagles-community-centre"
+    },
+    "glenvalleyregionalpark" : {
+      "items" : [
+        "A short 0.6 km riverside trail and one picnic table, popular for fishing. Gates close at 7pm from Oct 6 to Nov 2 (open from 6am)."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/glen-valley-regional-park"
     },
     "gobananas" : {
       "items" : [
@@ -758,6 +884,12 @@
         "Several places to eat up top, from a coffee bar to a bistro."
       ],
       "source" : "https://www.grousemountain.com/plan-your-visit"
+    },
+    "guildfordrecreationcentr" : {
+      "items" : [
+        "Main and leisure pools, public skating, and two preschool classrooms. Public swims and skates don’t need the 72-hour sign-up."
+      ],
+      "source" : "https://www.surrey.ca/culture-recreation/1876.aspx"
     },
     "gulfofgeorgiacannerynati" : {
       "items" : [
@@ -821,6 +953,12 @@
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/hazelnut-meadows-community-park"
     },
+    "hillcrest" : {
+      "items" : [
+        "The leisure pool is closed for repairs Oct 5–7, 2026. Public skating and kids’ swim lessons run here too."
+      ],
+      "source" : "https://vancouver.ca/parks-recreation-culture/hillcrest-aquatic-centre.aspx"
+    },
     "holland" : {
       "items" : [
         "Playground (renovated in 2020), fountains and big lawns."
@@ -871,6 +1009,18 @@
         "Baby care rooms, strollers to borrow, and a kids' menu in the restaurant."
       ],
       "source" : "https://www.ikea.com/ca/en/stores/richmond/"
+    },
+    "iona" : {
+      "items" : [
+        "The Iona Jetty trail runs 4 km out to sea, with wind shelters at 1.3 and 2.5 km. Ponds nearby are good for birdwatching. Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/iona-beach-regional-park"
+    },
+    "ionabeach" : {
+      "items" : [
+        "The Iona Jetty trail runs 4 km out to sea, with wind shelters at 1.3 and 2.5 km. Ponds nearby are good for birdwatching. Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/iona-beach-regional-park"
     },
     "jerrysulinapark" : {
       "items" : [
@@ -932,6 +1082,12 @@
       ],
       "source" : "https://burnaby.ca/sites/default/files/acquiadam/2024-05/Outdoor-Pools-%20Booking-Request-Form.pdf"
     },
+    "kensingtonprairiecommuni" : {
+      "items" : [
+        "Semiahmoo Family Place here runs play drop-ins for young kids and their parents."
+      ],
+      "source" : "https://www.surrey.ca/culture-recreation/7794.aspx"
+    },
     "keswickpark" : {
       "items" : [
         "Burnaby spray parks run from mid-May to the end of September, 9am–9pm (push the button to start the water)."
@@ -978,17 +1134,35 @@
       ],
       "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
     },
+    "kitscc" : {
+      "items" : [
+        "Licensed preschool (Tiggy Winkle) and group tennis lessons for kids."
+      ],
+      "source" : "https://www.kitscc.com/"
+    },
     "ladnercommunitycentre" : {
       "items" : [
         "Kids’ programs here include preschool classes, drop-in playtime and day camps. Check the centre’s page for times and sign-up."
       ],
       "source" : "https://www.delta.ca/parks-recreation/sport-recreation/indoor-facilities/ladner-community-centre"
     },
+    "ladnerpioneerlibrary" : {
+      "items" : [
+        "Borrow toys, tools and tech from The Playground collection with a library card."
+      ],
+      "source" : "https://www.fvrl.bc.ca/"
+    },
     "lighthouse" : {
       "items" : [
         "Pay parking all year at the Beacon Lane lot. Toilets are in the parking lot and inside the park."
       ],
       "source" : "https://westvancouver.ca/parks-recreation/parks-trails/lighthouse-park"
+    },
+    "linwoodpark" : {
+      "items" : [
+        "Also here: picnic tables, parking, an off-leash dog area and a community garden."
+      ],
+      "source" : "https://www.langleycity.ca/parks-recreation/parks-trails/linwood-park"
     },
     "lionsgatecommunityrecrea" : {
       "items" : [
@@ -1032,6 +1206,12 @@
       ],
       "source" : "https://thecityoflougheed.com/service-and-security/family-lounge/"
     },
+    "loutetpark" : {
+      "items" : [
+        "Also here: wheelchair access."
+      ],
+      "source" : "https://www.cnv.org/Parks-Recreation/Parks-Greenways/Parks"
+    },
     "lynn" : {
       "items" : [
         "The park and its suspension bridge are free.",
@@ -1045,6 +1225,12 @@
         "Kids’ programs here include drop-in playtime. Check the centre’s page for times and sign-up."
       ],
       "source" : "https://www.nvrc.ca/facilities-fields/locations-hours/community-recreation-centres/lynn-creek-community-recreation"
+    },
+    "lynnheadwaters" : {
+      "items" : [
+        "Easy trails for families: Varley Trail and Lynn Loop. Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/lynn-headwaters-regional-park"
     },
     "lynnvalleycommunityrecre" : {
       "items" : [
@@ -1071,6 +1257,18 @@
       ],
       "scope" : "city",
       "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
+    },
+    "mahonpark" : {
+      "items" : [
+        "Also here: a drinking fountain, a skate park, an off-leash dog area and wheelchair access."
+      ],
+      "source" : "https://www.cnv.org/Parks-Recreation/Parks-Greenways/Parks"
+    },
+    "maillardvillecommunityce" : {
+      "items" : [
+        "New centre with a dedicated children’s program area and a large covered outdoor space."
+      ],
+      "source" : "https://www.coquitlam.ca/1199/Maillardville-Community-Centre"
     },
     "maplegrovepool" : {
       "items" : [
@@ -1148,6 +1346,12 @@
       ],
       "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-56"
     },
+    "minnekhada" : {
+      "items" : [
+        "Lodge Trail is about 2 km return from the Quarry Road entrance, mostly flat with good wildlife viewing. Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/minnekhada-regional-park"
+    },
     "minoru" : {
       "items" : [
         "Also here: covered picnic areas, a drinking fountain, walking trails and sports courts."
@@ -1185,6 +1389,12 @@
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/mud-bay-park"
     },
+    "mundyparkpool" : {
+      "items" : [
+        "Leisure pool with a zero-entry option. Kids under 7 need someone 16+ within arm’s reach in the water."
+      ],
+      "source" : "https://coquitlam.ca/Facilities/Facility/Details/Mundy-Park-Outdoor-Pool-184"
+    },
     "murielarnasonlibrary" : {
       "items" : [
         "Free Babytime (0–2) and Storytime at Fraser Valley Regional Library branches. Check the branch calendar for times."
@@ -1216,17 +1426,41 @@
       ],
       "source" : "https://vancouver.ca/news-calendar/ready-set-splash-outdoor-pool-and-beach-season-begins-may-2026.aspx"
     },
+    "newtonarena" : {
+      "items" : [
+        "Drop-in public skating; check the online schedule for times."
+      ],
+      "source" : "https://www.surrey.ca/culture-recreation/5044.aspx"
+    },
     "newtonrecreationcentre" : {
       "items" : [
         "Kids’ programs here include preschool classes. Check the centre’s page for times and sign-up."
       ],
       "source" : "https://www.surrey.ca/culture-recreation/7325.aspx"
     },
+    "newwestminsterfamilyplac" : {
+      "items" : [
+        "Free drop-in family playtime for kids 0–5, plus free parenting workshops."
+      ],
+      "source" : "https://www.newwestfamilies.ca/"
+    },
     "newwestminsterpubliclibr" : {
       "items" : [
         "Free Babytime (0–12 months) and Baby Social (0–23 months)."
       ],
       "source" : "https://www.nwpl.ca/"
+    },
+    "nicholaspark" : {
+      "items" : [
+        "Also here: water play in summer, picnic tables, washrooms and sports courts."
+      ],
+      "source" : "https://www.langleycity.ca/parks-recreation/parks-trails/nicholas-park"
+    },
+    "nicomeklpark" : {
+      "items" : [
+        "Also here: picnic tables and walking trails."
+      ],
+      "source" : "https://www.langleycity.ca/parks-recreation/parks-trails/nicomekl-park"
     },
     "ninjatag" : {
       "items" : [
@@ -1328,6 +1562,12 @@
       ],
       "source" : "https://pme.ubc.ca/visit/"
     },
+    "pacificspiritregionalpar" : {
+      "items" : [
+        "Over 55 km of trails. Highlights for kids: Camosun Bog and the big trees on Sword Fern Trail. Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/pacific-spirit-regional-park"
+    },
     "pandorapark" : {
       "items" : [
         "Vancouver spray parks run May 16 to Sept 30, 9am–9pm daily. Staff supervise at busy times from late June to early September."
@@ -1385,6 +1625,12 @@
       ],
       "source" : "https://www.pittmeadows.ca/parksandrec"
     },
+    "pittriverregionalgreenwa" : {
+      "items" : [
+        "Flat 11 km greenway along the river, good for walking, biking and spotting birds. Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/pitt-river-regional-greenway"
+    },
     "playabbylangley" : {
       "items" : [
         "Toddler zones, slides and climbs, plus laser tag. No nuts or outside cakes allowed."
@@ -1396,6 +1642,12 @@
         "Free drop-in Baby Story Time (0–2) and Toddler Plus Story Time (2–5) at the Poirier library. No registration needed."
       ],
       "source" : "https://coqlibrary.ca/programguide"
+    },
+    "portagepark" : {
+      "items" : [
+        "Also here: picnic tables, walking trails and sports courts."
+      ],
+      "source" : "https://www.langleycity.ca/parks-recreation/parks-trails/portage-park"
     },
     "portcoquitlamcommunityce" : {
       "items" : [
@@ -1442,6 +1694,12 @@
         "Also here: an outdoor fitness circuit."
       ],
       "source" : "https://www.coquitlam.ca/Facilities/Facility/Details/-71"
+    },
+    "rayperraultpark" : {
+      "items" : [
+        "Also here: picnic tables, a drinking fountain, wheelchair access and sports courts."
+      ],
+      "source" : "https://www.cnv.org/Parks-Recreation/Parks-Greenways/Parks"
     },
     "redwood" : {
       "items" : [
@@ -1571,6 +1829,12 @@
       ],
       "source" : "https://www.richmond.ca/seaisland"
     },
+    "sendall" : {
+      "items" : [
+        "Also here: picnic tables, washrooms and walking trails."
+      ],
+      "source" : "https://www.langleycity.ca/parks-recreation/parks-trails/sendall-gardens"
+    },
     "serpentinewildlifemanage" : {
       "items" : [
         "Also here: picnic tables, walking trails and fishing."
@@ -1618,6 +1882,12 @@
         "Also here: a bike skills park, water play in summer, picnic tables and walking trails."
       ],
       "source" : "https://www.surrey.ca/parks-recreation/parks/south-surrey-athletic-park"
+    },
+    "southsurreyindoorpool" : {
+      "items" : [
+        "Wading pool and sensory-friendly swims; sensory kits to borrow at the front desk."
+      ],
+      "source" : "https://www.surrey.ca/parks-recreation/recreation-facilities/south-surrey-indoor-pool"
     },
     "spanishbanks" : {
       "items" : [
@@ -1700,6 +1970,12 @@
       "scope" : "city",
       "source" : "https://www.portcoquitlam.ca/node/5318"
     },
+    "surreybendregionalpark" : {
+      "items" : [
+        "Picnic shelters and flat trails through floodplain forest and marsh. Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/surrey-bend-regional-park"
+    },
     "surreylakepark" : {
       "items" : [
         "Also here: walking trails."
@@ -1734,11 +2010,23 @@
       "scope" : "city",
       "source" : "https://surreylibraries.ca/node/16686"
     },
+    "surreysportleisurecomple" : {
+      "items" : [
+        "Leisure pool and wading pool, plus public swims and skates. No 72-hour sign-up needed for those."
+      ],
+      "source" : "https://www.surrey.ca/culture-recreation/1888.aspx"
+    },
     "taylorpark" : {
       "items" : [
         "Also here: wheelchair access and sports courts."
       ],
       "source" : "https://www.burnaby.ca/explore-outdoors/parks/taylor-park"
+    },
+    "templetonparkpool" : {
+      "items" : [
+        "Indoor pool with a slide and a rope swing. Preschoolers (0–4) swim free."
+      ],
+      "source" : "https://vancouver.ca/parks-recreation-culture/templeton-pool.aspx"
     },
     "temporarycameroncommunit" : {
       "items" : [
@@ -1760,6 +2048,12 @@
       ],
       "source" : "https://www.richmond.ca/parks-recreation/parks/parksearch/park.aspx?ID=41"
     },
+    "terryfoxlibrary" : {
+      "items" : [
+        "Borrow toys, tools and tech from The Playground collection with a library card."
+      ],
+      "source" : "https://www.fvrl.bc.ca/"
+    },
     "tescottpark" : {
       "items" : [
         "Also here: walking trails."
@@ -1772,6 +2066,12 @@
       ],
       "source" : "https://thepolygon.ca/visit/"
     },
+    "thompsoncommunitycentre" : {
+      "items" : [
+        "Preschool programs, children’s events planned by a parents’ committee, and outdoor Playboxes."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/centres/thompson.htm"
+    },
     "thompsonpark" : {
       "items" : [
         "Also here: washrooms and a concession stand."
@@ -1783,6 +2083,12 @@
         "Kids’ programs here include preschool classes. Check the centre’s page for times and sign-up."
       ],
       "source" : "https://www.langleycity.ca/parks-recreation/recreation-facilities/timms-community-centre"
+    },
+    "tmtmxtnbelcarraregionalp" : {
+      "items" : [
+        "Two easy loops: Woodhaven Swamp (1.2 km) and Sasamat Lake Loop (3.2 km, with a floating walkway). Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/t%C9%99mt%C9%99m%C3%ADx%CA%B7t%C9%99n-belcarra-regional-park"
     },
     "towncentre" : {
       "items" : [
@@ -1809,11 +2115,23 @@
       ],
       "source" : "https://troutlakecc.com/"
     },
+    "tsawwassenlibrary" : {
+      "items" : [
+        "Borrow toys, tools and tech from The Playground collection with a library card."
+      ],
+      "source" : "https://www.fvrl.bc.ca/"
+    },
     "tsuyukipark" : {
       "items" : [
         "Also here: a zipline, a pump track, water play in summer and covered picnic areas."
       ],
       "source" : "https://www.mapleridge.ca/parks-recreation/parks-trails"
+    },
+    "tynehead" : {
+      "items" : [
+        "Serpentine Loop is a 1.7 km, mostly flat walk; look for spawning salmon in fall. Gates close at 7pm from Oct 6 to Nov 2."
+      ],
+      "source" : "https://metrovancouver.org/services/regional-parks/park/tynehead-regional-park"
     },
     "unwin" : {
       "items" : [
@@ -1964,6 +2282,12 @@
       ],
       "source" : "https://vancouver.ca/parks-recreation-culture/west-point-grey-community-centre.aspx"
     },
+    "westrichmondcommunitycen" : {
+      "items" : [
+        "Childcare programs, special events and youth activities run by the community association."
+      ],
+      "source" : "https://www.richmond.ca/parks-recreation/centres/wrichmond.htm"
+    },
     "westvancouveraquaticcent" : {
       "items" : [
         "Leisure pool, water slide and family hot tub. Kids under 7 need an adult within arm’s reach in the pool."
@@ -2012,6 +2336,12 @@
         "Playground, picnic spots and a swimming beach. Washrooms in the parking lot open 7am–9pm; concession open daily 11am–7pm."
       ],
       "source" : "https://westvancouver.ca/parks-recreation/parks-trails/whytecliff-park"
+    },
+    "willingdoncommunitycentr" : {
+      "items" : [
+        "Toddler drop-in with ride-on toys and climbers. Willingdon Heights Park next door has a playground, zipline and wading pool."
+      ],
+      "source" : "https://www.burnaby.ca/willingdon"
     },
     "willowbrookmall" : {
       "items" : [
