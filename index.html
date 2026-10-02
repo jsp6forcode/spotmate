@@ -835,7 +835,7 @@ class App {
       browse: false,
       // 부모 리뷰: user = 구글 로그인한 사람, reviewDraft = 쓰는 중인 리뷰 { id, rating, text }
       user: null, reviewsOn: false, reviewDraft: null, reviewBusy: false, reviewMsg: '',
-      feedbackBusy: false, feedbackMsg: '', feedbackSent: false,
+      feedbackBusy: false, feedbackMsg: '', feedbackSent: false, savedTab: 'saved',
       q: '', kw: [], unused: [], free: false, qBusy: false, aiSay: '',
       radius: RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
@@ -1452,6 +1452,7 @@ class App {
       case 'close': return this.closeModal();
       case 'save': return this.togglePlan(val);
       // 부모 리뷰
+      case 'savedtab': return this.set({ savedTab: val === 'reviews' ? 'reviews' : 'saved' });
       case 'rvsignin': return this.reviewSignIn();
       case 'fbagain': return this.set({ feedbackSent: false, feedbackMsg: '' });
       case 'rvsignout': this.fb.A.signOut(this.fb.auth); return this.set({ reviewDraft: null, reviewMsg: '' });
@@ -2562,7 +2563,37 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     save(); map.on('moveend zoomend', save);
     this._leaflet = map;
   }
+  // Saved 탭 안에서 "Saved"(저장한 곳)와 "My reviews"(내가 리뷰를 쓴 곳) 전환
   planView() {
+    const on = this.state.savedTab === 'reviews', btn = (v, label) => `<button data-act="savedtab" data-val="${v}" aria-pressed="${(v === 'reviews') === on}" class="min-h-[40px] px-4 rounded-lg text-sm font-bold transition-colors ${(v === 'reviews') === on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
+    return `<div class="mt-6 inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Saved or my reviews">${btn('saved', `Saved${this.state.plan.length ? ` (${this.state.plan.length})` : ''}`)}${btn('reviews', 'My reviews')}</div>${on ? this.myReviewsView() : this.savedList()}`;
+  }
+  myReviewsView() {
+    const { user, reviewsOn } = this.state;
+    const box = body => `<div class="mt-6 max-w-2xl rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-8 text-center">${body}</div>`;
+    if (!FIREBASE_CONFIG) return box('<p class="font-bold">Reviews aren’t available right now.</p>');
+    if (!reviewsOn) return box('<p class="text-slate-600 dark:text-slate-300" role="status">Loading reviews…</p>');
+    if (!user) return box('<p class="text-lg font-bold">Sign in to see your reviews</p><p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Sign in with the same Google account you used to write them.</p><button data-act="rvsignin" class="mt-4 min-h-[44px] px-5 rounded-xl font-semibold bg-violet-600 text-white">Sign in with Google</button>');
+    const stars = n => `<span class="text-amber-500" aria-label="${n} out of 5 stars">${'★'.repeat(n)}<span class="text-slate-300 dark:text-slate-600">${'★'.repeat(5 - n)}</span></span>`;
+    const mine = Object.values(this.reviews || {}).flat().filter(r => r.uid === user.uid && byId(r.spotId)).sort((a, b) => b.date - a.date);
+    if (!mine.length) return box('<p class="text-lg font-bold">No reviews yet</p><p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Open a place and tap ★ Review to share how it went.</p><button data-act="view" data-val="list" class="mt-4 min-h-[44px] px-5 rounded-xl font-semibold bg-violet-600 text-white">Browse places</button>');
+    return `
+    <div class="mt-6 max-w-2xl">
+      <h2 class="text-2xl font-bold">My reviews</h2>
+      <p class="text-sm text-slate-500 dark:text-slate-400">${plural(mine.length, 'place')} you’ve reviewed, newest first. Tap one to edit or delete your review.</p>
+      <div class="mt-4 space-y-2">${mine.map(r => { const s = byId(r.spotId); return `
+        <button data-act="open" data-val="${s.id}" class="w-full text-left flex items-start gap-3 rounded-xl p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-violet-300 dark:hover:ring-violet-700">
+          <span class="w-8 h-8 shrink-0 rounded-full text-white text-sm flex items-center justify-center" style="background:${CATS[s.cat].dot}" aria-hidden="true">${CATS[s.cat].icon}</span>
+          <span class="flex-1 min-w-0">
+            <span class="block font-bold truncate">${esc(s.name)}</span>
+            <span class="block text-xs text-slate-500 dark:text-slate-400">${esc(s.area)} · ${esc(`${MON[r.date.getMonth()]} ${r.date.getDate()}, ${r.date.getFullYear()}`)}</span>
+            <span class="block text-sm mt-0.5">${stars(r.rating)}</span>
+            ${r.text ? `<span class="block mt-1 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(r.text)}</span>` : ''}
+          </span>
+        </button>`; }).join('')}</div>
+    </div>`;
+  }
+  savedList() {
     const spots = this.state.plan.map(byId);
     if (!spots.length) return `
       <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
