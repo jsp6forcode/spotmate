@@ -3269,7 +3269,19 @@
       "items" : [
         "The Big Red Barn with goats and chickens is open in September and October. You can pick your own apples. In Sept and Oct the farm is open Tuesday to Sunday, 10am-5:30pm (u-pick entry closes at 4:45pm) and closed Mondays."
       ],
-      "source" : "http://www.willowviewfarms.com/location"
+      "source" : "https://www.willowviewfarms.com/location"
+    },
+    "hoycreekhatchery" : {
+      "items" : [
+        "Salmon Come Home on Sunday, Oct 25, 11am-3pm lets families visit the hatchery and see returning salmon. Chum usually return from early October to mid-November and coho from late October to mid-December."
+      ],
+      "source" : "https://www.coquitlam.ca/991/Salmon-Come-Home"
+    },
+    "littlecampbellriverh" : {
+      "items" : [
+        "A free nature trail along the river is open every day and is wheelchair accessible. Adult coho, steelhead and chinook are best seen from October to January, and the hatchery runs family smolt release events."
+      ],
+      "source" : "https://psf.ca/blog/salmon-spotting-metro-vancouver/"
     }
   },
   "updatedAt" : "2026-10-02"

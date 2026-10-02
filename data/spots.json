@@ -2974,6 +2974,10 @@
     { "id": "manuelpark", "hours": "sunrise-sunset", "hoursSource": "park", "cat": "nature", "name": "Manuel Park", "area": "Chilliwack", "lat": 49.127, "lng": -121.9597, "emoji": "🌳", "placeId": "ChIJFyYXPzJBhFQR6ou0z_wgsXs", "notKid": true,
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"], "summary": "Park with sports fields", "signals": [], "why": "", "tips": [] },
     { "id": "cultuslake", "hours": "sunrise-sunset", "hoursSource": "park", "cat": "nature", "name": "Cultus Lake", "area": "Chilliwack", "lat": 49.0503, "lng": -121.9883, "emoji": "🏖️", "placeId": "ChIJKziAQ3ZGhFQRkBcO2pgIKNY", "family": true, "notKid": true,
-      "trend": null, "env": "outdoor", "price": "Free", "time": "2–3 hrs", "crowd": "park", "weather": ["sunny"], "summary": "Lake with a beach", "signals": [], "why": "", "tips": [] }
+      "trend": null, "env": "outdoor", "price": "Free", "time": "2–3 hrs", "crowd": "park", "weather": ["sunny"], "summary": "Lake with a beach", "signals": [], "why": "", "tips": [] },
+    { "id": "hoycreekhatchery", "cat": "nature", "name": "Hoy Creek Hatchery", "area": "Coquitlam", "lat": 49.2868, "lng": -122.7968, "emoji": "🐟", "placeId": "ChIJ-48FRS5_hlQR-3qSN1JpMd8", "family": true,
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"], "summary": "Salmon hatchery", "signals": [], "why": "", "tips": [] },
+    { "id": "littlecampbellriverh", "cat": "nature", "name": "Little Campbell River Hatchery", "area": "Surrey", "lat": 49.0249, "lng": -122.7079, "emoji": "🐟", "placeId": "ChIJo313qtzFhVQRGmVcJ4HUT3Y", "family": true,
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"], "summary": "Volunteer-run salmon hatchery", "signals": [], "why": "", "tips": [] }
   ]
 }

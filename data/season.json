@@ -71,6 +71,36 @@
         "vandusen" : {
           "source" : "https://vancouver.ca/parks-recreation-culture/harvest-days.aspx",
           "why" : "Harvest Days runs on weekends Sept 26 to Oct 18 (plus Thanksgiving Monday, Oct 12), included with admission. Sugar maples, ginkgos and Japanese maples usually peak mid-to-late October."
+        },
+        "drsunyatsenclassicalchin" : {
+          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
+          "start" : "2026-10-10",
+          "why" : "Manicured trees give the garden a calm autumn scene. Advance booking is required."
+        },
+        "ubcbotanicalgarden" : {
+          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
+          "start" : "2026-10-10",
+          "why" : "The Carolinian Forest section has eastern North American trees in fall colour."
+        },
+        "parktilfordgardens" : {
+          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
+          "start" : "2026-10-10",
+          "why" : "The Japanese maples in the Asian garden turn gold and crimson."
+        },
+        "burnabymountainpark" : {
+          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
+          "start" : "2026-10-10",
+          "why" : "Walk the Panorama Trail or stop at the Kamui Mintara sculpture viewpoint."
+        },
+        "granville" : {
+          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
+          "start" : "2026-10-10",
+          "why" : "Maple trees glow red, orange and yellow around the island and Ron Basford Park."
+        },
+        "troutlake" : {
+          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
+          "start" : "2026-10-10",
+          "why" : "Maples, willow, oak, birch and cherry trees give the lake a mix of fall colours."
         }
       },
       "to" : "2026-11-10"
@@ -99,6 +129,16 @@
           "source" : "https://psf.ca/blog/salmon-spotting-metro-vancouver/",
           "start" : "2026-10-01",
           "why" : "Adult coho, chum and Chinook return to the Serpentine River here from October to December."
+        },
+        "hoycreekhatchery" : {
+          "source" : "https://www.coquitlam.ca/991/Salmon-Come-Home",
+          "start" : "2026-10-01",
+          "why" : "Chum return from early October to mid-November and coho from late October to mid-December. Salmon Come Home is on Oct 25."
+        },
+        "littlecampbellriverh" : {
+          "source" : "https://psf.ca/blog/salmon-spotting-metro-vancouver/",
+          "start" : "2026-10-01",
+          "why" : "Coho, steelhead and chinook can be seen from October to January. A free, wheelchair accessible nature trail follows the river."
         }
       },
       "to" : "2026-11-30"
@@ -136,6 +176,63 @@
         "westhamislandherbfarm" : {
           "source" : "https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026",
           "why" : "Pick your own pumpkins until Oct 31, daily 10am to 5pm, with a scarecrow display."
+        },
+        "tavesfarms" : {
+          "source" : "https://tavesfamilyfarms.com",
+          "why" : "Magic of Fall runs Sept 12 to Oct 31 with a giant pumpkin patch, three corn mazes and apple orchards."
+        },
+        "greendaleacreschilliwack" : {
+          "source" : "https://www.greendaleacres.ca",
+          "why" : "The corn maze has free tractor rides on weekends, plus a pumpkin patch and farm animals."
+        },
+        "peteyspumpkinpatch" : {
+          "source" : "https://www.peteyspumpkinpatch.ca",
+          "start" : "2026-10-03",
+          "why" : "Opens Saturday, Oct 3 with train rides, a petting zoo and a kids' corn maze."
+        },
+        "willowviewfarms" : {
+          "source" : "https://www.willowviewfarms.com/location",
+          "why" : "Pick your own apples and visit the Big Red Barn with goats and chickens. Open Tuesday to Sunday through October."
+        },
+        "bvm" : {
+          "source" : "https://www.burnaby.ca/halloween",
+          "start" : "2026-10-23",
+          "why" : "Haunted Village runs Oct 23 to 25 and Oct 30 to 31, 4 to 9pm."
+        },
+        "capilano" : {
+          "source" : "https://www.capbridge.com/events/canyon-frights/",
+          "start" : "2026-10-09",
+          "why" : "Canyon Frights runs Oct 9 to Nov 1, with the park decked out in pumpkins and spooky displays."
+        },
+        "brentwoodmall" : {
+          "source" : "https://www.tourismburnaby.com/events",
+          "start" : "2026-10-05",
+          "why" : "Halloweeks runs Oct 5 to 31 with free movies on the plaza, scavenger hunts and trick-or-treating on Oct 31, 3 to 4pm."
+        },
+        "centralpark" : {
+          "source" : "https://www.burnaby.ca/halloween",
+          "start" : "2026-10-30",
+          "why" : "Central Spark Halloween festivities are on Oct 30."
+        },
+        "bonsorrecreationcomplex" : {
+          "source" : "https://www.burnaby.ca/halloween",
+          "start" : "2026-10-23",
+          "why" : "Bonsor's Big Boo is a drop-in family Halloween event on Oct 23."
+        },
+        "kensingtoncomplex" : {
+          "source" : "https://www.burnaby.ca/halloween",
+          "start" : "2026-10-25",
+          "why" : "Ghouls \u0026 Goblins Public Skate is on Oct 25."
+        },
+        "edmondscommunitycentre" : {
+          "source" : "https://www.burnaby.ca/halloween",
+          "start" : "2026-10-24",
+          "why" : "Spooky Bash, a Halloween-themed swim with games, is on Oct 24."
+        },
+        "centennialarena" : {
+          "source" : "https://www.whiterockcity.ca/Calendar.aspx",
+          "start" : "2026-10-31",
+          "why" : "Halloween Skate is on Oct 31, 5:30 to 6:45pm."
         }
       },
       "to" : "2026-10-31"
