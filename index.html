@@ -930,6 +930,12 @@ class App {
     // 검색창: 입력 중인 글은 다시 그려져도 남도록 따로 들고 있다가, Enter/Search에 검색
     this.root.addEventListener('input', e => {
       if (e.target.name === 'q') this.qDraft = e.target.value;
+      if (e.target.dataset.act === 'evsearch') {
+        this.evq = e.target.value;
+        const r = this.eventsResults(e.target.dataset.kind), box = document.getElementById('ev-results'), cnt = document.getElementById('ev-count');
+        if (box) box.innerHTML = r.html;
+        if (cnt) cnt.innerHTML = r.count;
+      }
       if (e.target.dataset.act === 'rvtext' && this.state.reviewDraft) this.state.reviewDraft.text = e.target.value;
       // 피드백 폼: 다른 이유로 화면이 다시 그려져도 쓰던 글이 남게
       if (e.target.form && e.target.form.dataset.act === 'feedback') this.fbDraft[e.target.name] = e.target.value;
@@ -2191,32 +2197,47 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   // Events 탭(마켓 빼고) · Markets 탭(파머스 마켓만). kind 없이 부르면 예전처럼 둘 다 (카테고리 "Events")
   eventsView(kind) {
     const tabPage = kind === 'events' || kind === 'markets';
-    const evs = this.upcomingEvents(45).filter(ev => kind === 'markets' ? ev.type === 'market' : kind === 'events' ? ev.type !== 'market' : true), today = vanDate(0), week = vanDate(6);
-    const group = (title, list, hideDay) => list.length ? `<h2 class="mt-8 text-lg font-bold">${title}</h2><div class="mt-3 grid gap-3 md:grid-cols-2">${list.map(ev => this.eventRow(ev, false, hideDay)).join('')}</div>` : '';
+    // 검색어는 탭을 바꾸면 비워요
+    if (this._evqKind !== kind) { this.evq = ''; this._evqKind = kind; }
+    const r = this.eventsResults(kind);
+    const noun = kind === 'markets' ? 'market' : 'event';
     const note = (tabPage ? `
       <h2 class="mt-6 text-2xl font-extrabold tracking-tight">${kind === 'markets' ? '<span aria-hidden="true">🥕</span> Farmers markets' : 'Events for families'}</h2>
       <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">${kind === 'markets' ? 'Weekly markets with local produce and food trucks.' : 'Festivals, seasonal events and sales in the next 6 weeks.'}</p>
       <div class="mt-4 rounded-2xl p-3 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
-        <p class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">${plural(evs.length, kind === 'markets' ? 'market' : 'event')}${this.nearActive() ? `, near ${esc(this.originLabel())}` : ''}</p>
+        <input type="search" data-act="evsearch" data-kind="${kind}" value="${esc(this.evq || '')}" autocomplete="off" enterkeyhint="search" aria-label="Search ${noun}s"
+          placeholder="${kind === 'markets' ? 'Search markets: name, area, day' : 'Search events: pumpkin, Halloween, Surrey, free'}"
+          class="w-full min-h-[40px] sm:min-h-[44px] px-3 sm:px-4 text-sm sm:text-base rounded-lg sm:rounded-xl border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500">
+        <p id="ev-count" class="mt-2 sm:mt-3 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">${r.count}</p>
         <div class="mt-2 sm:mt-3">${this.locationBar([])}</div>
       </div>`
       // "See all"로 들어온 행사 목록에서 장소 목록으로 돌아가는 버튼 (카테고리 드롭다운을 몰라도 나갈 수 있게)
       : `<button data-act="cat" data-val="all" class="mt-6 inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">← Back to all spots</button>`) + `
       <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Check each source before you go.</p>`;
-
-    if (!evs.length) return `${note}
+    return `${note}<div id="ev-results">${r.html}</div>`;
+  }
+  // 검색창에 글을 쓸 때마다 이 부분만 다시 그려요 (입력창이 포커스를 잃지 않게)
+  eventsResults(kind) {
+    const tabPage = kind === 'events' || kind === 'markets';
+    const noun = kind === 'markets' ? 'market' : 'event';
+    const words = tabPage ? (this.evq || '').toLowerCase().split(/\s+/).filter(Boolean) : [];
+    const all = this.upcomingEvents(45).filter(ev => kind === 'markets' ? ev.type === 'market' : kind === 'events' ? ev.type !== 'market' : true), today = vanDate(0), week = vanDate(6);
+    const hay = ev => `${ev.name} ${ev.summary || ''} ${ev.venue || ''} ${ev.area || ''} ${ev.type === 'market' ? 'market farmers' : ev.type} ${ev.schedule && ev.schedule.hoursText || ''} ${/free/i.test(ev.summary || '') ? 'free' : ''}`.toLowerCase();
+    const evs = words.length ? all.filter(ev => { const h = hay(ev); return words.every(w => h.includes(w)); }) : all;
+    const count = `${plural(evs.length, noun)}${words.length ? ` for “${esc(this.evq.trim())}”` : ''}${this.nearActive() ? `, near ${esc(this.originLabel())}` : ''}`;
+    const group = (title, list, hideDay) => list.length ? `<h2 class="mt-8 text-lg font-bold">${title}</h2><div class="mt-3 grid gap-3 md:grid-cols-2">${list.map(ev => this.eventRow(ev, false, hideDay)).join('')}</div>` : '';
+    if (!evs.length) return { count, html: `
       <div class="mt-6 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
-        <p class="text-lg font-bold">No ${kind === 'markets' ? 'markets' : 'events'} coming up${this.nearActive() ? ` within ${radiusLabel(this.state.radius)}` : ''}</p>
+        <p class="text-lg font-bold">${words.length ? `No ${noun}s match “${esc(this.evq.trim())}”` : `No ${noun}s coming up${this.nearActive() ? ` within ${radiusLabel(this.state.radius)}` : ''}`}</p>
         ${this.nearActive() ? '<button data-act="radius" data-val="any" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show any distance</button>' : ''}
-      </div>`;
+      </div>` };
     // 몇 주 동안 이어지는 행사(옥수수 미로, 시즌 행사)는 하루짜리 행사와 섞이지 않게 따로 묶어요
     const ongoing = e => e.type !== 'market' && e.schedule.from && e.schedule.to && (Date.parse(e.schedule.to) - Date.parse(e.schedule.from)) / 864e5 > 14;
     const short = evs.filter(e => !ongoing(e));
-    return note
-      + group('Today', short.filter(e => e.next === today), true)
+    return { count, html: group('Today', short.filter(e => e.next === today), true)
       + group('This week', short.filter(e => e.next > today && e.next <= week))
       + group('Coming up', short.filter(e => e.next > week))
-      + group('Running all season', evs.filter(ongoing), true);
+      + group('Running all season', evs.filter(ongoing), true) };
   }
 
   // 리뷰 기준(먹거리)과 히든젬 표시의 기준을 카드마다 반복하지 않고 목록 위에 한 번만 보여줘요
