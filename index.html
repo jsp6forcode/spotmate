@@ -1082,13 +1082,9 @@ class App {
     <section class="mt-5 sm:mt-8 max-w-2xl mx-auto">
       <h2 class="text-xl sm:text-3xl font-extrabold tracking-tight">Hello, fellow parents! <span aria-hidden="true">👋</span></h2>
       <div class="mt-3 sm:mt-4 space-y-2.5 sm:space-y-4 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-200">
-        <p>I’m a dad raising our lovely kids here in Vancouver, and like a lot of parents, our weekends used to start with the same question: <em>where should we take the kids today?</em></p>
-        <p>I’d end up with a dozen tabs open, jumping between Google searches and different websites, trying to piece it all together. I didn’t want to take them just anywhere. I wanted to find the very best places for them, and I kept wishing there was one place to find them all.</p>
-        <p>So I started Tiny Trips as my own little side project: playgrounds, spray parks, farms, libraries, rainy-day hideouts and more around Metro Vancouver and the Fraser Valley, all in one spot.</p>
-        <p>To keep it to the good ones, I lean on what other families already think. Most places here are rated 4.0 or higher on Google, so you’re seeing spots lots of parents have already tried and loved.</p>
-        <p>It’s still a work in progress, and I’m sure I’ve missed things or gotten a few wrong. If you notice a mistake, know a great place that should be here, or just have an idea, please send me a note below. Every message really helps Tiny Trips grow into something more useful for all of us parents.</p>
-        <p>Thanks for stopping by, and have fun out there with your little ones!</p>
-        <p class="font-semibold">— A Vancouver dad</p>
+        <p>I’m a dad in Vancouver, and our weekends used to start with the same question: <em>where should we take the kids today?</em> I was tired of a dozen open tabs, so I started Tiny Trips: playgrounds, spray parks, farms, libraries, rainy-day hideouts and more around Metro Vancouver and the Fraser Valley, all in one spot.</p>
+        <p>Most places here are rated 4.0 or higher on Google, so you’re seeing spots lots of parents have already tried and loved. It’s still a work in progress, so if you spot a mistake or know a great place that’s missing, please send me a note below.</p>
+        <p class="font-semibold">Have fun out there! — A Vancouver dad</p>
       </div>
     </section>
     <section id="feedback" class="mt-6 sm:mt-10 max-w-2xl mx-auto rounded-2xl p-4 sm:p-6 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
@@ -1105,15 +1101,14 @@ class App {
           <input name="place" maxlength="100" value="${esc(d.place || '')}" class="${field}" placeholder="e.g. Mundy Park">
         </label>
         <label class="block text-xs sm:text-sm font-semibold">Your message
-          <textarea name="message" required maxlength="1000" rows="5" class="${field}" placeholder="Tell me what you noticed or what you’d like to see">${esc(d.message || '')}</textarea>
+          <textarea name="message" required maxlength="1000" rows="3" class="${field}" placeholder="Tell me what you noticed or what you’d like to see">${esc(d.message || '')}</textarea>
         </label>
-        <label class="block text-xs sm:text-sm font-semibold">Email <span class="font-normal text-slate-500 dark:text-slate-400">(optional, only if you’d like a reply)</span>
+        <label class="block text-xs sm:text-sm font-semibold">Email <span class="font-normal text-slate-500 dark:text-slate-400">(optional, for a reply. Never shown on the site)</span>
           <input name="email" type="email" maxlength="100" value="${esc(d.email || '')}" class="${field}" autocomplete="email">
         </label>
         <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden">
         ${feedbackMsg ? `<p class="text-sm text-rose-700 dark:text-rose-300" role="status">${esc(feedbackMsg)}</p>` : ''}
         <button type="submit" ${feedbackBusy ? 'disabled aria-busy="true"' : ''} class="min-h-[40px] sm:min-h-[48px] px-5 sm:px-6 text-sm sm:text-base rounded-xl font-bold bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-60">${feedbackBusy ? 'Sending…' : 'Send feedback'}</button>
-        <p class="text-xs text-slate-500 dark:text-slate-400">Your email is only used to reply to you. It’s never shown on the site.</p>
       </form>`}
     </section>`;
   }
@@ -2270,7 +2265,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 실제 사진이 없으면 장소 종류에 맞는 무료 스톡 사진 (Pexels). 그 장소가 아닐 수 있다고 사진 구석에 꼭 밝혀요 (사용자 결정, 2026-10-02)
     if (STOCK_ON && s.cat !== 'food' && s.cat !== 'dessert') {
       // 종류마다 사진 여러 장 중, 아직 덜 쓰인 사진을 골라 같은 종류여도 장소마다 다르게 보여요. 한 번 정한 사진은 카드와 장소 창에서 같게 (stockPick)
-      let st = stockPick[s.id];
+      // 데이터에 stockPhoto [Pexels 번호, 촬영자]가 있으면 그 사진을 (예: 호박밭이 보이는 곳에 호박 사진)
+      let st = s.stockPhoto || stockPick[s.id];
       if (!st) {
         const list = STOCK[kidProfile(s).kind] || STOCK.sight, start = [...s.id].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7) % list.length;
         st = list[start];

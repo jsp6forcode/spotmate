@@ -2992,6 +2992,10 @@
     { "id": "owlrehab", "cat": "nature", "name": "OWL Raptor Rehabilitation", "area": "Delta", "lat": 49.0713, "lng": -123.0188, "emoji": "🦉", "placeId": "ChIJCx8DgVvnhVQRhIoYT64az9k", "family": true,
       "trend": null, "env": "outdoor", "price": "$", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"], "summary": "Raptor rescue centre with weekend tours by reservation", "signals": [], "why": "", "tips": [] },
     { "id": "gvmezosoic", "cat": "nature", "name": "Greater Vancouver Mesozoic Adventure", "area": "Langley", "lat": 49.09, "lng": -122.4861, "emoji": "🦕", "placeId": "ChIJUz1CGgDNhVQRLL0v2D_ojX4", "family": true,
-      "trend": null, "env": "outdoor", "price": "$$", "time": "2–3 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"], "summary": "Dinosaur-themed zoo and play park", "signals": [], "why": "", "tips": [], "hours": "Mo-Su 09:00-17:00", "hoursSource": "web" }
+      "trend": null, "env": "outdoor", "price": "$$", "time": "2–3 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"], "summary": "Dinosaur-themed zoo and play park", "signals": [], "why": "", "tips": [], "hours": "Mo-Su 09:00-17:00", "hoursSource": "web" },
+    { "id": "singletreewinery", "cat": "nature", "name": "Singletree Winery", "area": "Abbotsford", "lat": 49.1069, "lng": -122.3797, "emoji": "🍷", "placeId": "ChIJBS4c4aE0hFQRLFSZuxyNeDM", "family": true, "stockPhoto": [6492359, "Magda Ehlers"],
+      "trend": null, "env": "outdoor", "price": "$$", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"], "summary": "Family-owned winery with a child-friendly picnic lawn among the vines", "signals": [], "why": "", "tips": [] },
+    { "id": "tavesestatecidery", "cat": "nature", "name": "Taves Estate Cidery", "area": "Abbotsford", "lat": 49.0080, "lng": -122.3159, "emoji": "🍷", "placeId": "ChIJIf3QHa21hVQRO_H7SNPdTYQ", "family": true, "stockPhoto": [18211888, "Babija Photo"],
+      "trend": null, "env": "outdoor", "price": "$$", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"], "summary": "Apple farm cidery with goats and a pumpkin garden", "signals": [], "why": "", "tips": [] }
   ]
 }

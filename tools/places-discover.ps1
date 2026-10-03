@@ -76,6 +76,10 @@ if ($Set -eq 'fraser2') {
   $kid2 = @('neighbourhood park with playground', 'splash pad', 'skate park', 'community centre', 'waterfall', 'trail walk', 'attractions for kids', 'farm market', 'playground', 'park')
   $queries = [ordered]@{ abbotsford = @($kid2 | ForEach-Object { "$_ in Abbotsford BC" }); chilliwack = @(($kid2 + 'Cultus Lake', 'Bridal Veil Falls') | ForEach-Object { "$_ in Chilliwack BC" }) }
 }
+if ($Set -eq 'wine') {
+  # 아이 데리고 가기 좋은 와이너리·시더리 후보 (2026-10-02, 사용자 요청). 반경은 위쪽 fraser 세트와 같은 방식이 아니라 메트로 기준 30km
+  $queries = [ordered]@{ wine = @('winery in Langley BC', 'winery in Abbotsford BC', 'winery Fort Langley', 'vineyard in Surrey BC', 'cidery in Fraser Valley BC', 'winery in Chilliwack BC', 'winery in Maple Ridge BC', 'winery Delta BC', 'family friendly winery Fraser Valley', 'winery with playground BC') }
+}
 $fields = 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.primaryTypeDisplayName,places.location'
 $headers = @{ 'X-Goog-Api-Key' = $key; 'X-Goog-FieldMask' = $fields }
 $calls = 0
