@@ -100,23 +100,25 @@ const WIZ = [
 // 장소 종류 → 태그 이름·목적(kid 아이 중심 / family 가족 나들이 / both)·맞는 나이(b 0–3, p 3–5, s 5–12). 이름과 설명 첫머리로 판단해요 (위에서부터 먼저 맞는 것)
 const KINDS = [
   ['water', 'Spray park', /spray park$|^spray|splash|wading|water ?park|water play/i, 'kid', 'bps'],
-  ['play', 'Playground', /playground|tot lot|adventure play/i, 'kid', 'bps'],
-  ['rides', 'Rides & amusements', /(?<!rainbow )\bplayland\b|amusement park|fun ?park/i, 'kid', 'ps'],
-  ['indoorplay', 'Indoor play', /indoor play|play (centre|center|caf)|jungle|kidtropolis|play ?zone|fun ?land|bounce|fun centre/i, 'kid', 'bps'],
+  ['play', 'Playground', /(?<!indoor )playground|tot lot|adventure play/i, 'kid', 'bps'],
+  ['rides', 'Rides & amusements', /(?<!rainbow )\bplayland\b|amusement park|fun ?park|miniature railway|burnaby central railway/i, 'kid', 'ps'],
+  ['indoorplay', 'Indoor play', /indoor play(ground)?|play (centre|center|caf)|jungle|kidtropolis|play ?zone|fun ?land|bounce|fun centre/i, 'kid', 'bps'],
   ['gym', 'Kids gym', /gymnastics|parkour|kids gym|ninja|tumble|\bg force gym|my gym|movement centre/i, 'kid', 'ps'],
-  ['active', 'Active play', /trampoline|climb|boulder|parkour|gymnastics|ninja|kids gym|\bair park/i, 'kid', 'ps'],
+  ['trampoline', 'Trampoline park', /trampoline|extreme air/i, 'kid', 'ps'],
+  ['active', 'Active play', /climb|boulder|parkour|gymnastics|ninja|kids gym|\bair park/i, 'kid', 'ps'],
   ['games', 'Games', /laser|escape|\bvr\b|go-kart|kart track|bowling/i, 'kid', 's'],
   ['minigolf', 'Mini golf', /mini ?golf|mini putt/i, 'kid', 'ps'],
   ['arcade', 'Arcade & mini golf', /arcade|claw|mini golf|mini putt/i, 'kid', 'ps'],
   ['golf', 'Golf', /golf (cent(re|er)|course|club)|(?<!mini)golf$/i, 'both', 'ps'],
   ['wheels', 'Bike & skate', /bike park|bike (skills|terrain)|bmx|pump ?track|skate ?park/i, 'kid', 's'],
-  ['arts', 'Arts & crafts', /pottery|art studio|arts centre|cultural cent|craft|paint/i, 'kid', 'ps'],
+  ['arts', 'Arts & crafts', /pottery|art studio|arts centre|(?<!& )cultural cent|craft|paint/i, 'kid', 'ps'],
   ['shop', 'Kids shop', /\btoys?\b|baby nook|book ?(store|shop)|kinder books/i, 'family', 'bps'],
   ['library', 'Library', /librar(y|ies)/i, 'both', 'bps'],
   ['pool', 'Pool', /pool|aquatic|swim/i, 'both', 'bps'],
   ['rec', 'Rec centre', /recreation|sports complex|community cent|leisure|ymca|family place|sportsplex/i, 'both', 'bps'],
   // 센터 이름에 쇼핑몰 단어(Town Centre, Oakridge)가 들어간 곳이 쇼핑몰 사진이 되지 않게, 쇼핑몰은 센터 다음에 판단해요
   ['mall', 'Shopping', /\bikea\b|kids market|\bmall\b|park royal|metropolis|coquitlam centre|richmond centre|town centre|tsawwassen mills|oakridge|lansdowne|shopping/i, 'family', 'bps'],
+  ['museum', 'Museum', /olympic experience/i, 'family', 'ps'],
   ['rink', 'Ice rink', /ice rink|skating|arena|\bice\b|oval|canlan/i, 'both', 'ps'],
   // 단어 경계로 ("Branch"의 ranch, "Libraries"가 농장이 되지 않게). 농장은 아이 중심 활동에도 맞아요
   // 연어 부화장·새와 야생동물 보호구역·호박밭은 농장 사진 대신 그 장소에 맞는 사진을 써요 (사용자 요청, 2026-10-03)
@@ -124,7 +126,11 @@ const KINDS = [
   ['birds', 'Wildlife & birds', /raptor|heron|\bbirds?\b|wildlife|sanctuary|\bfen\b|slough|polder|marshes/i, 'both', 'bps'],
   ['pumpkin', 'Pumpkin patch', /pumpkin/i, 'both', 'bps'],
   ['berry', 'Berry farm', /berry farms?|u-pick berry/i, 'both', 'bps'],
-  ['farm', 'Farm & animals', /\bfarms?\b|\bzoo\b|petting|animal|aquarium/i, 'both', 'bps'],
+  ['aquarium', 'Aquarium', /aquarium/i, 'family', 'bps'],
+  // 이름에 Zoo가 들어가도 홀로그램 쇼는 동물 농장이 아니에요 (Hologram Zoo Vancouver). 생물다양성 보호공원(Godwin Farm)은 농장이 아니라 산책로예요
+  ['hologram', 'Hologram show', /hologram/i, 'family', 'ps'],
+  ['trail', 'Trail', /biodiversity preserve/i, 'family', 'ps'],
+  ['farm', 'Farm & animals', /\bfarms?\b|\bzoo\b|petting|animal/i, 'both', 'bps'],
   ['museum', 'Museum', /museum|gallery|science|planetarium|space cent|historic site|heritage village/i, 'family', 'ps'],
   ['beach', 'Beach & lake', /beach|\blake\b/i, 'family', 'bps'],
   ['garden', 'Garden', /garden|conservatory|arboretum/i, 'family', 'bps'],
@@ -134,6 +140,8 @@ const KINDS = [
 // 실제 사진이 없는 장소의 대표 이미지: 장소 종류(KINDS 키) → [Pexels 사진 번호, 촬영자]. 사람 얼굴이 나오지 않는 사진만 골랐어요. Pexels 라이선스는 무료 사용이고, 카드에 "그 장소가 아닐 수 있다"고 표시해요
 const STOCK_ON = true, stockPick = {}, stockUse = {};
 const STOCK = {
+  trampoline: [[6571947, 'Tima Miroshnichenko'], [1739321, 'Jesus Perges']],
+  aquarium: [[13561441, 'GURYAN'], [8585895, 'Leo Tavares'], [12616864, 'Daka'], [10431750, 'Lu Zhao']],
   berry: [[37827669, 'Elissa Cahill'], [39321183, 'Petra Reid'], [35193370, 'Dursen'], [32494098, 'Muvaffak Karademir']],
   gym: [[6571948, 'Tima Miroshnichenko'], [6571923, 'Tima Miroshnichenko'], [4164525, 'Ivan S'], [4164508, 'Ivan S']],
   minigolf: [[9341535, 'Volker Thimm'], [6370119, 'Anna Tarazevich'], [5792836, 'Laker'], [37129020, 'Rahul Bhagat'], [39980602, 'Boost Media-Marketing'], [9341536, 'Volker Thimm']],
@@ -172,7 +180,13 @@ function kidProfile(s) {
   const head = s.summary.split(' with ')[0], text = `${s.name} ${head}`;
   // 이름으로 먼저, 안 되면 설명 첫머리로 (설명의 "next to a salmon hatchery" 때문에 공원이 농장이 되지 않게)
   const k = KINDS.find(x => x[2].test(s.name)) || KINDS.find(x => x[2].test(head)) || ['sight', s.cat === 'nature' ? 'Nature' : 'Attraction', null, 'family', 'ps'];
-  const ages = k[4].split('');
+  let ages = k[4].split(''), agesText = null;
+  // 설명에 나이가 적혀 있으면 종류 기본값 대신 그걸 따라요 ("for ages 0-6", "ages 4 and up")
+  const am = /\bages? (\d+)\s*[-–]\s*(\d+)/i.exec(s.summary), au = /\bages? (\d+) and up/i.exec(s.summary);
+  if (am || au) {
+    const lo = +(am || au)[1], hi = am ? +am[2] : 12, fit = ['b', 'p', 's'].filter(a => a === 'b' ? lo <= 2 : a === 'p' ? lo <= 5 && hi >= 3 : hi >= 5);
+    if (fit.length) { ages = fit; agesText = au && !am ? `Ages ${lo}+` : `Ages ${lo}–${hi}`; }
+  }
   const tags = [/^free/i.test(s.price || '') ? 'Free' : s.price ? 'Paid' : null, s.env === 'indoor' ? 'Indoor' : s.env === 'outdoor' ? 'Outdoor' : 'Indoor & outdoor', k[1]];
   // 설명에 나온 시설도 태그로 (공원의 놀이터·물놀이)
   if (/a playground/.test(s.summary) && k[0] !== 'play') tags.push('Playground');
@@ -181,7 +195,7 @@ function kidProfile(s) {
   // 공원에 놀이터가 있으면 아이 중심 활동에도 맞아요
   const purpose = k[0] === 'park' ? (/a playground|a spray park/.test(s.summary) || s.play ? 'both' : 'family') : k[3];
   const mins = (() => { const m = /(\d+)(?:–(\d+))? hrs?/.exec(s.time || ''); return /half day|full day/i.test(s.time || '') ? [3, 5] : m ? [+m[1], +(m[2] || m[1])] : [1, 2]; })();
-  return (s._kp = { kind: k[0], label: k[1], purpose, ages, agesText: ages.length === 3 ? 'Ages 0–12' : `Ages ${AGE_LABEL[ages[0]].split('–')[0]}–${AGE_LABEL[ages[ages.length - 1]].split('–')[1]}`, tags: tags.filter(Boolean), hours: mins });
+  return (s._kp = { kind: k[0], label: k[1], purpose, ages, agesText: agesText || (ages.length === 3 ? 'Ages 0–12' : `Ages ${AGE_LABEL[ages[0]].split('–')[0]}–${AGE_LABEL[ages[ages.length - 1]].split('–')[1]}`), tags: tags.filter(Boolean), hours: mins });
 }
 const PAGES = { list: ['nature', 'city'], eats: ['food', 'dessert'], ...(EATS_ON ? {} : { map: ['nature', 'city'] }) };
 // 페이지별 카테고리 드롭다운 항목 ('all' 제외). 행사는 Explore와 지도에서만
