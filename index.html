@@ -74,6 +74,7 @@ tailwind.config = {
 </head>
 <body class="font-sans text-slate-900 dark:text-slate-100">
 <div id="app"></div>
+<button id="to-top" type="button" aria-label="Back to top" class="fixed z-40 right-4 bottom-4 sm:right-6 sm:bottom-6 w-12 h-12 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-2xl font-bold shadow-lg ring-1 ring-black/10 flex items-center justify-center" style="display:none"><span aria-hidden="true">↑</span></button>
 
 <script>
 // ───────── 메타 데이터 ─────────
@@ -94,8 +95,6 @@ const WIZARD = true;
 const WIZ = [
   { key: 'age', q: 'How old are the kids?', opts: [['baby', 'Babies & toddlers', 'Ages 0–3'], ['pre', 'Preschoolers', 'Ages 3–5'], ['school', 'School age', 'Ages 5–12'], ['mixed', 'Mixed ages', 'Kids of different ages']] },
   { key: 'when', q: 'When are you going?', opts: [['now', 'Right now', 'Places open at this moment'], ['tomorrow', 'Tomorrow', 'Places open tomorrow'], ['weekend', 'This weekend', 'Open Saturday or Sunday, weekend events first'], ['any', 'Any time', 'Every place, whenever you go']] },
-  { key: 'dur', q: 'How long do you have?', opts: [['short', 'Up to an hour', 'A quick outing'], ['mid', '1–3 hours', 'A good chunk of the day'], ['long', '3 hours or more', 'Half a day or longer'], ['any', 'Any length', "Doesn't matter"]] },
-  { key: 'purpose', q: 'What kind of outing?', opts: [['kid', 'Kid-focused activity', 'Playgrounds, indoor play, climbing, crafts'], ['family', 'Family outing', 'Parks, beaches, museums, farms'], ['any', 'Both', 'Either kind']] },
 ];
 // 장소 종류 → 태그 이름·목적(kid 아이 중심 / family 가족 나들이 / both)·맞는 나이(b 0–3, p 3–5, s 5–12). 이름과 설명 첫머리로 판단해요 (위에서부터 먼저 맞는 것)
 const KINDS = [
@@ -2231,6 +2230,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const note = (tabPage ? `
       <h2 class="mt-6 text-2xl font-extrabold tracking-tight">${kind === 'markets' ? '<span aria-hidden="true">🥕</span> Farmers markets' : 'Events for families'}</h2>
       <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">${kind === 'markets' ? 'Weekly markets with local produce and food trucks.' : 'Festivals, seasonal events and sales in the next 6 weeks.'}</p>
+      ${this.state.when ? `<p class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl px-3 py-2 text-sm bg-violet-50 ring-1 ring-violet-200 dark:bg-violet-500/10 dark:ring-violet-500/30"><span class="font-semibold text-violet-900 dark:text-violet-100">Showing ${esc(whenLabel(this.state.when))}</span><button data-act="whenoff" class="font-semibold underline text-violet-800 dark:text-violet-200">Show all dates</button></p>` : ''}
       <div class="mt-4 rounded-2xl p-3 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
         <input type="search" data-act="evsearch" data-kind="${kind}" value="${esc(this.evq || '')}" autocomplete="off" enterkeyhint="search" aria-label="Search ${noun}s"
           placeholder="${kind === 'markets' ? 'Search markets: name, area, day' : 'Search events: pumpkin, Halloween, Surrey, free'}"
@@ -2248,14 +2248,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const tabPage = kind === 'events' || kind === 'markets';
     const noun = kind === 'markets' ? 'market' : 'event';
     const words = tabPage ? (this.evq || '').toLowerCase().split(/\s+/).filter(Boolean) : [];
-    const all = this.upcomingEvents(45).filter(ev => kind === 'markets' ? ev.type === 'market' : kind === 'events' ? ev.type !== 'market' : true), today = vanDate(0), week = vanDate(6);
+    const only = this.state.when ? whenDates(this.state.when) : null;   // Explore에서 고른 날짜(내일·이번 주말)를 행사·마켓에도 똑같이 적용
+    const all = this.upcomingEvents(only ? 8 : 45, only).filter(ev => kind === 'markets' ? ev.type === 'market' : kind === 'events' ? ev.type !== 'market' : true), today = vanDate(0), week = vanDate(6);
     const hay = ev => `${ev.name} ${ev.summary || ''} ${ev.venue || ''} ${ev.area || ''} ${ev.type === 'market' ? 'market farmers' : ev.type} ${ev.schedule && ev.schedule.hoursText || ''} ${/free/i.test(ev.summary || '') ? 'free' : ''}`.toLowerCase();
     const evs = words.length ? all.filter(ev => { const h = hay(ev); return words.every(w => h.includes(w)); }) : all;
-    const count = `${plural(evs.length, noun)}${words.length ? ` for “${esc(this.evq.trim())}”` : ''}${this.nearActive() ? `, near ${esc(this.originLabel())}` : ''}`;
+    const count = `${plural(evs.length, noun)}${only ? ` on ${esc(whenLabel(this.state.when))}` : ''}${words.length ? ` for “${esc(this.evq.trim())}”` : ''}${this.nearActive() ? `, near ${esc(this.originLabel())}` : ''}`;
     const group = (title, list, hideDay) => list.length ? `<h2 class="mt-8 text-lg font-bold">${title}</h2><div class="mt-3 grid gap-3 md:grid-cols-2">${list.map(ev => this.eventRow(ev, false, hideDay)).join('')}</div>` : '';
     if (!evs.length) return { count, html: `
       <div class="mt-6 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
-        <p class="text-lg font-bold">${words.length ? `No ${noun}s match “${esc(this.evq.trim())}”` : `No ${noun}s coming up${this.nearActive() ? ` within ${radiusLabel(this.state.radius)}` : ''}`}</p>
+        <p class="text-lg font-bold">${words.length ? `No ${noun}s match “${esc(this.evq.trim())}”` : `No ${noun}s ${only ? "on " + esc(whenLabel(this.state.when)) : "coming up"}${this.nearActive() ? ` within ${radiusLabel(this.state.radius)}` : ''}`}</p>
         ${this.nearActive() ? '<button data-act="radius" data-val="any" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show any distance</button>' : ''}
       </div>` };
     // 몇 주 동안 이어지는 행사(옥수수 미로, 시즌 행사)는 하루짜리 행사와 섞이지 않게 따로 묶어요
@@ -3070,6 +3071,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 }
 
 const app = new App();
+// 맨 위로 가는 버튼: 목록을 600px 넘게 내려오면 나타나고, 누르면 한 번에 올라가요 (다시 그려지는 #app 바깥에 둬서 사라지지 않아요)
+(() => {
+  const b = document.getElementById('to-top'); if (!b) return;
+  const calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const show = () => { b.style.display = window.scrollY < 600 ? 'none' : 'flex'; };
+  window.addEventListener('scroll', show, { passive: true }); show();
+  b.addEventListener('click', () => window.scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' }));
+})();
 </script>
 </body>
 </html>
