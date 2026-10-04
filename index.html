@@ -103,12 +103,13 @@ const KINDS = [
   ['play', 'Playground', /playground|tot lot|adventure play/i, 'kid', 'bps'],
   ['rides', 'Rides & amusements', /(?<!rainbow )\bplayland\b|amusement park|fun ?park/i, 'kid', 'ps'],
   ['indoorplay', 'Indoor play', /indoor play|play (centre|center|caf)|jungle|kidtropolis|play ?zone|fun ?land|bounce|fun centre/i, 'kid', 'bps'],
+  ['gym', 'Kids gym', /gymnastics|parkour|kids gym|ninja|tumble|\bg force gym|my gym|movement centre/i, 'kid', 'ps'],
   ['active', 'Active play', /trampoline|climb|boulder|parkour|gymnastics|ninja|kids gym|\bair park/i, 'kid', 'ps'],
   ['games', 'Games', /laser|escape|\bvr\b|go-kart|kart track|bowling/i, 'kid', 's'],
   ['minigolf', 'Mini golf', /mini ?golf|mini putt/i, 'kid', 'ps'],
   ['arcade', 'Arcade & mini golf', /arcade|claw|mini golf|mini putt/i, 'kid', 'ps'],
   ['golf', 'Golf', /golf (cent(re|er)|course|club)|(?<!mini)golf$/i, 'both', 'ps'],
-  ['wheels', 'Bike & skate', /bike park|bike (skills|terrain)|bmx|pump ?track|skate park/i, 'kid', 's'],
+  ['wheels', 'Bike & skate', /bike park|bike (skills|terrain)|bmx|pump ?track|skate ?park/i, 'kid', 's'],
   ['arts', 'Arts & crafts', /pottery|art studio|arts centre|cultural cent|craft|paint/i, 'kid', 'ps'],
   ['shop', 'Kids shop', /\btoys?\b|baby nook|book ?(store|shop)|kinder books/i, 'family', 'bps'],
   ['library', 'Library', /librar(y|ies)/i, 'both', 'bps'],
@@ -116,12 +117,13 @@ const KINDS = [
   ['rec', 'Rec centre', /recreation|sports complex|community cent|leisure|ymca|family place|sportsplex/i, 'both', 'bps'],
   // 센터 이름에 쇼핑몰 단어(Town Centre, Oakridge)가 들어간 곳이 쇼핑몰 사진이 되지 않게, 쇼핑몰은 센터 다음에 판단해요
   ['mall', 'Shopping', /\bikea\b|kids market|\bmall\b|park royal|metropolis|coquitlam centre|richmond centre|town centre|tsawwassen mills|oakridge|lansdowne|shopping/i, 'family', 'bps'],
-  ['rink', 'Ice rink', /ice rink|skating|arena|\bice\b|oval/i, 'both', 'ps'],
+  ['rink', 'Ice rink', /ice rink|skating|arena|\bice\b|oval|canlan/i, 'both', 'ps'],
   // 단어 경계로 ("Branch"의 ranch, "Libraries"가 농장이 되지 않게). 농장은 아이 중심 활동에도 맞아요
   // 연어 부화장·새와 야생동물 보호구역·호박밭은 농장 사진 대신 그 장소에 맞는 사진을 써요 (사용자 요청, 2026-10-03)
   ['salmon', 'Salmon hatchery', /hatchery/i, 'both', 'bps'],
-  ['birds', 'Wildlife & birds', /raptor|\bbirds?\b|wildlife|sanctuary|\bfen\b|slough|polder|marshes/i, 'both', 'bps'],
+  ['birds', 'Wildlife & birds', /raptor|heron|\bbirds?\b|wildlife|sanctuary|\bfen\b|slough|polder|marshes/i, 'both', 'bps'],
   ['pumpkin', 'Pumpkin patch', /pumpkin/i, 'both', 'bps'],
+  ['berry', 'Berry farm', /berry farms?|u-pick berry/i, 'both', 'bps'],
   ['farm', 'Farm & animals', /\bfarms?\b|\bzoo\b|petting|animal|aquarium/i, 'both', 'bps'],
   ['museum', 'Museum', /museum|gallery|science|planetarium|space cent|historic site|heritage village/i, 'family', 'ps'],
   ['beach', 'Beach & lake', /beach|\blake\b/i, 'family', 'bps'],
@@ -132,6 +134,8 @@ const KINDS = [
 // 실제 사진이 없는 장소의 대표 이미지: 장소 종류(KINDS 키) → [Pexels 사진 번호, 촬영자]. 사람 얼굴이 나오지 않는 사진만 골랐어요. Pexels 라이선스는 무료 사용이고, 카드에 "그 장소가 아닐 수 있다"고 표시해요
 const STOCK_ON = true, stockPick = {}, stockUse = {};
 const STOCK = {
+  berry: [[37827669, 'Elissa Cahill'], [39321183, 'Petra Reid'], [35193370, 'Dursen'], [32494098, 'Muvaffak Karademir']],
+  gym: [[6571948, 'Tima Miroshnichenko'], [6571923, 'Tima Miroshnichenko'], [4164525, 'Ivan S'], [4164508, 'Ivan S']],
   minigolf: [[9341535, 'Volker Thimm'], [6370119, 'Anna Tarazevich'], [5792836, 'Laker'], [37129020, 'Rahul Bhagat'], [39980602, 'Boost Media-Marketing'], [9341536, 'Volker Thimm']],
   golf: [[6573252, 'Kindel Media'], [33591646, 'Chimango Hara'], [33275794, 'BAE JUN'], [5384079, 'Lucie Liz'], [32988401, 'Ryan Lansdown']],
   salmon: [[12801543, 'Timon Cornelissen'], [19768980, 'Line Knipst'], [34079754, 'Héctor Berganza'], [29348598, 'Ken Cheatham'], [34145851, 'Beth Fitzpatrick']],
@@ -2287,7 +2291,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         // 이름은 센터·정원인데 설명이 공원이나 도서관이면 설명대로 (Tong Louie YMCA 등)
         const head = s.summary.split(' with ')[0];
         if (kind === 'rec' && /librar/i.test(head)) kind = 'library';
-        else if (['rec', 'garden'].includes(kind) && /^park\b/i.test(head)) kind = 'park';
+        else if (['rec', 'garden', 'pool'].includes(kind) && /^park\b/i.test(head)) kind = 'park';
+        else if (kind === 'farm' && /^museum/i.test(head)) kind = 'museum';
+        // 이름이 그냥 "Park"인 곳은 이름·설명에 나온 자연환경(숲·계곡·물가)에 맞는 사진 (예: Boundary Bay Regional Park는 바닷가)
+        if (kind === 'park') {
+          const nm = `${s.name} ${head}`;
+          if (/^(walking )?trail/i.test(head) || /ravine|\bcreek\b|headwaters|watershed|forest|greenway|natural area|conservation|reserve|provincial|mountain|nature (centre|house)/i.test(nm)) kind = 'trail';
+          else if (/\bcove\b|\bpoint\b|\bbay\b|harbour|foreshore|landing|waterfront|\bbeach\b|belcarra|\bisland\b|\blake\b|\briver\b/i.test(nm)) kind = 'beach';
+        }
         if (['park', 'trail', 'beach'].includes(kind)) kind = /a spray park/.test(s.summary) ? 'water' : /a playground/.test(s.summary) || s.play ? 'play' : kind;
         const list = STOCK[kind] || STOCK.sight, start = [...s.id].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7) % list.length;
         st = list[start];
