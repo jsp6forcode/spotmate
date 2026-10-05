@@ -191,6 +191,7 @@ function kidProfile(s) {
   if (/a playground/.test(s.summary) && k[0] !== 'play') tags.push('Playground');
   if (/a spray park/.test(s.summary) && k[0] !== 'water') tags.push('Spray park');
   if (/washrooms/.test(s.summary)) tags.push('Washrooms');
+  { const fa = fx(s.id) && fx(s.id).amenities; if (fa) { if (fa.stroller === 'yes') tags.push('Stroller OK'); if (fa.changing === true) tags.push('Changing table'); } }
   // 공원에 놀이터가 있으면 아이 중심 활동에도 맞아요
   const purpose = k[0] === 'park' ? (/a playground|a spray park/.test(s.summary) || s.play ? 'both' : 'family') : k[3];
   const mins = (() => { const m = /(\d+)(?:–(\d+))? hrs?/.exec(s.time || ''); return /half day|full day/i.test(s.time || '') ? [3, 5] : m ? [+m[1], +(m[2] || m[1])] : [1, 2]; })();
@@ -489,6 +490,9 @@ const DUP_STOP = /^(with|from|that|this|they|their|there|have|your|open|daily|pl
 const keyWords = t => new Set((String(t).toLowerCase().match(/[a-z]{4,}|\d+/g) || []).filter(w => !DUP_STOP.test(w)));
 const overlapsSeen = (t, seen) => { const w = [...keyWords(t)]; return w.length > 0 && w.filter(x => seen.has(x)).length / w.length >= 0.5; };
 // data/spot-notes.json: Tiny Trips tip, 공식 페이지에서 확인한 아이 관련 사실 { id: { items: [...], source } } (리뷰가 아니에요)
+// data/spot-facts.json: 입장료·예약·유모차/기저귀/수유·아이 먹거리 (확인한 것만. 모르면 비워 둬요)
+let FACTS = {}, FACTS_META = { updatedAt: '' };
+const fx = id => FACTS[id] || null;
 let NOTES = {}, NOTES_META = { updatedAt: '', note: '' };
 // data/season.json: 시즌 태그(#FallColours 등)와 스팟별 "지금 가야 하는 이유". 오늘(밴쿠버 날짜)이 from~to 안인 태그만 써요
 let SEASON = [], SEASON_NOTE = '';
@@ -896,6 +900,9 @@ function weatherDesc(code) {
 }
 function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+// 마지막으로 고른 자녀 나이: 다음 방문에 첫 질문이 자동으로 골라져 있어요 (결과에서 "상관없음"으로 넘긴 건 저장하지 않아요)
+const AGE_KEY = 'spotmate-age';
+const savedAge = () => { const v = load(AGE_KEY); return ['baby', 'pre', 'school', 'mixed'].includes(v) ? { age: v } : {}; };
 
 // ───────── 앱 ─────────
 class App {
@@ -929,7 +936,9 @@ class App {
       // filtersOpen: 모바일에서 카테고리·정렬·위치를 펼쳤는지
       filtersOpen: false,
       // wiz: Explore 5단계 추천 (step 0–4, ans = 단계별 고른 값, done = 결과 보기), wizMore: 결과를 몇 곳 보여줄지
-      wiz: { step: 0, ans: {}, done: false }, wizMore: 10,
+      // fxOn: 추천 결과 위 체크 필터 (Free only · Stroller OK · Rain OK · Under 2 hrs). 켜 둔 채 잊지 않게 기억하지 않아요
+      fxOn: { free: false, stroller: false, rain: false, short: false },
+      wiz: { step: 0, ans: savedAge(), done: false }, wizMore: 10,
       // browse: Explore를 질문 없이 전체 목록(필터)으로 보기. 열 때는 늘 Pick for me(질문)부터 시작해요
       browse: false,
       // 부모 리뷰: user = 구글 로그인한 사람, reviewDraft = 쓰는 중인 리뷰 { id, rating, text }
@@ -1009,11 +1018,11 @@ class App {
       // 꺼 둔 기능(Eats·트렌드·Reddit)의 파일은 아예 받지 않아요. spots.json 말고는 없어도 괜찮아요
       const get = (path, on = true) => on ? fetch(path, { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null) : Promise.resolve(null);
       const ohLib = window.opening_hours ? Promise.resolve() : loadScript(OH_LIB).catch(() => null);
-      const [data, ed, status, td, gd, nd, md, pd, hd, ld, prd, sd, pk] = await Promise.all([
+      const [data, ed, status, td, gd, nd, md, pd, hd, ld, prd, sd, pk, fd] = await Promise.all([
         fetch('data/spots.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
         get('data/events.json'), get('data/review-status.json'), get('data/trends-weekly.json', TRENDS_ON),
         get('data/spot-guides.json'), get('data/spot-notes.json'), get('data/parking-meters.json'), get('data/parking.json'),
-        get('data/happy-hours.json', EATS_ON), get('data/lunch-specials.json', EATS_ON), get('data/press.json', EATS_ON), get('data/season.json'), get('data/parent-says.json'),
+        get('data/happy-hours.json', EATS_ON), get('data/lunch-specials.json', EATS_ON), get('data/press.json', EATS_ON), get('data/season.json'), get('data/parent-says.json'), get('data/spot-facts.json'),
       ]);
       SPOTS = data.spots;
       // 행사 정보
@@ -1028,6 +1037,7 @@ class App {
       }
       // 스팟 안내(할 거리·먹을 것·준비물), Tiny Trips tip, 주차 미터·주차장
       if (gd) { GUIDES = gd.guides || {}; GUIDES_NOTE = gd.note || ''; }
+      if (fd) { FACTS = fd.spots || {}; FACTS_META = { updatedAt: fd.updatedAt || '' }; }
       if (nd) { NOTES = nd.notes || {}; NOTES_META = { updatedAt: nd.updatedAt || '', note: nd.note || '' }; }
       if (md) METERS = { spots: md.spots || {}, radius: md.radius || 200 };
       if (pd) PARKING = { spots: pd.spots || {}, radius: pd.radius || 400 };
@@ -1587,6 +1597,7 @@ class App {
       // 옵션을 누르면 강조를 잠깐 보여준 뒤 다음 질문으로 넘어가요 (마지막 질문이나 결과에서 고치는 중이면 바로 결과)
       case 'wizopt': {
         const [k, v] = val.split(':'), w = { ...this.state.wiz, ans: { ...this.state.wiz.ans, [k]: v } };
+        if (k === 'age') store(AGE_KEY, v);
         this.set({ wiz: w });
         clearTimeout(this.wizTimer);
         this.wizTimer = setTimeout(() => {
@@ -1626,7 +1637,7 @@ class App {
       case 'wizedit': return this.set({ wiz: { ...this.state.wiz, step: +val, done: false, editing: true } });
       case 'wizset': { const [k, v] = val.split(':'); return this.wizFinish({ ...this.state.wiz, ans: { ...this.state.wiz.ans, [k]: v } }); }
       case 'wizmore': return this.set({ wizMore: this.state.wizMore + 10 });
-      case 'wizreset': return this.set({ wiz: { step: 0, ans: {}, done: false }, wizMore: 10, when: '', tag: '' });
+      case 'wizreset': return this.set({ wiz: { step: 0, ans: savedAge(), done: false }, wizMore: 10, when: '', tag: '' });
       case 'whenoff': return this.set({ when: '' });
       case 'whenset': return this.set({ when: val, openNow: false });
       case 'opennow': return this.set({ openNow: !this.state.openNow, when: !this.state.openNow && this.planLater() ? '' : this.state.when });
@@ -1662,6 +1673,8 @@ class App {
       case 'more': return this.set({ restShown: this.state.restShown + REST_STEP });
       case 'share': return this.share(val);
       case 'shareev': return this.shareEvent(val);
+      case 'fxtoggle': return this.set({ fxOn: { ...this.state.fxOn, [val]: !this.state.fxOn[val] }, wizMore: 10 });
+      case 'report': { const s = byId(val); this.fbDraft = { type: 'wrong', place: s ? s.name : '' }; this.hideModal(); this.set({ view: 'about', feedbackSent: false, feedbackMsg: '' }); return setTimeout(() => { const t = document.getElementById('feedback'); if (t) t.scrollIntoView({ block: 'start' }); }, 0); }
       case 'clearplan': store('spotmate-plan', '[]'); return this.set({ plan: [], copyMsg: '', copyText: '' });
     }
   }
@@ -2421,6 +2434,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           // 아이 동반 장소: 무료/유료·실내/야외·종류 태그와 맞는 나이
           const kp = kidProfile(s);
           return `
+        ${this.factsLine(s)}
         <p class="mt-1.5 sm:mt-3 flex flex-wrap gap-1 sm:gap-1.5">${kp.tags.map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full ${t === 'Free' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'}">${esc(t)}</span>`).join('')}</p>
         <p class="max-sm:hidden mt-1 sm:mt-2 text-xs sm:text-sm font-semibold text-teal-700 dark:text-teal-300">${esc(kp.agesText)}</p>`; })() : ''}
         <div class="mt-1.5 sm:mt-3 flex flex-wrap gap-x-2 sm:gap-x-3 gap-y-0.5 sm:gap-y-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
@@ -2507,6 +2521,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const tagDef = activeTags().find(t => t.id === this.state.tag);
     if (tagDef) pool = pool.filter(s => tagDef.spots[s.id]);
     if (this.state.tag === 'justopened') pool = pool.filter(isJustOpened);
+    // 체크 필터: 켠 조건에 모두 맞는 곳만. 칩에 보이는 숫자는 필터를 켜기 전 기준이에요
+    const FXF = { free: s => /^free/i.test(s.price || ''), stroller: s => ((fx(s.id) || {}).amenities || {}).stroller === 'yes', rain: s => s.env !== 'outdoor', short: s => kidProfile(s).hours[1] <= 2 };
+    const base = pool.filter(s => this.wizMatch(s, a));
+    this._fxCounts = Object.fromEntries(Object.keys(FXF).map(k => [k, base.filter(FXF[k]).length]));
+    const fxOn = this.state.fxOn;
+    pool = pool.filter(s => Object.keys(FXF).every(k => !fxOn[k] || FXF[k](s)));
     const match = pool.filter(s => this.wizMatch(s, a));
     const top = this.wizPick(match, this.state.wizMore);
     let also = [], relaxed = [];
@@ -2571,6 +2591,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <button data-act="wizreset" class="ml-1 min-h-[28px] sm:min-h-[36px] text-xs sm:text-sm font-semibold underline text-slate-600 dark:text-slate-300">Start over</button>
         </div>
         ${this.seasonChips()}
+        ${this.fxChips()}
         <div class="mt-2 sm:mt-3">${this.locationBar([], true)}</div>
         ${this.state.geoMsg ? `<p class="mt-1 text-xs text-slate-600 dark:text-slate-300" role="status">${esc(this.state.geoMsg)}</p>` : ''}
       </section>
@@ -2803,6 +2824,48 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     this._leaflet = map;
   }
   // Saved 탭 안에서 "Saved"(저장한 곳)와 "My reviews"(내가 리뷰를 쓴 곳) 전환
+  // ── 확인된 방문 정보 (data/spot-facts.json): 카드 한 줄 · 모달 상자 · 결과 필터 ──
+  // 카드: "Adults $38, kids $27 · Book ahead" (확인된 입장료가 있을 때만)
+  factsLine(s) {
+    const f = fx(s.id), a = f && f.admission;
+    if (!a || !a.text) return '';
+    const bk = a.booking === 'required' ? 'Book ahead' : a.booking === 'recommended' ? 'Booking advised' : '';
+    return `<p class="mt-1.5 text-xs sm:text-sm text-slate-700 dark:text-slate-200"><span aria-hidden="true">🎟️</span> ${esc(a.text)}${bk ? ` <span class="font-bold text-amber-700 dark:text-amber-300">· ${bk}</span>` : ''}</p>`;
+  }
+  // 모달 "Good to know": 입장료·예약, 유모차·기저귀·수유, 먹거리, 확인한 날짜와 출처, 오류 신고
+  factsBox(s) {
+    const f = fx(s.id), a = (f && f.admission) || {}, m = (f && f.amenities) || {}, fd = (f && f.food) || {};
+    const report = `<button data-act="report" data-val="${esc(s.id)}" class="underline font-semibold text-violet-700 dark:text-violet-300">Something wrong? Tell us</button>`;
+    const chips = [
+      m.stroller === 'yes' ? 'Stroller-friendly' : m.stroller === 'partial' ? 'Partly stroller-friendly' : m.stroller === 'no' ? 'Not stroller-friendly' : '',
+      m.stairs === 'none' ? 'No stairs' : m.stairs === 'some' ? 'Some stairs' : m.stairs === 'many' ? 'Many stairs' : '',
+      m.changing === true ? 'Changing table' : '', m.nursing === true ? 'Nursing space' : '', m.washrooms === true ? 'Washrooms' : ''
+    ].filter(Boolean);
+    const food = [
+      fd.onsite === 'cafe' ? 'Café on site' : fd.onsite === 'snacks' ? 'Snacks on site' : fd.onsite === 'none' ? 'No food on site' : '',
+      fd.outside === 'allowed' ? 'Bring your own food' : fd.outside === 'not-allowed' ? 'Outside food not allowed' : ''
+    ].filter(Boolean);
+    const row = (icon, label, body) => `<div class="flex gap-3"><span class="text-xl leading-6" aria-hidden="true">${icon}</span><div class="min-w-0"><p class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">${label}</p>${body}</div></div>`;
+    const rows = [];
+    if (a.text) rows.push(row('🎟️', 'Admission', `<p class="font-semibold">${esc(a.text)}</p>${a.booking === 'required' ? `<p class="text-sm font-bold text-amber-700 dark:text-amber-300">Booking required${a.bookingNote ? `: ${esc(a.bookingNote)}` : ''}</p>` : a.booking === 'recommended' ? `<p class="text-sm font-semibold text-amber-700 dark:text-amber-300">Booking recommended${a.bookingNote ? `: ${esc(a.bookingNote)}` : ''}</p>` : a.booking === 'none' ? '<p class="text-sm text-slate-600 dark:text-slate-300">No booking needed</p>' : ''}`));
+    if (chips.length || m.note) rows.push(row('👶', 'With little ones', `${chips.length ? `<p class="mt-0.5 flex flex-wrap gap-1.5">${chips.map(c => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-500/15 dark:text-sky-300">${esc(c)}</span>`).join('')}</p>` : ''}${m.note ? `<p class="text-sm text-slate-600 dark:text-slate-300">${esc(m.note)}</p>` : ''}`));
+    if (food.length || fd.nearby) rows.push(row('🥪', 'Food', `${food.length ? `<p class="font-semibold">${esc(food.join(' · '))}</p>` : ''}${fd.nearby ? `<p class="text-sm text-slate-600 dark:text-slate-300">Nearby: ${esc(fd.nearby)}</p>` : ''}`));
+    const src = /^https:\/\//.test(a.source || '') ? ` · <a href="${esc(a.source)}" target="_blank" rel="noopener" class="underline">source</a>` : '';
+    const checked = f && f.checked ? `Info checked ${esc(shortDate(f.checked))}${src}` : '';
+    if (!rows.length) return `<p class="text-xs text-slate-500 dark:text-slate-400">${report}</p>`;
+    return `
+          <section class="rounded-2xl p-4 bg-slate-50 ring-1 ring-slate-200 dark:bg-slate-800/50 dark:ring-slate-700" aria-label="Good to know">
+            <h3 class="font-bold">Good to know</h3>
+            <div class="mt-3 space-y-3">${rows.join('')}</div>
+            <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">${checked ? `${checked} · ` : ''}${report}</p>
+          </section>`;
+  }
+  // 결과 위 체크 필터 칩 (숫자 = 지금 조건에 맞는 곳 중 그 필터에 해당하는 곳)
+  fxChips() {
+    const on = this.state.fxOn, n = this._fxCounts || {};
+    const chip = (k, label) => `<button data-act="fxtoggle" data-val="${k}" aria-pressed="${on[k]}" class="min-h-[36px] px-3 rounded-full text-xs sm:text-sm font-semibold border ${on[k] ? 'bg-violet-600 border-violet-600 text-white' : 'border-slate-300 bg-white text-slate-800 hover:border-violet-400 dark:bg-slate-900 dark:border-slate-600 dark:text-slate-100'}">${label}${n[k] != null ? ` <span class="font-normal opacity-80">${n[k]}</span>` : ''}</button>`;
+    return `<div class="mt-3 flex flex-wrap items-center gap-1.5 sm:gap-2" role="group" aria-label="Narrow the results"><span class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">Narrow down:</span>${chip('free', 'Free only')}${chip('stroller', 'Stroller OK')}${chip('rain', 'Rain OK')}${chip('short', '2 hrs or less')}</div>`;
+  }
   planView() {
     const on = this.state.savedTab === 'reviews', btn = (v, label) => `<button data-act="savedtab" data-val="${v}" aria-pressed="${(v === 'reviews') === on}" class="min-h-[40px] px-4 rounded-lg text-sm font-bold transition-colors ${(v === 'reviews') === on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
     return `<div class="mt-6 inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Saved or my reviews">${btn('saved', `Saved${this.state.plan.length ? ` (${this.state.plan.length})` : ''}`)}${btn('reviews', 'My reviews')}</div>${on ? this.myReviewsView() : this.savedList()}`;
@@ -2921,6 +2984,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         </div>
 
         <div class="p-6 space-y-6">
+          ${this.factsBox(s)}
           ${(() => {
             // 지금 가 볼 이유: 이 장소의 행사(60일 안) + 시즌 태그를 한 곳에, 영업시간 바로 밑에
             const evs = EVENTS.filter(ev => ev.spotId === s.id).map(ev => ({ ...ev, next: upcomingDates(ev, 60)[0] })).filter(ev => ev.next).sort((a, b) => a.next.localeCompare(b.next));

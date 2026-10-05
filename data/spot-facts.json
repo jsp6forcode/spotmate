@@ -1,0 +1,1923 @@
+{
+    "updatedAt":  "2026-10-03",
+    "note":  "Verified from official or published sources; blank means not verified. Prices change, so check the source.",
+    "spots":  {
+                  "30footpool":  {
+                                     "admission":  {
+                                                       "text":  "Free, Lynn Canyon Park has no admission fee",
+                                                       "source":  "https://lynncanyon.ca/frequently-asked-questions-about-lynn-canyon-park/"
+                                                   },
+                                     "amenities":  {
+                                                       "note":  "Natural swimming hole, about 10 min riverside trail after crossing the suspension bridge; popular in summer"
+                                                   },
+                                     "food":  {
+                                                  "nearby":  "Lynn Canyon Cafe near park entrance, picnic areas"
+                                              },
+                                     "checked":  "2026-10-03"
+                                 },
+                  "abbotsfordrecreationcent":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in swim: ages 0-4 free, 5-24 $4.35, 25-64 $9.65, 65+ $5.10, family (2 adults + kids 18 and under) $19.35",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.abbotsford.ca/node/137"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "changing":  true,
+                                                                     "washrooms":  true,
+                                                                     "note":  "City lists universal/family changerooms at both Abbotsford pools"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "academyfarms":  {
+                                       "admission":  {
+                                                         "text":  "Wagon tour: ages 3-12 $15, 13+ $18, under 3 free; includes buffalo burger BBQ lunch and Calf Alley stop",
+                                                         "booking":  "recommended",
+                                                         "bookingNote":  "Book a tour online; up to 30 per wagon, arrive 10 min early",
+                                                         "source":  "https://academyfarms.org/farm-tours/"
+                                                     },
+                                       "amenities":  {
+                                                         "note":  "Tours run daily year-round, about 30 min wagon ride; wear closed-toe shoes"
+                                                     },
+                                       "food":  {
+                                                    "onsite":  "cafe",
+                                                    "nearby":  "BBQ lunch served in the farm market"
+                                                },
+                                       "checked":  "2026-10-03"
+                                   },
+                  "alandersonmemorialpool":  {
+                                                 "admission":  {
+                                                                   "text":  "City of Langley drop-in: child/youth 4-18 $3, adult $6, family (up to 5) $12, under 4 free",
+                                                                   "source":  "https://www.langleycity.ca/node/1674"
+                                                               },
+                                                 "checked":  "2026-10-03"
+                                             },
+                  "albioncommunitycentreacc":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in: parent/adult and tot 0-4 $6.48 + tax, child 5-12 $3.27 + tax",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.mapleridge.ca/art-parks-rec/recreation-facilities/rates-memberships"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "aldor":  {
+                                "admission":  {
+                                                  "booking":  "recommended",
+                                                  "bookingNote":  "Fall pumpkin patch Sept 19-Oct 31, daily 9-6; buy tickets online ahead, 3 and up need a ticket"
+                                              },
+                                "amenities":  {
+                                                  "stroller":  "yes",
+                                                  "washrooms":  true,
+                                                  "note":  "Strollers welcome on the 80-acre farm; covered areas; no dogs at pumpkin patch"
+                                              },
+                                "food":  {
+                                             "onsite":  "snacks",
+                                             "nearby":  "Snack area with food on site"
+                                         },
+                                "checked":  "2026-10-03"
+                            },
+                  "aquarium":  {
+                                   "admission":  {
+                                                     "text":  "Adults about $39.95-$55.20 by date, kids 4-12 $28, under 3 free, plus tax",
+                                                     "booking":  "recommended",
+                                                     "bookingNote":  "Dynamic pricing; book timed tickets online",
+                                                     "source":  "https://vanaqua.org/visit/tickets"
+                                                 },
+                                   "checked":  "2026-10-03"
+                               },
+                  "beatybiodiversitymuseum":  {
+                                                  "admission":  {
+                                                                    "text":  "Adults $18, children 6-18 $10, under 6 free; family pass $35 (1 adult + 2 kids) or $55 (2 adults + 4 kids)",
+                                                                    "booking":  "none",
+                                                                    "bookingNote":  "Walk-ins welcome; tickets also online",
+                                                                    "source":  "https://beatymuseum.ubc.ca/visit/admission/"
+                                                                },
+                                                  "amenities":  {
+                                                                    "note":  "Children under 13 must be with an adult"
+                                                                },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "blakeburnlagoonspark":  {
+                                               "admission":  {
+                                                                 "text":  "Public park, no fee listed",
+                                                                 "booking":  "none",
+                                                                 "source":  "https://www.portcoquitlam.ca/node/3185"
+                                                             },
+                                               "amenities":  {
+                                                                 "washrooms":  false,
+                                                                 "note":  "1.6 km looped trail, picnic area; playground at adjacent Blakeburn Park; park washroom closed per city notice"
+                                                             },
+                                               "food":  {
+                                                            "onsite":  "none"
+                                                        },
+                                               "checked":  "2026-10-03"
+                                           },
+                  "bloedelconservatory":  {
+                                              "admission":  {
+                                                                "text":  "Adult $9, youth 13-18 $6.30, child 5-12 $4.50, 4 and under free (2025 rates, plus tax); $1 off adult online",
+                                                                "booking":  "recommended",
+                                                                "bookingNote":  "Tickets sold online via Showpass, small discount online",
+                                                                "source":  "https://vancouver.ca/parks-recreation-culture/Prices-and-memberships.aspx"
+                                                            },
+                                              "checked":  "2026-10-03"
+                                          },
+                  "bobchankentfamilyymca":  {
+                                                "amenities":  {
+                                                                  "changing":  true,
+                                                                  "note":  "Leisure guide lists a family/universal change room, pool and hot tub. Drop-in passes offered but price not published online."
+                                                              },
+                                                "checked":  "2026-10-03"
+                                            },
+                  "bonsorrecreationcomplex":  {
+                                                  "admission":  {
+                                                                    "booking":  "none",
+                                                                    "bookingNote":  null
+                                                                },
+                                                  "amenities":  {
+                                                                    "washrooms":  true,
+                                                                    "stairs":  "none",
+                                                                    "note":  "Accessible washrooms and elevators; childminding offered; leisure pool"
+                                                                },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "bridgeviewcommunitycentr":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in $4.00 child/youth (2-18), $8.00 adult; free Recreation Passcard required",
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  "Most drop-ins sign up 72 h ahead; public swim/skate do not",
+                                                                     "source":  "https://www.surrey.ca/parks-recreation/activities-registration/admissions-passes"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "britanniashipyardsnation":  {
+                                                   "admission":  {
+                                                                     "text":  "Free entry to the site; 1-hour guided heritage tours $12 per person",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.tourismvancouver.com/listings/britannia-shipyards-national-historic-site/53658/"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "burnabycentralrailway":  {
+                                                "admission":  {
+                                                                  "text":  "$5 per ride (ages 3+), under 3 free, 10 rides $45",
+                                                                  "booking":  "none",
+                                                                  "bookingNote":  "Tickets at on-site kiosk only; 2026 season ends Oct 12",
+                                                                  "source":  "https://bcsme.burnabyrailway.org/tickets"
+                                                              },
+                                                "amenities":  {
+                                                                  "note":  "Open 11am-5pm (last tickets 4:30)"
+                                                              },
+                                                "checked":  "2026-10-03"
+                                            },
+                  "canadianmuseumofflight":  {
+                                                 "admission":  {
+                                                                   "text":  "Adults $14, seniors/youth $10, under 6 free, family $35 (2 adults + up to 5 others); Wed-Sat 10-4, Sun 12-5",
+                                                                   "source":  "https://vancouversbestplaces.com/metro-vancouver/langley/canadian-museum-flight-langley/"
+                                                               },
+                                                 "checked":  "2026-10-03"
+                                             },
+                  "canlansportsnorthshore":  {
+                                                 "amenities":  {
+                                                                   "note":  "Wheelchair accessible; free parking 250+ cars; 3 NHL-size rinks; public skate price not published online, call 604-924-0828"
+                                                               },
+                                                 "food":  {
+                                                              "onsite":  "cafe",
+                                                              "nearby":  "Wild Wing restaurant on-site (has adult-only bar)"
+                                                          },
+                                                 "checked":  "2026-10-03"
+                                             },
+                  "capilano":  {
+                                   "admission":  {
+                                                     "text":  "Adult $77, youth 13-17 $50, child 6-12 $30, age 5 and under free; Treetops and Cliffwalk included",
+                                                     "booking":  "recommended",
+                                                     "bookingNote":  "Buy tickets on the official site; only those are guaranteed for entry",
+                                                     "source":  "https://www.capbridge.com/rates/"
+                                                 },
+                                   "amenities":  {
+                                                     "note":  "Bridge, Treetops and Cliffwalk are not wheelchair accessible; Canyon Frights Oct 9 to Nov 1 2026 included"
+                                                 },
+                                   "checked":  "2026-10-03"
+                               },
+                  "castlefunpark":  {
+                                        "admission":  {
+                                                          "text":  "Free entry and parking; pay per attraction with a reloadable Playcard. Go-karts: solo drivers 10+ and 54 in tall, ages 3+ can ride as passengers with an adult",
+                                                          "booking":  "none",
+                                                          "bookingNote":  "Go-kart track and parties can be booked by phone",
+                                                          "source":  "https://www.castlefunpark.com/faqs/"
+                                                      },
+                                        "amenities":  {
+                                                          "stairs":  "some",
+                                                          "note":  "Wheelchair lift between main floor and arcade floor"
+                                                      },
+                                        "food":  {
+                                                     "onsite":  "snacks",
+                                                     "outside":  "not-allowed"
+                                                 },
+                                        "checked":  "2026-10-03"
+                                    },
+                  "castleroyale":  {
+                                       "amenities":  {
+                                                         "note":  "Toddler area; Drop \u0026 Shop childcare"
+                                                     },
+                                       "checked":  "2026-10-03"
+                                   },
+                  "centennialarena":  {
+                                          "admission":  {
+                                                            "text":  "Public skate: child 0-18 $4, adult $6.25, senior $5.25; skate rental $4, helmet $1.75",
+                                                            "booking":  "none",
+                                                            "bookingNote":  "Public skate Oct-Mar, Wed and Sat evenings",
+                                                            "source":  "https://www.whiterockcity.ca/835/Ice-Arena"
+                                                        },
+                                          "checked":  "2026-10-03"
+                                      },
+                  "centralcity":  {
+                                      "admission":  {
+                                                        "text":  "Free to enter; attractions use Fun Cards from $10 (25 credits) plus GST. Skate and helmet rentals free; helmets required age 12 and under",
+                                                        "booking":  "none",
+                                                        "bookingNote":  "Walk-ins; reservations only for parties; waiver needed for skating, laser tag, go karts",
+                                                        "source":  "https://www.centralcityfunpark.com/faq"
+                                                    },
+                                      "amenities":  {
+                                                        "note":  "Free parking stalls marked FUN PARK"
+                                                    },
+                                      "food":  {
+                                                   "onsite":  "snacks",
+                                                   "outside":  "not-allowed"
+                                               },
+                                      "checked":  "2026-10-03"
+                                  },
+                  "champlainheightscommunit":  {
+                                                   "admission":  {
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  null
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "No pool; youth centre, preschool childcare, dance studio, squash courts"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "cheamleisurecentre":  {
+                                             "admission":  {
+                                                               "text":  "Drop-in swim: adult $6.91, youth 4-12 $3.48, teen/student $4.29, family (2 adults + 4 kids) $15.21",
+                                                               "booking":  "none",
+                                                               "source":  "https://www.ymcabc.ca/locations/cheam-leisure-centre"
+                                                           },
+                                             "amenities":  {
+                                                               "note":  "Lap pool, leisure pool, family hot tub, sauna."
+                                                           },
+                                             "checked":  "2026-10-03"
+                                         },
+                  "cheerfulchatterplaycafe":  {
+                                                  "admission":  {
+                                                                    "text":  "Kids 7 months+ $15.50 + GST per 2-hour session, adults $5.50 + GST, older kids $10.50; socks required",
+                                                                    "booking":  "recommended",
+                                                                    "bookingNote":  "Reservations encouraged; online booking closes 12 hours before, walk-ins possible",
+                                                                    "source":  "https://www.cheerfulchatterplaycafe.ca/faqs"
+                                                                },
+                                                  "amenities":  {
+                                                                    "note":  "Socks-only play area; non-slip socks $2.95 + tax"
+                                                                },
+                                                  "food":  {
+                                                               "onsite":  "cafe",
+                                                               "outside":  "not-allowed"
+                                                           },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "chilliwacklandingleisure":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in swim: adult $6.91, youth 4-12 $3.48, teen/student $4.29, family (2 adults + 4 kids) $15.21",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.ymcabc.ca/locations/chilliwack-landing-leisure-centre"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Wave pool with slide, family hot tub, outdoor water playground and pump track."
+                                                                 },
+                                                   "food":  {
+                                                                "onsite":  "cafe",
+                                                                "nearby":  "On-site restaurant per city page"
+                                                            },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "chilliwackmuseum":  {
+                                           "admission":  {
+                                                             "text":  "Free admission (donations welcome)",
+                                                             "booking":  "none",
+                                                             "source":  "https://chilliwackmuseum.ca/plan-your-visit/"
+                                                         },
+                                           "amenities":  {
+                                                             "note":  "Galleries physically accessible; most visits 30-45 min. Museum at 45820 Spadina Ave."
+                                                         },
+                                           "checked":  "2026-10-03"
+                                       },
+                  "christinesinclaircommuni":  {
+                                                   "admission":  {
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  null
+                                                                 },
+                                                   "food":  {
+                                                                "onsite":  "cafe",
+                                                                "nearby":  "Bastion Cafe on main level"
+                                                            },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "chuckecheese":  {
+                                       "admission":  {
+                                                         "text":  "Free entry; games, Fun Pass and food extra",
+                                                         "booking":  "none",
+                                                         "source":  "https://www.chuckecheese.com/langley-bc/experience"
+                                                     },
+                                       "amenities":  {
+                                                         "note":  "Toddler rides; kid check stamps at entry and exit"
+                                                     },
+                                       "food":  {
+                                                    "onsite":  "cafe",
+                                                    "nearby":  "Pizza served on site"
+                                                },
+                                       "checked":  "2026-10-03"
+                                   },
+                  "cipherxcoquitlamescapero":  {
+                                                   "admission":  {
+                                                                     "text":  "Escape rooms $35 per person (2-6 players, 60 min); minimum age not stated",
+                                                                     "booking":  "recommended",
+                                                                     "bookingNote":  "Book online",
+                                                                     "source":  "https://cipherx.ca/escape-rooms"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "1065 Ridgeway Ave. Mon-Thu 2-10pm, Fri-Sun 12-midnight."
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "cipherxsurreydeltaescape":  {
+                                                   "admission":  {
+                                                                     "text":  "Escape rooms $35 per person (2-6 players, 60 min); minimum age not stated",
+                                                                     "booking":  "recommended",
+                                                                     "bookingNote":  "Book online",
+                                                                     "source":  "https://cipherx.ca/escape-rooms"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Located at 7949 120 St, Delta. Also axe throwing and golf simulators there."
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "claytoncommunitycentre":  {
+                                                 "admission":  {
+                                                                   "text":  "Drop-in $4.00 child/youth (2-18), $8.00 adult; free Recreation Passcard required",
+                                                                   "booking":  "none",
+                                                                   "bookingNote":  "Most drop-ins sign up 72 h ahead; public swim/skate do not",
+                                                                   "source":  "https://www.surrey.ca/parks-recreation/activities-registration/admissions-passes"
+                                                               },
+                                                 "checked":  "2026-10-03"
+                                             },
+                  "cliffwalk":  {
+                                    "admission":  {
+                                                      "text":  "Included in Capilano Park day admission: Adult $77, youth 13-17 $50, child 6-12 $30, age 5 and under free; Treetops and Cliffwalk included",
+                                                      "booking":  "recommended",
+                                                      "bookingNote":  "Buy tickets on the official site",
+                                                      "source":  "https://www.capbridge.com/rates/"
+                                                  },
+                                    "amenities":  {
+                                                      "note":  "Cliffwalk is not wheelchair accessible"
+                                                  },
+                                    "checked":  "2026-10-03"
+                                },
+                  "clipnclimb":  {
+                                     "admission":  {
+                                                       "text":  "Climb session: ages 5 and under $21, ages 6+ $25 (75 min incl. safety briefing); Tuesdays after 4pm $19.95",
+                                                       "booking":  "none",
+                                                       "source":  "https://vancouversbestplaces.com/vancouver-climbing-centres/clip-n-climb-vancouver/"
+                                                   },
+                                     "checked":  "2026-10-03"
+                                 },
+                  "cloverdalearena":  {
+                                          "admission":  {
+                                                            "text":  "Public skate drop-in $4.00 child/youth (2-18), $8.00 adult (City of Surrey single-visit rate); skate rental $3.75, helmet $2.00; free Recreation Passcard required",
+                                                            "booking":  "none",
+                                                            "bookingNote":  "Public skating needs no advance sign-up",
+                                                            "source":  "https://www.surrey.ca/parks-recreation/recreation-programs/arena-programs"
+                                                        },
+                                          "amenities":  {
+                                                            "note":  "Helmets required for ages 12 and under; strollers allowed on ice if wheels cleaned and child wears helmet"
+                                                        },
+                                          "checked":  "2026-10-03"
+                                      },
+                  "cloverdalerecreationcent":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in $4.00 child/youth (2-18), $8.00 adult; free Recreation Passcard required",
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  "Most drop-ins sign up 72 h ahead; public swim/skate do not",
+                                                                     "source":  "https://www.surrey.ca/parks-recreation/activities-registration/admissions-passes"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "cloverdalesporticecomple":  {
+                                                   "admission":  {
+                                                                     "text":  "Public skate drop-in $4.00 child/youth (2-18), $8.00 adult (City of Surrey single-visit rate); skate rental $3.75, helmet $2.00; free Recreation Passcard required",
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  "Public skating needs no advance sign-up",
+                                                                     "source":  "https://www.surrey.ca/parks-recreation/recreation-programs/arena-programs"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Helmets required for ages 12 and under; strollers allowed on ice if wheels cleaned and child wears helmet"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "coastalclimbingcentre":  {
+                                                "admission":  {
+                                                                  "text":  "Day pass youth (13 and under) $15.95 incl. harness, bouldering $17.49, route climbing $19.95 plus GST; youth shoes rental $3.49",
+                                                                  "booking":  "none",
+                                                                  "bookingNote":  "Reservations not required; online waiver",
+                                                                  "source":  "https://coastalclimbing.ca/rates/"
+                                                              },
+                                                "amenities":  {
+                                                                  "note":  "Youth need parental supervision"
+                                                              },
+                                                "checked":  "2026-10-03"
+                                            },
+                  "crashcrawlys":  {
+                                       "food":  {
+                                                    "onsite":  "snacks"
+                                                },
+                                       "checked":  "2026-10-03"
+                                   },
+                  "creeksidecommunityrecrea":  {
+                                                   "admission":  {
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  null
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Gym, dance and yoga studios, childcare centre; paddling launch and waterfront restaurant outside"
+                                                                 },
+                                                   "food":  {
+                                                                "nearby":  "waterfront restaurant on site per official page"
+                                                            },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "cypress":  {
+                                  "admission":  {
+                                                    "text":  "Full-day adult lift ticket from about $119 plus tax, cheaper bought early online; nordic and snowshoe tickets sold separately",
+                                                    "booking":  "recommended",
+                                                    "bookingNote":  "Buy online in advance to save",
+                                                    "source":  "https://www.cypressmountain.com/downhill-tickets"
+                                                },
+                                  "amenities":  {
+                                                    "note":  "Tube park: children under 10 need a paying adult"
+                                                },
+                                  "checked":  "2026-10-03"
+                              },
+                  "davidsonspoolpark":  {
+                                            "admission":  {
+                                                              "text":  "No admission listed; natural swimming spot on the South Alouette River, no lifeguard",
+                                                              "booking":  "none",
+                                                              "source":  "https://www.mapleridge.ca/facilities/facility/details/Davidsons-Pool-51"
+                                                          },
+                                            "amenities":  {
+                                                              "washrooms":  true,
+                                                              "note":  "Portable washrooms in summer only; not an indoor pool; parking and picnic tables"
+                                                          },
+                                            "food":  {
+                                                         "outside":  "allowed",
+                                                         "nearby":  "no glass containers"
+                                                     },
+                                            "checked":  "2026-10-03"
+                                        },
+                  "delbrookcommunityrecreat":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in swim or skate (before tax): child 3-12 $3.82, youth 13-18 $4.84, adult $7.80, senior $5.86, family $4.02 per person (min $7.80), under 3 free",
+                                                                     "source":  "https://www.nvrc.ca/programs-memberships/register-program/fees"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Has 25 m 6-lane pool plus leisure pool with zero-depth entry; changeroom details not stated"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "donchristianrecreationce":  {
+                                                   "amenities":  {
+                                                                     "changing":  true,
+                                                                     "washrooms":  true,
+                                                                     "note":  "Baby change tables in washrooms; hosts preschool and childcare, listed hours Mon-Fri 9-2 only, so not a weekend drop-in spot"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "douglasjhusbanddiscovery":  {
+                                                   "amenities":  {
+                                                                     "note":  "Ladner, south of City Hall, free parking. Open Mon-Wed/Fri 10-5, Thu 10-8, Sat-Sun 12-5. Touchscreens, sand and water tables. Admission not listed."
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "douglasparkcommunitycent":  {
+                                                   "admission":  {
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  null
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Pottery studio, teen centre, childcare; no indoor pool listed, wading pool is outdoor"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "douglasrecreationcentre":  {
+                                                  "admission":  {
+                                                                    "text":  "City of Langley drop-in: child/youth 4-18 $3, adult $6, family (up to 5) $12, under 4 free",
+                                                                    "source":  "https://www.langleycity.ca/node/1674"
+                                                                },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "drsunyatsenclassicalchin":  {
+                                                   "admission":  {
+                                                                     "text":  "Adult $16, student $12, senior $13; family (2 adults + up to 3 under 17) $32",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://vancouverchinesegarden.com/visit/"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "stroller":  "partial",
+                                                                     "note":  "Compact strollers allowed, no storage on site"
+                                                                 },
+                                                   "food":  {
+                                                                "outside":  "not-allowed"
+                                                            },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "eagleridgepoolgroundsand":  {
+                                                   "admission":  {
+                                                                     "text":  "Pool $2 per person (2026 season May 30-Sep 7, now closed for the year); playground and park free",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.coquitlam.ca/facilities/facility/details/eagleridgeoutdoorpool-91"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "changing":  true,
+                                                                     "washrooms":  true,
+                                                                     "note":  "Playground, picnic area, 4 tennis courts and parking in the park; pool is seasonal."
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "edmondscommunitycentre":  {
+                                                 "admission":  {
+                                                                   "booking":  "none",
+                                                                   "bookingNote":  null
+                                                               },
+                                                 "amenities":  {
+                                                                   "washrooms":  true,
+                                                                   "stairs":  "none",
+                                                                   "note":  "Accessible changing facilities, zero-entry kids leisure pool, indoor playground for under 5; women\u0027s change room closing for maintenance from Oct 6"
+                                                               },
+                                                 "checked":  "2026-10-03"
+                                             },
+                  "emmaleafarms":  {
+                                       "food":  {
+                                                    "onsite":  "snacks",
+                                                    "nearby":  "Rotating food trucks in October; picnic area on site"
+                                                },
+                                       "checked":  "2026-10-03"
+                                   },
+                  "exitabbotsford":  {
+                                         "admission":  {
+                                                           "booking":  "recommended",
+                                                           "bookingNote":  "Book 2-3 weeks ahead; walk-ins not guaranteed; min 2 players; pay in person"
+                                                       },
+                                         "amenities":  {
+                                                           "note":  "Free lockers"
+                                                       },
+                                         "checked":  "2026-10-03"
+                                     },
+                  "falsecreekcommunitycentr":  {
+                                                   "admission":  {
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  null
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Granville Island; childcare, dance and pottery studios, boat launch"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "fasttrackindoorkartingpl":  {
+                                                   "admission":  {
+                                                                     "text":  "PlayZone: under 1 free, ages 1-5 $8.99, 6-12 $14.99, supervising adult free; kart races from $28.95",
+                                                                     "source":  "https://www.fasttrackkarting.ca"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "PlayZone open 10am-8pm daily; junior karts 42-60 inches"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "fortlangleynationalhisto":  {
+                                                   "admission":  {
+                                                                     "text":  "Adults $10, seniors $8.50, youth 6-17 free",
+                                                                     "source":  "https://parks.canada.ca/lhn-nhs/bc/langley/visit/tarifs-fees"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "fraserheightsrecreationc":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in $4 child/youth (2-18), $8 adult",
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  "Free Recreation Passcard needed; some drop-ins need 72-hour signup",
+                                                                     "source":  "https://www.surrey.ca/parks-recreation/activities-registration/admissions-passes"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "changing":  true,
+                                                                     "washrooms":  true,
+                                                                     "note":  "Universal changeroom plus baby change tables; level paved access from parking"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "fraserriverdiscoverycent":  {
+                                                   "admission":  {
+                                                                     "text":  "Adult $8, child 3-12 $5, senior 65+/student $6, family $20 (2 adults + up to 4 children); 2 and under free",
+                                                                     "source":  "https://www.newwestcity.ca/calendar-of-events/events/8833.php"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "fraservalleyheritagerail":  {
+                                                   "admission":  {
+                                                                     "text":  "Train rides; prices only shown on online booking page (not retrieved)",
+                                                                     "booking":  "required",
+                                                                     "bookingNote":  "Tickets sold online only; 2026 weekend season ended Sept 27, Christmas Electric Express tickets from Oct 15",
+                                                                     "source":  "https://fvhrs.org"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "funcircleindoorplaygroun":  {
+                                                   "admission":  {
+                                                                     "text":  "All-day pass: toddler (1-3) $8.49, child (3+) $12.49 plus GST; baby under 1 and adults free; socks required for all",
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  "Walk-in play; parties must be booked, laser tag pre-booking recommended",
+                                                                     "source":  "https://www.funcircle.ca/price"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "stairs":  "some",
+                                                                     "note":  "Party rooms on upper levels via stairs only; baby and toddler play space; free parking"
+                                                                 },
+                                                   "food":  {
+                                                                "onsite":  "snacks"
+                                                            },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "fundays365":  {
+                                     "admission":  {
+                                                       "text":  "Play session (2 hrs): child $25, adult $8, under 1 free, plus GST. Laser tag $14.99, rope course $14.25",
+                                                       "booking":  "recommended",
+                                                       "bookingNote":  "Tickets via online reservation form; waiver required",
+                                                       "source":  "https://365fundays.ca/en/pricing"
+                                                   },
+                                     "amenities":  {
+                                                       "note":  "Three timed play sessions daily with sanitizing between"
+                                                   },
+                                     "food":  {
+                                                  "onsite":  "snacks",
+                                                  "outside":  "not-allowed"
+                                              },
+                                     "checked":  "2026-10-03"
+                                 },
+                  "gameongo":  {
+                                   "admission":  {
+                                                     "text":  "Per person: 20 min $26.99, 40 min $39.99, 60 min $48.99 (member rates lower). Age 7+ plays alone; younger need a paying adult. Open noon-midnight",
+                                                     "booking":  "recommended",
+                                                     "bookingNote":  "Online booking; walk-ins first come first served",
+                                                     "source":  "https://gameongo.ca/pricing"
+                                                 },
+                                   "checked":  "2026-10-03"
+                               },
+                  "glenayrecommunitycentre":  {
+                                                  "amenities":  {
+                                                                    "note":  "Unstaffed; open only for scheduled registered programs, no drop-in"
+                                                                },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "gobananas":  {
+                                    "admission":  {
+                                                      "text":  "Children $10, adults $5, 2 and under free; socks required",
+                                                      "booking":  "none",
+                                                      "source":  "https://www.gobananaslangley.com"
+                                                  },
+                                    "amenities":  {
+                                                      "note":  "Closed Wednesdays; Sat 10:30-6, other days 10:30-3:30"
+                                                  },
+                                    "food":  {
+                                                 "onsite":  "snacks",
+                                                 "nearby":  "Across from Willowbrook Mall"
+                                             },
+                                    "checked":  "2026-10-03"
+                                },
+                  "greatervancouverzoo":  {
+                                              "admission":  {
+                                                                "text":  "Adults $38, kids 3-17 $27, seniors/students $27, 2 and under free; train ride $10, parking $8",
+                                                                "booking":  "recommended",
+                                                                "bookingNote":  "Check tickets online before visiting",
+                                                                "source":  "https://www.gvzoo.com/visit/hours-rates-getting-here/"
+                                                            },
+                                              "amenities":  {
+                                                                "note":  "Parking $8 per day"
+                                                            },
+                                              "checked":  "2026-10-03"
+                                          },
+                  "greendaleacreschilliwack":  {
+                                                   "admission":  {
+                                                                     "text":  "Roughly $17-22 per person (online cheaper, weekends higher); 2 and under free; corn maze included",
+                                                                     "booking":  "recommended",
+                                                                     "bookingNote":  "Buy tickets online for a discount",
+                                                                     "source":  "https://curiocity.com/chilliwack-corn-festival/"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Corn maze open through Oct 31, 2026."
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "grouse":  {
+                                 "admission":  {
+                                                   "text":  "Skyride admission: adult $89, senior $79, youth 13-18 $69, child 5-12 $49, age 3-4 $5, 0-2 free; Lower Mainland resident adult $74",
+                                                   "source":  "https://www.grousemountain.com/general-admission-membership"
+                                               },
+                                 "amenities":  {
+                                                   "note":  "Several dining venues on the mountain"
+                                               },
+                                 "food":  {
+                                              "onsite":  "cafe"
+                                          },
+                                 "checked":  "2026-10-03"
+                             },
+                  "guildfordrecreationcentr":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in $4 child/youth (2-18), $8 adult; childminding $4 per child for 90 min",
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  "Free Recreation Passcard needed; pool closed until Oct 20, 2026",
+                                                                     "source":  "https://www.surrey.ca/parks-recreation/activities-registration/admissions-passes"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "changing":  true,
+                                                                     "washrooms":  true,
+                                                                     "note":  "Universal change rooms with baby change tables; ramps and accessible washrooms; pool closed Aug 31-Oct 19"
+                                                                 },
+                                                   "food":  {
+                                                                "onsite":  "cafe",
+                                                                "nearby":  "Second-floor cafe, cash only"
+                                                            },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "gulfofgeorgiacannerynati":  {
+                                                   "admission":  {
+                                                                     "text":  "Adults $14.75, seniors 65+ $12.50, youth 17 and under free (2026); free summer days via Canada Strong Pass",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://gulfofgeorgiacannery.org/events/canada-strong-pass-free-admission-to-the-cannery-2/"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "happyplayhouse":  {
+                                         "admission":  {
+                                                           "text":  "Per child: 30 min $15, 60 min $25, 120 min $34.99; adults free; socks $2; Tue/Wed 60 min $15",
+                                                           "booking":  "recommended",
+                                                           "bookingNote":  "Online booking available",
+                                                           "source":  "https://www.happyplayhouse.ca/pricing"
+                                                       },
+                                         "amenities":  {
+                                                           "note":  "Mon-Fri 10-6, weekends by appointment at 137 Chadwick Ct"
+                                                       },
+                                         "food":  {
+                                                      "onsite":  "cafe"
+                                                  },
+                                         "checked":  "2026-10-03"
+                                     },
+                  "harryjeromecommunityrecr":  {
+                                                   "food":  {
+                                                                "onsite":  "cafe"
+                                                            },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "hillcrest":  {
+                                    "admission":  {
+                                                      "booking":  "none",
+                                                      "bookingNote":  "Phone ahead for staffing if bringing groups of children; wait times possible at peak"
+                                                  },
+                                    "amenities":  {
+                                                      "stairs":  "none",
+                                                      "note":  "Leisure pool with toys, sprays and lazy river; outdoor pool; universal and public change rooms; elevator, ramp, pool lift. Paid parking, 3 free hours for centre users. Under-8s need guardian in water within arm\u0027s reach (1 guardian to 3 kids)"
+                                                  },
+                                    "checked":  "2026-10-03"
+                                },
+                  "hologramzoovancouver":  {
+                                               "admission":  {
+                                                                 "text":  "Adult $35, child 4-16 $28, senior 60+ $30, 0-3 free (online rates; door slightly higher)",
+                                                                 "booking":  "recommended",
+                                                                 "bookingNote":  "Cheaper online; door tickets subject to availability",
+                                                                 "source":  "https://www.todocanada.ca/city/vancouver/event/halloween-hologram-experience/"
+                                                             },
+                                               "amenities":  {
+                                                                 "stroller":  "yes",
+                                                                 "note":  "Listing says wheelchair accessible and prams allowed"
+                                                             },
+                                               "checked":  "2026-10-03"
+                                           },
+                  "hydecreekrecreationcentr":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in child (5-12) $3.49, youth (13-24) $5.24, adult $6.98, family $13.97; 4 and under free (from Jan 2026)",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.portcoquitlam.ca/media/file/2026recreation-membership-optionsbrochurepdf"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "inlettheatre":  {
+                                       "amenities":  {
+                                                         "note":  "200-seat civic theatre, free onsite parking, wheelchair accessible; tickets sold by each show organizer"
+                                                     },
+                                       "checked":  "2026-10-03"
+                                   },
+                  "innoplay":  {
+                                   "admission":  {
+                                                     "text":  "1 hour $20.95, 2 hours $29.95, all day $39.95 (one child plus one adult); extra adult $7",
+                                                     "booking":  "recommended",
+                                                     "bookingNote":  "Online booking available",
+                                                     "source":  "https://www.innoplay.ca/pricing"
+                                                 },
+                                   "amenities":  {
+                                                     "note":  "Ages 6 months to 12; under 4 need an adult present; grip socks required"
+                                                 },
+                                   "food":  {
+                                                "onsite":  "snacks",
+                                                "outside":  "not-allowed",
+                                                "nearby":  "Water only from outside"
+                                            },
+                                   "checked":  "2026-10-03"
+                               },
+                  "irvinghouse":  {
+                                      "admission":  {
+                                                        "text":  "By donation; open Sat-Sun 12-4pm",
+                                                        "booking":  "none",
+                                                        "bookingNote":  "Groups of many need to book a tour",
+                                                        "source":  "https://www.newwestcity.ca/services/arts-and-heritage/museums-and-archives"
+                                                    },
+                                      "checked":  "2026-10-03"
+                                  },
+                  "junglejacs":  {
+                                     "admission":  {
+                                                       "text":  "Playground: age 4-17 $21.99, 1-3 $17.99, 6-12 months $5.99, under 6 months free, adults $4.99, plus GST. Trampoline $6.85 plus socks $4.74; bumper cars $4",
+                                                       "booking":  "none",
+                                                       "bookingNote":  "Online booking link exists; waiver online",
+                                                       "source":  "https://junglejacs.com/prices/"
+                                                   },
+                                     "amenities":  {
+                                                       "note":  "Separate toddler play area; trampoline socks required"
+                                                   },
+                                     "food":  {
+                                                  "onsite":  "cafe"
+                                              },
+                                     "checked":  "2026-10-03"
+                                 },
+                  "karenmagnussencommunityr":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in swim or skate (before tax): child 3-12 $3.82, youth 13-18 $4.84, adult $7.80, senior $5.86, family $4.02 per person (min $7.80), under 3 free",
+                                                                     "source":  "https://www.nvrc.ca/programs-memberships/register-program/fees"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Has arena, pool and fitness centre; family changeroom not stated"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "kensingtoncomplex":  {
+                                            "admission":  {
+                                                              "text":  "Toonie Skate includes skate and helmet rental; other public skate rates not listed",
+                                                              "booking":  "none",
+                                                              "source":  "https://www.burnaby.ca/recreation-and-arts/recreation-facilities/kensington-complex"
+                                                          },
+                                            "amenities":  {
+                                                              "washrooms":  true,
+                                                              "note":  "Accessible washrooms and showers; skate rental; CSA helmet required for kids 12 and under"
+                                                          },
+                                            "checked":  "2026-10-03"
+                                        },
+                  "kensingtonparkoutdoorpoo":  {
+                                                   "admission":  {
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  null
+                                                                 },
+                                                   "amenities":  {
+                                                                     "washrooms":  true,
+                                                                     "note":  "Heated change rooms; wading pool closed this summer per city page"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "kidtropolis":  {
+                                      "admission":  {
+                                                        "text":  "Drop-in play $16 weekdays, $18 weekends/holidays, 1 adult included (older listing; confirm online)",
+                                                        "booking":  "recommended",
+                                                        "bookingNote":  "Pre-book timed entry online; walk-ins if space",
+                                                        "source":  "https://www.kidtropolis.ca"
+                                                    },
+                                      "food":  {
+                                                   "onsite":  "cafe"
+                                               },
+                                      "checked":  "2026-10-03"
+                                  },
+                  "kwantlenoutdoorpool":  {
+                                              "admission":  {
+                                                                "text":  "Free public swim; summer season only (closed for the season now)",
+                                                                "booking":  "none",
+                                                                "bookingNote":  "Children must be accompanied in the water by a parent or guardian",
+                                                                "source":  "https://www.surrey.ca/parks-recreation/recreation-facilities/kwantlen-outdoor-pool"
+                                                            },
+                                              "amenities":  {
+                                                                "washrooms":  true,
+                                                                "note":  "Change room facilities on site"
+                                                            },
+                                              "checked":  "2026-10-03"
+                                          },
+                  "ladnercommunitycentre":  {
+                                                "admission":  {
+                                                                  "text":  "Delta residents: kids 2-18 free, adult $7.25. Non-residents: child $5.60, youth $7.15, adult $8.75 (from Apr 2026)",
+                                                                  "booking":  "none",
+                                                                  "source":  "https://www.delta.ca/admission"
+                                                              },
+                                                "checked":  "2026-10-03"
+                                            },
+                  "ladnerleisurecentre":  {
+                                              "admission":  {
+                                                                "text":  "Delta drop-in swim: residents child 2-9 and youth free, adult $7.25; non-residents child $5.60, youth $7.15, adult $8.75",
+                                                                "source":  "https://www.delta.ca/admission"
+                                                            },
+                                              "checked":  "2026-10-03"
+                                          },
+                  "ladneroutdoorpool":  {
+                                            "admission":  {
+                                                              "text":  "Delta residents: kids 2-18 free, adult $7.25. Non-residents: child $5.60, youth $7.15, adult $8.75 (from Apr 2026)",
+                                                              "booking":  "none",
+                                                              "source":  "https://www.delta.ca/admission"
+                                                          },
+                                            "checked":  "2026-10-03"
+                                        },
+                  "laitypumpkinpatchnorth":  {
+                                                 "admission":  {
+                                                                   "text":  "Weekend $11, weekday $14 per person age 3+; 2 and under free; pumpkins extra",
+                                                                   "booking":  "none",
+                                                                   "bookingNote":  "Tickets sold at the gate only",
+                                                                   "source":  "https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026"
+                                                               },
+                                                 "checked":  "2026-10-03"
+                                             },
+                  "langleysportsplex":  {
+                                            "admission":  {
+                                                              "text":  "Drop-in swim: child 4-18 $3, adult $6, family max $12, under 4 free",
+                                                              "booking":  "none",
+                                                              "source":  "https://langleycity.ca/recreation-culture/recreation/admission-rates-passes-and-financial-assistance"
+                                                          },
+                                            "checked":  "2026-10-03"
+                                        },
+                  "laserdomeplus":  {
+                                        "admission":  {
+                                                          "text":  "Laser tag $14 per game (2 for $21.50, 3 for $27.50); Space Jungle (ages 4-10) $7.50-$16; climbing $15 per 15 min; $7 games Tuesdays",
+                                                          "booking":  "none",
+                                                          "bookingNote":  "Drop-in needs no reservation",
+                                                          "source":  "https://www.laserdome.net/"
+                                                      },
+                                        "amenities":  {
+                                                          "note":  "Space Jungle soft play for ages 10 and under"
+                                                      },
+                                        "food":  {
+                                                     "outside":  "allowed"
+                                                 },
+                                        "checked":  "2026-10-03"
+                                    },
+                  "lionsgatecommunityrecrea":  {
+                                                   "admission":  {
+                                                                     "text":  "NVRC day-use drop-in (from Jan 5 2026, before tax): child 3-12 $3.82, youth $4.84, adult $7.80",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.nvrc.ca/programs-memberships/fitness-memberships-fees"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Fee is the NVRC-wide day-use rate, not specific to this centre"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "littlebeans":  {
+                                      "amenities":  {
+                                                        "note":  "Official site says the Port Moody location is permanently closed"
+                                                    },
+                                      "checked":  "2026-10-03"
+                                  },
+                  "londonfarm":  {
+                                     "admission":  {
+                                                       "text":  "Park and gardens free, dawn to dusk; farmhouse open Fri-Sun 10am-4pm",
+                                                       "booking":  "none",
+                                                       "source":  "https://richmond.ca/city-hall/news/2023/londonfarm03aug2023.htm"
+                                                   },
+                                     "amenities":  {
+                                                       "washrooms":  true,
+                                                       "note":  "Gender-neutral public washrooms reported; benches and picnic areas"
+                                                   },
+                                     "checked":  "2026-10-03"
+                                 },
+                  "lynncreekcommunityrecrea":  {
+                                                   "admission":  {
+                                                                     "text":  "NVRC day-use drop-in (from Jan 5 2026, before tax): child 3-12 $3.82, youth $4.84, adult $7.80",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.nvrc.ca/programs-memberships/fitness-memberships-fees"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Fee is the NVRC-wide day-use rate, not specific to this centre"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "mapleridgeleisurecentre":  {
+                                                  "admission":  {
+                                                                    "text":  "Drop-in: parent/adult and tot 0-4 $6.48 + tax, child 5-12 $3.27 + tax",
+                                                                    "booking":  "none",
+                                                                    "source":  "https://www.mapleridge.ca/art-parks-rec/recreation-facilities/rates-memberships"
+                                                                },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "mapleridgemuseumcommunit":  {
+                                                   "admission":  {
+                                                                     "text":  "By donation; museum open Thu-Sun 10am-4pm (archives closed)",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://mapleridgemuseum.org/?p=3894"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "maplewoodfarm":  {
+                                        "admission":  {
+                                                          "text":  "Off-season (to Mar 13, from Sep 8): adult $10.95, child/senior $6.50, under 19 months free. Peak (Mar 14-Sep 7): adult $13, child/senior $8.50. Tax included",
+                                                          "booking":  "none",
+                                                          "bookingNote":  "Walk-ins welcome; online tickets also offered",
+                                                          "source":  "https://maplewoodfarm.bc.ca/hours-prices/"
+                                                      },
+                                        "amenities":  {
+                                                          "stroller":  "yes",
+                                                          "note":  "Strollers allowed on grounds; hand-washing stations on site"
+                                                      },
+                                        "checked":  "2026-10-03"
+                                    },
+                  "matsquirecreationcentre":  {
+                                                  "admission":  {
+                                                                    "text":  "Drop-in swim: ages 0-4 free, 5-24 $4.35, 25-64 $9.65, 65+ $5.10, family $19.35",
+                                                                    "booking":  "none",
+                                                                    "source":  "https://www.abbotsford.ca/node/137"
+                                                                },
+                                                  "amenities":  {
+                                                                    "changing":  true,
+                                                                    "washrooms":  true,
+                                                                    "note":  "City lists universal/family changerooms at both Abbotsford pools; pool had annual maintenance closure through Sept 28"
+                                                                },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "mennoniteheritagemuseum":  {
+                                                  "admission":  {
+                                                                    "text":  "Admission by donation",
+                                                                    "booking":  "none",
+                                                                    "source":  "https://whichmuseum.com/museum/mennonite-heritage-museum-abbotsford-12871/tickets-prices"
+                                                                },
+                                                  "food":  {
+                                                               "onsite":  "cafe"
+                                                           },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "moa":  {
+                              "admission":  {
+                                                "text":  "Adults $26, youth 6-18 $13, 0-5 free; half price Thursday after 5pm",
+                                                "booking":  "none",
+                                                "bookingNote":  "Tickets sold in person only, not online",
+                                                "source":  "https://moa.ubc.ca/faq/how-much-is-museum-admission/"
+                                            },
+                              "checked":  "2026-10-03"
+                          },
+                  "monovamuseumofnorthvanco":  {
+                                                   "admission":  {
+                                                                     "text":  "Adult $15, senior $12, youth 6-17 $10, family $38, under 5 free",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://monova.ca/visit"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "stroller":  "yes",
+                                                                     "changing":  true,
+                                                                     "washrooms":  true,
+                                                                     "note":  "Wheelchair accessible with accessible washrooms and baby change; sensory kits on request; Wed-Sun 10-5, Thu to 8"
+                                                                 },
+                                                   "food":  {
+                                                                "nearby":  "Lonsdale Quay Market near the Seabus"
+                                                            },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "mundyparkpool":  {
+                                        "admission":  {
+                                                          "text":  "$2 per person (outdoor pool, season May 30-Sep 7, 2026); weekend sessions timed",
+                                                          "booking":  "recommended",
+                                                          "bookingNote":  "Pre-register for weekend sessions",
+                                                          "source":  "https://www.coquitlam.ca/MundyParkPool"
+                                                      },
+                                        "amenities":  {
+                                                          "changing":  true,
+                                                          "washrooms":  true,
+                                                          "note":  "Seasonal outdoor pool with lazy river, zero-depth entry and splash area; closed for the year now. Universal change rooms with showers and lockers."
+                                                      },
+                                        "food":  {
+                                                     "onsite":  "snacks",
+                                                     "nearby":  "Concession on site"
+                                                 },
+                                        "checked":  "2026-10-03"
+                                    },
+                  "museumofarchaeologyethno":  {
+                                                   "admission":  {
+                                                                     "text":  "Free entry. Open Mon-Thu 10am-4pm, closed Fri-Sun",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.sfu.ca/museum-archaeology/visit/plan-your-visit.html"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "museumofvancouver":  {
+                                            "admission":  {
+                                                              "text":  "Adults 18+ $24, youth 13-18 and seniors $19, children 12 and under free",
+                                                              "booking":  "none",
+                                                              "bookingNote":  "Pay what you can on first Sunday of month",
+                                                              "source":  "https://museumofvancouver.ca/visit"
+                                                          },
+                                            "amenities":  {
+                                                              "stroller":  "yes",
+                                                              "washrooms":  true,
+                                                              "stairs":  "none",
+                                                              "note":  "Ramps, elevators, accessible washrooms; Low Sensory Sundays last Sunday monthly"
+                                                          },
+                                            "checked":  "2026-10-03"
+                                        },
+                  "newtonarena":  {
+                                      "admission":  {
+                                                        "text":  "Public skate at regular drop-in rate: $4 child/youth, $8 adult; skate rental $3.75",
+                                                        "booking":  "none",
+                                                        "bookingNote":  "Free Recreation Passcard needed",
+                                                        "source":  "https://www.surrey.ca/parks-recreation/recreation-programs/arena-programs"
+                                                    },
+                                      "amenities":  {
+                                                        "stroller":  "yes",
+                                                        "changing":  true,
+                                                        "washrooms":  true,
+                                                        "note":  "Strollers allowed during open skate (helmets required); baby change table in womens lobby washroom; skate rental shop"
+                                                    },
+                                      "checked":  "2026-10-03"
+                                  },
+                  "newtonrecreationcentre":  {
+                                                 "admission":  {
+                                                                   "text":  "Drop-in $4 child/youth (2-18), $8 adult",
+                                                                   "booking":  "none",
+                                                                   "bookingNote":  "Free Recreation Passcard needed",
+                                                                   "source":  "https://www.surrey.ca/parks-recreation/activities-registration/admissions-passes"
+                                                               },
+                                                 "amenities":  {
+                                                                   "changing":  true,
+                                                                   "washrooms":  true,
+                                                                   "note":  "Wave pool, slides, tot pool; baby change tables in all three pool changerooms; outdoor playground; accessibility certified"
+                                                               },
+                                                 "food":  {
+                                                              "onsite":  "cafe"
+                                                          },
+                                                 "checked":  "2026-10-03"
+                                             },
+                  "nikkeinationalmuseumcult":  {
+                                                   "admission":  {
+                                                                     "text":  "Admission by donation",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://whichmuseum.com/museum/nikkei-national-museum-cultural-centre-burnaby-14639/tickets-prices"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "ninjatag":  {
+                                   "admission":  {
+                                                     "text":  "Per 10-min game $10, 3 games $25; wristband and grip socks $3.50 once; ages 7+, min height 3.5 ft",
+                                                     "booking":  "recommended",
+                                                     "bookingNote":  "Reserve online or walk in; sign waiver ahead",
+                                                     "source":  "https://www.ninjatag.ca/admission"
+                                                 },
+                                   "amenities":  {
+                                                     "note":  "1300 Woolridge St. Mon-Fri 12-8, Sat-Sun 10-8."
+                                                 },
+                                   "checked":  "2026-10-03"
+                               },
+                  "nitobe":  {
+                                 "admission":  {
+                                                   "text":  "Adults $10, concession $8, family $25",
+                                                   "booking":  "recommended",
+                                                   "bookingNote":  "Tickets sold via the garden online shop; open Tue-Sun 10-4:30 until Oct 31, then 10-2",
+                                                   "source":  "https://botanicalgarden.ubc.ca/nitobe-memorial-garden/"
+                                               },
+                                 "checked":  "2026-10-03"
+                             },
+                  "northdeltarecreationcent":  {
+                                                   "admission":  {
+                                                                     "text":  "Delta residents: kids 2-18 free, adult $7.25. Non-residents: child $5.60, youth $7.15, adult $8.75 (from Apr 2026)",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.delta.ca/admission"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "northsurreysporticecompl":  {
+                                                   "admission":  {
+                                                                     "text":  "Public skate at regular drop-in rate: $4 child/youth, $8 adult; skate rental $3.75",
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  "Free Recreation Passcard needed",
+                                                                     "source":  "https://www.surrey.ca/parks-recreation/recreation-programs/arena-programs"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "stroller":  "yes",
+                                                                     "changing":  true,
+                                                                     "washrooms":  true,
+                                                                     "note":  "Strollers allowed during open skate (helmets required); baby changerooms and universal washrooms"
+                                                                 },
+                                                   "food":  {
+                                                                "nearby":  "On-site food service listed as currently closed"
+                                                            },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "ohmyland":  {
+                                   "food":  {
+                                                "onsite":  "cafe"
+                                            },
+                                   "checked":  "2026-10-03"
+                               },
+                  "olympicexperienceatrichm":  {
+                                                   "admission":  {
+                                                                     "text":  "Adults $17, youth/seniors $13, kids 6-12 $11, 5 and under free; free first Thursday of the month 2-5 pm",
+                                                                     "source":  "https://richmondsentinel.ca/public/article-detail/48311/olympic-experience-launches-community-thursdays"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "owlrehab":  {
+                                   "admission":  {
+                                                     "text":  "Tour entry by donation (per local news listings); weekend tours by online reservation, no walk-ins",
+                                                     "booking":  "required",
+                                                     "bookingNote":  "Reserve online; walk-ins not accepted"
+                                                 },
+                                   "amenities":  {
+                                                     "note":  "Outdoor tour, rain or shine"
+                                                 },
+                                   "checked":  "2026-10-03"
+                               },
+                  "pacificmuseumofearth":  {
+                                               "admission":  {
+                                                                 "text":  "General admission by donation",
+                                                                 "booking":  "none",
+                                                                 "bookingNote":  "Mon-Fri 10am-5pm; groups book by email",
+                                                                 "source":  "https://pme.ubc.ca/visit/"
+                                                             },
+                                               "checked":  "2026-10-03"
+                                           },
+                  "parkgatecommunitycentre":  {
+                                                  "admission":  {
+                                                                    "text":  "NVRC day-use drop-in (from Jan 5 2026, before tax): child 3-12 $3.82, youth $4.84, adult $7.80",
+                                                                    "booking":  "none",
+                                                                    "source":  "https://www.nvrc.ca/programs-memberships/fitness-memberships-fees"
+                                                                },
+                                                  "amenities":  {
+                                                                    "note":  "Fee is the NVRC-wide day-use rate, not specific to this centre"
+                                                                },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "peteyspumpkinpatch":  {
+                                             "admission":  {
+                                                               "text":  "$17 per person, seniors 75+ $10, under 2 free, family of 4 $65; pumpkins $3-25 extra",
+                                                               "booking":  "none",
+                                                               "bookingNote":  "Pay at the gate; no online tickets needed",
+                                                               "source":  "https://peteyspumpkinpatch.ca"
+                                                           },
+                                             "amenities":  {
+                                                               "note":  "Train rides, bouncy castle, corn maze, petting zoo and playground included. Open from Oct 3, 2026; weekdays 1-5, weekends 10-5."
+                                                           },
+                                             "food":  {
+                                                          "onsite":  "snacks",
+                                                          "nearby":  "Food truck on site"
+                                                      },
+                                             "checked":  "2026-10-03"
+                                         },
+                  "petitefortplaycaf":  {
+                                            "admission":  {
+                                                              "text":  "12-visit pack $108 (under 3) or $130 (3+); single drop-in price not published",
+                                                              "bookingNote":  "Open Tue-Sun, closed Mon and stat holidays",
+                                                              "source":  "https://petiteforet.co"
+                                                          },
+                                            "amenities":  {
+                                                              "stroller":  "yes",
+                                                              "changing":  true,
+                                                              "washrooms":  true,
+                                                              "note":  "Fully wheelchair accessible; two indoor stroller spots, change table"
+                                                          },
+                                            "food":  {
+                                                         "onsite":  "cafe",
+                                                         "outside":  "allowed"
+                                                     },
+                                            "checked":  "2026-10-03"
+                                        },
+                  "pinetreecommunitycentre":  {
+                                                  "admission":  {
+                                                                    "text":  "Drop-in (ONE PASS rates, Apr 2026): child 0-12 $3.43, youth $5.10, adult $6.81",
+                                                                    "booking":  "none",
+                                                                    "bookingNote":  "Some youth drop-ins need pre-registration",
+                                                                    "source":  "https://www.coquitlam.ca/979/Drop-In-Activities"
+                                                                },
+                                                  "amenities":  {
+                                                                    "washrooms":  true,
+                                                                    "note":  "Gym, multipurpose room, locker rooms; accessible entrances and elevators."
+                                                                },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "pittmeadowsfamilyrecreat":  {
+                                                   "admission":  {
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  null
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "pittmeadowsmuseumgeneral":  {
+                                                   "admission":  {
+                                                                     "text":  "Admission by donation",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.pittmeadowsmuseum.com/general-store-site"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "playabbyabbotsford":  {
+                                             "admission":  {
+                                                               "text":  "Reported $8.99 for ages 1-3 and $12.99 for ages 3+ (third-party listing)",
+                                                               "source":  "https://www.playabby.com/"
+                                                           },
+                                             "amenities":  {
+                                                               "note":  "Official site mentions toddler zones, lockers, Wi-Fi"
+                                                           },
+                                             "food":  {
+                                                          "outside":  "allowed"
+                                                      },
+                                             "checked":  "2026-10-03"
+                                         },
+                  "playabbychilliwack":  {
+                                             "admission":  {
+                                                               "text":  "Under 1 free, ages 1-4 $9, ages 5+ $15",
+                                                               "booking":  "none",
+                                                               "source":  "https://www.playabby.com/chilliwack"
+                                                           },
+                                             "amenities":  {
+                                                               "note":  "Socks required for everyone. Open Mon-Fri 9-6; address 44921 Commercial Ct."
+                                                           },
+                                             "food":  {
+                                                          "outside":  "allowed",
+                                                          "nearby":  "Outside food OK except nut products and alcohol"
+                                                      },
+                                             "checked":  "2026-10-03"
+                                         },
+                  "playabbylangley":  {
+                                          "admission":  {
+                                                            "text":  "Day pass: baby under 1 free, toddler 1-4 $10, child 5+ $17; Mon-Fri 9-6, Sat-Sun 9-8",
+                                                            "booking":  "none",
+                                                            "source":  "https://www.playabby.com/playparkb/langley"
+                                                        },
+                                          "amenities":  {
+                                                            "note":  "Socks required, waiver to sign"
+                                                        },
+                                          "food":  {
+                                                       "outside":  "allowed",
+                                                       "nearby":  "no nut products or alcohol; cakes only with party booking"
+                                                   },
+                                          "checked":  "2026-10-03"
+                                      },
+                  "playland":  {
+                                   "admission":  {
+                                                     "text":  "2026 season ended; per a listing 2026 passes were Fun Pass $37.80 online / $42 gate, Thrill Pass $50.40 online / $56 gate, ages 3 and under free",
+                                                     "bookingNote":  "Closed for the season, reopens 2027; Fright Nights runs this fall",
+                                                     "source":  "https://www.pne.ca/playland/"
+                                                 },
+                                   "amenities":  {
+                                                     "note":  "Playland itself is closed until 2027"
+                                                 },
+                                   "checked":  "2026-10-03"
+                               },
+                  "playscapecaf":  {
+                                       "amenities":  {
+                                                         "stroller":  "yes",
+                                                         "changing":  true,
+                                                         "washrooms":  true,
+                                                         "note":  "Indoor stroller parking; toddler washrooms with change tables"
+                                                     },
+                                       "food":  {
+                                                    "onsite":  "cafe"
+                                                },
+                                       "checked":  "2026-10-03"
+                                   },
+                  "poiriersportleisurecompl":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in swim/skate (ONE PASS rates, Apr 2026): child 0-12 $3.43, youth $5.10, adult $6.81",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.coquitlam.ca/979/Drop-In-Activities"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "washrooms":  true,
+                                                                     "note":  "Lap pool, warm leisure pool (about 90F), 3 ice arenas, elevators and accessible change rooms."
+                                                                 },
+                                                   "food":  {
+                                                                "onsite":  "snacks",
+                                                                "nearby":  "Concession on site"
+                                                            },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "pomoarts":  {
+                                   "admission":  {
+                                                     "text":  "Free admission and parking to the gallery",
+                                                     "booking":  "none",
+                                                     "source":  "https://preview-art.com/listing/pomoarts/"
+                                                 },
+                                   "checked":  "2026-10-03"
+                               },
+                  "pomomuseum":  {
+                                     "admission":  {
+                                                       "text":  "Admission by donation, $5 suggested",
+                                                       "booking":  "none",
+                                                       "source":  "https://pomo.museum/visit"
+                                                   },
+                                     "amenities":  {
+                                                       "washrooms":  true,
+                                                       "note":  "Ramp into museum; train car not wheelchair accessible; washrooms not wheelchair accessible; free parking"
+                                                   },
+                                     "checked":  "2026-10-03"
+                                 },
+                  "projectclimbingcloverdal":  {
+                                                   "admission":  {
+                                                                     "text":  "Bouldering drop-in $24 adult, $22 student/youth; rock shoes $5. Min age 5 (7 recommended); under-14 groups max 4; parent supervision and minor waiver by own parent",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://projectclimbing.ca/cloverdale/rates/"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "queensboroughcommunityce":  {
+                                                   "admission":  {
+                                                                     "text":  "City drop-in: child 4-12 $3.85, youth $5.10, adult $7.70, family member $3.85, under 3 free",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.newwestcity.ca/activepass"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "richmondnaturehouse":  {
+                                              "admission":  {
+                                                                "text":  "Admission by donation; open daily 9 am-5 pm",
+                                                                "source":  "https://richmond.ca/parks-recreation/parks/programs/natureseries.htm"
+                                                            },
+                                              "checked":  "2026-10-03"
+                                          },
+                  "ronandrewscommunityrecre":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in swim or skate (before tax): child 3-12 $3.82, youth 13-18 $4.84, adult $7.80, senior $5.86, family $4.02 per person (min $7.80), under 3 free",
+                                                                     "source":  "https://www.nvrc.ca/programs-memberships/register-program/fees"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "37.5 m pool; closed to public Fridays 8-10pm for youth night"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "rondrisofarmsgeneralstor":  {
+                                                   "admission":  {
+                                                                     "text":  "General store free; pumpkin patch entry $8 per person plus $4 wagon ride (patch open Sept 30-Oct 31)",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://vancouversbestplaces.com/surrey/rondriso-farms-pumpkin-patch/"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Farm animals in barn; patch hours weekdays 3-6pm, weekends 10am-6pm"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "scienceworld":  {
+                                       "admission":  {
+                                                         "text":  "Adult $37.50, youth 13-18 $30.50, child 3-12 $25.50, 0-2 free",
+                                                         "booking":  "recommended",
+                                                         "bookingNote":  "Reserve tickets online",
+                                                         "source":  "https://www.scienceworld.ca/your-visit/"
+                                                     },
+                                       "amenities":  {
+                                                         "note":  "Allow about 2 hours"
+                                                     },
+                                       "food":  {
+                                                    "onsite":  "cafe",
+                                                    "nearby":  "Triple O\u0027s closed for renovation through October; Snack Lab open instead"
+                                                },
+                                       "checked":  "2026-10-03"
+                                   },
+                  "seatosky":  {
+                                   "admission":  {
+                                                     "text":  "Adult $77.65, youth 13-18 $46.15, child 6-12 $31.45, 5 and under free (reseller listing; official site says online is cheaper)",
+                                                     "booking":  "recommended",
+                                                     "bookingNote":  "Buy online; sunset discount after 4 pm Fri-Sun through Thanksgiving",
+                                                     "source":  "https://www.seatoskygondola.com"
+                                                 },
+                                   "food":  {
+                                                "onsite":  "cafe",
+                                                "nearby":  "Six food venues at summit incl. Co-Pilot Cafe"
+                                            },
+                                   "checked":  "2026-10-03"
+                               },
+                  "seymourcreekgolfcentre":  {
+                                                 "admission":  {
+                                                                   "text":  "Mini putt $8 per person or $25 family of 4, under 5 free (GST incl.); open Mon-Sat 9-10, Sun 9-9",
+                                                                   "booking":  "none",
+                                                                   "source":  "https://www.seymourcreekgolf.com/mini-putt"
+                                                               },
+                                                 "amenities":  {
+                                                                   "note":  "18 holes with tunnels, obstacles and water"
+                                                               },
+                                                 "checked":  "2026-10-03"
+                                             },
+                  "shadboltcentreforthearts":  {
+                                                   "amenities":  {
+                                                                     "stroller":  "yes",
+                                                                     "washrooms":  true,
+                                                                     "stairs":  "none",
+                                                                     "note":  "Elevators and ramps; accessible washrooms on all floors"
+                                                                 },
+                                                   "food":  {
+                                                                "onsite":  "none",
+                                                                "nearby":  "Encores Cafe closed since June 2024, reopens 2027"
+                                                            },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "singletreewinery":  {
+                                           "admission":  {
+                                                             "booking":  "none",
+                                                             "bookingNote":  "Walk-ins welcome; reservations available"
+                                                         },
+                                           "checked":  "2026-10-03"
+                                       },
+                  "smilingcreekactivitycent":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in from Apr 2026: child 0-12 $3.43, youth $5.10, adult $6.81 (before tax)",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://coquitlam.ca/979/Drop-In-Activities"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "southarmoutdoorpool":  {
+                                              "admission":  {
+                                                                "text":  "2026 season: child 2-12 $4.15, youth $5.45, adult $6.80, infant free; family $4.15 per person",
+                                                                "booking":  "none",
+                                                                "source":  "https://richmond.ca/__shared/assets/South_Arm_Outdoor_Pool_Spring_and_Summer79029.pdf"
+                                                            },
+                                              "amenities":  {
+                                                                "note":  "Heated free-form pool, wading pool, slides, picnic area, free parking"
+                                                            },
+                                              "checked":  "2026-10-03"
+                                          },
+                  "southdeltarecreationcent":  {
+                                                   "admission":  {
+                                                                     "text":  "Delta residents: kids 2-18 free, adult $7.25. Non-residents: child $5.60, youth $7.15, adult $8.75 (from Apr 2026)",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.delta.ca/admission"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "southlandsheritagefarm":  {
+                                                 "admission":  {
+                                                                   "text":  "Pumpkin Fest (Sep 26-Oct 31): $15 per person incl. a pumpkin, under 3 free; donation visits paused during Fest",
+                                                                   "booking":  "recommended",
+                                                                   "bookingNote":  "Older listing says bookings recommended, drop-ins welcome",
+                                                                   "source":  "https://southlandsfarm.pike13.com"
+                                                               },
+                                                 "checked":  "2026-10-03"
+                                             },
+                  "southsurreyarena":  {
+                                           "admission":  {
+                                                             "text":  "Public skate at regular drop-in rate: $4 child/youth, $8 adult; skate rental $3.75",
+                                                             "booking":  "none",
+                                                             "bookingNote":  "Free Recreation Passcard needed",
+                                                             "source":  "https://www.surrey.ca/parks-recreation/recreation-programs/arena-programs"
+                                                         },
+                                           "amenities":  {
+                                                             "stroller":  "yes",
+                                                             "changing":  true,
+                                                             "washrooms":  true,
+                                                             "note":  "Strollers allowed during open skate (helmets required); universal washrooms with child change tables; skate shop"
+                                                         },
+                                           "food":  {
+                                                        "onsite":  "snacks",
+                                                        "nearby":  "Food service listed on site"
+                                                    },
+                                           "checked":  "2026-10-03"
+                                       },
+                  "southsurreyindoorpool":  {
+                                                "admission":  {
+                                                                  "text":  "Drop-in $4 child/youth (2-18), $8 adult",
+                                                                  "booking":  "none",
+                                                                  "bookingNote":  "Free Recreation Passcard needed; closed Sundays",
+                                                                  "source":  "https://www.surrey.ca/parks-recreation/activities-registration/admissions-passes"
+                                                              },
+                                                "amenities":  {
+                                                                  "changing":  true,
+                                                                  "washrooms":  true,
+                                                                  "note":  "Universal changerooms; children\u0027s pool, whirlpool, sauna; sensory kits at front desk"
+                                                              },
+                                                "checked":  "2026-10-03"
+                                            },
+                  "stevestontram":  {
+                                        "admission":  {
+                                                          "text":  "Free admission; Tue-Sun 12-4 pm in fall/winter, closed stat holidays",
+                                                          "source":  "https://www.richmondsentinel.ca/article-detail/31542/new-steveston-tram-exhibit-opens-on-family-day-weekend"
+                                                      },
+                                        "checked":  "2026-10-03"
+                                    },
+                  "summitcommunitycentre":  {
+                                                "admission":  {
+                                                                  "text":  "Drop-in (ONE PASS rates, Apr 2026): child 0-12 $3.43, youth $5.10, adult $6.81",
+                                                                  "booking":  "none",
+                                                                  "source":  "https://www.coquitlam.ca/979/Drop-In-Activities"
+                                                              },
+                                                "amenities":  {
+                                                                  "note":  "1450 Parkway Blvd, Westwood Plateau; regular hours resumed Sep 21, 2026."
+                                                              },
+                                                "checked":  "2026-10-03"
+                                            },
+                  "sungodrecreationcentre":  {
+                                                 "admission":  {
+                                                                   "text":  "Delta drop-in swim: residents child 2-9 and youth free, adult $7.25; non-residents child $5.60, youth $7.15, adult $8.75",
+                                                                   "source":  "https://www.delta.ca/admission"
+                                                               },
+                                                 "checked":  "2026-10-03"
+                                             },
+                  "surreysportleisurecomple":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in $4 child/youth (2-18), $8 adult; childminding $4 per child (12 and under)",
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  "Free Recreation Passcard needed; public swim needs no advance signup",
+                                                                     "source":  "https://www.surrey.ca/parks-recreation/activities-registration/admissions-passes"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "changing":  true,
+                                                                     "washrooms":  true,
+                                                                     "note":  "Family change rooms; 50m pool, leisure pool, tots pool, 160 ft slide; hot tub closed at time of check"
+                                                                 },
+                                                   "food":  {
+                                                                "onsite":  "cafe",
+                                                                "nearby":  "Booster Juice cafe on site"
+                                                            },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "tamesew":  {
+                                  "admission":  {
+                                                    "text":  "City drop-in: child 4-12 $3.85, youth $5.10, adult $7.70, family member $3.85, under 3 free",
+                                                    "booking":  "none",
+                                                    "source":  "https://www.newwestcity.ca/activepass"
+                                                },
+                                  "amenities":  {
+                                                    "stroller":  "partial",
+                                                    "changing":  true,
+                                                    "note":  "Strollers allowed in universal change area or lobby viewing area"
+                                                },
+                                  "checked":  "2026-10-03"
+                              },
+                  "tavesestatecidery":  {
+                                            "admission":  {
+                                                              "text":  "Fall farm passes (Fun Pass, SuperFUN Pass) cover pumpkin garden, petting barn, mazes; gate prices $3 more than online advance. Open Sep 12-Oct 31",
+                                                              "booking":  "recommended",
+                                                              "bookingNote":  "Buy online 24+ hours ahead for cheaper tickets",
+                                                              "source":  "https://www.tavesfamilyfarms.com"
+                                                          },
+                                            "food":  {
+                                                         "onsite":  "snacks"
+                                                     },
+                                            "checked":  "2026-10-03"
+                                        },
+                  "temporarycameroncommunit":  {
+                                                   "admission":  {
+                                                                     "text":  "PlayZone drop-in for ages 1-5 $2 per child; day pass rates apply to other drop-ins",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.burnaby.ca/cameron"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "washrooms":  true,
+                                                                     "stairs":  "none",
+                                                                     "note":  "Inside City of Lougheed mall; accessible washrooms, mall elevators; open daily"
+                                                                 },
+                                                   "food":  {
+                                                                "nearby":  "Mall food court in the same building"
+                                                            },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "theactartscentre":  {
+                                           "admission":  {
+                                                             "text":  "Tickets vary by show; e.g. 2026 youth showcase adult $31, under 18 $26 incl. fees",
+                                                             "booking":  "recommended",
+                                                             "bookingNote":  "Ticketed shows, tickets via Purchase.MapleRidgeACT.ca",
+                                                             "source":  "https://www.mapleridge.ca/node/4898"
+                                                         },
+                                           "checked":  "2026-10-03"
+                                       },
+                  "thehiveclimbingpoco":  {
+                                              "admission":  {
+                                                                "text":  "Day pass adult $32, youth 6-17 $24, ages 0-5 $19; shoe rental $7",
+                                                                "booking":  "none",
+                                                                "bookingNote":  "Waiver required; under-18s need guardian-signed form",
+                                                                "source":  "https://www.hiveclimbing.com/pricing"
+                                                            },
+                                              "checked":  "2026-10-03"
+                                          },
+                  "thereachgallerymuseum":  {
+                                                "admission":  {
+                                                                  "text":  "Admission by donation",
+                                                                  "booking":  "none",
+                                                                  "source":  "https://thereach.ca/location-hours/"
+                                                              },
+                                                "amenities":  {
+                                                                  "note":  "Closed Sun, Mon and holidays; Tue 10-8, Wed-Fri 10-5, Sat 12-5"
+                                                              },
+                                                "checked":  "2026-10-03"
+                                            },
+                  "thompsoncommunitycentre":  {
+                                                  "admission":  {
+                                                                    "text":  "Sports drop-in (open gym etc.) $3.55 child/youth (3-18), $6.30 adult (19-54), $5.05 senior; family $3.55 per person",
+                                                                    "booking":  "none",
+                                                                    "source":  "https://www.richmond.ca/__shared/assets/Sports_Schedule_Winter78131.pdf"
+                                                                },
+                                                  "amenities":  {
+                                                                    "note":  "Official page mentions fitness centre, birthday parties, playboxes; no pool listed"
+                                                                },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "timmscommunitycentre":  {
+                                               "admission":  {
+                                                                 "text":  "City of Langley drop-in 2026: child/youth 4-18 $3, adult 19-59 $6, senior 60+ $4.50, family $12; under 4 free",
+                                                                 "source":  "https://langleycity.ca/recreation-culture/recreation/admission-rates-passes-and-financial-assistance"
+                                                             },
+                                               "checked":  "2026-10-03"
+                                           },
+                  "tonglouiefamilyymca":  {
+                                              "amenities":  {
+                                                                "note":  "Plus changerooms, leisure pool, cafe"
+                                                            },
+                                              "food":  {
+                                                           "onsite":  "cafe"
+                                                       },
+                                              "checked":  "2026-10-03"
+                                          },
+                  "towncentreparkcommunityc":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in from Apr 2026: child 0-12 $3.43, youth $5.10, adult $6.81 (before tax)",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://coquitlam.ca/979/Drop-In-Activities"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "treetopsadventure":  {
+                                            "admission":  {
+                                                              "text":  "Included in Capilano Park day admission: Adult $77, youth 13-17 $50, child 6-12 $30, age 5 and under free; Treetops and Cliffwalk included",
+                                                              "booking":  "recommended",
+                                                              "bookingNote":  "Buy tickets on the official site",
+                                                              "source":  "https://www.capbridge.com/rates/"
+                                                          },
+                                            "amenities":  {
+                                                              "note":  "Treetops Adventure is not wheelchair accessible"
+                                                          },
+                                            "checked":  "2026-10-03"
+                                        },
+                  "ubcbotanicalgarden":  {
+                                             "admission":  {
+                                                               "text":  "Adult $14.50 (summer rates), concession and family rates available; winter flat $5",
+                                                               "booking":  "recommended",
+                                                               "bookingNote":  "Tickets sold online or on site",
+                                                               "source":  "https://botanicalgarden.ubc.ca/visit/"
+                                                           },
+                                             "amenities":  {
+                                                               "washrooms":  true,
+                                                               "note":  "Open Tue-Sun, 10-4:30 until Oct 31, then 10-2"
+                                                           },
+                                             "food":  {
+                                                          "onsite":  "cafe",
+                                                          "outside":  "allowed",
+                                                          "nearby":  "Garden Cafe on site; picnics welcome"
+                                                      },
+                                             "checked":  "2026-10-03"
+                                         },
+                  "urbansafarirescuesociety":  {
+                                                   "admission":  {
+                                                                     "text":  "Adults $15, children/seniors/students $10 (plus GST), under 3 free",
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  "Advance booking not required; closed Tue-Wed",
+                                                                     "source":  "https://www.urbansafari.ca"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Open Mon, Thu-Sun 11am-4pm; 1395 176 St"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "vag":  {
+                              "admission":  {
+                                                "text":  "Adults $29 BC residents, $35 non-BC; ages 18 and under free; free first Friday of month 4-8pm",
+                                                "booking":  "recommended",
+                                                "bookingNote":  "Reserve tickets online",
+                                                "source":  "https://www.vanartgallery.bc.ca/visit"
+                                            },
+                              "amenities":  {
+                                                "note":  "Street-level access; free lockers with admission; wheelchairs on request"
+                                            },
+                              "food":  {
+                                           "onsite":  "cafe",
+                                           "nearby":  "1931 Gallery Bistro in the gallery"
+                                       },
+                              "checked":  "2026-10-03"
+                          },
+                  "vancouvermaritimemuseum":  {
+                                                  "admission":  {
+                                                                    "text":  "Adult $22, youth/senior/student $17.50, 5 and under free, family pass $48.50 (plus GST); pay what you can first Sunday",
+                                                                    "booking":  "none",
+                                                                    "source":  "https://www.vanmaritime.com/visit"
+                                                                },
+                                                  "amenities":  {
+                                                                    "note":  "Open Tue-Sun 10-5"
+                                                                },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "vancouverpolicemuseumarc":  {
+                                                   "admission":  {
+                                                                     "text":  "Adult $14, youth 5-18 $11, family (2 adults + 2 youth) $40",
+                                                                     "booking":  "none",
+                                                                     "bookingNote":  "No timed reservation needed",
+                                                                     "source":  "https://www.vancouverpolicemuseum.ca/tickets"
+                                                                 },
+                                                   "amenities":  {
+                                                                     "note":  "Moving: old site (240 E Cordova) closes Oct 31, new site at 351 Abbott St opens Nov 5, 2026"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "vandusen":  {
+                                   "admission":  {
+                                                     "text":  "Apr-Oct plus GST: adult $15.81, youth 13-18 $11.05, child 5-12 $7.90, 4 and under free",
+                                                     "booking":  "none",
+                                                     "source":  "https://vandusengarden.org/plan-your-visit/hours-admission/"
+                                                 },
+                                   "amenities":  {
+                                                     "stroller":  "yes",
+                                                     "note":  "Strollers, wagons, wheelchairs welcome; fall hours 9-5, last entry 30 min before close"
+                                                 },
+                                   "food":  {
+                                                "onsite":  "cafe",
+                                                "outside":  "allowed",
+                                                "nearby":  "Picnics on lawns with blanket; Truffles Garden Cafe on site"
+                                            },
+                                   "checked":  "2026-10-03"
+                               },
+                  "watermania":  {
+                                     "admission":  {
+                                                       "text":  "Drop-in swim $4.95 child (2-12), $6.55 youth (13-18), $8.15 adult; family rate $4.95 per person with 1-2 parents. Water slides need age 7+ and 1.2 m. Pool was closed for maintenance Sep 8-Oct 4, 2026",
+                                                       "booking":  "none",
+                                                       "source":  "https://www.richmond.ca/__shared/assets/Watermania_Aquatic_and_Fitness_Schedule_Fall_202679539.pdf"
+                                                   },
+                                     "amenities":  {
+                                                       "note":  "Change rooms, showers and lockers (two quarters); under-7s must stay within arm\u0027s reach of an adult, 1:3 ratio"
+                                                   },
+                                     "checked":  "2026-10-03"
+                                 },
+                  "wcblairrecreationcentre":  {
+                                                  "admission":  {
+                                                                    "text":  "City of Langley drop-in 2026: child/youth 4-18 $3, adult 19-59 $6, senior 60+ $4.50, family $12; under 4 free",
+                                                                    "source":  "https://langleycity.ca/recreation-culture/recreation/admission-rates-passes-and-financial-assistance"
+                                                                },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "wesburncommunitycentre":  {
+                                                 "amenities":  {
+                                                                   "stroller":  "yes",
+                                                                   "note":  "Wheelchair accessible, automatic doors; park has spray park and playground"
+                                                               },
+                                                 "checked":  "2026-10-03"
+                                             },
+                  "westcoastminiputt":  {
+                                            "admission":  {
+                                                              "booking":  "required",
+                                                              "bookingNote":  "Open by reservation only; book online or call 604-285-1888"
+                                                          },
+                                            "checked":  "2026-10-03"
+                                        },
+                  "westvancouveraquaticcent":  {
+                                                   "admission":  {
+                                                                     "text":  "Drop-in swim: child 3-12 $4.60, youth $5.85, adult $8.35, under 3 free, family rate $4.65 per person",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://westvancouver.ca/parks-recreation/recreation-programs-services/admissions-passes"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "whiterockcommunitycentre":  {
+                                                   "admission":  {
+                                                                     "text":  "Gym drop-in $4; public skating $4-$6 per visit Oct-Mar (2026)",
+                                                                     "booking":  "none",
+                                                                     "source":  "https://www.whiterockcity.ca/832/Memberships-Fees"
+                                                                 },
+                                                   "checked":  "2026-10-03"
+                                               },
+                  "whiterockmuseumarchives":  {
+                                                  "admission":  {
+                                                                    "text":  "Admission by donation; guided tour suggested $5 per person",
+                                                                    "booking":  "none",
+                                                                    "source":  "https://www.whiterockmuseum.ca/visit"
+                                                                },
+                                                  "amenities":  {
+                                                                    "stroller":  "yes",
+                                                                    "note":  "Gallery fully accessible for wheelchairs and strollers; open Tue-Sun 10:30-4:30"
+                                                                },
+                                                  "checked":  "2026-10-03"
+                                              },
+                  "wildplaymr":  {
+                                     "admission":  {
+                                                       "text":  "Price depends on time slot; kids course ages 5-12; bundles from $59.98",
+                                                       "booking":  "recommended",
+                                                       "bookingNote":  "Book timed slots online",
+                                                       "source":  "https://www.wildplay.com/maple-ridge"
+                                                   },
+                                     "amenities":  {
+                                                       "washrooms":  true,
+                                                       "note":  "Free parking, lockers, covered picnic tables; open Fri-Mon 10-6 in Oct, weekends only from Nov 1"
+                                                   },
+                                     "checked":  "2026-10-03"
+                                 }
+              }
+}
