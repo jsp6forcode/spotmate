@@ -78,7 +78,7 @@ tailwind.config = {
 
 <script>
 // ───────── 메타 데이터 ─────────
-// basis: 'trend' = 검색량(Google Trends) 순위, 'reviews' = Google 리뷰 기준으로 고른 추천 (순위 없음)
+// basis: 'trend' = 검색량 순위, 'reviews' = 리뷰 기준으로 고른 추천 (순위 없음)
 const CATS = {
   nature: { label: 'Nature & Views', icon: '🏔️', basis: 'trend',   dot: '#10b981' },
   city:   { label: 'City Sights',    icon: '🏙️', basis: 'trend',   dot: '#0ea5e9' },
@@ -213,7 +213,7 @@ const catOptions = view => PAGES[view] ? [...PAGES[view], ...(view !== 'eats' ? 
 // Eats에는 All이 없어요 (Food가 기본). 다른 페이지는 All부터
 const hasAll = view => view !== 'eats';
 const defaultCat = view => hasAll(view) ? 'all' : PAGES[view][0];
-// "Vancouver classic": 이미 많은 사람이 알고 좋아하는 곳. 데이터의 gem(구글 4.6+·리뷰 500+)과 검색량 상위(isClassic)를 합쳤어요
+// "Vancouver classic": 이미 많은 사람이 알고 좋아하는 곳. 데이터의 gem(평점 4.6+·리뷰 500+)과 검색량 상위(isClassic)를 합쳤어요
 const CLASSIC = { label: 'Vancouver classic', criteria: 'A local favourite that plenty of people already know and love: rated 4.6+ on Google from 500+ reviews, or one of the most searched places in BC.' };
 // 🧸 Kids 필터: 아이 동반 장소(family: true, 놀이터·수영장·몰·농장 등)와 아이랑 가기 좋은 곳(kids: true)만 남겨요
 const KIDS_TAG = "Playgrounds, spray parks and pools built for kids, plus places Google marks as good for children or where Google reviews (4.0+ rating, 50+ reviews) say it's great for families.";
@@ -237,7 +237,7 @@ function pickOf(s) {
   return null;
 }
 // play: 놀이터·물놀이장·어린이 수영장처럼 아이를 위해 만든 시설 (리뷰가 적어도 아이랑 갈 곳이에요)
-// notKid: 구글 리뷰에 아이 관련 단어가 3번 미만이고 예외(구글 "어린이에게 적합", 공식 아이 정보)도 없는 곳 (tools/kid-words.ps1)
+// notKid: 리뷰에 아이 관련 단어가 3번 미만이고 예외(공식 아이 정보 등)도 없는 곳 (tools/kid-words.ps1)
 const isKid = s => !s.notKid && (!!s.kids || !!s.family || !!s.play);
 // 먹거리 "지금 먹기 좋은 곳": 비·추운 날엔 국물 요리, 맑고 따뜻한 날엔 아이스크림·파티오 (이름·설명으로 판단)
 const HOT_FOOD = /ramen|\bpho\b|phở|hot ?pot|noodle|udon|laksa|jjigae|tonkotsu|bun bo|congee|soup|dumpling|\bmomos?\b/i;
@@ -375,12 +375,12 @@ const CLASSIC_MIN = 40;
 const isClassic = s => hasTrend(s) && s.trend[2] >= CLASSIC_MIN;
 // 처음 본 지 이 기간이 안 된 스팟은 "New since your last visit"으로 표시해요
 const NEW_DAYS = 14;
-// ── 평소 대비 증가율 (data/trends-weekly.json: Google Trends BC) ──
+// ── 평소 대비 증가율 (data/trends-weekly.json) ──
 // 평소 = 직전 4주(마지막 완결 4주) 주간 검색량 평균(series), 최근 = 마지막 RECENT_DAYS일의 일간 검색량 평균(daily).
 // Trends는 요청마다 척도가 달라서, 주간·일간이 겹치는 주들로 비율(k)을 구해 일간 값을 주간 척도로 바꿔 비교해요.
 // 장소마다 따로 조회한 값이라 장소끼리 척도는 달라도 비율은 비교할 수 있어요.
 // 검색량이 너무 적으면(0인 주가 많으면) 비율이 튀어서 계산하지 않아요.
-// 일간 값의 0은 "검색이 없었다"가 아니라 "양이 적어 Google이 비워 둔 날"이라, 0이 낀 주·날은 계산에서 빼요.
+// 일간 값의 0은 "검색이 없었다"가 아니라 "양이 적어 비워 둔 날"이라, 0이 낀 주·날은 계산에서 빼요.
 const RISE_MIN_WEEKS = 40;   // 12개월 중 검색량이 0이 아닌 주가 이만큼은 있어야 해요
 const BASE_WEEKS = 4;        // "평소"로 보는 직전 주 수 (12개월 평균은 여름 성수기 때문에 가을·겨울엔 대부분 "평소보다 적음"이 돼요)
 // 평소는 4주의 평균이 아니라 중앙값: 한 주만 튀어도(예: 27, 37, 6, 30) 배율이 크게 부풀지 않게
@@ -589,7 +589,7 @@ const recentReddit = s => ((REDDIT.mentions[s.id] || {}).posts || []).filter(p =
 // 데이터 기준일 → "today", "yesterday", "3 days ago"
 // data/parking.json: 스팟 근처 400m 안 주차장 (OpenStreetMap). { id: [{ m, fee?, kind?, name?, customers? }] }
 let PARKING = { spots: {}, radius: 400 };
-// "What parents say" 요약 (data/parent-says.json, 구글 리뷰를 우리 말로 요약한 한두 문장)
+// "What parents say" 요약 (data/parent-says.json, 한두 문장)
 let SAYS = {};
 const PARK_KIND = { surface: 'Surface lot', 'multi-storey': 'Parkade', underground: 'Underground', rooftop: 'Rooftop', street_side: 'Street parking', lane: 'Street parking', layby: 'Pull-out' };
 const parkingOf = s => PARKING.spots[s.id];
@@ -3135,7 +3135,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           })()}
 
 
-          <!-- "How busy is it?" 칸도 뺐어요: 혼잡도는 위의 Google Maps 링크에서 봐요 (구글은 혼잡도 API를 주지 않아요) -->
+          <!-- "How busy is it?" 칸도 뺐어요: 혼잡도는 위의 지도 링크에서 봐요 -->
           <!-- "Tips" 칸은 뺐어요: 위의 Tiny Trips tip과 겹쳐서. 꼭 필요한 안내는 data/spot-notes.json으로 옮겨요 -->
 
 

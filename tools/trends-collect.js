@@ -1,6 +1,6 @@
-// 평소 대비 증가율용 Google Trends 주간·일간 데이터 수집 (자주 돌릴수록 최신, 브라우저에서 직접 실행)
+// 평소 대비 증가율용 검색 추세 주간·일간 데이터 수집 (자주 돌릴수록 최신, 브라우저에서 직접 실행)
 //
-// Google Trends는 공식 API가 없고 서버(GitHub Actions)에서 부르면 막혀서, 사람이 쓰는 브라우저에서 돌려요.
+// 검색 추세 데이터는 공식 API가 없고 서버(GitHub Actions)에서 부르면 막혀서, 사람이 쓰는 브라우저에서 돌려요.
 // 사용법:
 //   1. https://trends.google.com/trends/explore?geo=CA-BC&q=Stanley%20Park 를 열어요 (쿠키가 생기도록)
 //   2. 개발자 도구(F12) → Console에 이 파일 내용을 통째로 붙여넣고 Enter
@@ -12,7 +12,7 @@
 // 앱(index.html의 riseOf)이 "최근 완결된 3일 검색량 ÷ 직전 4주 주간 중앙값"으로 증가율을 계산해요.
 // 주간·일간은 척도가 달라서, 겹치는 주들로 일간 값을 주간 척도로 바꿔요.
 // 평소보다 많이 검색되는 곳(1.05× 이상)의 이유는 notes[스팟 id] = { why, rising, source }에 따로 적어요.
-// rising은 Google Trends 최근 7일 "급상승 연관 검색어", why는 지금 유효한 이유(이미 지난 행사는 X)로 사람이 쓴 한두 문장이에요.
+// rising은 최근 7일 "급상승 연관 검색어", why는 지금 유효한 이유(이미 지난 행사는 X)로 사람이 쓴 한두 문장이에요.
 // 이 스크립트는 notes를 만들지 않으니, 새 파일로 덮어쓸 때 새로 써 주세요.
 // 정기 갱신: Claude 앱 예약 작업 "spotmate-data-refresh"(월·목 아침)가 이 과정을 대신하고, 끝나면 tools/validate-data.ps1로 점검해요.
 (async () => {

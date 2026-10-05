@@ -1,5 +1,5 @@
 ﻿# 새로 생긴 곳 발굴 ("Just opened"): 평점 4.9+, 리뷰 30+ 이면서 최근 6개월 안에 연 것으로 보이는 곳
-# Google Places에는 "개업일"이 없어서, 돌려주는 리뷰(최대 5개)가 모두 최근 6개월 안이고 리뷰 수가 적은 곳을 후보로 보여줘요.
+# 장소 데이터에는 "개업일"이 없어서, 돌려주는 리뷰(최대 5개)가 모두 최근 6개월 안이고 리뷰 수가 적은 곳을 후보로 보여줘요.
 # 후보는 반드시 사람이 개업 기사·공식 SNS로 개업 시기를 확인한 뒤에만 data/spots.json에 "opened": "YYYY-MM"으로 넣어요.
 # Google 약관상 평점·리뷰 수·리뷰는 저장하지 않고 화면에만 출력해요 (Place ID는 저장 가능).
 # 사용법: powershell -ExecutionPolicy Bypass -File tools\new-openings.ps1 [-Months 6] [-MinRating 4.9] [-MinReviews 30] [-Recheck]

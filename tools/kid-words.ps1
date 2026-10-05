@@ -1,5 +1,5 @@
 ﻿# 아이 언급 횟수 확인 (사용자 규칙, 2026-10-01):
-#   구글 리뷰(Places API가 주는 최대 5개)에 아기·아이 관련 단어가 모두 합쳐 3번 이상 나와야 SpotMate에 보여줘요.
+#   리뷰(최대 5개)에 아기·아이 관련 단어가 모두 합쳐 3번 이상 나와야 SpotMate에 보여줘요.
 #   단어: kid(s), kiddo, child(ren), toddler, baby/babies, infant, little one(s), stroller, pram, son, daughter,
 #         grandkid, grandchild(ren), preschool(er), youngster, playground, play area, tot(s)  ("family"는 너무 넓어서 빼요)
 #   리뷰 글은 저장하지 않고, 센 숫자만 -Out 임시 파일(스크래치 폴더)에 써요. 저장소에는 결과(통과 못 하면 "notKid": true)만 넣어요.
