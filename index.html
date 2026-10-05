@@ -503,6 +503,18 @@ const overlapsSeen = (t, seen) => { const w = [...keyWords(t)]; return w.length 
 // data/spot-facts.json: 입장료·예약·유모차/기저귀/수유·아이 먹거리 (확인한 것만. 모르면 비워 둬요)
 let FACTS = {}, FACTS_META = { updatedAt: '' };
 const fx = id => FACTS[id] || null;
+// 장소 창의 세 상자(What parents say · Tiny Trips tip · Good to know)가 같은 모양이 되게: 제목은 굵게, 내용은 점(•) 목록, 맨 아래 작은 출처 줄. 배경색만 상자마다 달라요 (사용자 요청, 2026-10-04)
+const BOX_TONE = {
+  pink: { bg: 'bg-pink-50 dark:bg-pink-500/10 ring-1 ring-pink-200 dark:ring-pink-500/25', h: 'text-pink-900 dark:text-pink-200', dot: 'text-pink-600 dark:text-pink-300' },
+  sky: { bg: 'bg-sky-50 dark:bg-sky-500/10 ring-1 ring-sky-200 dark:ring-sky-500/25', h: 'text-sky-900 dark:text-sky-200', dot: 'text-sky-600 dark:text-sky-300' },
+  slate: { bg: 'bg-slate-50 dark:bg-slate-800/50 ring-1 ring-slate-200 dark:ring-slate-700', h: 'text-slate-900 dark:text-slate-100', dot: 'text-slate-500 dark:text-slate-400' }
+};
+const infoBox = (tone, title, itemsHtml, footerHtml = '', label = '') => `
+          <section class="rounded-2xl p-5 ${BOX_TONE[tone].bg}"${label ? ` aria-label="${label}"` : ''}>
+            <h3 class="font-bold ${BOX_TONE[tone].h}">${title}</h3>
+            <ul class="mt-2 space-y-1.5 text-sm text-slate-800 dark:text-slate-200">${itemsHtml.map(x => `<li class="flex gap-2"><span aria-hidden="true" class="${BOX_TONE[tone].dot}">•</span><span>${x}</span></li>`).join('')}</ul>
+            ${footerHtml ? `<p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">${footerHtml}</p>` : ''}
+          </section>`;
 let NOTES = {}, NOTES_META = { updatedAt: '', note: '' };
 // data/season.json: 시즌 태그(#FallColours 등)와 스팟별 "지금 가야 하는 이유". 오늘(밴쿠버 날짜)이 from~to 안인 태그만 써요
 let SEASON = [], SEASON_NOTE = '';
@@ -2401,22 +2413,21 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         : (() => { const oi = openInfo(s); return oi
           ? `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>`
           : HOURS_READY ? '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
-        <p class="hidden sm:block mt-2 text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(s.summary)}</p>
+        <p class="hidden sm:block mt-2 sm:mt-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(s.summary)}</p>
         ${why ? why.lunch ? `
-        <div class="mt-1.5 sm:mt-3 border-l-4 border-emerald-500 rounded-r-lg bg-emerald-50 dark:bg-emerald-500/10 pl-2 pr-2 sm:pl-3 sm:pr-3 py-1 sm:py-2">
+        <div class="mt-2 sm:mt-3 border-l-4 border-emerald-500 rounded-r-lg bg-emerald-50 dark:bg-emerald-500/10 pl-2 pr-2 sm:pl-3 sm:pr-3 py-1 sm:py-2">
           <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wide text-emerald-800 dark:text-emerald-300">${esc(why.label)}</p>
-          <p class="mt-0.5 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2 max-sm:[-webkit-line-clamp:4]">${esc(why.text)}</p>
+          <p class="mt-0.5 text-xs sm:text-sm leading-snug text-slate-800 dark:text-slate-100 clamp2 max-sm:[-webkit-line-clamp:4]">${esc(why.text)}</p>
         </div>` : `
-        <div class="mt-1.5 sm:mt-3 border-l-4 ${why.hh ? 'border-amber-500' : 'border-amber-400'} rounded-r-lg bg-amber-50 dark:bg-amber-500/10 pl-2 pr-2 sm:pl-3 sm:pr-3 py-1 sm:py-2">
-          <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wide text-amber-800 dark:text-amber-300">${esc(why.label || 'Why now')}</p>
-          <p class="mt-0.5 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2 max-sm:[-webkit-line-clamp:4]">${esc(why.text)}</p>
-          ${evExtra ? `<p class="mt-1 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(evExtra)}</p>` : ''}
+        <div class="mt-2 sm:mt-3 border-l-4 ${why.hh ? 'border-amber-500' : 'border-amber-400'} rounded-r-lg bg-amber-50 dark:bg-amber-500/10 pl-2 pr-2 sm:pl-3 sm:pr-3 py-1 sm:py-2">
+          <p class="text-xs sm:text-sm leading-snug text-slate-800 dark:text-slate-100 clamp2 max-sm:[-webkit-line-clamp:4]">${esc(why.text)}</p>
+          ${evExtra ? `<p class="mt-1 text-xs sm:text-sm leading-snug text-slate-800 dark:text-slate-100 clamp2">${esc(evExtra)}</p>` : ''}
         </div>` : ''}
         ${(() => {
           // 이유 박스(Coming up 등)와 별개로, What parents say → Tiny Trips tip 순서, 각각 3줄까지 (사용자 요청, 2026-10-04)
           const tip = this.tipItems(s, 'card')[0];
           if (!tip && !SAYS[s.id]) return '';
-          return `<div class="max-sm:hidden mt-1.5 sm:mt-2 text-xs sm:text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2 sm:px-2.5 py-1 sm:py-1.5">${SAYS[s.id] ? `<p class="[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden"><span class="font-semibold">What parents say</span> · ${esc(SAYS[s.id])}</p>` : ''}${tip ? `<p class="${SAYS[s.id] ? 'mt-1 ' : ''}[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold">Tiny Trips tip:</span> ${esc(tip)}</p>` : ''}</div>`;
+          return `<div class="max-sm:hidden mt-2 sm:mt-3 text-xs sm:text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2 sm:px-2.5 py-1 sm:py-1.5">${SAYS[s.id] ? `<p class="[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden"><span class="font-semibold">What parents say:</span> ${esc(SAYS[s.id])}</p>` : ''}${tip ? `<p class="${SAYS[s.id] ? 'mt-1 ' : ''}[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold">Tiny Trips tip:</span> ${esc(tip)}</p>` : ''}</div>`;
         })()}
 
         ${TRENDS_ON && s.rise != null && s.rise >= RISING_MIN && !(why && why.icon === RISE_ICON) ? `<p class="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-300" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
@@ -2441,19 +2452,22 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           const st = hh || lu;
           return st ? `
         <p class="mt-2 text-xs text-slate-500 dark:text-slate-400 truncate">${esc(st.label)}: ${esc(hhSchedule(st.h).map(g => `${g.days} ${g.times}`).join(' · '))}</p>` : ''; })()}
+        ${this.factsLine(s)}
+        <!-- 태그·나이·시간·가격 줄은 카드 높이와 상관없이 늘 카드 아래쪽(버튼 바로 위)에 맞춰요 -->
+        <div class="mt-auto">
         ${KIDS_ONLY && isKid(s) ? (() => {
           // 아이 동반 장소: 무료/유료·실내/야외·종류 태그와 맞는 나이
           const kp = kidProfile(s);
           return `
-        ${this.factsLine(s)}
-        <p class="mt-1.5 sm:mt-3 flex flex-wrap gap-1 sm:gap-1.5">${kp.tags.map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full ${t === 'Free' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'}">${esc(t)}</span>`).join('')}</p>
-        <p class="max-sm:hidden mt-1 sm:mt-2 text-xs sm:text-sm font-semibold text-teal-700 dark:text-teal-300">${esc(kp.agesText)}</p>`; })() : ''}
-        <div class="mt-1.5 sm:mt-3 flex flex-wrap gap-x-2 sm:gap-x-3 gap-y-0.5 sm:gap-y-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+        <p class="mt-2 sm:mt-3 flex flex-wrap gap-1 sm:gap-1.5">${kp.tags.map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full ${t === 'Free' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'}">${esc(t)}</span>`).join('')}</p>
+        <p class="max-sm:hidden mt-2 sm:mt-3 text-xs sm:text-sm font-semibold text-teal-700 dark:text-teal-300">${esc(kp.agesText)}</p>`; })() : ''}
+        <div class="mt-2 sm:mt-3 flex flex-wrap gap-x-2 sm:gap-x-3 gap-y-0.5 sm:gap-y-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
           ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}${parkShort(s) ? `<span class="max-sm:hidden">${esc(parkShort(s))}</span>` : ''}
           ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
         </div>
+        </div>
         ${this.state.reviewsOn && this.reviewStats(s.id) ? (() => { const st = this.reviewStats(s.id); return `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm"><span class="text-amber-500" aria-hidden="true">★</span> <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'parent review')}</span></p>`; })() : ''}
-        <div class="mt-auto pt-2.5 sm:pt-4 ${this.state.reviewsOn ? 'flex gap-2' : ''}">
+        <div class="pt-2.5 sm:pt-4 ${this.state.reviewsOn ? 'flex gap-2' : ''}">
         ${this.state.reviewsOn ? `<button data-act="rvcard" data-val="${s.id}" class="shrink-0 px-2.5 sm:px-4 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">★ Review</button>` : ''}
           <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="w-full py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm border ${saved ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-300' : 'border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200'}">${saved ? '♥ Saved' : '♡ Save'}</button>
 
@@ -2841,9 +2855,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const f = fx(s.id), a = f && f.admission;
     if (!a || !a.text) return '';
     const bk = a.booking === 'required' ? 'Book ahead' : a.booking === 'recommended' ? 'Booking advised' : '';
-    return `<p class="mt-1.5 text-xs sm:text-sm text-slate-700 dark:text-slate-200"><span aria-hidden="true">🎟️</span> ${esc(a.text)}${bk ? ` <span class="font-bold text-amber-700 dark:text-amber-300">· ${bk}</span>` : ''}</p>`;
+    return `<p class="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-700 dark:text-slate-200"><span class="font-semibold">Admission:</span> ${esc(a.text)}${bk ? ` <span class="font-semibold text-amber-700 dark:text-amber-300">${bk}.</span>` : ''}</p>`;
   }
-  // 모달 "Good to know": 입장료·예약, 유모차·기저귀·수유, 먹거리, 확인한 날짜와 출처, 오류 신고
+  // 모달 "Good to know": 입장료·예약, 유모차·기저귀·수유, 먹거리, 확인한 날짜와 출처 (다른 두 상자와 같은 모양)
   factsBox(s) {
     const f = fx(s.id), a = (f && f.admission) || {}, m = (f && f.amenities) || {}, fd = (f && f.food) || {};
     const chips = [
@@ -2855,20 +2869,17 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       fd.onsite === 'cafe' ? 'Café on site' : fd.onsite === 'snacks' ? 'Snacks on site' : fd.onsite === 'none' ? 'No food on site' : '',
       fd.outside === 'allowed' ? 'Bring your own food' : fd.outside === 'not-allowed' ? 'Outside food not allowed' : ''
     ].filter(Boolean);
-    const row = (icon, label, body) => `<div><div class="min-w-0"><p class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">${label}</p>${body}</div></div>`;
-    const rows = [];
-    if (a.text) rows.push(row('🎟️', 'Admission', `<p class="font-semibold">${esc(a.text)}</p>${a.booking === 'required' ? `<p class="text-sm font-bold text-amber-700 dark:text-amber-300">Booking required${a.bookingNote ? `: ${esc(a.bookingNote)}` : ''}</p>` : a.booking === 'recommended' ? `<p class="text-sm font-semibold text-amber-700 dark:text-amber-300">Booking recommended${a.bookingNote ? `: ${esc(a.bookingNote)}` : ''}</p>` : a.booking === 'none' ? '<p class="text-sm text-slate-600 dark:text-slate-300">No booking needed</p>' : ''}`));
-    if (chips.length || m.note) rows.push(row('👶', 'With little ones', `${chips.length ? `<p class="mt-0.5 flex flex-wrap gap-1.5">${chips.map(c => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-500/15 dark:text-sky-300">${esc(c)}</span>`).join('')}</p>` : ''}${m.note ? `<p class="text-sm text-slate-600 dark:text-slate-300">${esc(m.note)}</p>` : ''}`));
-    if (food.length || fd.nearby) rows.push(row('🥪', 'Food', `${food.length ? `<p class="font-semibold">${esc(food.join(' · '))}</p>` : ''}${fd.nearby ? `<p class="text-sm text-slate-600 dark:text-slate-300">Nearby: ${esc(fd.nearby)}</p>` : ''}`));
+    const label = x => `<span class="font-semibold">${x}:</span> `;
+    const booking = a.booking === 'required' ? ` <span class="font-semibold text-amber-700 dark:text-amber-300">Booking required${a.bookingNote ? `: ${esc(a.bookingNote)}` : ''}.</span>`
+      : a.booking === 'recommended' ? ` <span class="font-semibold text-amber-700 dark:text-amber-300">Booking recommended${a.bookingNote ? `: ${esc(a.bookingNote)}` : ''}.</span>` : a.booking === 'none' ? ' No booking needed.' : '';
+    const items = [];
+    if (a.text || booking) items.push(label('Admission') + (a.text ? esc(a.text) + (booking ? '.' : '') : '') + booking);
+    if (chips.length || m.note) items.push(label('With little ones') + esc(chips.join(' · ')) + (chips.length && m.note ? '. ' : '') + (m.note ? esc(m.note) : ''));
+    if (food.length || fd.nearby) items.push(label('Food') + esc(food.join(' · ')) + (food.length && fd.nearby ? '. ' : '') + (fd.nearby ? `Nearby: ${esc(fd.nearby)}` : ''));
+    if (!items.length) return '';
     const src = /^https:\/\//.test(a.source || '') ? ` · <a href="${esc(a.source)}" target="_blank" rel="noopener" class="underline">source</a>` : '';
     const checked = f && f.checked ? `Info checked ${esc(shortDate(f.checked))}${src}` : '';
-    if (!rows.length) return '';
-    return `
-          <section class="rounded-2xl p-4 bg-slate-50 ring-1 ring-slate-200 dark:bg-slate-800/50 dark:ring-slate-700" aria-label="Good to know">
-            <h3 class="font-bold">Good to know</h3>
-            <div class="mt-3 space-y-3">${rows.join('')}</div>
-            ${checked ? `<p class="mt-3 text-xs text-slate-500 dark:text-slate-400">${checked}</p>` : ''}
-          </section>`;
+    return infoBox('slate', 'Good to know', items, checked, 'Good to know');
   }
   // 결과 위 체크 필터 칩 (숫자 = 지금 조건에 맞는 곳 중 그 필터에 해당하는 곳)
   fxChips() {
@@ -2984,9 +2995,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${this.planLater() && HOURS_READY && this.planHours(s) ? (() => { const ph = this.planHours(s); return `
           <p class="mt-1 text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)} <span class="font-normal text-slate-500 dark:text-slate-400">(${WHEN_PHRASE[this.state.when]})</span></p>`; })()
           : (() => { const oi = openInfo(s); return oi ? `
-          <p class="mt-1 text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 empty:hidden">${s.hoursSource === 'osm' ? `Hours: ${esc(weekHours(s) || s.hours)} · from OpenStreetMap, check Google Maps before you go`
-            : s.hoursSource === 'web' ? `Hours: ${esc(weekHours(s) || s.hours)} · from ${/^https:\/\//.test(s.hoursUrl || '') ? `<a href="${esc(s.hoursUrl)}" target="_blank" rel="noopener" class="underline">the place's website or listings</a>` : "the place's website or listings"}, check before you go` : isDaylight(s) ? '' : esc(HOURS_NOTE[s.hoursSource] || '')}</p>`
+          <p class="mt-1 text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>${(s.hoursSource === 'osm' || s.hoursSource === 'web') && !isDaylight(s) ? `
+          <p class="text-xs text-slate-500 dark:text-slate-400">Hours: ${esc(weekHours(s) || s.hours)}</p>` : ''}`
             : '<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Opening hours unknown. Check Google Maps.</p>'; })()}
           ${TRENDS_ON && s.rise != null ? `
           <p class="mt-2 text-sm ${s.rise >= RISING_MIN ? 'font-semibold text-rose-600 dark:text-rose-300' : 'text-slate-600 dark:text-slate-300'}">${riseText(s.rise, 'search level')}
@@ -3017,22 +3027,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               ...press.map(p => line(`<span class="font-semibold">In the news</span> · ${esc(p.outlet)}, ${esc(shortDate(p.date))}: <a href="${esc(p.url)}" target="_blank" rel="noopener" class="underline">${esc(p.title)} ↗</a>`)),
               ...tags.map(t => { const x = t.spots[s.id]; return overlapsSeen(x.why, seen) ? '' : line(`<span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}`); }),
             ].join('');
-            const tipHtml = notes.length ? `<ul class="mt-2 space-y-1.5 text-sm text-slate-800 dark:text-slate-200">${notes.slice(0, 2).map(x => `<li class="flex gap-2"><span aria-hidden="true" class="text-sky-600 dark:text-sky-300">•</span><span>${esc(x)}</span></li>`).join('')}</ul>
-            <p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">Checked ${esc(shortDate(NOTES_META.updatedAt))} · ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'official site'}. Hours can change.</p>` : '';
             const chipsBlock = `${chips || extra ? `
           <div>
             ${chips ? `<div class="flex flex-wrap gap-2">${chips}</div>` : ''}${extra}
           </div>` : ''}`;
-            const tipBlock = `${tipHtml ? `
-          <section class="rounded-2xl p-5 bg-sky-50 dark:bg-sky-500/10 ring-1 ring-sky-200 dark:ring-sky-500/25">
-            <h3 class="font-bold text-sky-900 dark:text-sky-200">Tiny Trips tip</h3>
-            ${tipHtml}
-          </section>` : ''}`;
-            const saysBlock = `${says ? `
-          <section class="rounded-2xl p-5 bg-pink-50 dark:bg-pink-500/10 ring-1 ring-pink-200 dark:ring-pink-500/25">
-            <h3 class="font-bold text-pink-900 dark:text-pink-200"><span aria-hidden="true">💬</span> What parents say</h3>
-            <p class="mt-2 text-sm text-slate-800 dark:text-slate-200">${esc(says)}</p>
-          </section>` : ''}`;
+            const tipBlock = notes.length ? infoBox('sky', 'Tiny Trips tip', notes.slice(0, 2).map(esc), `Checked ${esc(shortDate(NOTES_META.updatedAt))} · ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'official site'}. Hours can change.`) : '';
+            const saysBlock = says ? infoBox('pink', 'What parents say', [esc(says)]) : '';
             // 순서 (사용자 결정, 2026-10-04): What parents say → Tiny Trips tip → Good to know → 행사·시즌 칩
             return saysBlock + tipBlock + this.factsBox(s) + chipsBlock; })()}
 
@@ -3044,7 +3044,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
           <div class="grid grid-cols-2 gap-3">
             <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/20 hover:ring-amber-400">
-              <p class="font-bold">Google Maps ↗</p><p class="text-xs text-slate-500 dark:text-slate-400">Ratings & reviews</p>
+              <p class="font-bold">Google Reviews ↗</p><p class="text-xs text-slate-500 dark:text-slate-400">Ratings from other parents</p>
             </a>
             <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-emerald-50 dark:bg-emerald-500/10 ring-1 ring-emerald-200 dark:ring-emerald-500/20 hover:ring-emerald-400">
               <p class="font-bold">${s.price ? esc(s.price) : 'Prices'} ↗</p><p class="text-xs text-slate-500 dark:text-slate-400">Search prices online</p>
