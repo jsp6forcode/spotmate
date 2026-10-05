@@ -503,6 +503,7 @@ const overlapsSeen = (t, seen) => { const w = [...keyWords(t)]; return w.length 
 // data/spot-facts.json: 입장료·예약·유모차/기저귀/수유·아이 먹거리 (확인한 것만. 모르면 비워 둬요)
 let FACTS = {}, FACTS_META = { updatedAt: '' };
 const fx = id => FACTS[id] || null;
+const LINES3 = '[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden';
 // 장소 창의 세 상자(What parents say · Tiny Trips tip · Good to know)가 같은 모양이 되게: 제목은 굵게, 내용은 점(•) 목록, 맨 아래 작은 출처 줄. 배경색만 상자마다 달라요 (사용자 요청, 2026-10-04)
 const BOX_TONE = {
   pink: { bg: 'bg-pink-50 dark:bg-pink-500/10 ring-1 ring-pink-200 dark:ring-pink-500/25', h: 'text-pink-900 dark:text-pink-200', dot: 'text-pink-600 dark:text-pink-300' },
@@ -2426,8 +2427,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${(() => {
           // 이유 박스(Coming up 등)와 별개로, What parents say → Tiny Trips tip 순서, 각각 3줄까지 (사용자 요청, 2026-10-04)
           const tip = this.tipItems(s, 'card')[0];
-          if (!tip && !SAYS[s.id]) return '';
-          return `<div class="max-sm:hidden mt-2 sm:mt-3 text-xs sm:text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2 sm:px-2.5 py-1 sm:py-1.5">${SAYS[s.id] ? `<p class="[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden"><span class="font-semibold">What parents say:</span> ${esc(SAYS[s.id])}</p>` : ''}${tip ? `<p class="${SAYS[s.id] ? 'mt-1 ' : ''}[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold">Tiny Trips tip:</span> ${esc(tip)}</p>` : ''}</div>`;
+          // 휴대폰에서는 What parents say → Tiny Trips tip → Good to know(입장료) 중 있는 첫 번째 하나만, 3줄까지 (사용자 요청, 2026-10-04)
+          const mobLabel = SAYS[s.id] ? ['What parents say:', SAYS[s.id]] : tip ? ['Tiny Trips tip:', tip] : null;
+          const mob = mobLabel ? `<div class="sm:hidden mt-2 text-xs text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2 py-1.5"><p class="${LINES3}"><span class="font-semibold">${mobLabel[0]}</span> ${esc(mobLabel[1])}</p></div>` : this.factsLine(s, true);
+          if (!tip && !SAYS[s.id]) return mob;
+          return mob + `<div class="max-sm:hidden mt-2 sm:mt-3 text-xs sm:text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2 sm:px-2.5 py-1 sm:py-1.5">${SAYS[s.id] ? `<p class="[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden"><span class="font-semibold">What parents say:</span> ${esc(SAYS[s.id])}</p>` : ''}${tip ? `<p class="${SAYS[s.id] ? 'mt-1 ' : ''}[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold">Tiny Trips tip:</span> ${esc(tip)}</p>` : ''}</div>`;
         })()}
 
         ${TRENDS_ON && s.rise != null && s.rise >= RISING_MIN && !(why && why.icon === RISE_ICON) ? `<p class="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-300" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
@@ -2851,11 +2855,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   // Saved 탭 안에서 "Saved"(저장한 곳)와 "My reviews"(내가 리뷰를 쓴 곳) 전환
   // ── 확인된 방문 정보 (data/spot-facts.json): 카드 한 줄 · 모달 상자 · 결과 필터 ──
   // 카드: "Adults $38, kids $27 · Book ahead" (확인된 입장료가 있을 때만)
-  factsLine(s) {
+  factsLine(s, mobile = false) {
     const f = fx(s.id), a = f && f.admission;
     if (!a || !a.text) return '';
     const bk = a.booking === 'required' ? 'Book ahead' : a.booking === 'recommended' ? 'Booking advised' : '';
-    return `<p class="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-700 dark:text-slate-200"><span class="font-semibold">Admission:</span> ${esc(a.text)}${bk ? ` <span class="font-semibold text-amber-700 dark:text-amber-300">${bk}.</span>` : ''}</p>`;
+    return `<p class="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-700 dark:text-slate-200 ${mobile ? 'sm:hidden ' + LINES3 : 'max-sm:hidden'}"><span class="font-semibold">Admission:</span> ${esc(a.text)}${bk ? ` <span class="font-semibold text-amber-700 dark:text-amber-300">${bk}.</span>` : ''}</p>`;
   }
   // 모달 "Good to know": 입장료·예약, 유모차·기저귀·수유, 먹거리, 확인한 날짜와 출처 (다른 두 상자와 같은 모양)
   factsBox(s) {
