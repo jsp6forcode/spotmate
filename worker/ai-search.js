@@ -6,7 +6,7 @@
 // 키는 이 Worker 안에만 있고 브라우저에는 절대 보내지 않아요.
 
 const MODEL = 'claude-haiku-4-5-20251001';
-const DEFAULT_ORIGINS = 'https://jsp6forcode.github.io,http://localhost:8765';
+const DEFAULT_ORIGINS = 'https://tinytripsvan.ca,https://www.tinytripsvan.ca,https://jsp6forcode.github.io,http://localhost:8765';
 const MAX_Q = 200;          // 검색어 최대 글자 수
 const PER_MINUTE = 12;      // IP당 1분 요청 수 (Worker 인스턴스마다 따로 세는 간단한 제한)
 
