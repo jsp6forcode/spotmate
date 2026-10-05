@@ -2845,7 +2845,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       fd.onsite === 'cafe' ? 'Café on site' : fd.onsite === 'snacks' ? 'Snacks on site' : fd.onsite === 'none' ? 'No food on site' : '',
       fd.outside === 'allowed' ? 'Bring your own food' : fd.outside === 'not-allowed' ? 'Outside food not allowed' : ''
     ].filter(Boolean);
-    const row = (icon, label, body) => `<div class="flex gap-3"><span class="text-xl leading-6" aria-hidden="true">${icon}</span><div class="min-w-0"><p class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">${label}</p>${body}</div></div>`;
+    const row = (icon, label, body) => `<div><div class="min-w-0"><p class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">${label}</p>${body}</div></div>`;
     const rows = [];
     if (a.text) rows.push(row('🎟️', 'Admission', `<p class="font-semibold">${esc(a.text)}</p>${a.booking === 'required' ? `<p class="text-sm font-bold text-amber-700 dark:text-amber-300">Booking required${a.bookingNote ? `: ${esc(a.bookingNote)}` : ''}</p>` : a.booking === 'recommended' ? `<p class="text-sm font-semibold text-amber-700 dark:text-amber-300">Booking recommended${a.bookingNote ? `: ${esc(a.bookingNote)}` : ''}</p>` : a.booking === 'none' ? '<p class="text-sm text-slate-600 dark:text-slate-300">No booking needed</p>' : ''}`));
     if (chips.length || m.note) rows.push(row('👶', 'With little ones', `${chips.length ? `<p class="mt-0.5 flex flex-wrap gap-1.5">${chips.map(c => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-500/15 dark:text-sky-300">${esc(c)}</span>`).join('')}</p>` : ''}${m.note ? `<p class="text-sm text-slate-600 dark:text-slate-300">${esc(m.note)}</p>` : ''}`));
@@ -2984,7 +2984,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         </div>
 
         <div class="p-6 space-y-6">
-          ${this.factsBox(s)}
           ${(() => {
             // 지금 가 볼 이유: 이 장소의 행사(60일 안) + 시즌 태그를 한 곳에, 영업시간 바로 밑에
             const evs = EVENTS.filter(ev => ev.spotId === s.id).map(ev => ({ ...ev, next: upcomingDates(ev, 60)[0] })).filter(ev => ev.next).sort((a, b) => a.next.localeCompare(b.next));
@@ -2994,7 +2993,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             // "Why go now"(행사·시즌)와 Tiny Trips tip(공식 정보)을 한 상자로 합쳤어요 (2026-10-01)
             const notes = NOTES[s.id] ? this.tipItems(s, 'modal') : [], src = (NOTES[s.id] || {}).source || '', host = (/^https:\/\/(?:www\.)?([^/]+)/.exec(src) || [])[1] || '';
             const says = SAYS[s.id];
-            if (!evs.length && !tags.length && !press.length && !food.length && !notes.length && !says) return '';
+            if (!evs.length && !tags.length && !press.length && !food.length && !notes.length && !says) return this.factsBox(s);
             // 정리 (사용자 결정, 2026-10-02): 파란 창에는 공식 정보인 Tiny Trips tip만. "지금"(행사·시즌)은 칩 한 줄로, 부모 후기는 파란 창 밖으로. 앞에 나온 말과 겹치는 문장은 숨겨요
             const seen = new Set(); [s.summary, says || '', ...notes].forEach(t => keyWords(t).forEach(w => seen.add(w)));
             const chip = h => `<span class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-900 ring-1 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-200 dark:ring-amber-500/30">${h}</span>`;
@@ -3010,18 +3009,22 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             ].join('');
             const tipHtml = notes.length ? `<ul class="mt-2 space-y-1.5 text-sm text-slate-800 dark:text-slate-200">${notes.slice(0, 2).map(x => `<li class="flex gap-2"><span aria-hidden="true" class="text-sky-600 dark:text-sky-300">•</span><span>${esc(x)}</span></li>`).join('')}</ul>
             <p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">Checked ${esc(shortDate(NOTES_META.updatedAt))} · ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'official site'}. Hours can change.</p>` : '';
-            return `${chips || extra ? `
+            const chipsBlock = `${chips || extra ? `
           <div>
             ${chips ? `<div class="flex flex-wrap gap-2">${chips}</div>` : ''}${extra}
-          </div>` : ''}${tipHtml ? `
+          </div>` : ''}`;
+            const tipBlock = `${tipHtml ? `
           <section class="rounded-2xl p-5 bg-sky-50 dark:bg-sky-500/10 ring-1 ring-sky-200 dark:ring-sky-500/25">
             <h3 class="font-bold text-sky-900 dark:text-sky-200"><span aria-hidden="true">💡</span> Tiny Trips tip</h3>
             ${tipHtml}
-          </section>` : ''}${says ? `
+          </section>` : ''}`;
+            const saysBlock = `${says ? `
           <section class="rounded-2xl p-5 bg-pink-50 dark:bg-pink-500/10 ring-1 ring-pink-200 dark:ring-pink-500/25">
             <h3 class="font-bold text-pink-900 dark:text-pink-200"><span aria-hidden="true">💬</span> What parents say</h3>
             <p class="mt-2 text-sm text-slate-800 dark:text-slate-200">${esc(says)}</p>
-          </section>` : ''}`; })()}
+          </section>` : ''}`;
+            // 순서 (사용자 결정, 2026-10-04): What parents say → Tiny Trips tip → Good to know → 행사·시즌 칩
+            return saysBlock + tipBlock + this.factsBox(s) + chipsBlock; })()}
 
 
           ${[[lunchState(s), 'emerald', LUNCH_META], [hhState(s), 'amber', HAPPY_META]]
