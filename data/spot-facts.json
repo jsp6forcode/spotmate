@@ -104,7 +104,7 @@
                                                              },
                                                "amenities":  {
                                                                  "washrooms":  false,
-                                                                 "note":  "1.6 km looped trail, picnic area; playground at adjacent Blakeburn Park; park washroom closed per city notice"
+                                                                 "note":  "1.6 km looped trail, picnic area; playground at adjacent Blakeburn Park"
                                                              },
                                                "food":  {
                                                             "onsite":  "none"
@@ -743,7 +743,7 @@
                                                    "amenities":  {
                                                                      "changing":  true,
                                                                      "washrooms":  true,
-                                                                     "note":  "Universal change rooms with baby change tables; ramps and accessible washrooms; pool closed Aug 31-Oct 19"
+                                                                     "note":  "Universal change rooms with baby change tables; ramps and accessible washrooms"
                                                                  },
                                                    "food":  {
                                                                 "onsite":  "cafe",
@@ -888,7 +888,7 @@
                                                                  },
                                                    "amenities":  {
                                                                      "washrooms":  true,
-                                                                     "note":  "Heated change rooms; wading pool closed this summer per city page"
+                                                                     "note":  "Heated change rooms"
                                                                  },
                                                    "checked":  "2026-10-03"
                                                },
@@ -983,12 +983,6 @@
                                                                  },
                                                    "checked":  "2026-10-03"
                                                },
-                  "littlebeans":  {
-                                      "amenities":  {
-                                                        "note":  "Official site says the Port Moody location is permanently closed"
-                                                    },
-                                      "checked":  "2026-10-03"
-                                  },
                   "londonfarm":  {
                                      "admission":  {
                                                        "text":  "Park and gardens free, dawn to dusk; farmhouse open Fri-Sun 10am-4pm",
@@ -1050,7 +1044,7 @@
                                                   "amenities":  {
                                                                     "changing":  true,
                                                                     "washrooms":  true,
-                                                                    "note":  "City lists universal/family changerooms at both Abbotsford pools; pool had annual maintenance closure through Sept 28"
+                                                                    "note":  "City lists universal/family changerooms at both Abbotsford pools"
                                                                 },
                                                   "checked":  "2026-10-03"
                                               },
@@ -1101,7 +1095,7 @@
                                         "amenities":  {
                                                           "changing":  true,
                                                           "washrooms":  true,
-                                                          "note":  "Seasonal outdoor pool with lazy river, zero-depth entry and splash area; closed for the year now. Universal change rooms with showers and lockers."
+                                                          "note":  "Seasonal outdoor pool with lazy river, zero-depth entry and splash area. Universal change rooms with showers and lockers."
                                                       },
                                         "food":  {
                                                      "onsite":  "snacks",
@@ -1635,7 +1629,7 @@
                                                    "amenities":  {
                                                                      "changing":  true,
                                                                      "washrooms":  true,
-                                                                     "note":  "Family change rooms; 50m pool, leisure pool, tots pool, 160 ft slide; hot tub closed at time of check"
+                                                                     "note":  "Family change rooms; 50m pool, leisure pool, tots pool, 160 ft slide"
                                                                  },
                                                    "food":  {
                                                                 "onsite":  "cafe",
