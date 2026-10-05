@@ -136,6 +136,15 @@ const KINDS = [
   ['trail', 'Trail', /trail|hike|canyon|falls|lookout|mountain|forest|pathway/i, 'family', 'ps'],
   ['park', 'Park', /park/i, 'both', 'bps'],
 ];
+// "Stroller OK": 확인된 정보(spot-facts)가 우선이고, 없으면 몰·놀이공원·박물관·수족관·렉센터·수영장·링크·도서관·실내 놀이터처럼 큰 건물은 유모차가 되는 곳으로 봐요 (사용자 요청, 2026-10-04). 확인된 'no'·'partial'은 그대로 둬요
+const BIG_KINDS = new Set(['mall', 'rides', 'museum', 'aquarium', 'rec', 'pool', 'rink', 'library', 'indoorplay']);
+const strollerRule = (s, kind) => BIG_KINDS.has(kind) && (s.env !== 'outdoor' || kind === 'rides');
+function strollerInfo(s) {
+  const st = ((fx(s.id) || {}).amenities || {}).stroller;
+  if (st === 'yes') return 'yes';
+  if (st === 'no' || st === 'partial') return null;
+  return strollerRule(s, kidProfile(s).kind) ? 'big' : null;
+}
 // 실제 사진이 없는 장소의 대표 이미지: 장소 종류(KINDS 키) → [Pexels 사진 번호, 촬영자]. 사람 얼굴이 나오지 않는 사진만 골랐어요. Pexels 라이선스는 무료 사용이고, 카드에 "그 장소가 아닐 수 있다"고 표시해요
 const STOCK_ON = true, stockPick = {}, stockUse = {};
 const STOCK = {
@@ -191,7 +200,8 @@ function kidProfile(s) {
   if (/a playground/.test(s.summary) && k[0] !== 'play') tags.push('Playground');
   if (/a spray park/.test(s.summary) && k[0] !== 'water') tags.push('Spray park');
   if (/washrooms/.test(s.summary)) tags.push('Washrooms');
-  { const fa = fx(s.id) && fx(s.id).amenities; if (fa) { if (fa.stroller === 'yes') tags.push('Stroller OK'); if (fa.changing === true) tags.push('Changing table'); } }
+  { const fa = fx(s.id) && fx(s.id).amenities; if (fa) { if (fa.changing === true) tags.push('Changing table'); } }
+  { const st = ((fx(s.id) || {}).amenities || {}).stroller; if (st === 'yes' || (st !== 'no' && st !== 'partial' && strollerRule(s, k[0]))) tags.push('Stroller OK'); }
   // 공원에 놀이터가 있으면 아이 중심 활동에도 맞아요
   const purpose = k[0] === 'park' ? (/a playground|a spray park/.test(s.summary) || s.play ? 'both' : 'family') : k[3];
   const mins = (() => { const m = /(\d+)(?:–(\d+))? hrs?/.exec(s.time || ''); return /half day|full day/i.test(s.time || '') ? [3, 5] : m ? [+m[1], +(m[2] || m[1])] : [1, 2]; })();
@@ -1357,6 +1367,8 @@ class App {
   // Tiny Trips tip 중 화면에 아직 안 나온 줄만 (where: 'card'면 카드의 설명·이유·행사 줄, 'modal'이면 장소 창의 Why go now·설명과 비교)
   tipItems(s, where) {
     const n = NOTES[s.id]; if (!n) return [];
+    // 장소 창은 카드에 보이는 팁을 항상 포함해요 (카드엔 있는데 창엔 없는 일이 없게). 카드 팁을 맨 앞에, 창에서만 걸러지지 않은 줄을 뒤에 (2026-10-04)
+    if (where === 'modal') { const cardTips = this.tipItems(s, 'card'), rest = this.tipItems(s, 'modalOnly'); return [...cardTips, ...rest.filter(x => !cardTips.includes(x))]; }
     const texts = [s.summary];
     const reasons = this.nowReasons(s);
     if (where === 'card') { const why = reasons.filter(x => x.score >= NOW_MIN)[0]; if (why) texts.push(why.text); const e = this._spotEvents && this._spotEvents[s.id]; if (e) texts.push(eventReason(e.ev, s, e.next)); }
@@ -2380,7 +2392,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       </div>
       <div class="p-2.5 sm:p-5 flex flex-col flex-1">
         <h3 class="text-sm sm:text-lg font-bold leading-snug group-hover:text-violet-700 dark:group-hover:text-violet-300">${esc(s.name)}</h3>
-        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 truncate">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p>
+        <div class="flex items-center justify-between gap-2"><p class="min-w-0 text-xs sm:text-sm text-slate-500 dark:text-slate-400 truncate">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p>${spotTags(s).length ? `<p class="max-sm:hidden shrink-0 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300">#${esc(t.label)}</span>`).join('')}</p>` : ''}</div>
         ${this.planLater() && HOURS_READY ? (() => {
           // 날짜 계획: 그날(들) 영업시간
           const ph = this.planHours(s);
@@ -2401,14 +2413,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${evExtra ? `<p class="mt-1 text-xs sm:text-[15px] leading-snug font-medium text-slate-800 dark:text-slate-100 clamp2">${esc(evExtra)}</p>` : ''}
         </div>` : ''}
         ${(() => {
-          // 이유 박스(Coming up 등)와 별개로, 공식 Tiny Trips tip과 What parents say는 항상 같은 상자에 (2026-10-02)
+          // 이유 박스(Coming up 등)와 별개로, What parents say → Tiny Trips tip 순서, 각각 3줄까지 (사용자 요청, 2026-10-04)
           const tip = this.tipItems(s, 'card')[0];
           if (!tip && !SAYS[s.id]) return '';
-          return `<div class="max-sm:hidden mt-1.5 sm:mt-2 text-xs sm:text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2 sm:px-2.5 py-1 sm:py-1.5">${tip ? `<p class="max-sm:[display:-webkit-box] max-sm:[-webkit-line-clamp:3] max-sm:[-webkit-box-orient:vertical] max-sm:overflow-hidden" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold"><span aria-hidden="true">💡</span> Tiny Trips tip:</span> ${esc(tip)}</p>` : ''}${SAYS[s.id] ? `<p class="${tip ? 'mt-1 ' : ''}max-sm:[display:-webkit-box] max-sm:[-webkit-line-clamp:3] max-sm:[-webkit-box-orient:vertical] max-sm:overflow-hidden"><span class="font-semibold">What parents say</span> · ${esc(SAYS[s.id])}</p>` : ''}</div>`;
+          return `<div class="max-sm:hidden mt-1.5 sm:mt-2 text-xs sm:text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2 sm:px-2.5 py-1 sm:py-1.5">${SAYS[s.id] ? `<p class="[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden"><span class="font-semibold">What parents say</span> · ${esc(SAYS[s.id])}</p>` : ''}${tip ? `<p class="${SAYS[s.id] ? 'mt-1 ' : ''}[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold">Tiny Trips tip:</span> ${esc(tip)}</p>` : ''}</div>`;
         })()}
 
         ${TRENDS_ON && s.rise != null && s.rise >= RISING_MIN && !(why && why.icon === RISE_ICON) ? `<p class="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-300" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
-        ${spotTags(s).length ? `<p class="hidden sm:flex mt-2 flex-wrap gap-1.5">${spotTags(s).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300">#${esc(t.label)}</span>`).join('')}</p>` : ''}
         ${(() => { const m = GUIDES[s.id] && GUIDES[s.id].menu; return m && m.length ? `<p class="hidden sm:block mt-2 text-sm text-slate-700 dark:text-slate-300"><span class="font-semibold">Popular:</span> ${m.slice(0, 3).map(esc).join(' · ')}</p>` : ''; })()}
         ${(() => {
           // 해피아워: 지금이면 눈에 띄는 배지(위 이유 박스가 이미 해피아워면 생략), 오늘 이따면 시작 시간, 아니면 주간 일정 한 줄
@@ -2522,7 +2533,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (tagDef) pool = pool.filter(s => tagDef.spots[s.id]);
     if (this.state.tag === 'justopened') pool = pool.filter(isJustOpened);
     // 체크 필터: 켠 조건에 모두 맞는 곳만. 칩에 보이는 숫자는 필터를 켜기 전 기준이에요
-    const FXF = { free: s => /^free/i.test(s.price || ''), stroller: s => ((fx(s.id) || {}).amenities || {}).stroller === 'yes', rain: s => s.env !== 'outdoor', short: s => kidProfile(s).hours[1] <= 2 };
+    const FXF = { free: s => /^free/i.test(s.price || ''), stroller: s => !!strollerInfo(s), rain: s => s.env !== 'outdoor', short: s => kidProfile(s).hours[1] <= 2 };
     const base = pool.filter(s => this.wizMatch(s, a));
     this._fxCounts = Object.fromEntries(Object.keys(FXF).map(k => [k, base.filter(FXF[k]).length]));
     const fxOn = this.state.fxOn;
@@ -2835,9 +2846,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   // 모달 "Good to know": 입장료·예약, 유모차·기저귀·수유, 먹거리, 확인한 날짜와 출처, 오류 신고
   factsBox(s) {
     const f = fx(s.id), a = (f && f.admission) || {}, m = (f && f.amenities) || {}, fd = (f && f.food) || {};
-    const report = `<button data-act="report" data-val="${esc(s.id)}" class="underline font-semibold text-violet-700 dark:text-violet-300">Something wrong? Tell us</button>`;
     const chips = [
-      m.stroller === 'yes' ? 'Stroller-friendly' : m.stroller === 'partial' ? 'Partly stroller-friendly' : m.stroller === 'no' ? 'Not stroller-friendly' : '',
+      m.stroller === 'yes' ? 'Stroller-friendly' : m.stroller === 'partial' ? 'Partly stroller-friendly' : m.stroller === 'no' ? 'Not stroller-friendly' : strollerInfo(s) === 'big' ? 'Stroller-friendly (large facility)' : '',
       m.stairs === 'none' ? 'No stairs' : m.stairs === 'some' ? 'Some stairs' : m.stairs === 'many' ? 'Many stairs' : '',
       m.changing === true ? 'Changing table' : '', m.nursing === true ? 'Nursing space' : '', m.washrooms === true ? 'Washrooms' : ''
     ].filter(Boolean);
@@ -2852,12 +2862,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (food.length || fd.nearby) rows.push(row('🥪', 'Food', `${food.length ? `<p class="font-semibold">${esc(food.join(' · '))}</p>` : ''}${fd.nearby ? `<p class="text-sm text-slate-600 dark:text-slate-300">Nearby: ${esc(fd.nearby)}</p>` : ''}`));
     const src = /^https:\/\//.test(a.source || '') ? ` · <a href="${esc(a.source)}" target="_blank" rel="noopener" class="underline">source</a>` : '';
     const checked = f && f.checked ? `Info checked ${esc(shortDate(f.checked))}${src}` : '';
-    if (!rows.length) return `<p class="text-xs text-slate-500 dark:text-slate-400">${report}</p>`;
+    if (!rows.length) return '';
     return `
           <section class="rounded-2xl p-4 bg-slate-50 ring-1 ring-slate-200 dark:bg-slate-800/50 dark:ring-slate-700" aria-label="Good to know">
             <h3 class="font-bold">Good to know</h3>
             <div class="mt-3 space-y-3">${rows.join('')}</div>
-            <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">${checked ? `${checked} · ` : ''}${report}</p>
+            ${checked ? `<p class="mt-3 text-xs text-slate-500 dark:text-slate-400">${checked}</p>` : ''}
           </section>`;
   }
   // 결과 위 체크 필터 칩 (숫자 = 지금 조건에 맞는 곳 중 그 필터에 해당하는 곳)
@@ -2968,7 +2978,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
         </div>
         <div class="px-6 pt-5">
-          <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.label}${s.cuisine ? ` · ${esc(s.cuisine)}` : ''}</p>
+          <div class="flex items-baseline justify-between gap-3"><p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.label}${s.cuisine ? ` · ${esc(s.cuisine)}` : ''}</p><button data-act="report" data-val="${esc(s.id)}" class="shrink-0 text-xs underline font-semibold text-violet-700 dark:text-violet-300">Something wrong? Tell us</button></div>
           <h2 class="mt-1 text-3xl font-bold leading-tight pr-2">${esc(s.name)}</h2>
           <p class="mt-1 text-slate-600 dark:text-slate-300">${esc(s.area)}${cur && cur.dist != null ? `, ${fmtDist(cur.dist)}` : ''}</p>
           ${this.planLater() && HOURS_READY && this.planHours(s) ? (() => { const ph = this.planHours(s); return `
@@ -3015,7 +3025,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </div>` : ''}`;
             const tipBlock = `${tipHtml ? `
           <section class="rounded-2xl p-5 bg-sky-50 dark:bg-sky-500/10 ring-1 ring-sky-200 dark:ring-sky-500/25">
-            <h3 class="font-bold text-sky-900 dark:text-sky-200"><span aria-hidden="true">💡</span> Tiny Trips tip</h3>
+            <h3 class="font-bold text-sky-900 dark:text-sky-200">Tiny Trips tip</h3>
             ${tipHtml}
           </section>` : ''}`;
             const saysBlock = `${says ? `
