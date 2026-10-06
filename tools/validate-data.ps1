@@ -137,7 +137,7 @@ if ($sn) {
 # ── 행사 ──
 $ev = Load 'events.json'
 if ($ev) {
-  $types = 'market','festival','seasonal','sale','meet','popup'
+  $types = 'market','festival','seasonal','sale','popup'
   $seen = @{}
   foreach ($e in @($ev.events)) {
     if ($seen[$e.id]) { Err "events 에 id가 두 번 있어요: $($e.id)" }; $seen[$e.id] = 1
@@ -146,7 +146,7 @@ if ($ev) {
     if (-not ((IsDate $sc.from) -and (IsDate $sc.to)) -or (S $sc.from) -gt (S $sc.to)) { Err "events.$($e.id) 의 from/to 가 이상해요"; continue }
     if ($e.source -notmatch '^https://') { Err "events.$($e.id).source 는 https 링크여야 해요" }
     if ($e.spotId -and -not $ids[$e.spotId]) { Err "events.$($e.id) 의 spotId($($e.spotId))가 spots.json 에 없어요" }
-    if ((D $sc.to) -lt $today -and @('sale','meet','popup') -contains $e.type) { Warn "events.$($e.id) 는 $(S $sc.to)에 끝났어요. 지워 주세요." }
+    if ((D $sc.to) -lt $today -and @('sale','popup') -contains $e.type) { Warn "events.$($e.id) 는 $(S $sc.to)에 끝났어요. 지워 주세요." }
   }
   Ok "events $(@($ev.events).Count)개"
 }

@@ -656,15 +656,15 @@ let EVENTS = [];
 let EVENTS_META = { updatedAt: '', note: '' };
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-// sale: 브랜드 웨어하우스·팩토리 세일, meet: 사인회·팬미팅, popup: 팝업·박람회처럼 며칠만 열리는 행사
-const EVENT_TYPES = { market: 'Farmers market', festival: 'Festival', seasonal: 'Seasonal', sale: 'Warehouse sale', meet: 'Signing & meet-up', popup: 'Pop-up & show' };
+// sale: 유명 브랜드 웨어하우스·팩토리 세일, popup: 팝업·박람회처럼 며칠만 열리는 행사
+const EVENT_TYPES = { market: 'Farmers market', festival: 'Festival', seasonal: 'Seasonal', sale: 'Warehouse sale', popup: 'Pop-up & show' };
 // 어른 위주 행사(맥주 축제, 샘플 세일, 영화제 등)에 붙이는 표시: 보여주되 부모용이라고 윙크로 알려줘요 (events.json의 forParents)
 const PARENTS_BADGE = '<span class="ml-1 align-middle whitespace-nowrap text-[11px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 dark:bg-amber-500/20 dark:text-amber-200">For parents 😉</span>';
 // 카드 이유 박스 제목: 행사 종류·시즌 태그 이름에 맞게 (Coming up 대신)
-const EVENT_LABEL = { market: "Market", festival: "Festival", seasonal: "Seasonal", sale: "Warehouse sale", meet: "Meet-up", popup: "Pop-up" };
+const EVENT_LABEL = { market: "Market", festival: "Festival", seasonal: "Seasonal", sale: "Warehouse sale", popup: "Pop-up" };
 const eventLabel = ev => EVENT_LABEL[ev.type] || "Event";
 const tagLabel = t => String(t.label || "").replace(/([a-z])([A-Z])/g, "$1 $2") || "Season";
-const RARE_EVENT = ['sale', 'meet', 'popup'];
+const RARE_EVENT = ['sale', 'popup'];
 const REST_STEP = 12;
 // Worth going now에 늘 보여줄 추천 수 (이유가 있는 곳이 모자라면 클래식·리뷰 추천으로 채워요)
 const TOP_N = 10;
