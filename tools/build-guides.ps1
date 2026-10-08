@@ -193,19 +193,18 @@ foreach ($c in ($CITIES | Sort-Object)) {
 }
 $mp = @($pages | Where-Object { -not $_.city })
 [void]$idx.AppendLine('<h2>Metro Vancouver</h2><ul>' + (($mp | ForEach-Object { "<li><a href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a> ($($_.spots.Count))</li>" }) -join '') + '</ul>')
-$idxHtml = @"
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Places to take kids in Metro Vancouver: guides by city and kind | Tiny Trips</title>
-<meta name="description" content="Guides to playgrounds, spray parks, farms, museums and indoor play for kids in Metro Vancouver, Abbotsford and Chilliwack, by city and by kind.">
-<link rel="canonical" href="$site/guides/">
-<style>$css</style></head><body><main>
-<nav class="top"><a href="/">Tiny Trips</a></nav>
-<h1>Places to take kids in Metro Vancouver</h1><p class="lead">Pick a city or a kind of place. Each guide lists the spots with a short description, and links to the Tiny Trips app for hours, parking and what parents say.</p>
-$($idx.ToString())
-<footer><a href="/">Open the Tiny Trips app</a></footer>
-</main></body></html>
-"@
+# 안내 목록도 진짜 앱을 보여주고, 도시·종류별 목록은 아래에 접어 둬요 (다른 안내 페이지와 같은 방식)
+$L = 'underline text-teal-700 dark:text-teal-300'
+$idxBody = ($idx.ToString()).Replace('<h2>', '<h2 class="font-bold mt-5 mb-1">').Replace('<ul>', '<ul class="list-disc pl-5 space-y-0.5">').Replace('<a href', "<a class=""$L"" href")
+$idxBody = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">Places to take kids in Metro Vancouver: guides by city and kind</summary><div class=""mt-3""><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">Places to take kids in Metro Vancouver</h1><p class=""mb-2"">Pick a city or a kind of place. Each guide lists the spots with a short description, and links to the Tiny Trips app for hours, parking and what parents say.</p>" + $idxBody + "</div></details>"
+$idxDesc = 'Guides to playgrounds, spray parks, farms, museums and indoor play for kids in Metro Vancouver, Abbotsford and Chilliwack, by city and by kind.'
+$idxTitle = 'Places to take kids in Metro Vancouver: guides by city and kind'
+$idxHtml = $shell
+$idxHtml = Sub $idxHtml '<title>[^<]*</title>' "<title>$idxTitle | Tiny Trips</title>"
+$idxHtml = Sub $idxHtml '<link rel="canonical" href="[^"]*">' "<link rel=""canonical"" href=""$site/guides/"">"
+$idxHtml = Sub $idxHtml '<meta name="description" content="[^"]*">' "<meta name=""description"" content=""$idxDesc"">"
+$idxHtml = Sub $idxHtml '<meta property="og:url" content="[^"]*">' "<meta property=""og:url"" content=""$site/guides/"">"
+$idxHtml = Sub $idxHtml '<!--seo-start-->.*<!--seo-end-->' "<!--seo-start-->$idxBody<!--seo-end-->"
 [IO.File]::WriteAllText((Join-Path $guideDir 'index.html'), $idxHtml, $enc)
 
 # 사이트맵
