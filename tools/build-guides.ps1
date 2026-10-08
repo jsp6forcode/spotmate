@@ -175,6 +175,15 @@ foreach ($p in $pages) {
   [IO.File]::WriteAllText((Join-Path $dir 'index.html'), $html, $enc)
 }
 
+# 예전 주소(things-to-do-with-kids-<도시>)로 들어와도 새 주소로 넘어가게 이동용 페이지를 만들어요 (GitHub Pages 는 서버 리다이렉트가 없어서)
+foreach ($p in ($pages | Where-Object { $_.slug -like 'places-to-take-kids-*' })) {
+  $old = $p.slug -replace '^places-to-take-kids-', 'things-to-do-with-kids-'
+  $to = "$site/guides/$($p.slug)/"
+  $stub = "<!doctype html><html lang=""en""><head><meta charset=""utf-8""><title>Moved: $(Esc $p.h1)</title><link rel=""canonical"" href=""$to""><meta http-equiv=""refresh"" content=""0; url=/guides/$($p.slug)/""><script>location.replace('/guides/$($p.slug)/' + location.hash)</script></head><body><p>This page moved to <a href=""/guides/$($p.slug)/"">$(Esc $p.h1)</a>.</p></body></html>"
+  $d = Join-Path $guideDir $old
+  New-Item -ItemType Directory $d -Force | Out-Null
+  [IO.File]::WriteAllText((Join-Path $d 'index.html'), $stub, $enc)
+}
 # 안내 목록 페이지 (도시별로 묶어서)
 $idx = New-Object System.Text.StringBuilder
 foreach ($c in ($CITIES | Sort-Object)) {
