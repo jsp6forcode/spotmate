@@ -116,6 +116,20 @@ nav.top{font-size:14px;margin-bottom:12px}h1{font-size:26px;line-height:1.25;mar
 
 function Sub($text, $pattern, $value) { [regex]::Replace($text, $pattern, { param($m) $value }, 'Singleline') }
 $shell = [IO.File]::ReadAllText((Join-Path $root 'index.html'), $enc)
+# 종류별 맞는 나이: 앱(app.js)의 KINDS 에서 읽어요 (b 0–3, p 3–5, s 5–12)
+$AGES = @{}
+foreach ($ln in (Get-Content (Join-Path $root 'app.js') -Encoding UTF8)) {
+  if ($ln -match "^\s*\['(\w+)',.*, '(?:kid|family|both)', '([bps]+)'") { if (-not $AGES[$matches[1]]) { $AGES[$matches[1]] = $matches[2] } }
+}
+function AgeText($codes) {
+  $w = @(); if ($codes -match 'b') { $w += 'babies and toddlers (0–3)' }; if ($codes -match 'p') { $w += 'preschoolers (3–5)' }; if ($codes -match 's') { $w += 'school-age kids (5–12)' }
+  if ($w.Count -le 1) { $w -join '' } else { ($w[0..($w.Count - 2)] -join ', ') + ' and ' + $w[-1] }
+}
+function NameList($arr, $max = 5) {
+  $x = @($arr | Select-Object -First $max | ForEach-Object { $_.name })
+  if ($x.Count -le 1) { return ($x -join '') }
+  ($x[0..($x.Count - 2)] -join ', ') + ' and ' + $x[-1]
+}
 function Plural($n, $w) { if ($n -eq 1) { "$n $w" } else { "$n ${w}s" } }
 $guideDir = Join-Path $root 'guides'
 if (Test-Path $guideDir) { Remove-Item $guideDir -Recurse -Force }
@@ -153,7 +167,24 @@ foreach ($p in $pages) {
   }
   $rel = Related $p
   $relHtml = if ($rel) { '<div class="mt-6"><strong>More guides</strong><ul class="list-disc pl-5 mt-1">' + (($rel | ForEach-Object { "<li><a class=""$L"" href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a></li>" }) -join '') + '</ul></div>' } else { '' }
-  $body = "<nav class=""mb-2""><a class=""$L"" href=""/"">Tiny Trips</a> › <a class=""$L"" href=""/guides/"">Guides</a></nav><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">$(Esc $p.h1)</h1><p class=""mb-4"">$(Esc $lead)</p>" + $sb.ToString() + $relHtml + "<p class=""mt-6 text-xs"">Details change, so check the official site before you go.</p>"
+  # 본문 보강: 데이터에서 계산한 "빠른 답변" (무료·실내·시간·나이). 데이터에 없는 말은 쓰지 않아요
+  $freeL = @($list | Where-Object { $_.price -match '^free' })
+  $inL = @($list | Where-Object { $_.env -eq 'indoor' })
+  $gemL = @($list | Where-Object { $_.gem })
+  $topTime = ($list | Where-Object { $_.time } | Group-Object time | Sort-Object Count -Descending | Select-Object -First 1)
+  $QA = New-Object System.Collections.ArrayList
+  if ($gemL.Count) { [void]$QA.Add(@("Which $what $where are worth a special trip?", "Tiny Trips marks $(NameList $gemL 4) as standout spots.")) }
+  if ($freeL.Count -eq $n -and $n -gt 1) { [void]$QA.Add(@("Are there free $what ${where}?", "Yes. All $n spots on this list are free to visit.")) }
+  elseif ($freeL.Count) { [void]$QA.Add(@("Are there free $what ${where}?", "Yes. $($freeL.Count) of the $n are free, including $(NameList $freeL 5).")) }
+  else { [void]$QA.Add(@("Are there free $what ${where}?", "Most of these charge admission. Each listing in the app shows the price range.")) }
+  if ($inL.Count -eq $n -and $n -gt 1) { [void]$QA.Add(@("What is good on a rainy day ${where}?", "All $n spots on this list are indoors, so they work in any weather.")) }
+  elseif ($inL.Count) { [void]$QA.Add(@("What is good on a rainy day ${where}?", "Indoor options on this list: $(NameList $inL 5).")) }
+  else { [void]$QA.Add(@("What is good on a rainy day ${where}?", "These spots are mostly outdoors. For wet days, open the Indoor filter in the app or see the indoor play guides.")) }
+  if ($p.kind -and $AGES[$p.kind]) { [void]$QA.Add(@("What ages are $what $where good for?", "They suit $(AgeText $AGES[$p.kind]).")) }
+  if ($topTime) { [void]$QA.Add(@("How long should we plan for?", "Most visits here take about $($topTime.Name). Each listing shows its own time.")) }
+  $qaHtml = '<h2 class="font-bold text-base mt-6 mb-2 text-slate-900 dark:text-slate-100">Quick answers</h2>' + (($QA | ForEach-Object { "<h3 class=""font-semibold mt-3 text-slate-900 dark:text-slate-100"">$(Esc $_[0])</h3><p class=""mb-1"">$(Esc $_[1])</p>" }) -join '')
+  $faq = ([ordered]@{ '@context' = 'https://schema.org'; '@type' = 'FAQPage'; mainEntity = @($QA | ForEach-Object { [ordered]@{ '@type' = 'Question'; name = $_[0]; acceptedAnswer = [ordered]@{ '@type' = 'Answer'; text = $_[1] } } }) } | ConvertTo-Json -Depth 6 -Compress) -replace '</', '<\/'
+  $body = "<nav class=""mb-2""><a class=""$L"" href=""/"">Tiny Trips</a> › <a class=""$L"" href=""/guides/"">Guides</a></nav><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">$(Esc $p.h1)</h1><p class=""mb-4"">$(Esc $lead)</p>" + $qaHtml + "<h2 class=""font-bold text-base mt-6 mb-2 text-slate-900 dark:text-slate-100"">All spots</h2>" + $sb.ToString() + $relHtml + "<p class=""mt-6 text-xs"">Details change, so check the official site before you go.</p>"
   $body = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">About this guide: $(Esc $p.h1)</summary><div class=""mt-3"">" + $body + "</div></details>"
   $html = $shell
   $html = Sub $html '<title>[^<]*</title>' "<title>$(Esc $p.title) | Tiny Trips</title>"
@@ -169,7 +200,7 @@ foreach ($p in $pages) {
   if ($p.city -or $p.kind) {
     $g = ([ordered]@{ title = $p.h1; ids = @($list | ForEach-Object { $_.id }) } | ConvertTo-Json -Compress) -replace '</', '<\/'
     $html = Sub $html '<script src="/app.js"></script>' "<script>window.GUIDE=$g</script><script src=""/app.js""></script>"
-  }  $html = Sub $html '</head>' "<script type=""application/ld+json"">$ld</script>`n</head>"
+  }  $html = Sub $html '</head>' "<script type=""application/ld+json"">$ld</script><script type=""application/ld+json"">$faq</script>`n</head>"
   $dir = Join-Path $guideDir $p.slug
   New-Item -ItemType Directory $dir | Out-Null
   [IO.File]::WriteAllText((Join-Path $dir 'index.html'), $html, $enc)
