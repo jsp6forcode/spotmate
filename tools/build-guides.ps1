@@ -89,8 +89,11 @@ foreach ($g in $rows | Group-Object kind, city) {
   }
 }
 foreach ($g in $spots | Group-Object city) {
-  if ($g.Count -ge $MinCity) { [void]$pages.Add([pscustomobject]@{ slug = Slug "things to do with kids $($g.Name)"; title = "Things to do with kids in $($g.Name)"; h1 = "Things to do with kids in $($g.Name)"; city = $g.Name; kind = ''; kindPlural = ''; spots = $g.Group }) }
+  if ($g.Count -ge $MinCity) { [void]$pages.Add([pscustomobject]@{ slug = Slug "places to take kids $($g.Name)"; title = "Places to take kids in $($g.Name): things to do with kids"; h1 = "Places to take kids in $($g.Name)"; city = $g.Name; kind = ''; kindPlural = ''; spots = $g.Group }) }
 }
+# 硫뷀듃濡?諛댁퓼踰??꾩껜: "places to take kids" 寃?됱슜. ?μ냼媛 ?덈Т 留롮븘??異붿쿇(gem) ?꾩＜ 30怨노쭔 ?ｊ퀬 ?꾩떆蹂??덈궡濡??댁뼱以섏슂
+$gems = @($spots | Where-Object { $_.gem } | Select-Object -First 30)
+if ($gems.Count -ge 6) { [void]$pages.Add([pscustomobject]@{ slug = 'places-to-take-kids-metro-vancouver'; title = 'Places to take kids in Metro Vancouver: top picks by city'; h1 = 'Places to take kids in Metro Vancouver'; city = ''; kind = ''; kindPlural = ''; spots = $gems }) }
 foreach ($g in $rows | Group-Object kind) {
   $f = $g.Group[0]
   if ($g.Count -ge $MinKind -and $f.kind -notin 'sight') { [void]$pages.Add([pscustomobject]@{ slug = Slug "$($f.kindPlural) metro vancouver"; title = "$($f.kindPlural) for kids in Metro Vancouver"; h1 = "$($f.kindPlural) for kids in Metro Vancouver"; city = ''; kind = $f.kind; kindPlural = $f.kindPlural; spots = $g.Group }) }
@@ -178,12 +181,12 @@ $mp = @($pages | Where-Object { -not $_.city })
 $idxHtml = @"
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kid-friendly places in Metro Vancouver: guides | Tiny Trips</title>
+<title>Places to take kids in Metro Vancouver: guides by city and kind | Tiny Trips</title>
 <meta name="description" content="Guides to playgrounds, spray parks, farms, museums and indoor play for kids in Metro Vancouver, Abbotsford and Chilliwack, by city and by kind.">
 <link rel="canonical" href="$site/guides/">
 <style>$css</style></head><body><main>
 <nav class="top"><a href="/">Tiny Trips</a></nav>
-<h1>Kid-friendly places in Metro Vancouver</h1><p class="lead">Pick a city or a kind of place. Each guide lists the spots with a short description, and links to the Tiny Trips app for hours, parking and what parents say.</p>
+<h1>Places to take kids in Metro Vancouver</h1><p class="lead">Pick a city or a kind of place. Each guide lists the spots with a short description, and links to the Tiny Trips app for hours, parking and what parents say.</p>
 $($idx.ToString())
 <footer><a href="/">Open the Tiny Trips app</a></footer>
 </main></body></html>
