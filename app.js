@@ -884,7 +884,9 @@ class App {
       fxOn: { free: false, stroller: false, rain: false, short: false },
       wiz: { step: 0, ans: savedAge(), done: false }, wizMore: 10,
       // browse: Explore를 질문 없이 전체 목록(필터)으로 보기. 열 때는 늘 Pick for me(질문)부터 시작해요
-      browse: false,
+      browse: !!(window.GUIDE && window.GUIDE.ids),
+      // guide: 안내 페이지(/guides/…)로 들어왔을 때 그 안내에 실린 장소만 보여줘요 (build-guides.ps1 이 window.GUIDE = { title, ids } 를 넣어요)
+      guide: window.GUIDE && window.GUIDE.ids ? { title: String(window.GUIDE.title || ''), set: new Set(window.GUIDE.ids) } : null,
       // 부모 리뷰: user = 구글 로그인한 사람, reviewDraft = 쓰는 중인 리뷰 { id, rating, text }
       user: null, reviewsOn: false, reviewDraft: null, reviewBusy: false, reviewMsg: '',
       feedbackBusy: false, feedbackMsg: '', feedbackSent: false, savedTab: 'saved',
@@ -1357,7 +1359,8 @@ class App {
       (cat === 'all' ? !PAGES[this.state.view] || PAGES[this.state.view].includes(s.cat) : s.cat === cat)
       && (eats || !this.state.indoor || s.env !== 'outdoor') && (eats || !(this.state.kidsOnly || KIDS_ONLY) || isKid(s))
       // 행사 장소(Pacific Coliseum, 컨벤션센터, 마켓이 열리는 공원 등)는 7일 안에 그곳 행사가 있을 때만
-      && (!s.venue || !!(this._spotEvents && this._spotEvents[s.id])))
+      && (!s.venue || !!(this._spotEvents && this._spotEvents[s.id]))
+      && (!this.state.guide || this.state.guide.set.has(s.id)))
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
     // 위치 필터가 켜져 있으면 반경 안의 스팟만 남기고, 순위도 그 안에서 다시 매겨요
     // 지역(도시)을 골랐으면 반경 밖이어도 그 도시 이름이 지역에 있는 곳은 넣어요 (Burke Mountain, Coquitlam 등 넓은 도시)
@@ -1589,6 +1592,7 @@ class App {
       case 'opennow': return this.set({ openNow: !this.state.openNow, when: !this.state.openNow && this.planLater() ? '' : this.state.when });
       // 해피아워와 런치 필터는 하나만 (둘 다 켜면 겹치는 곳이 거의 없어서)
       case 'qclear': return this.clearSearch();
+      case 'guideclear': return this.set({ guide: null, browse: false, restShown: REST_STEP });
       case 'qtry': return this.runSearch(val);
       // 알아들은 조건 칩의 ×: 그 조건만 꺼요
       case 'qrm': {
@@ -1887,6 +1891,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
           ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : view === 'about' ? this.aboutView() : view === 'events' || view === 'markets' ? this.eventsView(view) : this.pickMode() && !this.state.q ? this.wizardView()
             : this.pickMode() ? `<button data-act="qclear" class="mt-6 inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">← Back to the picker</button>${this.planBar()}${this.listView(items)}` : this.state.cat === 'events' ? this.eventsView() : `
+            ${this.guideBanner()}
             ${this.planBar()}
             ${view !== 'map' ? this.seasonChips() : ''}
             ${view === 'eats' && (this.state.hh || this.state.lunch) ? '' : this.criteriaBanner(items)}
@@ -2426,6 +2431,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     return true;
   }
   // Explore를 질문(단계별 추천)으로 보는 중인지 (Browse all이면 예전처럼 전체 목록과 필터)
+  // 안내 페이지로 들어왔을 때 맨 위 안내 띠: 지금 보는 안내 이름과 전체 보기 버튼
+  guideBanner() {
+    const g = this.state.guide;
+    if (!g) return '';
+    return `<div class="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-sm text-teal-900 dark:border-teal-800 dark:bg-teal-950 dark:text-teal-100"><span class="font-semibold">${esc(g.title)}</span><span class="text-teal-700 dark:text-teal-300">${g.set.size} places</span><button data-act="guideclear" class="ml-auto min-h-[36px] px-3 py-1 rounded-lg font-semibold border border-teal-300 hover:border-teal-500 dark:border-teal-700">Show all places</button></div>`
+  }
   pickMode() { return WIZARD && this.state.view === 'list' && !this.state.browse; }
   // 추천 결과에서 위치를 고르면: 그 지역에 맞는 반경(도시 5 km, 동네 2 km, 내 위치 5 km)으로 10곳부터 다시 보여줘요
   wizLocPatch(key) {
