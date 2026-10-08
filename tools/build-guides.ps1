@@ -114,6 +114,8 @@ nav.top{font-size:14px;margin-bottom:12px}h1{font-size:26px;line-height:1.25;mar
 .related{margin-top:28px;font-size:15px}.related ul{padding-left:18px}footer{margin-top:32px;color:var(--mut);font-size:13px}
 '@
 
+function Sub($text, $pattern, $value) { [regex]::Replace($text, $pattern, { param($m) $value }, 'Singleline') }
+$shell = [IO.File]::ReadAllText((Join-Path $root 'index.html'), $enc)
 function Plural($n, $w) { if ($n -eq 1) { "$n $w" } else { "$n ${w}s" } }
 $guideDir = Join-Path $root 'guides'
 if (Test-Path $guideDir) { Remove-Item $guideDir -Recurse -Force }
@@ -142,28 +144,27 @@ foreach ($p in $pages) {
   $url = "$site/guides/$($p.slug)/"
   $items = for ($i = 0; $i -lt $n; $i++) { [ordered]@{ '@type' = 'ListItem'; position = $i + 1; name = $list[$i].name; url = "$site/#spot=$($list[$i].id)" } }
   $ld = ([ordered]@{ '@context' = 'https://schema.org'; '@type' = 'ItemList'; name = $p.h1; url = $url; numberOfItems = $n; itemListElement = @($items) } | ConvertTo-Json -Depth 5 -Compress) -replace '</', '<\/'
+  # 방문자에게는 진짜 앱(index.html 껍데기)이 뜨고, 이 안내 글은 앱 아래쪽(#seo-static)에 남아요. 구글은 같은 글을 그대로 읽어요
+  $L = 'underline text-teal-700 dark:text-teal-300'
   $sb = New-Object System.Text.StringBuilder
   foreach ($s in $list) {
     $meta = @($s.area, $(if ($s.price) { $s.price }), $(if ($s.time) { $s.time }), $(if ($s.env) { (Get-Culture).TextInfo.ToTitleCase($s.env) })) | Where-Object { $_ }
-    [void]$sb.AppendLine("<section class=""spot""><h2>$(Esc $s.name)</h2><p class=""meta"">$(Esc ($meta -join ' · '))</p><p>$(Esc $s.summary)</p><a class=""cta"" href=""/#spot=$(Esc $s.id)"">Hours, parking &amp; tips</a></section>")
+    [void]$sb.AppendLine("<div class=""rounded-xl border border-slate-200 dark:border-slate-700 p-3 mb-3""><h2 class=""font-bold text-base text-slate-900 dark:text-slate-100"">$(Esc $s.name)</h2><p class=""text-xs mb-1"">$(Esc ($meta -join ' · '))</p><p class=""mb-2"">$(Esc $s.summary)</p><a class=""$L"" href=""/#spot=$(Esc $s.id)"">Hours, parking &amp; tips</a></div>")
   }
   $rel = Related $p
-  $relHtml = if ($rel) { '<div class="related"><strong>More guides</strong><ul>' + (($rel | ForEach-Object { "<li><a href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a></li>" }) -join '') + '</ul></div>' } else { '' }
-  $html = @"
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>$(Esc $p.title) | Tiny Trips</title>
-<meta name="description" content="$(Esc $desc)">
-<link rel="canonical" href="$url">
-<meta property="og:title" content="$(Esc $p.title)"><meta property="og:description" content="$(Esc $desc)"><meta property="og:type" content="website"><meta property="og:url" content="$url">
-<script type="application/ld+json">$ld</script>
-<style>$css</style></head><body><main>
-<nav class="top"><a href="/">Tiny Trips</a> › <a href="/guides/">Guides</a></nav>
-<h1>$(Esc $p.h1)</h1><p class="lead">$(Esc $lead)</p>
-$($sb.ToString())$relHtml
-<footer>Details change, so check the official site before you go. <a href="/">Open the Tiny Trips app</a> for what is open now.</footer>
-</main></body></html>
-"@
+  $relHtml = if ($rel) { '<div class="mt-6"><strong>More guides</strong><ul class="list-disc pl-5 mt-1">' + (($rel | ForEach-Object { "<li><a class=""$L"" href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a></li>" }) -join '') + '</ul></div>' } else { '' }
+  $body = "<nav class=""mb-2""><a class=""$L"" href=""/"">Tiny Trips</a> › <a class=""$L"" href=""/guides/"">Guides</a></nav><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">$(Esc $p.h1)</h1><p class=""mb-4"">$(Esc $lead)</p>" + $sb.ToString() + $relHtml + "<p class=""mt-6 text-xs"">Details change, so check the official site before you go.</p>"
+  $html = $shell
+  $html = Sub $html '<title>[^<]*</title>' "<title>$(Esc $p.title) | Tiny Trips</title>"
+  $html = Sub $html '<link rel="canonical" href="[^"]*">' "<link rel=""canonical"" href=""$url"">"
+  $html = Sub $html '<meta name="description" content="[^"]*">' "<meta name=""description"" content=""$(Esc $desc)"">"
+  $html = Sub $html '<meta property="og:title" content="[^"]*">' "<meta property=""og:title"" content=""$(Esc $p.title)"">"
+  $html = Sub $html '<meta property="og:description" content="[^"]*">' "<meta property=""og:description"" content=""$(Esc $desc)"">"
+  $html = Sub $html '<meta property="og:url" content="[^"]*">' "<meta property=""og:url"" content=""$url"">"
+  $html = Sub $html '<meta name="twitter:title" content="[^"]*">' "<meta name=""twitter:title"" content=""$(Esc $p.title)"">"
+  $html = Sub $html '<meta name="twitter:description" content="[^"]*">' "<meta name=""twitter:description"" content=""$(Esc $desc)"">"
+  $html = Sub $html '<!--seo-start-->.*<!--seo-end-->' "<!--seo-start-->$body<!--seo-end-->"
+  $html = Sub $html '</head>' "<script type=""application/ld+json"">$ld</script>`n</head>"
   $dir = Join-Path $guideDir $p.slug
   New-Item -ItemType Directory $dir | Out-Null
   [IO.File]::WriteAllText((Join-Path $dir 'index.html'), $html, $enc)

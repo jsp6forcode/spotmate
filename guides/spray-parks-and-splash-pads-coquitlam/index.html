@@ -1,27 +1,89 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Spray parks and splash pads in Coquitlam for kids | Tiny Trips</title>
-<meta name="description" content="6 kid-friendly places in Coquitlam: spray parks and splash pads picked for families with babies, toddlers and school-age kids. 6 free. Open any spot in Tiny Trips for hours, parking and what parents say.">
 <link rel="canonical" href="https://tinytripsvan.ca/guides/spray-parks-and-splash-pads-coquitlam/">
-<meta property="og:title" content="Spray parks and splash pads in Coquitlam for kids"><meta property="og:description" content="6 kid-friendly places in Coquitlam: spray parks and splash pads picked for families with babies, toddlers and school-age kids. 6 free. Open any spot in Tiny Trips for hours, parking and what parents say."><meta property="og:type" content="website"><meta property="og:url" content="https://tinytripsvan.ca/guides/spray-parks-and-splash-pads-coquitlam/">
+<meta name="theme-color" content="#0d9488">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230d9488'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle'%3E%F0%9F%8E%92%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Tiny Trips">
+<meta property="og:title" content="Spray parks and splash pads in Coquitlam for kids">
+<meta property="og:description" content="6 kid-friendly places in Coquitlam: spray parks and splash pads picked for families with babies, toddlers and school-age kids. 6 free. Open any spot in Tiny Trips for hours, parking and what parents say.">
+<meta property="og:url" content="https://tinytripsvan.ca/guides/spray-parks-and-splash-pads-coquitlam/">
+<meta property="og:image" content="https://images.pexels.com/photos/7669218/pexels-photo-7669218.jpeg?auto=compress&cs=tinysrgb&w=1200&h=630&fit=crop">
+<meta property="og:image:alt" content="A family heading out on a trip with a picnic basket">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Spray parks and splash pads in Coquitlam for kids">
+<meta name="twitter:description" content="6 kid-friendly places in Coquitlam: spray parks and splash pads picked for families with babies, toddlers and school-age kids. 6 free. Open any spot in Tiny Trips for hours, parking and what parents say.">
+<meta name="twitter:image" content="https://images.pexels.com/photos/7669218/pexels-photo-7669218.jpeg?auto=compress&cs=tinysrgb&w=1200&h=630&fit=crop">
+<meta name="description" content="6 kid-friendly places in Coquitlam: spray parks and splash pads picked for families with babies, toddlers and school-age kids. 6 free. Open any spot in Tiny Trips for hours, parking and what parents say.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: { extend: { colors: {
+    // 포인트 색: 보라(violet) 자리를 틸(청록)로 바꿔요 (2026-10-02, 사용자 결정). 코드 곳곳의 violet-* 클래스가 그대로 틸이 돼요
+    violet: { 50: "#f0fdfa", 100: "#ccfbf1", 200: "#99f6e4", 300: "#5eead4", 400: "#2dd4bf", 500: "#14b8a6", 600: "#0d9488", 700: "#0f766e", 800: "#115e59", 900: "#134e4a", 950: "#042f2e" }
+  }, fontFamily: {
+    sans: ['"IBM Plex Sans"', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
+    brand: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif']
+  } } }
+};
+</script>
+<style>
+  :root { box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body { background: #fbfbfa; }
+  html.dark body { background: #0b1120; }
+  .clamp2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .no-scrollbar { scrollbar-width: none; } .no-scrollbar::-webkit-scrollbar { display: none; }
+  /* 지도 핀 (Leaflet divIcon): 카테고리 색 원 + 번호 */
+  /* 헤더: 나들이 가는 가족 사진 (Pexels, Kampus). 글자가 읽히게 위아래를 어둡게 덮어요 */
+  .hero { background: linear-gradient(180deg, rgba(15,23,42,.52) 0%, rgba(15,23,42,.2) 50%, rgba(15,23,42,.58) 100%), url("https://images.pexels.com/photos/7669218/pexels-photo-7669218.jpeg?auto=compress&cs=tinysrgb&w=1600") center 35% / cover, #3b2a6b; }
+  .dark .hero { background: linear-gradient(180deg, rgba(2,6,23,.72) 0%, rgba(2,6,23,.46) 50%, rgba(2,6,23,.78) 100%), url("https://images.pexels.com/photos/7669218/pexels-photo-7669218.jpeg?auto=compress&cs=tinysrgb&w=1600") center 35% / cover, #1b1238; }
+  /* 퀴즈 화면: 은은한 색 번짐 배경 + 헤더에 살짝 걸친 둥근 카드, 모서리에 작은 아이콘 (2026-10-02, 사용자 결정 A+C) */
+  .wiz-wrap { background: radial-gradient(circle at 12% 18%, #d3f5ee 0, transparent 38%), radial-gradient(circle at 88% 55%, #fff0d2 0, transparent 42%), radial-gradient(circle at 35% 100%, #ffe1e8 0, transparent 40%); border-radius: 28px; padding: 0 0 28px; }
+  .dark .wiz-wrap { background: radial-gradient(circle at 12% 18%, rgba(13,148,136,.22) 0, transparent 38%), radial-gradient(circle at 88% 55%, rgba(245,158,11,.12) 0, transparent 42%), radial-gradient(circle at 35% 100%, rgba(244,114,182,.12) 0, transparent 40%); }
+  .wiz-card { position: relative; background: rgba(255,255,255,.93); border-radius: 22px; padding: 18px 16px; box-shadow: 0 2px 4px rgba(15,23,42,.04), 0 18px 48px rgba(13,148,136,.14); }
+  .dark .wiz-card { background: rgba(15,23,42,.88); box-shadow: 0 18px 48px rgba(0,0,0,.4); }
+   (min-width: 640px) { .wiz-card { border-radius: 28px; padding: 28px 30px; margin-top: -24px; } }
+  .wiz-deco { position: absolute; opacity: .6; pointer-events: none; user-select: none; }
+  .hero h1 { text-shadow: 0 2px 16px rgba(0,0,0,.45); }
+  .hero p, .hero span { text-shadow: 0 1px 8px rgba(0,0,0,.5); }
+  .spot-pin { width: 30px; height: 30px; border-radius: 9999px; border: 3px solid #fff; color: #fff; font: 800 12px/24px system-ui, sans-serif; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.4); }
+  .spot-pin.origin { width: 18px; height: 18px; background: #111827; }
+  /* 행사(보라 테두리)·파머스 마켓(초록 테두리) 핀: 흰 바탕에 이모지 */
+  .spot-pin.ev { background: #fff; border-color: #a21caf; font: 16px/24px system-ui, sans-serif; }
+  .spot-pin.ev.mk { border-color: #059669; }
+  /* 오른쪽 목록에 마우스를 올리면 그 장소 핀을 크게 + 보라 테두리 */
+  .spot-pin { transition: transform .12s, box-shadow .12s; }
+  .spot-pin.hl { transform: scale(1.45); border-color: #0d9488; box-shadow: 0 0 0 4px rgba(13,148,136,.35), 0 2px 8px rgba(0,0,0,.5); }
+  /* isolation: 지도 레이어(z-index 400~1000)가 지도 상자 안에서만 쌓이게. 안 그러면 장소 창이 지도 뒤로 가려져요 */
+  .leaflet-container { font-family: inherit; isolation: isolate; z-index: 0; }
+  /* 다크 모드: OSM 지도는 밝은 그림뿐이라 타일만 어둡게 (핀·글자는 그대로) */
+  .dark .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.95) contrast(.9); }
+  .sticky-bar { position: sticky; top: env(safe-area-inset-top, 0px); }
+  button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid #14b8a6; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Spray parks and splash pads in Coquitlam for kids","url":"https://tinytripsvan.ca/guides/spray-parks-and-splash-pads-coquitlam/","numberOfItems":6,"itemListElement":[{"@type":"ListItem","position":1,"name":"Blue Mountain Park","url":"https://tinytripsvan.ca/#spot=bluemountain"},{"@type":"ListItem","position":2,"name":"Blue Mountain Spray Park","url":"https://tinytripsvan.ca/#spot=bluemountainspraypark"},{"@type":"ListItem","position":3,"name":"Cottonwood Park","url":"https://tinytripsvan.ca/#spot=cottonwoodpark"},{"@type":"ListItem","position":4,"name":"Galloway Park","url":"https://tinytripsvan.ca/#spot=gallowaypark"},{"@type":"ListItem","position":5,"name":"Mackin Park","url":"https://tinytripsvan.ca/#spot=mackinpark"},{"@type":"ListItem","position":6,"name":"Rochester Park","url":"https://tinytripsvan.ca/#spot=rochesterpark"}]}</script>
-<style>:root{--bg:#f7fafa;--fg:#14292b;--mut:#4a6366;--card:#fff;--line:#d5e3e4;--acc:#0f766e}
-@media(prefers-color-scheme:dark){:root{--bg:#0e1b1c;--fg:#e4f1f1;--mut:#9db8ba;--card:#152729;--line:#27403f;--acc:#5eead4}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-main{max-width:760px;margin:0 auto;padding:20px 16px 48px}a{color:var(--acc)}
-nav.top{font-size:14px;margin-bottom:12px}h1{font-size:26px;line-height:1.25;margin:4px 0 8px}p.lead{color:var(--mut);margin:0 0 20px}
-.spot{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 12px}
-.spot h2{font-size:18px;margin:0 0 2px}.spot .meta{color:var(--mut);font-size:14px;margin:0 0 6px}.spot p{margin:0 0 8px}
-.cta{display:inline-block;background:var(--acc);color:var(--bg);font-weight:600;text-decoration:none;border-radius:8px;padding:8px 14px;font-size:14px}
-.related{margin-top:28px;font-size:15px}.related ul{padding-left:18px}footer{margin-top:32px;color:var(--mut);font-size:13px}</style></head><body><main>
-<nav class="top"><a href="/">Tiny Trips</a> › <a href="/guides/">Guides</a></nav>
-<h1>Spray parks and splash pads in Coquitlam for kids</h1><p class="lead">6 kid-friendly places in Coquitlam: spray parks and splash pads picked for families with babies, toddlers and school-age kids. 6 free. Open any spot in Tiny Trips for hours, parking and what parents say.</p>
-<section class="spot"><h2>Blue Mountain Park</h2><p class="meta">Coquitlam &#183; Free &#183; 1–2 hrs &#183; Outdoor</p><p>Park with a playground, a spray park, an outdoor pool, sports fields, picnic tables and washrooms</p><a class="cta" href="/#spot=bluemountain">Hours, parking &amp; tips</a></section>
-<section class="spot"><h2>Blue Mountain Spray Park</h2><p class="meta">Coquitlam &#183; Free &#183; 1–2 hrs &#183; Outdoor</p><p>Spray park with a playground and picnic tables</p><a class="cta" href="/#spot=bluemountainspraypark">Hours, parking &amp; tips</a></section>
-<section class="spot"><h2>Cottonwood Park</h2><p class="meta">Coquitlam &#183; Free &#183; 1–2 hrs &#183; Outdoor</p><p>Park with a playground, a spray park, sports fields, picnic tables and washrooms</p><a class="cta" href="/#spot=cottonwoodpark">Hours, parking &amp; tips</a></section>
-<section class="spot"><h2>Galloway Park</h2><p class="meta">Coquitlam &#183; Free &#183; 1–2 hrs &#183; Outdoor</p><p>Park with a playground, a spray park, sports fields and picnic tables</p><a class="cta" href="/#spot=gallowaypark">Hours, parking &amp; tips</a></section>
-<section class="spot"><h2>Mackin Park</h2><p class="meta">Coquitlam &#183; Free &#183; 1–2 hrs &#183; Outdoor</p><p>Park with a playground, a spray park, sports fields, picnic tables and washrooms</p><a class="cta" href="/#spot=mackinpark">Hours, parking &amp; tips</a></section>
-<section class="spot"><h2>Rochester Park</h2><p class="meta">Coquitlam &#183; Free &#183; 1 hr &#183; Outdoor</p><p>Park with a playground, a spray park, sports fields, picnic tables and washrooms</p><a class="cta" href="/#spot=rochesterpark">Hours, parking &amp; tips</a></section>
-<div class="related"><strong>More guides</strong><ul><li><a href="/guides/parks-coquitlam/">Parks in Coquitlam for kids</a></li><li><a href="/guides/shopping-centres-coquitlam/">Shopping centres in Coquitlam for kids</a></li><li><a href="/guides/kid-friendly-trails-coquitlam/">Kid-friendly trails in Coquitlam for kids</a></li><li><a href="/guides/playgrounds-coquitlam/">Playgrounds in Coquitlam for kids</a></li><li><a href="/guides/rec-centres-coquitlam/">Rec centres in Coquitlam for kids</a></li><li><a href="/guides/places-to-take-kids-coquitlam/">Places to take kids in Coquitlam</a></li><li><a href="/guides/spray-parks-and-splash-pads-north-vancouver/">Spray parks and splash pads in North Vancouver for kids</a></li><li><a href="/guides/spray-parks-and-splash-pads-vancouver/">Spray parks and splash pads in Vancouver for kids</a></li><li><a href="/guides/spray-parks-and-splash-pads-langley/">Spray parks and splash pads in Langley for kids</a></li><li><a href="/guides/spray-parks-and-splash-pads-surrey/">Spray parks and splash pads in Surrey for kids</a></li><li><a href="/guides/spray-parks-and-splash-pads-new-westminster/">Spray parks and splash pads in New Westminster for kids</a></li><li><a href="/guides/spray-parks-and-splash-pads-delta/">Spray parks and splash pads in Delta for kids</a></li><li><a href="/guides/spray-parks-and-splash-pads-port-coquitlam/">Spray parks and splash pads in Port Coquitlam for kids</a></li><li><a href="/guides/spray-parks-and-splash-pads-burnaby/">Spray parks and splash pads in Burnaby for kids</a></li></ul></div>
-<footer>Details change, so check the official site before you go. <a href="/">Open the Tiny Trips app</a> for what is open now.</footer>
-</main></body></html>
+</head>
+<body class="font-sans text-slate-900 dark:text-slate-100">
+<div id="app"></div>
+<section id="seo-static" class="max-w-6xl mx-auto px-4 md:px-6 pb-12 text-sm text-slate-600 dark:text-slate-300"><!--seo-start--><nav class="mb-2"><a class="underline text-teal-700 dark:text-teal-300" href="/">Tiny Trips</a> › <a class="underline text-teal-700 dark:text-teal-300" href="/guides/">Guides</a></nav><h1 class="font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100">Spray parks and splash pads in Coquitlam for kids</h1><p class="mb-4">6 kid-friendly places in Coquitlam: spray parks and splash pads picked for families with babies, toddlers and school-age kids. 6 free. Open any spot in Tiny Trips for hours, parking and what parents say.</p><div class="rounded-xl border border-slate-200 dark:border-slate-700 p-3 mb-3"><h2 class="font-bold text-base text-slate-900 dark:text-slate-100">Blue Mountain Park</h2><p class="text-xs mb-1">Coquitlam &#183; Free &#183; 1–2 hrs &#183; Outdoor</p><p class="mb-2">Park with a playground, a spray park, an outdoor pool, sports fields, picnic tables and washrooms</p><a class="underline text-teal-700 dark:text-teal-300" href="/#spot=bluemountain">Hours, parking &amp; tips</a></div>
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 p-3 mb-3"><h2 class="font-bold text-base text-slate-900 dark:text-slate-100">Blue Mountain Spray Park</h2><p class="text-xs mb-1">Coquitlam &#183; Free &#183; 1–2 hrs &#183; Outdoor</p><p class="mb-2">Spray park with a playground and picnic tables</p><a class="underline text-teal-700 dark:text-teal-300" href="/#spot=bluemountainspraypark">Hours, parking &amp; tips</a></div>
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 p-3 mb-3"><h2 class="font-bold text-base text-slate-900 dark:text-slate-100">Cottonwood Park</h2><p class="text-xs mb-1">Coquitlam &#183; Free &#183; 1–2 hrs &#183; Outdoor</p><p class="mb-2">Park with a playground, a spray park, sports fields, picnic tables and washrooms</p><a class="underline text-teal-700 dark:text-teal-300" href="/#spot=cottonwoodpark">Hours, parking &amp; tips</a></div>
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 p-3 mb-3"><h2 class="font-bold text-base text-slate-900 dark:text-slate-100">Galloway Park</h2><p class="text-xs mb-1">Coquitlam &#183; Free &#183; 1–2 hrs &#183; Outdoor</p><p class="mb-2">Park with a playground, a spray park, sports fields and picnic tables</p><a class="underline text-teal-700 dark:text-teal-300" href="/#spot=gallowaypark">Hours, parking &amp; tips</a></div>
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 p-3 mb-3"><h2 class="font-bold text-base text-slate-900 dark:text-slate-100">Mackin Park</h2><p class="text-xs mb-1">Coquitlam &#183; Free &#183; 1–2 hrs &#183; Outdoor</p><p class="mb-2">Park with a playground, a spray park, sports fields, picnic tables and washrooms</p><a class="underline text-teal-700 dark:text-teal-300" href="/#spot=mackinpark">Hours, parking &amp; tips</a></div>
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 p-3 mb-3"><h2 class="font-bold text-base text-slate-900 dark:text-slate-100">Rochester Park</h2><p class="text-xs mb-1">Coquitlam &#183; Free &#183; 1 hr &#183; Outdoor</p><p class="mb-2">Park with a playground, a spray park, sports fields, picnic tables and washrooms</p><a class="underline text-teal-700 dark:text-teal-300" href="/#spot=rochesterpark">Hours, parking &amp; tips</a></div>
+<div class="mt-6"><strong>More guides</strong><ul class="list-disc pl-5 mt-1"><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/parks-coquitlam/">Parks in Coquitlam for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/shopping-centres-coquitlam/">Shopping centres in Coquitlam for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/kid-friendly-trails-coquitlam/">Kid-friendly trails in Coquitlam for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/playgrounds-coquitlam/">Playgrounds in Coquitlam for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/rec-centres-coquitlam/">Rec centres in Coquitlam for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/places-to-take-kids-coquitlam/">Places to take kids in Coquitlam</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/spray-parks-and-splash-pads-north-vancouver/">Spray parks and splash pads in North Vancouver for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/spray-parks-and-splash-pads-vancouver/">Spray parks and splash pads in Vancouver for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/spray-parks-and-splash-pads-langley/">Spray parks and splash pads in Langley for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/spray-parks-and-splash-pads-surrey/">Spray parks and splash pads in Surrey for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/spray-parks-and-splash-pads-new-westminster/">Spray parks and splash pads in New Westminster for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/spray-parks-and-splash-pads-delta/">Spray parks and splash pads in Delta for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/spray-parks-and-splash-pads-port-coquitlam/">Spray parks and splash pads in Port Coquitlam for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/spray-parks-and-splash-pads-burnaby/">Spray parks and splash pads in Burnaby for kids</a></li></ul></div><p class="mt-6 text-xs">Details change, so check the official site before you go.</p><!--seo-end--></section>
+<button id="to-top" type="button" aria-label="Back to top" class="fixed z-40 right-4 bottom-4 sm:right-6 sm:bottom-6 w-12 h-12 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-2xl font-bold shadow-lg ring-1 ring-black/10 flex items-center justify-center" style="display:none"><span aria-hidden="true">↑</span></button>
+
+<script src="/app.js"></script>
+</body>
+</html>
