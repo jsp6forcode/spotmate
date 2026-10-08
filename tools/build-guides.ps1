@@ -154,6 +154,7 @@ foreach ($p in $pages) {
   $rel = Related $p
   $relHtml = if ($rel) { '<div class="mt-6"><strong>More guides</strong><ul class="list-disc pl-5 mt-1">' + (($rel | ForEach-Object { "<li><a class=""$L"" href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a></li>" }) -join '') + '</ul></div>' } else { '' }
   $body = "<nav class=""mb-2""><a class=""$L"" href=""/"">Tiny Trips</a> › <a class=""$L"" href=""/guides/"">Guides</a></nav><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">$(Esc $p.h1)</h1><p class=""mb-4"">$(Esc $lead)</p>" + $sb.ToString() + $relHtml + "<p class=""mt-6 text-xs"">Details change, so check the official site before you go.</p>"
+  $body = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">About this guide: $(Esc $p.h1)</summary><div class=""mt-3"">" + $body + "</div></details>"
   $html = $shell
   $html = Sub $html '<title>[^<]*</title>' "<title>$(Esc $p.title) | Tiny Trips</title>"
   $html = Sub $html '<link rel="canonical" href="[^"]*">' "<link rel=""canonical"" href=""$url"">"
