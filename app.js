@@ -1592,7 +1592,7 @@ class App {
       case 'opennow': return this.set({ openNow: !this.state.openNow, when: !this.state.openNow && this.planLater() ? '' : this.state.when });
       // 해피아워와 런치 필터는 하나만 (둘 다 켜면 겹치는 곳이 거의 없어서)
       case 'qclear': return this.clearSearch();
-      case 'guideclear': return this.set({ guide: null, browse: false, restShown: REST_STEP });
+      case 'guideclear': return this.set({ guide: null, browse: true, restShown: REST_STEP });
       case 'qtry': return this.runSearch(val);
       // 알아들은 조건 칩의 ×: 그 조건만 꺼요
       case 'qrm': {
