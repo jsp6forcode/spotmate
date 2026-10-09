@@ -2676,7 +2676,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const newCount = ranked.filter(s => this.isNew(s)).length;
     const fillNote = 'Vancouver classics and places Google reviewers love, in no particular order.';
     return `
-      ${ranked.length ? `${heading('list-top', period ? `Worth going ${period}` : 'Worth going now', period ? `${plural(ranked.length, 'spot')} with a reason to go ${period}: ${this.planLater() ? 'an event that day, something in season, or newly opened' : reasons}.` : eats ? `${plural(ranked.length, 'spot')} with a reason to go right now.` : `${plural(ranked.length, 'spot')} with a reason to go this week: ${reasons}.`)}
+      ${ranked.length ? `${heading('list-top', period ? `Worth going ${period}` : 'Worth going now', '')}
       ${newCount ? `<p class="mt-3 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${plural(newCount, 'new spot')} since your last visit, shown first.</p>` : ''}
       ${grid(ranked)}` : ''}
       ${fill.length ? (ranked.length ? `

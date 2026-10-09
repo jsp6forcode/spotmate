@@ -157,9 +157,11 @@ foreach ($p in $pages) {
   $where = if ($p.city) { "in $($p.city)" } else { 'across Metro Vancouver' }
   $what = if ($p.kindPlural) { $p.kindPlural.ToLower() } else { 'places' }
   $bits = @()
-  if ($free) { $bits += "$free free" }
-  if ($indoor) { $bits += "$indoor indoor" }
-  $lead = "$(Plural $n 'kid-friendly place') ${where}: $what picked for families with babies, toddlers and school-age kids." + $(if ($bits) { " $($bits -join ', ')." } else { '' }) + ' Open any spot in Tiny Trips for hours, parking and what parents say.'
+  $isIndoorPage = $p.slug -like 'indoor-*'
+  if ($free) { $bits += $(if ($isIndoorPage) { "$free of them free" } else { "$free free" }) }
+  if ($indoor -and -not $isIndoorPage) { $bits += "$indoor indoor" }
+  $lead = if ($isIndoorPage) { "$(Plural $n 'indoor place') to take kids ${where}, good for rainy days: play centres, libraries, museums, pools and more for babies, toddlers and school-age kids." } else { "$(Plural $n 'kid-friendly place') ${where}: $what picked for families with babies, toddlers and school-age kids." }
+  $lead += $(if ($bits) { " $($bits -join ', ')." } else { '' }) + ' Open any spot in Tiny Trips for hours, parking and what parents say.'
   $desc = ($lead -replace '\s+', ' ')
   if ($desc.Length -gt 300) { $desc = $desc.Substring(0, 297) + '...' }
   $url = "$site/guides/$($p.slug)/"
