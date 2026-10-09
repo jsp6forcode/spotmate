@@ -5,7 +5,8 @@
 param(
   [int]$MinKindCity = 3,     # 종류×도시 페이지에 필요한 최소 장소 수
   [int]$MinCity = 6,         # 도시 전체 페이지
-  [int]$MinKind = 6          # 종류 전체(메트로 밴쿠버) 페이지
+  [int]$MinKind = 6,         # 종류 전체(메트로 밴쿠버) 페이지
+  [int]$MinIndoorCity = 4    # 도시별 실내 장소 페이지
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
@@ -98,6 +99,12 @@ foreach ($g in $rows | Group-Object kind) {
   $f = $g.Group[0]
   if ($g.Count -ge $MinKind -and $f.kind -notin 'sight') { [void]$pages.Add([pscustomobject]@{ slug = Slug "$($f.kindPlural) metro vancouver"; title = "$($f.kindPlural) for kids in Metro Vancouver"; h1 = "$($f.kindPlural) for kids in Metro Vancouver"; city = ''; kind = $f.kind; kindPlural = $f.kindPlural; spots = $g.Group }) }
 }
+# "indoor places to take kids (near me)" 검색용: 놀이센터·도서관·박물관·수영장 등 실내(env=indoor) 장소를 도시별로 한데 묶어요
+foreach ($g in $spots | Where-Object { $_.env -eq 'indoor' } | Group-Object city) {
+  if ($g.Count -ge $MinIndoorCity) { [void]$pages.Add([pscustomobject]@{ slug = Slug "indoor places to take kids $($g.Name)"; title = "Indoor places to take kids in $($g.Name): rainy day ideas"; h1 = "Indoor places to take kids in $($g.Name)"; city = $g.Name; kind = ''; kindPlural = 'indoor places'; spots = $g.Group }) }
+}
+$ind = @($spots | Where-Object { $_.env -eq 'indoor' })
+if ($ind.Count -ge $MinKind) { [void]$pages.Add([pscustomobject]@{ slug = 'indoor-places-to-take-kids-metro-vancouver'; title = 'Indoor places to take kids in Metro Vancouver: rainy day ideas'; h1 = 'Indoor places to take kids in Metro Vancouver'; city = ''; kind = ''; kindPlural = 'indoor places'; spots = $ind }) }
 # 같은 주소가 두 번 생기면(종류 하나뿐인 도시 등) 앞의 것만
 $pages = @($pages | Group-Object slug | ForEach-Object { $_.Group[0] })
 Write-Host "안내 페이지 $($pages.Count)개"
@@ -197,7 +204,7 @@ foreach ($p in $pages) {
   $html = Sub $html '<meta name="twitter:description" content="[^"]*">' "<meta name=""twitter:description"" content=""$(Esc $desc)"">"
   $html = Sub $html '<!--seo-start-->.*<!--seo-end-->' "<!--seo-start-->$body<!--seo-end-->"
   # 앱이 이 안내에 실린 장소만 보여주게 (메트로 전체 추천 모음은 일부만 실려서 제외)
-  if ($p.city -or $p.kind) {
+  if ($p.city -or $p.kind -or $p.slug -like 'indoor-*') {
     $g = ([ordered]@{ title = $p.h1; ids = @($list | ForEach-Object { $_.id }) } | ConvertTo-Json -Compress) -replace '</', '<\/'
     $html = Sub $html '<script src="/app.js"></script>' "<script>window.GUIDE=$g</script><script src=""/app.js""></script>"
   }  $html = Sub $html '</head>' "<script type=""application/ld+json"">$ld</script><script type=""application/ld+json"">$faq</script>`n</head>"
