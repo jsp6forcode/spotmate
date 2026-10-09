@@ -205,7 +205,8 @@ foreach ($p in $pages) {
   $html = Sub $html '<!--seo-start-->.*<!--seo-end-->' "<!--seo-start-->$body<!--seo-end-->"
   # 앱이 이 안내에 실린 장소만 보여주게 (메트로 전체 추천 모음은 일부만 실려서 제외)
   if ($p.city -or $p.kind -or $p.slug -like 'indoor-*') {
-    $g = ([ordered]@{ title = $p.h1; ids = @($list | ForEach-Object { $_.id }) } | ConvertTo-Json -Compress) -replace '</', '<\/'
+    $allIndoor = $list.Count -gt 1 -and @($list | Where-Object { $_.env -ne 'indoor' }).Count -eq 0
+    $g = ([ordered]@{ title = $p.h1; ids = @($list | ForEach-Object { $_.id }); indoor = $allIndoor; city = [string]$p.city } | ConvertTo-Json -Compress) -replace '</', '<\/'
     $html = Sub $html '<script src="/app.js"></script>' "<script>window.GUIDE=$g</script><script src=""/app.js""></script>"
   }  $html = Sub $html '</head>' "<script type=""application/ld+json"">$ld</script><script type=""application/ld+json"">$faq</script>`n</head>"
   $dir = Join-Path $guideDir $p.slug

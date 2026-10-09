@@ -399,6 +399,8 @@ const SEARCH_PLACES = [
   [/\babbotsford\b|\bmatsqui\b/i, 'abbotsford'], [/\bchilliwack\b|\bsardis\b/i, 'chilliwack'],
 ];
 // 검색으로 고른 지역의 반경: 도시는 5 km, 동네는 2 km (downtown 포함)
+// 도시 안내 페이지(window.GUIDE.city)에 해당하는 ORIGINS 키 (없으면 '')
+const guideCityKey = () => (window.GUIDE && window.GUIDE.city && Object.keys(ORIGINS).find(k => ORIGINS[k].label === window.GUIDE.city)) || '';
 const placeRadius = k => ORIGINS[k].r || (k === 'downtown' ? 2 : 5);
 
 // ───────── 스팟 데이터 ─────────
@@ -865,11 +867,11 @@ class App {
       when: '',
       view: 'list', dark: savedDark === null ? prefersDark : savedDark === '1',
       // nearKey: '' = 위치 필터 없음, 'here' = GPS 현재 위치(origin), 그 외 = ORIGINS의 지역
-      nearKey: '', origin: null, geoMsg: '', geoBusy: false,
+      nearKey: guideCityKey(), origin: null, geoMsg: '', geoBusy: false,
       // "Open now"는 늘 꺼진 채로 시작해요 (밤에 켜 두면 추천이 몇 곳만 남아서, 켠 상태를 기억하지 않아요)
       openNow: false,
       // Indoor·Kids도 기억하지 않아요 (검색·비 안내로 켜진 게 다음 방문까지 남아 목록이 몰래 좁혀지지 않게)
-      indoor: false, kidsOnly: false,
+      indoor: !!(window.GUIDE && window.GUIDE.indoor), kidsOnly: false,
       // cuisine: Food 카테고리에서 고른 음식 종류 ('' = 전체)
       cuisine: '',
       // price: Eats 가격대 ('' = 전체, '$', '$$', '$$$' = $$$ 이상). 켜 둔 채 잊으면 목록이 줄어 보여서 기억하지 않아요
@@ -886,12 +888,12 @@ class App {
       // browse: Explore를 질문 없이 전체 목록(필터)으로 보기. 열 때는 늘 Pick for me(질문)부터 시작해요
       browse: !!(window.GUIDE && window.GUIDE.ids),
       // guide: 안내 페이지(/guides/…)로 들어왔을 때 그 안내에 실린 장소만 보여줘요 (build-guides.ps1 이 window.GUIDE = { title, ids } 를 넣어요)
-      guide: window.GUIDE && window.GUIDE.ids ? { title: String(window.GUIDE.title || ''), set: new Set(window.GUIDE.ids) } : null,
+      guide: window.GUIDE && window.GUIDE.ids ? { title: String(window.GUIDE.title || ''), set: new Set(window.GUIDE.ids), indoor: !!window.GUIDE.indoor, cityKey: guideCityKey() } : null,
       // 부모 리뷰: user = 구글 로그인한 사람, reviewDraft = 쓰는 중인 리뷰 { id, rating, text }
       user: null, reviewsOn: false, reviewDraft: null, reviewBusy: false, reviewMsg: '',
       feedbackBusy: false, feedbackMsg: '', feedbackSent: false, savedTab: 'saved',
       q: '', kw: [], unused: [], free: false, qBusy: false, aiSay: '',
-      radius: RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
+      radius: guideCityKey() ? 'any' : RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
       // "Good any day" 목록에서 보여줄 개수 (Show more로 12개씩 늘어나요)
       restShown: REST_STEP,
@@ -1360,7 +1362,9 @@ class App {
       && (eats || !this.state.indoor || s.env !== 'outdoor') && (eats || !(this.state.kidsOnly || KIDS_ONLY) || isKid(s))
       // 행사 장소(Pacific Coliseum, 컨벤션센터, 마켓이 열리는 공원 등)는 7일 안에 그곳 행사가 있을 때만
       && (!s.venue || !!(this._spotEvents && this._spotEvents[s.id]))
-      && (!this.state.guide || this.state.guide.set.has(s.id)))
+      // 실내 안내 페이지는 Indoor 필터가 켜진 채 열리고, 그 버튼을 끄면 안내 목록 제한도 풀려 전체 장소가 나와요
+      // 도시 안내 페이지도 그 도시가 선택된 채 열리고, 지역을 바꾸거나 위치 필터를 끄면 제한이 풀려요
+      && (!this.state.guide || (this.state.guide.indoor && !this.state.indoor) || (this.state.guide.cityKey && this.state.nearKey !== this.state.guide.cityKey) || this.state.guide.set.has(s.id)))
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
     // 위치 필터가 켜져 있으면 반경 안의 스팟만 남기고, 순위도 그 안에서 다시 매겨요
     // 지역(도시)을 골랐으면 반경 밖이어도 그 도시 이름이 지역에 있는 곳은 넣어요 (Burke Mountain, Coquitlam 등 넓은 도시)
@@ -2435,7 +2439,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   guideBanner() {
     const g = this.state.guide;
     if (!g) return '';
-    return `<div class="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-sm text-teal-900 dark:border-teal-800 dark:bg-teal-950 dark:text-teal-100"><span class="font-semibold">${esc(g.title)}</span><span class="text-teal-700 dark:text-teal-300">${g.set.size} places</span>${this.state.guideAll ? '' : '<button data-act="guideclear" class="ml-auto min-h-[36px] px-3 py-1 rounded-lg font-semibold border border-teal-300 hover:border-teal-500 dark:border-teal-700">Show all places</button>'}</div>`
+    return `<div class="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-sm text-teal-900 dark:border-teal-800 dark:bg-teal-950 dark:text-teal-100"><span class="font-semibold">${esc(g.title)}</span><span class="text-teal-700 dark:text-teal-300">${g.set.size} places</span>${this.state.guideAll || g.indoor || g.cityKey ? '' : '<button data-act="guideclear" class="ml-auto min-h-[36px] px-3 py-1 rounded-lg font-semibold border border-teal-300 hover:border-teal-500 dark:border-teal-700">Show all places</button>'}</div>`
   }
   pickMode() { return WIZARD && this.state.view === 'list' && !this.state.browse; }
   // 추천 결과에서 위치를 고르면: 그 지역에 맞는 반경(도시 5 km, 동네 2 km, 내 위치 5 km)으로 10곳부터 다시 보여줘요
