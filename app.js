@@ -1364,13 +1364,15 @@ class App {
       && (!s.venue || !!(this._spotEvents && this._spotEvents[s.id]))
       // 실내 안내 페이지는 Indoor 필터가 켜진 채 열리고, 그 버튼을 끄면 안내 목록 제한도 풀려 전체 장소가 나와요
       // 도시 안내 페이지도 그 도시가 선택된 채 열리고, 지역을 바꾸거나 위치 필터를 끄면 제한이 풀려요
-      && (!this.state.guide || (this.state.guide.indoor && !this.state.indoor) || (this.state.guide.cityKey && this.state.nearKey !== this.state.guide.cityKey) || this.state.guide.set.has(s.id)))
+      && (!this.guideActive() || this.state.guide.set.has(s.id)))
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
     // 위치 필터가 켜져 있으면 반경 안의 스팟만 남기고, 순위도 그 안에서 다시 매겨요
     // 지역(도시)을 골랐으면 반경 밖이어도 그 도시 이름이 지역에 있는 곳은 넣어요 (Burke Mountain, Coquitlam 등 넓은 도시)
-    if (this.nearActive() && radius !== 'any') {
+    // 안내 페이지에서 실내만 껐고 도시는 남았으면, 그 도시 안(기본 반경)의 모든 장소를 보여줘요
+    const g0 = this.state.guide, radius2 = g0 && g0.cityKey && this.state.nearKey === g0.cityKey && !this.guideActive() && !this.state.guideAll ? placeRadius(g0.cityKey) : radius;
+    if (this.nearActive() && radius2 !== 'any') {
       const o = ORIGINS[this.state.nearKey], inArea = o ? new RegExp(`(^|[(,] ?)${o.label}\\b`, 'i') : null;
-      items = items.filter(s => s.dist <= radius || (inArea && inArea.test(s.area || '')));
+      items = items.filter(s => s.dist <= radius2 || (inArea && inArea.test(s.area || '')));
     }
     // 가격대 (Eats만): $ · $$ · $$$+($$$와 $$$$). 가격을 모르는 곳은 숨기고 개수만 세어 둬요
     this._priceUnknown = 0;
@@ -1596,7 +1598,8 @@ class App {
       case 'opennow': return this.set({ openNow: !this.state.openNow, when: !this.state.openNow && this.planLater() ? '' : this.state.when });
       // 해피아워와 런치 필터는 하나만 (둘 다 켜면 겹치는 곳이 거의 없어서)
       case 'qclear': return this.clearSearch();
-      case 'guideclear': return this.set({ guideAll: true, restShown: this.state.guide ? this.state.guide.set.size : REST_STEP });
+      case 'guideclear': return this.set({ guideAll: true, restShown: REST_STEP });
+      case 'guideback': return this.set({ guideAll: false, restShown: REST_STEP });
       case 'qtry': return this.runSearch(val);
       // 알아들은 조건 칩의 ×: 그 조건만 꺼요
       case 'qrm': {
@@ -2439,9 +2442,20 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   guideBanner() {
     const g = this.state.guide;
     if (!g) return '';
+    const box = 'mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-sm text-teal-900 dark:border-teal-800 dark:bg-teal-950 dark:text-teal-100', btn = 'ml-auto min-h-[36px] px-3 py-1 rounded-lg font-semibold border border-teal-300 hover:border-teal-500 dark:border-teal-700';
+    // "Show all places"를 눌러 전체를 보는 중: 안내 이름과 되돌아가는 버튼만
+    if (this.state.guideAll) return `<div class="${box}"><span class="font-semibold">Showing all places</span><button data-act="guideback" class="${btn}">Back to ${esc(g.title)}</button></div>`;
     // 실내·도시 필터를 끄면 안내 목록 제한이 풀려 개수가 맞지 않으니 띠도 숨겨요
-    if ((g.indoor && !this.state.indoor) || (g.cityKey && this.state.nearKey !== g.cityKey)) return '';
-    return `<div class="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-sm text-teal-900 dark:border-teal-800 dark:bg-teal-950 dark:text-teal-100"><span class="font-semibold">${esc(g.title)}</span><span class="text-teal-700 dark:text-teal-300">${g.set.size} places</span>${this.state.guideAll || g.indoor || g.cityKey ? '' : '<button data-act="guideclear" class="ml-auto min-h-[36px] px-3 py-1 rounded-lg font-semibold border border-teal-300 hover:border-teal-500 dark:border-teal-700">Show all places</button>'}</div>`
+    if (!this.guideActive()) return '';
+    return `<div class="${box}"><span class="font-semibold">${esc(g.title)}</span><span class="text-teal-700 dark:text-teal-300">${g.set.size} places</span>${g.indoor || g.cityKey ? '' : `<button data-act="guideclear" class="${btn}">Show all places</button>`}</div>`
+  }
+  // 안내 페이지의 장소 제한이 지금 적용되는지: 실내·도시 필터가 켜져 있는 동안, 또는 "Show all places"를 누르기 전까지
+  guideActive() {
+    const g = this.state.guide;
+    if (!g || this.state.guideAll) return false;
+    if (g.indoor && !this.state.indoor) return false;
+    if (g.cityKey && this.state.nearKey !== g.cityKey) return false;
+    return true;
   }
   pickMode() { return WIZARD && this.state.view === 'list' && !this.state.browse; }
   // 추천 결과에서 위치를 고르면: 그 지역에 맞는 반경(도시 5 km, 동네 2 km, 내 위치 5 km)으로 10곳부터 다시 보여줘요

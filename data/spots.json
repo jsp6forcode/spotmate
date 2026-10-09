@@ -681,7 +681,7 @@
       "summary": "Neighbourhood park with a playground, next to Edmonds Community Centre", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "sumodino", "hours": "Mo-Th 10:00-19:00; Fr,Sa 10:00-20:00; Su 10:00-19:00", "hoursSource": "web", "hoursUrl": "https://www.sumodinoclawcity.com/", "cat": "city", "family": true, "name": "Sumo Dino", "area": "Richmond",
+      "id": "sumodino", "stockPhoto": [18403861, "miami302"], "hours": "Mo-Th 10:00-19:00; Fr,Sa 10:00-20:00; Su 10:00-19:00", "hoursSource": "web", "hoursUrl": "https://www.sumodinoclawcity.com/", "cat": "city", "family": true, "name": "Sumo Dino", "area": "Richmond",
       "lat": 49.1755, "lng": -123.1325, "emoji": "🦖", "placeId": "ChIJq-b2hnp1hlQRzRqZ-W1yhCE",
       "trend": null, "env": "indoor", "price": "$$", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"],
       "summary": "Indoor play centre at Lansdowne Centre", "signals": [], "why": "", "tips": []
