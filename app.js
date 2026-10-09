@@ -1311,7 +1311,8 @@ class App {
   tipItems(s, where) {
     const n = NOTES[s.id]; if (!n) return [];
     // 장소 창은 카드에 보이는 팁을 항상 포함해요 (카드엔 있는데 창엔 없는 일이 없게). 카드 팁을 맨 앞에, 창에서만 걸러지지 않은 줄을 뒤에 (2026-10-04)
-    if (where === 'modal') { const cardTips = this.tipItems(s, 'card'), rest = this.tipItems(s, 'modalOnly'); return [...cardTips, ...rest.filter(x => !cardTips.includes(x))]; }
+    // 장소 창은 위의 이유·시즌 줄과 겹치는 팁을 숨겨요 (같은 말이 반복돼 보이지 않게, 2026-10-09)
+    if (where === 'modal') return this.tipItems(s, 'modalOnly');
     const texts = [s.summary];
     const reasons = this.nowReasons(s);
     if (where === 'card') { const why = reasons.filter(x => x.score >= NOW_MIN)[0]; if (why) texts.push(why.text); const e = this._spotEvents && this._spotEvents[s.id]; if (e) texts.push(eventReason(e.ev, s, e.next)); }
@@ -2822,7 +2823,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     return `<p class="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-700 dark:text-slate-200 ${mobile ? 'sm:hidden ' + LINES3 : 'max-sm:hidden'}"><span class="font-semibold">Admission:</span> ${esc(a.text)}${bk ? ` <span class="font-semibold text-amber-700 dark:text-amber-300">${bk}.</span>` : ''}</p>`;
   }
   // 모달 "Good to know": 입장료·예약, 유모차·기저귀·수유, 먹거리, 확인한 날짜와 출처 (다른 두 상자와 같은 모양)
-  factsBox(s) {
+  factsBox(s, dd) {
     const f = fx(s.id), a = (f && f.admission) || {}, m = (f && f.amenities) || {}, fd = (f && f.food) || {};
     const chips = [
       m.stroller === 'yes' ? 'Stroller-friendly' : m.stroller === 'partial' ? 'Partly stroller-friendly' : m.stroller === 'no' ? 'Not stroller-friendly' : strollerInfo(s) === 'big' ? 'Stroller-friendly (large facility)' : '',
@@ -2841,6 +2842,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (chips.length || m.note) items.push(label('With little ones') + esc(chips.join(' · ')) + (chips.length && m.note ? '. ' : '') + (m.note ? esc(m.note) : ''));
     if (food.length || fd.nearby) items.push(label('Food') + esc(food.join(' · ')) + (food.length && fd.nearby ? '. ' : '') + (fd.nearby ? `Nearby: ${esc(fd.nearby)}` : ''));
     if (!items.length) return '';
+    // 확인된 사실은 가장 먼저 장소 창의 "이미 나온 말"에 올려서, 뒤에 나오는 tip·후기·할 거리가 같은 말을 반복하지 않게 해요
+    if (dd) items.forEach(x => dd.add(x.replace(/<[^>]+>/g, ' ')));
     const src = /^https:\/\//.test(a.source || '') ? ` · <a href="${esc(a.source)}" target="_blank" rel="noopener" class="underline">source</a>` : '';
     const checked = f && f.checked ? `Info checked ${esc(shortDate(f.checked))}${src}` : '';
     return infoBox('slate', 'Good to know', items, checked, 'Good to know');
@@ -2926,6 +2929,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const cur = items.find(x => x.id === s.id);
     const rank = cur ? this.rankOf(cur) : null;
     const saved = st.plan.includes(s.id);
+    // 같은 말이 장소 창에 두 번 나오지 않게 (규칙, 2026-10-09): 영업시간 → Good to know(확인된 사실) → Tiny Trips tip → What parents say → 시즌·행사 → Things to do 순으로 적어 두고,
+    // 뒤에 나오는 줄이 앞의 내용과 핵심 단어의 절반 이상 겹치면 그 줄을 숨겨요. 새 내용 칸을 만들 때도 dd.fresh(text)로 걸러요
+    const dd = (() => { const seen = new Set(); const add = t => keyWords(t).forEach(w => seen.add(w)); add(weekHours(s) || s.hours || ''); return { add, fresh: t => { if (overlapsSeen(t, seen)) return false; add(t); return true; } }; })();
     const key = `${s.id}|${st.tf}|${st.weather}`, ai = this.ai[key];
     let aiBlock = '';
     if (this.sample) {
@@ -2975,21 +2981,24 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             // 먹거리: 최근 기사(링크)·Reddit 글·지금 시간대·날씨에 맞는 이유
             const press = recentPress(s), food = this.nowReasons(s).filter(r => r.label === 'Good right now' || r.label === 'Talked about lately');
             // "Why go now"(행사·시즌)와 Tiny Trips tip(공식 정보)을 한 상자로 합쳤어요 (2026-10-01)
-            const notes = NOTES[s.id] ? this.tipItems(s, 'modal') : [], src = (NOTES[s.id] || {}).source || '', host = (/^https:\/\/(?:www\.)?([^/]+)/.exec(src) || [])[1] || '';
-            const says = SAYS[s.id];
-            if (!evs.length && !tags.length && !press.length && !food.length && !notes.length && !says) return this.factsBox(s);
+            const factsHtml = this.factsBox(s, dd);
+            const notes = (NOTES[s.id] ? this.tipItems(s, 'modal') : []).filter(dd.fresh), src = (NOTES[s.id] || {}).source || '', host = (/^https:\/\/(?:www\.)?([^/]+)/.exec(src) || [])[1] || '';
+            const says = SAYS[s.id] && dd.fresh(SAYS[s.id]) ? SAYS[s.id] : '';
+            if (!evs.length && !tags.length && !press.length && !food.length && !notes.length && !says) return factsHtml;
             // 정리 (사용자 결정, 2026-10-02): 파란 창에는 공식 정보인 Tiny Trips tip만. "지금"(행사·시즌)은 칩 한 줄로, 부모 후기는 파란 창 밖으로. 앞에 나온 말과 겹치는 문장은 숨겨요
-            const seen = new Set(); [s.summary, says || '', ...notes].forEach(t => keyWords(t).forEach(w => seen.add(w)));
             const chip = h => `<span class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-900 ring-1 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-200 dark:ring-amber-500/30">${h}</span>`;
             const line = h => `<p class="mt-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${h}</p>`;
+            // 같은 시즌 설명(#태그 줄)이 이미 그 행사를 말하면 행사 칩은 생략 ("Pumpkin patch"가 칩과 줄에 두 번 나오지 않게)
+            const tagSeen = new Set(); tags.forEach(t => keyWords(t.spots[s.id].why).forEach(w => tagSeen.add(w)));
+            const evShown = evs.filter(ev => !overlapsSeen(eventReason(ev, s, ev.next).replace(/^[^:]*:\s*/, ''), tagSeen));
             const chips = [
-              ...evs.map(ev => chip(`<span aria-hidden="true">${esc(ev.icon || '🎪')}</span> ${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}`)),
+              ...evShown.map(ev => chip(`<span aria-hidden="true">${esc(ev.icon || '🎪')}</span> ${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}`)),
               ...tags.map(t => chip(`#${esc(t.label)}`)),
             ].join('');
             const extra = [
               ...food.map(r => line(`<span class="font-semibold">${esc(r.label)}</span> · ${esc(r.text)}`)),
               ...press.map(p => line(`<span class="font-semibold">In the news</span> · ${esc(p.outlet)}, ${esc(shortDate(p.date))}: <a href="${esc(p.url)}" target="_blank" rel="noopener" class="underline">${esc(p.title)} ↗</a>`)),
-              ...tags.map(t => { const x = t.spots[s.id]; return overlapsSeen(x.why, seen) ? '' : line(`<span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}`); }),
+              ...tags.map(t => { const x = t.spots[s.id]; return !dd.fresh(x.why) ? '' : line(`<span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}`); }),
             ].join('');
             const chipsBlock = `${chips || extra ? `
           <div>
@@ -2998,7 +3007,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const tipBlock = notes.length ? infoBox('sky', 'Tiny Trips tip', notes.slice(0, 2).map(esc), `Checked ${esc(shortDate(NOTES_META.updatedAt))} · ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'official site'}. Hours can change.`) : '';
             const saysBlock = says ? infoBox('pink', 'What parents say', [esc(says)]) : '';
             // 순서 (사용자 결정, 2026-10-04): What parents say → Tiny Trips tip → Good to know → 행사·시즌 칩
-            return saysBlock + tipBlock + this.factsBox(s) + chipsBlock; })()}
+            return saysBlock + tipBlock + factsHtml + chipsBlock; })()}
 
 
           ${[[lunchState(s), 'emerald', LUNCH_META], [hhState(s), 'amber', HAPPY_META]]
@@ -3085,7 +3094,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             </div>` : '';
             // 음식점·카페는 조사한 인기 메뉴(menu)를 우선 보여주고, 없으면 기존 메모(eat)
             const eats = s.cat === 'food' || s.cat === 'dessert';
-            const body = list('Things to do', g.do, '•') + list(eats ? 'Popular menu' : 'What to eat', eats ? (g.menu || g.eat) : g.eat, '•');
+            // 앞 칸(Good to know·tip·후기·시즌)에서 이미 한 말은 빼요
+            const body = list('Things to do', (g.do || []).filter(dd.fresh), '•') + list(eats ? 'Popular menu' : 'What to eat', ((eats ? (g.menu || g.eat) : g.eat) || []).filter(eats ? () => true : dd.fresh), '•');
             const src = eats && g.menu && /^https:\/\//i.test(g.menuSource || '') ? g.menuSource : '';
             return body ? `
           <section class="space-y-5">

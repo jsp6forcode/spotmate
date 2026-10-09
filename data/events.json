@@ -89,7 +89,7 @@
       "summary": "Open-studio art festival, 30th year", "source": "https://culturecrawl.ca/" },
     { "id": "rcf-pumpkins", "type": "seasonal", "icon": "🎃", "name": "Pumpkin patch at Richmond Country Farms", "area": "Richmond",
       "venue": "Richmond Country Farms (12900 Steveston Hwy)", "lat": 49.133, "lng": -123.0838, "spotId": "richmondcountryfarms",
-      "schedule": { "from": "2026-10-01", "to": "2026-10-31", "start": "09:00", "end": "20:00" },
+      "schedule": { "from": "2026-09-26", "to": "2026-10-31", "hoursText": "Weekdays 9am-4pm, weekends 10am-4:30pm" },
       "summary": "October pumpkin patch", "source": "https://dailyhive.com/vancouver/metro-vancouver-pumpkin-patches-2026" },
     { "id": "hazelmere-pumpkins", "type": "seasonal", "icon": "🎃", "name": "Hazelmere Pumpkin Patch", "area": "South Surrey",
       "venue": "18507 20 Ave, Surrey", "lat": 49.0386, "lng": -122.71, "spotId": "hazelmere",

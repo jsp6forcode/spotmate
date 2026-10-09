@@ -32,6 +32,7 @@ tools: Read, Grep, Glob, Edit, Write, PowerShell, WebSearch, WebFetch, mcp__Clau
 - 스톡 사진은 항상 "Stock photo · may differ from the actual place"로 표시되므로 그 표기는 건드리지 않는다.
 - 스톡 사진은 **그 장소의 종류·특징에 맞아야 한다.** 장소 종류에 맞는 STOCK 항목이 없으면 `stockPhoto`로 장소별 지정하거나, 같은 종류가 여러 곳이면 새 종류를 `KINDS`와 `STOCK`에 추가한다. 무작정 일반 사진을 쓰지 않는다.
 - **스톡 사진을 붙일 때는 반드시 그 장소의 이름과 설명(summary)을 먼저 읽고, 설명에 나오는 핵심 활동·시설과 사진이 맞는지 확인한다.** 종류(kind)만 보고 붙이지 않는다. 예: Sumo Dino는 "claw-machine and play centre"라서 실내 놀이터(볼풀)가 아니라 claw machine 사진이어야 한다. 설명의 특징이 종류 기본 사진과 다르면 `STOCK_HINTS`(app.js)에 한 줄을 추가하거나 `stockPhoto`로 장소별 지정한다. 사용자가 사진을 지정한 장소(sumodino 등)는 `STOCK` 목록을 바꾼 뒤에도 사진이 그대로인지 다시 확인한다.
+- **장소 창(모달)에서 같은 내용이 두 번 나오지 않게 한다.** 새 텍스트 칸을 만들 때는 `modal()`의 `dd.fresh(text)`로 걸러 앞 칸과 겹치는 줄을 숨긴다 (규칙: 영업시간 → Good to know → tip → 후기 → 시즌 → 할 거리).
 - **얼굴이 알아볼 정도로 나오는 사진은 쓰지 않는다.** 뒷모습, 먼 실루엣, 손·다리만 나오는 것은 괜찮다.
 - 사용자가 직접 찍은 사진은 `"photo": {"url": "data/photos/xxx.jpg", "credit": "Photo: Tiny Trips", "own": true}` 형식으로 쓴다.
 - Pexels 사진을 추가하기 전에 반드시 로드를 확인한다: `https://images.pexels.com/photos/{id}/pexels-photo-{id}.jpeg?auto=compress&cs=tinysrgb&w=640`. 어떤 번호는 이 주소에 이미지가 없어(깨진 이미지) 사이트에서 안 보인다. 촬영자 이름은 `https://www.pexels.com/photo/{id}/` 페이지에서 "Photo by …"로 확인한다.
