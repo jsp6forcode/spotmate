@@ -68,6 +68,11 @@ function strollerInfo(s) {
 }
 // 실제 사진이 없는 장소의 대표 이미지: 장소 종류(KINDS 키) → [Pexels 사진 번호, 촬영자]. 사람 얼굴이 나오지 않는 사진만 골랐어요. Pexels 라이선스는 무료 사용이고, 카드에 "그 장소가 아닐 수 있다"고 표시해요
 const STOCK_ON = true, stockPick = {}, stockUse = {};
+// 설명에 이런 말이 나오면 장소 종류(KINDS)와 상관없이 그 특징의 스톡 사진을 써요: [정규식, STOCK 종류]
+const STOCK_HINTS = [
+  [/claw[- ]machine|\bclaw\b/i, 'arcade'],
+  [/go-?kart|karting/i, 'games'],
+];
 const STOCK = {
   trampoline: [[6571947, 'Tima Miroshnichenko'], [1739321, 'Jesus Perges']],
   aquarium: [[13561441, 'GURYAN'], [8585895, 'Leo Tavares'], [12616864, 'Daka'], [10431750, 'Lu Zhao']],
@@ -2279,6 +2284,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         if (kind === 'rec' && /librar/i.test(head)) kind = 'library';
         else if (['rec', 'garden', 'pool'].includes(kind) && /^park\b/i.test(head)) kind = 'park';
         else if (kind === 'farm' && /^museum/i.test(head)) kind = 'museum';
+        // 이름·설명에 그 장소만의 특징이 드러나면 그 특징에 맞는 사진 (예: Sumo Dino는 "play centre"가 아니라 claw machine). 새 특징이 생기면 STOCK_HINTS에 한 줄 추가해요
+        const hint = STOCK_HINTS.find(([re]) => re.test(`${s.name} ${head}`));
+        if (hint) kind = hint[1];
         // 이름이 그냥 "Park"인 곳은 이름·설명에 나온 자연환경(숲·계곡·물가)에 맞는 사진 (예: Boundary Bay Regional Park는 바닷가)
         if (kind === 'park') {
           const nm = `${s.name} ${head}`;
