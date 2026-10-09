@@ -1592,7 +1592,7 @@ class App {
       case 'opennow': return this.set({ openNow: !this.state.openNow, when: !this.state.openNow && this.planLater() ? '' : this.state.when });
       // 해피아워와 런치 필터는 하나만 (둘 다 켜면 겹치는 곳이 거의 없어서)
       case 'qclear': return this.clearSearch();
-      case 'guideclear': return this.set({ guide: null, browse: true, restShown: REST_STEP });
+      case 'guideclear': return this.set({ guideAll: true, restShown: this.state.guide ? this.state.guide.set.size : REST_STEP });
       case 'qtry': return this.runSearch(val);
       // 알아들은 조건 칩의 ×: 그 조건만 꺼요
       case 'qrm': {
@@ -2435,7 +2435,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   guideBanner() {
     const g = this.state.guide;
     if (!g) return '';
-    return `<div class="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-sm text-teal-900 dark:border-teal-800 dark:bg-teal-950 dark:text-teal-100"><span class="font-semibold">${esc(g.title)}</span><span class="text-teal-700 dark:text-teal-300">${g.set.size} places</span><button data-act="guideclear" class="ml-auto min-h-[36px] px-3 py-1 rounded-lg font-semibold border border-teal-300 hover:border-teal-500 dark:border-teal-700">Show all places</button></div>`
+    return `<div class="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-sm text-teal-900 dark:border-teal-800 dark:bg-teal-950 dark:text-teal-100"><span class="font-semibold">${esc(g.title)}</span><span class="text-teal-700 dark:text-teal-300">${g.set.size} places</span>${this.state.guideAll ? '' : '<button data-act="guideclear" class="ml-auto min-h-[36px] px-3 py-1 rounded-lg font-semibold border border-teal-300 hover:border-teal-500 dark:border-teal-700">Show all places</button>'}</div>`
   }
   pickMode() { return WIZARD && this.state.view === 'list' && !this.state.browse; }
   // 추천 결과에서 위치를 고르면: 그 지역에 맞는 반경(도시 5 km, 동네 2 km, 내 위치 5 km)으로 10곳부터 다시 보여줘요
