@@ -2674,7 +2674,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 날짜 계획: "Worth going this weekend"처럼 그 날 기준으로
     const w = this.state.when, period = w === 'weekend' ? 'this weekend' : w === 'today' ? 'today' : w === 'tomorrow' ? 'tomorrow' : w ? `on ${WHEN[w]}` : '';
     const newCount = ranked.filter(s => this.isNew(s)).length;
-    const fillNote = 'Vancouver classics and places Google reviewers love, in no particular order.';
+    // 안내 페이지는 제목 없이 한 목록으로: 지금 갈 이유가 있는 곳이 맨 앞, 이어서 나머지 (Worth going / Also worth a try / Good any day로 나누지 않아요)
+    if (this.state.guide) return `<div id="list-top" class="scroll-mt-4"></div>${more([...ranked, ...fill, ...rest])}`;
     return `
       ${ranked.length ? `${heading('list-top', period ? `Worth going ${period}` : 'Worth going now', '')}
       ${newCount ? `<p class="mt-3 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${plural(newCount, 'new spot')} since your last visit, shown first.</p>` : ''}
@@ -2682,10 +2683,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       ${fill.length ? (ranked.length ? `
       <div class="mt-8">
         <h3 class="text-lg font-bold">Also worth a try</h3>
-        <p class="text-sm text-slate-500 dark:text-slate-400">${fillNote}</p>
-      </div>` : heading('list-top', 'Top picks', `Nothing stands out ${period || (eats ? 'right now' : 'this week')}, so here are ${fillNote}`)) + grid(fill) : ''}
+      </div>` : heading('list-top', 'Top picks', '')) + grid(fill) : ''}
       ${events}
-      ${rest.length ? `${heading('list-rest', ranked.length || fill.length ? 'Good any day' : 'Spots', `${plural(rest.length, 'spot')}. Vancouver classics first, then the rest in no particular order.`)}
+      ${rest.length ? `${heading('list-rest', ranked.length || fill.length ? 'Good any day' : 'Spots', '')}
       ${more(rest)}` : ''}`;
   }
 
