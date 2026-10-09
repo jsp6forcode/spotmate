@@ -2439,6 +2439,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   guideBanner() {
     const g = this.state.guide;
     if (!g) return '';
+    // 실내·도시 필터를 끄면 안내 목록 제한이 풀려 개수가 맞지 않으니 띠도 숨겨요
+    if ((g.indoor && !this.state.indoor) || (g.cityKey && this.state.nearKey !== g.cityKey)) return '';
     return `<div class="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-sm text-teal-900 dark:border-teal-800 dark:bg-teal-950 dark:text-teal-100"><span class="font-semibold">${esc(g.title)}</span><span class="text-teal-700 dark:text-teal-300">${g.set.size} places</span>${this.state.guideAll || g.indoor || g.cityKey ? '' : '<button data-act="guideclear" class="ml-auto min-h-[36px] px-3 py-1 rounded-lg font-semibold border border-teal-300 hover:border-teal-500 dark:border-teal-700">Show all places</button>'}</div>`
   }
   pickMode() { return WIZARD && this.state.view === 'list' && !this.state.browse; }
