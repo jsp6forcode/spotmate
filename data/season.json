@@ -3,7 +3,7 @@
   "tags" : [
     {
       "about" : "Maples and ginkgos usually peak mid-to-late October.",
-      "emoji" : "🍁",
+      "emoji" : "?뛻",
       "from" : "2026-09-20",
       "id" : "fallcolours",
       "label" : "FallColours",
@@ -107,7 +107,7 @@
     },
     {
       "about" : "Salmon return to local rivers and hatcheries in fall.",
-      "emoji" : "🐟",
+      "emoji" : "?맅",
       "from" : "2026-09-20",
       "id" : "salmonrun",
       "label" : "SalmonRun",
@@ -145,7 +145,7 @@
     },
     {
       "about" : "Pumpkin patches and haunted nights through October.",
-      "emoji" : "🎃",
+      "emoji" : "?럠",
       "from" : "2026-09-19",
       "id" : "halloween",
       "label" : "Halloween",
@@ -253,7 +253,7 @@
     },
     {
       "about" : "Local ski hills open when the snow arrives.",
-      "emoji" : "⛷️",
+      "emoji" : "?뤄툘",
       "from" : "2026-09-20",
       "id" : "skiseasonsoon",
       "label" : "SkiSeasonSoon",
@@ -277,5 +277,5 @@
       "to" : "2026-12-20"
     }
   ],
-  "updatedAt" : "2026-10-05"
+  "updatedAt" : "2026-10-08"
 }
