@@ -1749,7 +1749,8 @@ class App {
   // 기록(history)에 한 칸을 더해서, 휴대폰 뒤로가기가 사이트를 떠나지 않고 모달만 닫게 해요
   openModal(id) {
     document.body.style.overflow = 'hidden';
-    const url = `${location.pathname}${location.search}#spot=${encodeURIComponent(id)}`;
+    // 전용 주소가 있는 장소는 /spots/<id>/, 없으면 #spot=<id>
+    const url = SPOT_PAGES.has(id) ? `/spots/${encodeURIComponent(id)}/${location.search}` : `${location.pathname}${location.search}#spot=${encodeURIComponent(id)}`;
     // 외부 링크(Google Maps·가격)에 갔다 뒤로 와서 페이지가 다시 열리면 이 기록 칸이 이미 모달 칸이에요. 또 쌓지 않고 덮어써서 X 한 번에 닫히게 해요
     try { if (this.state.modal || (history.state && history.state.modal)) history.replaceState({ modal: id }, '', url); else history.pushState({ modal: id }, '', url); } catch (e) {}
     this.set({ modal: id, trendInfo: false, shareMsg: null, reviewMsg: '', reviewDraft: null });
@@ -1762,7 +1763,7 @@ class App {
   hideModal() {
     if (this.aiCtl) this.aiCtl.abort();
     document.body.style.overflow = '';
-    try { if (/^#spot=/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    try { if (location.pathname.startsWith('/spots/')) history.replaceState(null, '', '/' + location.search); else if (/^#spot=/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
     this.set({ modal: null, trendInfo: false, shareMsg: null, reviewMsg: '', reviewDraft: null });
   }
   // 공유: 휴대폰은 공유 시트, 안 되면 링크를 클립보드에 복사
