@@ -2377,6 +2377,8 @@
       "trend": null, "env": "outdoor", "price": "Free", "time": "2–3 hrs", "crowd": "park", "weather": ["sunny"], "summary": "Lake with a beach", "signals": [], "why": "", "tips": [] },
     { "id": "hoycreekhatchery", "cat": "nature", "name": "Hoy Creek Hatchery", "area": "Coquitlam", "lat": 49.2868, "lng": -122.7968, "emoji": "🐟", "placeId": "ChIJ-48FRS5_hlQR-3qSN1JpMd8", "family": true,
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"], "summary": "Salmon hatchery", "signals": [], "why": "", "tips": [] },
+    { "id": "hydecreekhatchery", "cat": "nature", "name": "Hyde Creek Hatchery", "area": "Port Coquitlam", "lat": 49.2766, "lng": -122.7557, "emoji": "🐟", "placeId": "ChIJv3CSGGh_hlQRhAqWg8WDmOQ", "kids": true,
+      "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"], "summary": "Salmon hatchery and education centre", "signals": [], "why": "", "tips": [] },
     { "id": "littlecampbellriverh", "cat": "nature", "name": "Little Campbell River Hatchery", "area": "Surrey", "lat": 49.0249, "lng": -122.7079, "emoji": "🐟", "placeId": "ChIJo313qtzFhVQRGmVcJ4HUT3Y", "family": true,
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["rain", "cloudy", "sunny"], "summary": "Volunteer-run salmon hatchery", "signals": [], "why": "", "tips": [] },
     { "id": "maanfarms", "cat": "nature", "name": "Maan Farms", "area": "Abbotsford", "lat": 49.0163, "lng": -122.2819, "emoji": "🌽", "placeId": "ChIJSYBRUXk1hFQRvoCmKJkBn3c", "family": true,

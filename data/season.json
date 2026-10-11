@@ -120,6 +120,11 @@
           "source" : "https://www.pac.dfo-mpo.gc.ca/sep-pmvs/hatcheries-ecloseries/capilano-eng.html",
           "why" : "Coho are returning now and Chinook come back in October and November. The hatchery has viewing windows."
         },
+        "hydecreekhatchery" : {
+          "source" : "https://psf.ca/blog/salmon-spotting-tricities/",
+          "start" : "2026-10-01",
+          "why" : "Chum return to Hyde Creek in October and November and coho in November. Park at Hyde Creek Recreation Centre and follow the creek trail, with lookouts and a footbridge, to the hatchery."
+        },
         "inletpark" : {
           "source" : "https://psf.ca/blog/salmon-spotting-tricities/",
           "start" : "2026-10-01",
