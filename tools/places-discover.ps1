@@ -18,52 +18,23 @@ if (-not $key) { throw ".env.local에 GOOGLE_PLACES_API_KEY 값이 없어요." }
 
 # 카테고리별 발굴 검색어 (한 번에 최대 20곳씩)
 $queries = [ordered]@{
-  food   = @('best restaurants in Vancouver', 'brunch in Vancouver', 'bakery in Vancouver', 'dim sum in Richmond BC',
-             'ramen in Vancouver', 'seafood restaurant Vancouver', 'cafe in Vancouver', 'food market Vancouver')
   hidden = @('parks in Vancouver', 'hiking trails North Vancouver', 'gardens in Vancouver', 'viewpoints West Vancouver',
              'beaches in Vancouver', 'museums in Vancouver', 'lakes near Vancouver BC', 'tourist attractions Burnaby')
 }
 
 if ($Set -eq 'metro') {
   $queries = [ordered]@{
-    food   = @('best restaurants in Surrey BC', 'best restaurants in Burnaby', 'best restaurants in Richmond BC', 'best restaurants in Coquitlam',
-               'best restaurants in North Vancouver', 'best restaurants in New Westminster', 'best restaurants in Langley BC', 'best restaurants in Port Moody')
     hidden = @('parks in Surrey BC', 'parks in Coquitlam', 'parks in Langley BC', 'parks in Delta BC', 'hiking trails Maple Ridge',
                'parks in Port Moody', 'parks in Richmond BC', 'tourist attractions Surrey BC', 'tourist attractions New Westminster', 'tourist attractions Langley BC')
   }
 }
 if ($Set -eq 'gems') {
-  # 히든젬(리뷰 500+) 보강용: 스팟이 적은 교외 지역 위주
+  # 히든젬(리뷰 300+) 보강용: 스팟이 적은 교외 지역 위주
   $queries = [ordered]@{
     hidden = @('parks in Coquitlam', 'parks in Port Coquitlam', 'things to do in Port Moody', 'hiking trails Coquitlam', 'lakes near Coquitlam',
                'parks in Burnaby', 'parks in North Vancouver', 'parks in West Vancouver', 'parks in Surrey BC', 'parks in Langley BC',
                'parks in Delta BC', 'parks in Richmond BC', 'parks in New Westminster', 'hiking trails Maple Ridge', 'museums in Metro Vancouver',
                'gardens in Vancouver', 'beaches in Vancouver', 'viewpoints North Vancouver')
-  }
-}
-if ($Set -eq 'food500') {
-  # 먹거리 기준(리뷰 500+) 보강용: 식당이 적은 지역 위주
-  $queries = [ordered]@{
-    food = @('best restaurants in Coquitlam', 'best restaurants in Port Coquitlam', 'best restaurants in Port Moody', 'best restaurants in Burnaby',
-             'best restaurants in Delta BC', 'best restaurants in Maple Ridge', 'best restaurants in West Vancouver', 'best restaurants in North Vancouver',
-             'best restaurants in Richmond BC', 'best restaurants in Surrey BC', 'best restaurants in New Westminster', 'best restaurants in Langley BC',
-             'best cafe in Coquitlam', 'best bakery in Burnaby')
-  }
-}
-if ($Set -eq 'dessert') {
-  # 디저트 카페, 베이커리, 젤라토, 카페
-  $queries = [ordered]@{
-    dessert = @('dessert cafe Vancouver', 'dessert cafe Richmond BC', 'dessert cafe Burnaby', 'dessert cafe Coquitlam', 'dessert cafe Surrey BC',
-                'patisserie Vancouver', 'gelato Vancouver', 'ice cream North Vancouver', 'bakery cafe New Westminster', 'bakery Port Moody',
-                'bakery cafe Langley BC', 'cafe Maple Ridge', 'dessert Delta BC', 'cafe West Vancouver')
-  }
-}
-if ($Set -eq 'food300') {
-  $queries = [ordered]@{
-    food = @('best restaurants in Coquitlam', 'best restaurants in Port Coquitlam', 'best restaurants in Port Moody', 'best restaurants in Burnaby',
-             'best restaurants in Delta BC', 'best restaurants in Maple Ridge', 'best restaurants in West Vancouver', 'best restaurants in North Vancouver',
-             'best restaurants in Richmond BC', 'best restaurants in Surrey BC', 'best restaurants in New Westminster', 'best restaurants in Langley BC',
-             'family restaurant Coquitlam', 'korean restaurant Coquitlam', 'sushi Burnaby', 'pho Surrey BC')
   }
 }
 if ($Set -like 'fraser*') {

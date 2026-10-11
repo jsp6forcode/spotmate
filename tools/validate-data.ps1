@@ -50,7 +50,6 @@ $sameOk = @(
 )
 $okSet = @{}; foreach ($p in $sameOk) { $a, $b = $p -split '\|'; $okSet["$a|$b"] = 1; $okSet["$b|$a"] = 1 }
 function Words($n) { @((NormName $n) -split ' ' | Where-Object { $_.Length -ge 4 -and $_ -notmatch '^(park|parks|centre|center|community|public|library|branch|playground|regional|beach|lake|trail|pool|outdoor|indoor|kids|family|bistro|kitchen|restaurant|grill|diner|cafe|house|west|north|south|east|vancouver|burnaby|richmond|surrey|coquitlam|langley|delta|the)$' }) }
-function SpotGroup($s) { if ($s.cat -in 'food', 'dessert') { 'food' } else { 'place' } }
 function NormName($n) { (($n -replace '\(.*?\)', '').ToLower() -replace '[^a-z0-9 ]', ' ' -replace '\s+', ' ').Trim() }
 function Km($a, $b) { $r = [math]::PI / 180; $x = ([double]$b.lng - [double]$a.lng) * $r * [math]::Cos(([double]$a.lat + [double]$b.lat) / 2 * $r); $y = ([double]$b.lat - [double]$a.lat) * $r; 6371 * [math]::Sqrt($x * $x + $y * $y) }
 $grid = @{}; foreach ($s in $spots) { if ($null -eq $s.lat) { continue }; $k = "$([int][math]::Floor([double]$s.lat / 0.02)),$([int][math]::Floor([double]$s.lng / 0.02))"; if (-not $grid[$k]) { $grid[$k] = New-Object System.Collections.ArrayList }; [void]$grid[$k].Add($s) }
@@ -61,7 +60,6 @@ foreach ($s in $spots) {
   $gy = [int][math]::Floor([double]$s.lat / 0.02); $gx = [int][math]::Floor([double]$s.lng / 0.02); $sn = NormName $s.name
   foreach ($dy in -1..1) { foreach ($dx in -1..1) { foreach ($o in @($grid["$($gy + $dy),$($gx + $dx)"])) {
     if (-not $o -or $o.id -le $s.id -or $o.venue -or $okSet["$($s.id)|$($o.id)"]) { continue }
-    if ((SpotGroup $s) -ne (SpotGroup $o)) { continue }
     $d = Km $s $o; if ($d -gt 1.2) { continue }
     $on = NormName $o.name
     $prefix = ($on.Length -ge 6 -and $sn.StartsWith("$on ")) -or ($sn.Length -ge 6 -and $on.StartsWith("$sn ")) -or ($sn -eq $on)
@@ -76,11 +74,6 @@ foreach ($s in @($spots | Where-Object { $_.hoursUntil })) {
 }
 $noHours = @($spots | Where-Object { -not $_.hours -and -not $_.venue })
 if ($noHours.Count) { Ok "영업시간 없는 스팟 $($noHours.Count)곳 (행사 장소 제외)" }
-foreach ($s in @($spots | Where-Object { $_.opened })) {
-  if ((S $s.opened) -notmatch '^\d{4}-\d{2}$') { Err "$($s.id).opened 는 YYYY-MM 이어야 해요" }
-  if ($s.openedSource -notmatch '^https://') { Err "$($s.id).openedSource 는 개업 기사·공식 SNS https 링크여야 해요" }
-  if (-not $s.placeId) { Err "$($s.id) 는 새로 연 곳이라 매달 평점을 확인하도록 placeId가 있어야 해요" }
-}
 
 # ── 검색 추세 ──
 $t = Load 'trends-weekly.json'
@@ -159,50 +152,6 @@ if ($pk) {
   $missing = @($spots | Where-Object { -not ($pk.spots.PSObject.Properties.Name -contains $_.id) } | ForEach-Object { $_.id })
   if ($missing.Count) { Warn "주차 정보가 없는 스팟 $($missing.Count)곳: $($missing[0..4] -join ', '). tools/parking-osm.ps1 -Ids 로 채워 주세요." }
   Ok "parking $($n)곳"
-}
-
-# ── 해피아워 (happy-hours.json) · 런치 스페셜 (lunch-specials.json) ──
-# 자주 안 바뀌어서 45일 기준, 경고만 (주간 점검 실패로 만들지 않아요)
-function CheckDeals($file) {
-  $dd = Load $file
-  if (-not $dd) { return }
-  if (-not (IsDate $dd.updatedAt)) { Err "$file updatedAt 이 날짜가 아니에요" }
-  elseif (($today - (D $dd.updatedAt)).Days -gt 45) { Warn "$file 이 $(($today - (D $dd.updatedAt)).Days) 일 전 데이터예요. 다시 확인해 주세요." }
-  $dayRe = '^(Mo|Tu|We|Th|Fr|Sa|Su)(-(Mo|Tu|We|Th|Fr|Sa|Su))?(,(Mo|Tu|We|Th|Fr|Sa|Su)(-(Mo|Tu|We|Th|Fr|Sa|Su))?)*$'
-  $n = 0
-  foreach ($x in (Props $dd.spots)) {
-    $n++
-    if (-not $ids[$x.Name]) { Err "$file 에 없는 스팟 id: $($x.Name)"; continue }
-    if ($x.Value.source -notmatch '^https?://') { Err "$file.$($x.Name).source 는 링크여야 해요" }
-    $w = @($x.Value.w)
-    if (-not $w.Count) { Err "$file.$($x.Name) 에 시간(w)이 없어요" }
-    foreach ($v in $w) {
-      if ((S $v.d) -notmatch $dayRe) { Err "$file.$($x.Name) 의 요일($($v.d))을 읽을 수 없어요" }
-      if ($v.all -or $v.approx) { continue }
-      if ((S $v.f) -notmatch '^\d{2}:\d{2}$' -or ((S $v.t) -notmatch '^\d{2}:\d{2}$' -and $v.t -ne 'close')) { Err "$file.$($x.Name) 의 시간($($v.f)–$($v.t))은 HH:MM 이어야 해요 (끝은 'close' 가능)" }
-    }
-  }
-  Ok "$file $n 곳"
-}
-CheckDeals 'happy-hours.json'
-CheckDeals 'lunch-specials.json'
-
-# ── 음식 기사 언급 (press.json) ──
-$pr = Load 'press.json'
-if ($pr) {
-  $n = 0
-  foreach ($x in (Props $pr.items)) {
-    if (-not $ids[$x.Name]) { Err "press 에 없는 스팟 id: $($x.Name)"; continue }
-    if (@('food', 'dessert') -notcontains $ids[$x.Name].cat) { Warn "press.$($x.Name) 는 먹거리가 아니라 앱에서 쓰이지 않아요" }
-    foreach ($p in @($x.Value)) {
-      $n++
-      if (-not ($p.outlet -and $p.title)) { Err "press.$($x.Name) 에 outlet/title 이 빠졌어요" }
-      if ($p.url -notmatch '^https://') { Err "press.$($x.Name) 링크는 https 여야 해요: $($p.url)" }
-      if (-not (IsDate $p.date)) { Err "press.$($x.Name).date 는 YYYY-MM-DD 여야 해요" }
-      elseif (($today - (D $p.date)).Days -gt 30) { Warn "press.$($x.Name) 기사($(S $p.date))가 30일 지나 앱에서 안 보여요. 지워 주세요." }
-    }
-  }
-  Ok "press 기사 $n 개"
 }
 
 # ── Reddit 언급 ──

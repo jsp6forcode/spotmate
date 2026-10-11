@@ -14,7 +14,7 @@ function Strip-Html($h) { (($h -replace '<[^>]+>', '') -replace '&amp;', '&' -re
 $stop = 'the','and','park','regional','restaurant','cafe','bar','kitchen','co','bakery','house','centre','center','of'
 
 $results = foreach ($s in $spots) {
-  $radius = if ($s.cat -in 'food', 'dessert') { 120 } else { 500 }
+  $radius = 500
   try {
     $g = Invoke-RestMethod -Headers $ua ("https://commons.wikimedia.org/w/api.php?action=query&format=json&list=geosearch&gsnamespace=6&gslimit=30" +
       "&gsradius=$radius&gscoord=$($s.lat)|$($s.lng)")
@@ -27,7 +27,6 @@ $results = foreach ($s in $spots) {
   } | Sort-Object score -Descending)
   if (-not $cands.Count) { continue }
   # 식당/카페는 이름이 파일명에 있어야만 후보로 봐요 (근처 아무 건물 사진 방지)
-  if ($s.cat -in 'food', 'dessert' -and $cands[0].hits -eq 0) { continue }
   $pick = $cands[0]
   $ii = Invoke-RestMethod -Headers $ua ("https://commons.wikimedia.org/w/api.php?action=query&format=json&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=800&titles=" + [uri]::EscapeDataString($pick.title))
   $info = (@($ii.query.pages.PSObject.Properties.Value)[0]).imageinfo

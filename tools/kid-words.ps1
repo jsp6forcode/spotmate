@@ -35,7 +35,7 @@ function Read-Error($err) {
 }
 
 $spots = (Get-Content (Join-Path $root 'data\spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots
-$spots = if ($Ids) { @($spots | Where-Object { $_.id -in $Ids }) } else { @($spots | Where-Object { ($_.kids -or $_.family -or $_.play) -and $_.cat -notmatch 'food|dessert' }) }
+$spots = if ($Ids) { @($spots | Where-Object { $_.id -in $Ids }) } else { @($spots | Where-Object { ($_.kids -or $_.family -or $_.play) }) }
 $calls = 0
 $rows = foreach ($s in $spots) {
   try {
