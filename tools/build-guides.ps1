@@ -68,7 +68,16 @@ function CityOf($s) {
 # 불러오기
 $raw = Get-Content (Join-Path $root 'data/spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 $all = if ($raw.spots) { $raw.spots } else { $raw }
+# 월간 점검(refresh-reviews.ps1)에서 폐업하거나 기준에서 벗어난 곳은 앱에서 숨겨요. 안내·장소 페이지에서도 뺍니다
+$inactive = @{}
+$statusFile = Join-Path $root 'data/review-status.json'
+if (Test-Path $statusFile) {
+  $st = Get-Content $statusFile -Raw -Encoding UTF8 | ConvertFrom-Json
+  if ($st.inactive) { foreach ($n in $st.inactive.PSObject.Properties.Name) { $inactive[$n] = $true } }
+}
+Write-Host "숨김(inactive) $($inactive.Count)곳"
 $spots = foreach ($s in $all) {
+  if ($inactive[$s.id]) { continue }
   if ($s.venue -or $s.notKid -or $s.cat -notin 'nature', 'city') { continue }
   if (-not ($s.kids -or $s.family -or $s.play)) { continue }
   $k = KindOf $s
@@ -121,8 +130,20 @@ nav.top{font-size:14px;margin-bottom:12px}h1{font-size:26px;line-height:1.25;mar
 .related{margin-top:28px;font-size:15px}.related ul{padding-left:18px}footer{margin-top:32px;color:var(--mut);font-size:13px}
 '@
 
-function Sub($text, $pattern, $value) { [regex]::Replace($text, $pattern, { param($m) $value }, 'Singleline') }
+# 패턴을 못 찾으면 멈춰요 (index.html 서식이 바뀌었는데 조용히 틀린 페이지가 수백 개 나가지 않게)
+function Sub($text, $pattern, $value) {
+  if (-not [regex]::IsMatch($text, $pattern, 'Singleline')) { throw "빌드 중단: index.html 에서 패턴을 못 찾았어요: $pattern" }
+  [regex]::Replace($text, $pattern, { param($m) $value }, 'Singleline')
+}
 $shell = [IO.File]::ReadAllText((Join-Path $root 'index.html'), $enc)
+# app.js 주소에 내용 해시(?v=)를 붙여요. app.js 가 바뀌면 주소가 바뀌어서 브라우저·CDN 이 옛 파일을 쓰지 않아요 (줄바꿈은 LF 로 맞춰 어디서 빌드해도 같은 값)
+$appText = ([IO.File]::ReadAllText((Join-Path $root 'app.js'), $enc)) -replace "`r`n", "`n"
+$sha = [Security.Cryptography.SHA1]::Create()
+$ver = (($sha.ComputeHash($enc.GetBytes($appText)) | ForEach-Object { $_.ToString('x2') }) -join '').Substring(0, 8)
+$appSrc = "/app.js?v=$ver"
+$shellNew = Sub $shell '<script src="/app\.js[^"]*"></script>' "<script src=""$appSrc""></script>"
+if ($shellNew -ne $shell) { [IO.File]::WriteAllText((Join-Path $root 'index.html'), $shellNew, $enc) }
+$shell = $shellNew
 # 종류별 맞는 나이: 앱(app.js)의 KINDS 에서 읽어요 (b 0–3, p 3–5, s 5–12)
 $AGES = @{}
 foreach ($ln in (Get-Content (Join-Path $root 'app.js') -Encoding UTF8)) {
@@ -209,7 +230,7 @@ foreach ($p in $pages) {
   if ($p.city -or $p.kind -or $p.slug -like 'indoor-*') {
     $allIndoor = $list.Count -gt 1 -and @($list | Where-Object { $_.env -ne 'indoor' }).Count -eq 0
     $g = ([ordered]@{ title = $p.h1; ids = @($list | ForEach-Object { $_.id }); indoor = $allIndoor; city = [string]$p.city } | ConvertTo-Json -Compress) -replace '</', '<\/'
-    $html = Sub $html '<script src="/app.js"></script>' "<script>window.GUIDE=$g</script><script src=""/app.js""></script>"
+    $html = Sub $html '<script src="/app.js[^"]*"></script>' "<script>window.GUIDE=$g</script><script src=""$appSrc""></script>"
   }  $html = Sub $html '</head>' "<script type=""application/ld+json"">$ld</script><script type=""application/ld+json"">$faq</script>`n</head>"
   $dir = Join-Path $guideDir $p.slug
   New-Item -ItemType Directory $dir | Out-Null
@@ -244,7 +265,7 @@ foreach ($s in $spots) {
   $h = Sub $h '<meta name="twitter:description" content="[^"]*">' "<meta name=""twitter:description"" content=""$(Esc $sdesc)"">"
   $h = Sub $h '<!--seo-start-->.*<!--seo-end-->' "<!--seo-start-->$sbody<!--seo-end-->"
   $idJson = ([string]$s.id | ConvertTo-Json -Compress) -replace '</', '<\/'
-  $h = Sub $h '<script src="/app.js"></script>' "<script>window.SPOT_ID=$idJson</script><script src=""/app.js""></script>"
+  $h = Sub $h '<script src="/app.js[^"]*"></script>' "<script>window.SPOT_ID=$idJson</script><script src=""$appSrc""></script>"
   $h = Sub $h '</head>' "<script type=""application/ld+json"">$sld</script>`n</head>"
   $d = Join-Path $spotDir $s.id
   New-Item -ItemType Directory $d | Out-Null
@@ -295,4 +316,12 @@ foreach ($p in ($pages | Sort-Object slug)) { [void]$sm.AppendLine("  <url><loc>
 foreach ($s in ($spots | Sort-Object id)) { [void]$sm.AppendLine("  <url><loc>$site/spots/$($s.id)/</loc><lastmod>$today</lastmod><changefreq>monthly</changefreq></url>") }
 [void]$sm.AppendLine('</urlset>')
 [IO.File]::WriteAllText((Join-Path $root 'sitemap.xml'), $sm.ToString(), $enc)
-Write-Host "끝: guides/ $($pages.Count + 1)쪽, sitemap.xml"
+# 점검: 결과가 말이 되는지 (데이터가 비었거나 파일이 빠졌는데 그대로 배포되지 않게)
+$nGuide = @(Get-ChildItem $guideDir -Directory | Where-Object { Test-Path (Join-Path $_.FullName 'index.html') }).Count
+$nSpot = @(Get-ChildItem $spotDir -Directory).Count
+$nLoc = ([regex]::Matches($sm.ToString(), '<loc>')).Count
+if (@($spots).Count -lt 300) { throw "빌드 중단: 장소가 너무 적어요 ($(@($spots).Count)곳)" }
+if ($nSpot -ne @($spots).Count) { throw "빌드 중단: 장소 페이지 $nSpot 개 != 장소 $(@($spots).Count) 곳" }
+if ($nLoc -ne ($pages.Count + $nSpot + 2)) { throw "빌드 중단: 사이트맵 $nLoc 개 != 안내 $($pages.Count) + 장소 $nSpot + 2" }
+if ($nGuide -lt $pages.Count) { throw "빌드 중단: 안내 페이지 폴더 $nGuide 개 < $($pages.Count)" }
+Write-Host "끝: guides/ $($pages.Count + 1)쪽, spots/ ${nSpot}쪽, sitemap.xml ${nLoc}개, app.js?v=$ver"

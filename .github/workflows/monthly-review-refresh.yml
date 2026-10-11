@@ -26,13 +26,20 @@ jobs:
           GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
         run: ./tools/refresh-reviews.ps1
 
+      # 숨길 곳이 바뀌었으면 안내 페이지(guides/)·장소 페이지(spots/)·사이트맵도 다시 만들어요 (안 그러면 폐업한 곳이 검색에 남아요)
+      - name: Rebuild static pages if the status changed
+        shell: pwsh
+        run: |
+          git diff --quiet -- data/review-status.json
+          if ($LASTEXITCODE -ne 0) { ./tools/build-guides.ps1 } else { Write-Host 'Status unchanged, skipping rebuild' }
+
       - name: Commit and redeploy if changed
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "spotmate-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/review-status.json
+          git add data/review-status.json data/spot-pages.json guides spots sitemap.xml index.html
           if git diff --cached --quiet; then
             echo "No changes"
           else

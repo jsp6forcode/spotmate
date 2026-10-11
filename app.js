@@ -1767,8 +1767,7 @@ class App {
     // 가까운 곳: 이미 위치를 골랐으면 그대로, 아니면 현재 위치를 물어요 (반경 2 km)
     const locating = !p.place && p.near && !this.nearActive();
     if (!p.place && p.near) { if (locating) this.locate(); if (this.state.radius === 'any' || this.state.radius > 2) this.set({ radius: 2 }); }
-    // 검색어를 주소(?q=)에 남겨서 북마크·공유할 수 있게 (#spot= 링크는 그대로)
-    try { history.replaceState(history.state, '', `${location.pathname}?q=${encodeURIComponent(q)}${location.hash}`); } catch (e) {}
+    // 검색어(?q=)는 set() → syncUrl()이 다른 필터와 함께 주소에 남겨요
     this.scrollToResults(locating);
   }
   // 검색 뒤 스크롤: 모바일이나 위치를 묻는 중엔 검색창을 맨 위로 (알아들은 조건 칩·위치 안내가 보이게),
@@ -1785,7 +1784,6 @@ class App {
     // 검색으로 고른 지역은 검색을 지우면 같이 풀어요 (직접 고른 위치는 그대로)
     if (this.qPlace && this.state.nearKey === this.qPlace) this.state.nearKey = '';
     this.qPlace = null;
-    try { if (location.search) history.replaceState(history.state, '', location.pathname + location.hash); } catch (e) {}
     this.set({ q: '', kw: [], unused: [], free: false, qBusy: false, aiSay: '', when: '', openNow: false, kidsOnly: false, indoor: false, price: '', hh: false, lunch: false });
   }
   // 모달을 열면 주소에 #spot=id 를 붙여요. 그 주소를 공유하면 받은 사람도 바로 이 장소가 열려요
