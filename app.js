@@ -12,7 +12,7 @@ const EATS_ON = false;
 // KIDS_ONLY: Explore와 지도는 아이랑 가기 좋은 곳(isKid)만 보여줘요 (그래서 Kids 버튼은 없어요)
 const KIDS_ONLY = true;
 // WIZARD: Explore를 5단계 질문(나이·언제·예산·시간·목적)으로 골라 10곳을 추천하는 방식으로 (false면 예전 검색·필터 목록)
-const WIZARD = true;
+const WIZARD = false;
 const WIZ = [
   { key: 'age', q: 'How old are the kids?', opts: [['baby', 'Babies & toddlers', 'Ages 0–3'], ['pre', 'Preschoolers', 'Ages 3–5'], ['school', 'School age', 'Ages 5–12'], ['mixed', 'Mixed ages', 'Kids of different ages']] },
   { key: 'when', q: 'When are you going?', opts: [['now', 'Right now', 'Places open at this moment'], ['tomorrow', 'Tomorrow', 'Places open tomorrow'], ['weekend', 'This weekend', 'Open Saturday or Sunday, weekend events first'], ['any', 'Any time', 'Every place, whenever you go']] },
