@@ -1,9 +1,44 @@
 {
-  "checkedAt": "2026-10-01",
-  "checked": 731,
+  "checkedAt": "2026-10-11",
+  "checked": 884,
   "inactive": {
+    "bvm": "temporarily closed",
+    "deasisland": "no longer meets the gem criteria",
     "littlepisces": "no longer meets the dessert criteria",
     "gratia": "no longer meets the dessert criteria",
-    "provisionsitalianaatseasidehotel": "temporarily closed"
+    "meros": "no longer meets the just opened criteria",
+    "popculture": "no longer meets the just opened criteria",
+    "capilanoriverhatchery": "temporarily closed",
+    "mundyparkpool": "temporarily closed",
+    "alandersonmemorialpool": "temporarily closed"
+  },
+  "lowFamily": {
+    "potspotstudio": "below the Google rating or review minimum",
+    "brentwoodmall": "below the Google rating or review minimum",
+    "lansdownecentre": "below the Google rating or review minimum",
+    "semiahmoocentre": "below the Google rating or review minimum",
+    "littlelegendsplayhouse": "below the Google rating or review minimum",
+    "blakeburnpark": "below the Google rating or review minimum",
+    "loottoycompany": "below the Google rating or review minimum",
+    "park81aave": "below the Google rating or review minimum",
+    "lionsplaygroundtsawwassen": "below the Google rating or review minimum",
+    "sunshinehillspark": "below the Google rating or review minimum",
+    "tsawwassenlibrary": "below the Google rating or review minimum",
+    "albionpark": "below the Google rating or review minimum",
+    "volkerpark": "below the Google rating or review minimum",
+    "hammondplayground": "below the Google rating or review minimum",
+    "crashcrawlys": "below the Google rating or review minimum",
+    "margueritepark": "below the Google rating or review minimum",
+    "towncentreparkcommunityc": "below the Google rating or review minimum",
+    "smilingcreekactivitycent": "below the Google rating or review minimum",
+    "summitcommunitycentre": "below the Google rating or review minimum",
+    "glenayrecommunitycentre": "below the Google rating or review minimum",
+    "seaislandcommunitycentre": "below the Google rating or review minimum",
+    "lynncreekcommunityrecrea": "below the Google rating or review minimum",
+    "lynnvalleycommunityrecre": "below the Google rating or review minimum",
+    "gleneaglescommunitycentr": "below the Google rating or review minimum",
+    "mapleridgeleisurecentre": "below the Google rating or review minimum",
+    "cottonwoodcentre": "below the Google rating or review minimum",
+    "maanfarms": "below the Google rating or review minimum"
   }
 }
