@@ -32,6 +32,8 @@ jobs:
         run: |
           git diff --quiet -- data/review-status.json
           if ($LASTEXITCODE -ne 0) { ./tools/build-guides.ps1 } else { Write-Host 'Status unchanged, skipping rebuild' }
+          # git diff --quiet 가 "바뀜"을 1로 돌려주는데, pwsh 단계는 마지막 종료 코드를 그대로 쓰므로 빌드가 성공해도 실패로 끝나요
+          exit 0
 
       - name: Commit and redeploy if changed
         env:

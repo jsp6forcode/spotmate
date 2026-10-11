@@ -27,6 +27,7 @@ $rules = @(
 
 $spots = (Get-Content (Join-Path $root 'data/spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots
 $inactive = [ordered]@{}
+$lowFamily = [ordered]@{}   # family 인데 평점·리뷰 수 기준엔 못 미치는 곳 (숨기지 않고 표시만 달라져요)
 $checked = 0; $calls = 0; $errors = 0
 $failed = New-Object System.Collections.Generic.List[string]
 
@@ -56,7 +57,9 @@ foreach ($s in $spots) {
   if ($p.businessStatus -eq 'CLOSED_PERMANENTLY') { $inactive[$s.id] = 'permanently closed'; continue }
   if ($p.businessStatus -eq 'CLOSED_TEMPORARILY') { $inactive[$s.id] = 'temporarily closed'; continue }
   if ([double]$p.rating -lt $rule.minRating -or [int]$p.userRatingCount -lt $rule.minReviews) {
-    $inactive[$s.id] = "no longer meets the $($rule.name) criteria"
+    # 아이 동반(family) 장소는 평점·리뷰 수가 모자라도 숨기지 않아요 (동네 공원·시설은 리뷰가 적어요). 기준 문구만 빼도록 lowFamily 에 적고, 폐업·Google에서 사라짐만 숨겨요
+    if ($rule.name -eq 'family') { $lowFamily[$s.id] = 'below the Google rating or review minimum' }
+    else { $inactive[$s.id] = "no longer meets the $($rule.name) criteria" }
   }
 }
 
@@ -70,14 +73,20 @@ if ($failed.Count -gt 0 -and (Test-Path $statusPath)) {
   foreach ($prop in $prev.inactive.PSObject.Properties) {
     if ($failed.Contains($prop.Name) -and -not $inactive.Contains($prop.Name)) { $inactive[$prop.Name] = $prop.Value }
   }
+  if ($prev.lowFamily) {
+    foreach ($prop in $prev.lowFamily.PSObject.Properties) {
+      if ($failed.Contains($prop.Name) -and -not $lowFamily.Contains($prop.Name)) { $lowFamily[$prop.Name] = $prop.Value }
+    }
+  }
 }
 
 $result = [ordered]@{
   checkedAt = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
   checked   = $checked
   inactive  = $inactive
+  lowFamily = $lowFamily
 }
 $json = $result | ConvertTo-Json -Depth 4
 [IO.File]::WriteAllText($statusPath, $json + "`n", (New-Object Text.UTF8Encoding $false))
-"점검 $checked 곳, API 호출 $calls 회, 숨김 $($inactive.Count) 곳, 확인 실패 $errors 곳"
+"점검 $checked 곳, API 호출 $calls 회, 숨김 $($inactive.Count) 곳, 기준 미달 표시만 바꿈(family) $($lowFamily.Count) 곳, 확인 실패 $errors 곳"
 $inactive.GetEnumerator() | ForEach-Object { "  - $($_.Key): $($_.Value)" }
