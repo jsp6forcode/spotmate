@@ -519,6 +519,8 @@ const recentReddit = s => ((REDDIT.mentions[s.id] || {}).posts || []).filter(p =
 let PARKING = { spots: {}, radius: 400 };
 // "What parents say" 요약 (data/parent-says.json, 한두 문장)
 let SAYS = {};
+// 전용 주소(/spots/<id>/)가 있는 장소 id (build-guides.ps1 이 data/spot-pages.json 으로 만들어요)
+let SPOT_PAGES = new Set();
 const PARK_KIND = { surface: 'Surface lot', 'multi-storey': 'Parkade', underground: 'Underground', rooftop: 'Rooftop', street_side: 'Street parking', lane: 'Street parking', layby: 'Pull-out' };
 const parkingOf = s => PARKING.spots[s.id];
 // 카드용 한 줄: 가장 가까운 주차장 거리와 유료 여부
@@ -971,11 +973,11 @@ class App {
       // 꺼 둔 기능(Eats·트렌드·Reddit)의 파일은 아예 받지 않아요. spots.json 말고는 없어도 괜찮아요
       const get = (path, on = true) => on ? fetch(path, { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null) : Promise.resolve(null);
       const ohLib = window.opening_hours ? Promise.resolve() : loadScript(OH_LIB).catch(() => null);
-      const [data, ed, status, td, gd, nd, md, pd, hd, ld, prd, sd, pk, fd] = await Promise.all([
+      const [data, ed, status, td, gd, nd, md, pd, hd, ld, prd, sd, pk, fd, sp] = await Promise.all([
         fetch('/data/spots.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
         get('/data/events.json'), get('/data/review-status.json'), get('/data/trends-weekly.json', TRENDS_ON),
         get('/data/spot-guides.json'), get('/data/spot-notes.json'), get('/data/parking-meters.json'), get('/data/parking.json'),
-        get('/data/happy-hours.json', EATS_ON), get('/data/lunch-specials.json', EATS_ON), get('/data/press.json', EATS_ON), get('/data/season.json'), get('/data/parent-says.json'), get('/data/spot-facts.json'),
+        get('/data/happy-hours.json', EATS_ON), get('/data/lunch-specials.json', EATS_ON), get('/data/press.json', EATS_ON), get('/data/season.json'), get('/data/parent-says.json'), get('/data/spot-facts.json'), get('/data/spot-pages.json'),
       ]);
       SPOTS = data.spots;
       // 행사 정보
@@ -1000,6 +1002,7 @@ class App {
       if (prd) PRESS = prd.items || {};
       // 시즌 태그
       if (pk) SAYS = pk.spots || {};
+      if (sp && Array.isArray(sp.ids)) SPOT_PAGES = new Set(sp.ids);
       if (sd) { SEASON = Array.isArray(sd.tags) ? sd.tags : []; SEASON_NOTE = sd.note || ''; }
       // 영업시간 해석 라이브러리: 못 불러오면 "Open now" 필터 없이 동작해요
       await ohLib;
@@ -1020,6 +1023,8 @@ class App {
       // 공유받은 링크(#spot=id)로 들어오면 그 장소를 바로 열어요
       const m = /^#spot=([^&]+)/.exec(location.hash), shared = m && byId(decodeURIComponent(m[1]));
       if (shared) this.openModal(shared.id);
+      // 장소 전용 주소(/spots/<id>/)로 들어오면 그 장소를 바로 열어요 (build-guides.ps1 이 window.SPOT_ID 를 넣어요)
+      else if (window.SPOT_ID && byId(window.SPOT_ID)) this.openModal(window.SPOT_ID);
       this.openSharedEvent();
     } catch (e) {
       this.set({ loading: false, loadError: "We couldn't load the spots. Check your connection and try again." });
@@ -1764,7 +1769,7 @@ class App {
   async share(id) {
     const s = byId(id);
     if (!s) return;
-    const url = location.origin + location.pathname + '#spot=' + encodeURIComponent(id);
+    const url = SPOT_PAGES.has(id) ? location.origin + '/spots/' + encodeURIComponent(id) + '/' : location.origin + location.pathname + '#spot=' + encodeURIComponent(id);
     const done = text => { this.set({ shareMsg: { id, text } }); clearTimeout(this.shareTimer); this.shareTimer = setTimeout(() => { if (this.state.shareMsg) this.set({ shareMsg: null }); }, 2500); };
     if (navigator.share && matchMedia('(pointer: coarse)').matches) {   // 공유 시트는 휴대폰에서만. 컴퓨터 브라우저는 공유 창이 안 뜨거나 반응이 없을 수 있어서 바로 복사해요
       try { await navigator.share({ title: `${s.name} · Tiny Trips`, text: `${s.name} (${s.area})`, url }); return; }

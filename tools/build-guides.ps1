@@ -165,14 +165,14 @@ foreach ($p in $pages) {
   $desc = ($lead -replace '\s+', ' ')
   if ($desc.Length -gt 300) { $desc = $desc.Substring(0, 297) + '...' }
   $url = "$site/guides/$($p.slug)/"
-  $items = for ($i = 0; $i -lt $n; $i++) { [ordered]@{ '@type' = 'ListItem'; position = $i + 1; name = $list[$i].name; url = "$site/#spot=$($list[$i].id)" } }
+  $items = for ($i = 0; $i -lt $n; $i++) { [ordered]@{ '@type' = 'ListItem'; position = $i + 1; name = $list[$i].name; url = "$site/spots/$($list[$i].id)/" } }
   $ld = ([ordered]@{ '@context' = 'https://schema.org'; '@type' = 'ItemList'; name = $p.h1; url = $url; numberOfItems = $n; itemListElement = @($items) } | ConvertTo-Json -Depth 5 -Compress) -replace '</', '<\/'
   # 방문자에게는 진짜 앱(index.html 껍데기)이 뜨고, 이 안내 글은 앱 아래쪽(#seo-static)에 남아요. 구글은 같은 글을 그대로 읽어요
   $L = 'underline text-teal-700 dark:text-teal-300'
   $sb = New-Object System.Text.StringBuilder
   foreach ($s in $list) {
     $meta = @($s.area, $(if ($s.price) { $s.price }), $(if ($s.time) { $s.time }), $(if ($s.env) { (Get-Culture).TextInfo.ToTitleCase($s.env) })) | Where-Object { $_ }
-    [void]$sb.AppendLine("<div class=""rounded-xl border border-slate-200 dark:border-slate-700 p-3 mb-3""><h2 class=""font-bold text-base text-slate-900 dark:text-slate-100"">$(Esc $s.name)</h2><p class=""text-xs mb-1"">$(Esc ($meta -join ' · '))</p><p class=""mb-2"">$(Esc $s.summary)</p><a class=""$L"" href=""/#spot=$(Esc $s.id)"">Hours, parking &amp; tips</a></div>")
+    [void]$sb.AppendLine("<div class=""rounded-xl border border-slate-200 dark:border-slate-700 p-3 mb-3""><h2 class=""font-bold text-base text-slate-900 dark:text-slate-100"">$(Esc $s.name)</h2><p class=""text-xs mb-1"">$(Esc ($meta -join ' · '))</p><p class=""mb-2"">$(Esc $s.summary)</p><a class=""$L"" href=""/spots/$(Esc $s.id)/"">Hours, parking &amp; tips</a></div>")
   }
   $rel = Related $p
   $relHtml = if ($rel) { '<div class="mt-6"><strong>More guides</strong><ul class="list-disc pl-5 mt-1">' + (($rel | ForEach-Object { "<li><a class=""$L"" href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a></li>" }) -join '') + '</ul></div>' } else { '' }
@@ -216,6 +216,43 @@ foreach ($p in $pages) {
   [IO.File]::WriteAllText((Join-Path $dir 'index.html'), $html, $enc)
 }
 
+# 장소별 페이지 (spots/<id>/): 구글이 장소마다 따로 색인해요. 방문자에게는 앱이 뜨고 그 장소 모달이 바로 열려요
+$spotDir = Join-Path $root 'spots'
+if (Test-Path $spotDir) { Remove-Item $spotDir -Recurse -Force }
+New-Item -ItemType Directory $spotDir | Out-Null
+$guideOf = @{}   # 장소 id -> 그 장소가 실린 안내 페이지들
+foreach ($p in $pages) { if ($p.slug -like 'places-to-take-kids-metro*') { continue }; foreach ($s in $p.spots) { if (-not $guideOf[$s.id]) { $guideOf[$s.id] = New-Object System.Collections.ArrayList }; [void]$guideOf[$s.id].Add($p) } }
+foreach ($s in $spots) {
+  $L = 'underline text-teal-700 dark:text-teal-300'
+  $surl = "$site/spots/$($s.id)/"
+  $meta = @($s.area, $(if ($s.price) { $s.price }), $(if ($s.time) { $s.time }), $(if ($s.env) { (Get-Culture).TextInfo.ToTitleCase($s.env) })) | Where-Object { $_ }
+  $title = "$($s.name) with kids: $($s.area)"
+  $sdesc = (("$($s.name) in $($s.area): $($s.summary). Hours, parking and tips for families on Tiny Trips.") -replace '\s+', ' ')
+  if ($sdesc.Length -gt 300) { $sdesc = $sdesc.Substring(0, 297) + '...' }
+  $more = @($guideOf[$s.id] | Select-Object -First 6)
+  $moreHtml = if ($more) { '<div class="mt-4"><strong>Guides with this spot</strong><ul class="list-disc pl-5 mt-1">' + (($more | ForEach-Object { "<li><a class=""$L"" href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a></li>" }) -join '') + '</ul></div>' } else { '' }
+  $sbody = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">About $(Esc $s.name)</summary><div class=""mt-3""><nav class=""mb-2""><a class=""$L"" href=""/"">Tiny Trips</a> › <a class=""$L"" href=""/guides/"">Guides</a></nav><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">$(Esc $s.name)</h1><p class=""text-xs mb-1"">$(Esc ($meta -join ' · '))</p><p class=""mb-2"">$(Esc $s.summary)</p>$moreHtml<p class=""mt-4 text-xs"">Details change, so check the official site before you go.</p></div></details>"
+  $sld = ([ordered]@{ '@context' = 'https://schema.org'; '@type' = 'TouristAttraction'; name = $s.name; description = $s.summary; url = $surl; address = [ordered]@{ '@type' = 'PostalAddress'; addressLocality = $s.city; addressRegion = 'BC'; addressCountry = 'CA' } } | ConvertTo-Json -Depth 4 -Compress) -replace '</', '<\/'
+  $h = $shell
+  $h = Sub $h '<title>[^<]*</title>' "<title>$(Esc $title) | Tiny Trips</title>"
+  $h = Sub $h '<link rel="canonical" href="[^"]*">' "<link rel=""canonical"" href=""$surl"">"
+  $h = Sub $h '<meta name="description" content="[^"]*">' "<meta name=""description"" content=""$(Esc $sdesc)"">"
+  $h = Sub $h '<meta property="og:title" content="[^"]*">' "<meta property=""og:title"" content=""$(Esc $title)"">"
+  $h = Sub $h '<meta property="og:description" content="[^"]*">' "<meta property=""og:description"" content=""$(Esc $sdesc)"">"
+  $h = Sub $h '<meta property="og:url" content="[^"]*">' "<meta property=""og:url"" content=""$surl"">"
+  $h = Sub $h '<meta name="twitter:title" content="[^"]*">' "<meta name=""twitter:title"" content=""$(Esc $title)"">"
+  $h = Sub $h '<meta name="twitter:description" content="[^"]*">' "<meta name=""twitter:description"" content=""$(Esc $sdesc)"">"
+  $h = Sub $h '<!--seo-start-->.*<!--seo-end-->' "<!--seo-start-->$sbody<!--seo-end-->"
+  $idJson = ([string]$s.id | ConvertTo-Json -Compress) -replace '</', '<\/'
+  $h = Sub $h '<script src="/app.js"></script>' "<script>window.SPOT_ID=$idJson</script><script src=""/app.js""></script>"
+  $h = Sub $h '</head>' "<script type=""application/ld+json"">$sld</script>`n</head>"
+  $d = Join-Path $spotDir $s.id
+  New-Item -ItemType Directory $d | Out-Null
+  [IO.File]::WriteAllText((Join-Path $d 'index.html'), $h, $enc)
+}
+[IO.File]::WriteAllText((Join-Path $root 'data/spot-pages.json'), (([ordered]@{ ids = @($spots | ForEach-Object { $_.id }) } | ConvertTo-Json -Compress)), $enc)
+Write-Host "장소 페이지 $(@($spots).Count)개"
+
 # 예전 주소(things-to-do-with-kids-<도시>)로 들어와도 새 주소로 넘어가게 이동용 페이지를 만들어요 (GitHub Pages 는 서버 리다이렉트가 없어서)
 foreach ($p in ($pages | Where-Object { $_.slug -like 'places-to-take-kids-*' })) {
   $old = $p.slug -replace '^places-to-take-kids-', 'things-to-do-with-kids-'
@@ -255,6 +292,7 @@ $sm = New-Object System.Text.StringBuilder
 [void]$sm.AppendLine("  <url><loc>$site/</loc><changefreq>weekly</changefreq></url>")
 [void]$sm.AppendLine("  <url><loc>$site/guides/</loc><lastmod>$today</lastmod><changefreq>weekly</changefreq></url>")
 foreach ($p in ($pages | Sort-Object slug)) { [void]$sm.AppendLine("  <url><loc>$site/guides/$($p.slug)/</loc><lastmod>$today</lastmod><changefreq>weekly</changefreq></url>") }
+foreach ($s in ($spots | Sort-Object id)) { [void]$sm.AppendLine("  <url><loc>$site/spots/$($s.id)/</loc><lastmod>$today</lastmod><changefreq>monthly</changefreq></url>") }
 [void]$sm.AppendLine('</urlset>')
 [IO.File]::WriteAllText((Join-Path $root 'sitemap.xml'), $sm.ToString(), $enc)
 Write-Host "끝: guides/ $($pages.Count + 1)쪽, sitemap.xml"
