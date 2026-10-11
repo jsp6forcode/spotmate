@@ -1,0 +1,39 @@
+# 생성 파일(guides/, spots/, data/spot-pages.json, index.html의 app.js?v=)이 데이터·app.js와 맞는지 점검
+# - tools/build-guides.ps1 을 서버(Linux)에서 돌려 커밋된 파일과 같은지 비교해요
+# - 빌드를 깜빡했거나, Windows와 Linux가 다르게 만들면 실패해서 알려줘요 (배포를 막지는 않아요)
+# - sitemap.xml 은 lastmod 가 빌드한 날짜라서 비교에서 빼요
+name: Check generated pages
+
+on:
+  push:
+    paths:
+      - 'data/**'
+      - 'app.js'
+      - 'index.html'
+      - 'tools/build-guides.ps1'
+      - 'guides/**'
+      - 'spots/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rebuild guides and spot pages
+        shell: pwsh
+        run: ./tools/build-guides.ps1
+
+      - name: Fail if generated files differ from the commit
+        run: |
+          if git diff --quiet -- guides spots data/spot-pages.json index.html; then
+            echo "Generated files are up to date"
+          else
+            git diff --stat -- guides spots data/spot-pages.json index.html | tail -5
+            echo "::error::guides/, spots/ 등이 데이터와 달라요. 로컬에서 tools/build-guides.ps1 을 돌려 커밋하세요"
+            exit 1
+          fi

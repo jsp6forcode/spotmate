@@ -114,8 +114,27 @@ foreach ($g in $spots | Where-Object { $_.env -eq 'indoor' } | Group-Object city
 }
 $ind = @($spots | Where-Object { $_.env -eq 'indoor' })
 if ($ind.Count -ge $MinKind) { [void]$pages.Add([pscustomobject]@{ slug = 'indoor-places-to-take-kids-metro-vancouver'; title = 'Indoor places to take kids in Metro Vancouver: rainy day ideas'; h1 = 'Indoor places to take kids in Metro Vancouver'; city = ''; kind = ''; kindPlural = 'indoor places'; spots = $ind }) }
-# 같은 주소가 두 번 생기면(종류 하나뿐인 도시 등) 앞의 것만
-$pages = @($pages | Group-Object slug | ForEach-Object { $_.Group[0] })
+# 정렬·묶기 순서는 Windows(내 PC)와 Linux(GitHub Actions)가 달라서, 같은 데이터로 빌드해도 링크 순서가 바뀌어 파일 1,000개가 매번 달라졌어요.
+# 문자열 비교는 항상 코드 값(Ordinal) 순서로 고정해요. key 는 겹치지 않는 문자열이어야 해요
+function SortOrd($items, [scriptblock]$key) {
+  $arr = [object[]]@($items); if ($arr.Count -lt 2) { return $arr }
+  $keys = [string[]]@($arr | ForEach-Object { & $key $_ })
+  # 제네릭 Sort<string, object>(keys, items, comparer): 이름이 같은 다른 오버로드는 keys 만 정렬해서 쓰면 안 돼요
+  [Array]::Sort([string[]]$keys, [object[]]$arr, [Collections.Generic.Comparer[string]]::Create({ param($a, $b) [string]::CompareOrdinal($a, $b) }))
+  $arr
+}
+# ConvertTo-Json 도 Windows PowerShell(5.1)과 PowerShell 7(Linux)이 ' < > & 를 다르게 써요 (' 대 '). 늘 같은 글자로 고정해요
+function ConvertTo-Json {
+  param([Parameter(ValueFromPipeline = $true)]$InputObject, [int]$Depth = 2, [switch]$Compress)
+  process {
+    $j = Microsoft.PowerShell.Utility\ConvertTo-Json -InputObject $InputObject -Depth $Depth -Compress:$Compress
+    $j = $j -replace '\\u0027', "'" -replace '\\u0026', '&' -replace '\\u003c', '<' -replace '\\u003e', '>'
+    $j -replace '<', '<' -replace '>', '>' -replace '&', '&'
+  }
+}
+# 같은 주소가 두 번 생기면(종류 하나뿐인 도시 등) 앞의 것만 (먼저 나온 순서로 고르고, 주소 순서로 정렬)
+$seenSlug = @{}
+$pages = @(SortOrd @($pages | Where-Object { if ($seenSlug[$_.slug]) { $false } else { $seenSlug[$_.slug] = $true; $true } }) { param($p) $p.slug })
 Write-Host "안내 페이지 $($pages.Count)개"
 
 $css = @'
@@ -167,11 +186,12 @@ function Related($p) {
   $r = @()
   if ($p.city) { $r += $pages | Where-Object { $_.city -eq $p.city -and $_.slug -ne $p.slug } | Select-Object -First 8 }
   if ($p.kind) { $r += $pages | Where-Object { $_.kind -eq $p.kind -and $_.slug -ne $p.slug } | Select-Object -First 8 }
-  $r | Group-Object slug | ForEach-Object { $_.Group[0] }
+  $seen = @{}
+  $r | Where-Object { if ($seen[$_.slug]) { $false } else { $seen[$_.slug] = $true; $true } }
 }
 
 foreach ($p in $pages) {
-  $list = @($p.spots | Sort-Object @{ e = { -not $_.gem } }, name)
+  $list = @(SortOrd $p.spots { param($s) "$(if ($s.gem) { '0' } else { '1' })$($s.name.ToLowerInvariant())|$($s.id)" })
   $n = $list.Count
   $free = @($list | Where-Object { $_.price -match '^free' }).Count
   $indoor = @($list | Where-Object { $_.env -eq 'indoor' }).Count
@@ -201,7 +221,7 @@ foreach ($p in $pages) {
   $freeL = @($list | Where-Object { $_.price -match '^free' })
   $inL = @($list | Where-Object { $_.env -eq 'indoor' })
   $gemL = @($list | Where-Object { $_.gem })
-  $topTime = ($list | Where-Object { $_.time } | Group-Object time | Sort-Object Count -Descending | Select-Object -First 1)
+  $topTime = (SortOrd @($list | Where-Object { $_.time } | Group-Object time) { param($g) ('{0:D6}' -f (999999 - $g.Count)) + $g.Name } | Select-Object -First 1)
   $QA = New-Object System.Collections.ArrayList
   if ($gemL.Count) { [void]$QA.Add(@("Which $what $where are worth a special trip?", "Tiny Trips marks $(NameList $gemL 4) as standout spots.")) }
   if ($freeL.Count -eq $n -and $n -gt 1) { [void]$QA.Add(@("Are there free $what ${where}?", "Yes. All $n spots on this list are free to visit.")) }
@@ -285,7 +305,7 @@ foreach ($p in ($pages | Where-Object { $_.slug -like 'places-to-take-kids-*' })
 }
 # 안내 목록 페이지 (도시별로 묶어서)
 $idx = New-Object System.Text.StringBuilder
-foreach ($c in ($CITIES | Sort-Object)) {
+foreach ($c in (SortOrd $CITIES { param($c) $c })) {
   $cp = @($pages | Where-Object { $_.city -eq $c })
   if (-not $cp) { continue }
   [void]$idx.AppendLine("<h2>$(Esc $c)</h2><ul>" + (($cp | ForEach-Object { "<li><a href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a> ($($_.spots.Count))</li>" }) -join '') + '</ul>')
@@ -312,8 +332,8 @@ $sm = New-Object System.Text.StringBuilder
 [void]$sm.AppendLine('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
 [void]$sm.AppendLine("  <url><loc>$site/</loc><changefreq>weekly</changefreq></url>")
 [void]$sm.AppendLine("  <url><loc>$site/guides/</loc><lastmod>$today</lastmod><changefreq>weekly</changefreq></url>")
-foreach ($p in ($pages | Sort-Object slug)) { [void]$sm.AppendLine("  <url><loc>$site/guides/$($p.slug)/</loc><lastmod>$today</lastmod><changefreq>weekly</changefreq></url>") }
-foreach ($s in ($spots | Sort-Object id)) { [void]$sm.AppendLine("  <url><loc>$site/spots/$($s.id)/</loc><lastmod>$today</lastmod><changefreq>monthly</changefreq></url>") }
+foreach ($p in $pages) { [void]$sm.AppendLine("  <url><loc>$site/guides/$($p.slug)/</loc><lastmod>$today</lastmod><changefreq>weekly</changefreq></url>") }
+foreach ($s in (SortOrd $spots { param($s) [string]$s.id })) { [void]$sm.AppendLine("  <url><loc>$site/spots/$($s.id)/</loc><lastmod>$today</lastmod><changefreq>monthly</changefreq></url>") }
 [void]$sm.AppendLine('</urlset>')
 [IO.File]::WriteAllText((Join-Path $root 'sitemap.xml'), $sm.ToString(), $enc)
 # 점검: 결과가 말이 되는지 (데이터가 비었거나 파일이 빠졌는데 그대로 배포되지 않게)
