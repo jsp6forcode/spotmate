@@ -391,8 +391,6 @@ let NOTES = {}, NOTES_META = { updatedAt: '', note: '' };
 let SEASON = [], SEASON_NOTE = '';
 const activeTags = () => { const d = vanDate(0); return SEASON.filter(t => t.from <= d && d <= t.to && t.spots); };
 const spotTags = s => activeTags().filter(t => t.spots[s.id]);
-// data/reddit.json: 예전 "On Reddit lately" 근거 링크. 2026-09-30부터 사이트에서 뺐어요 (파일을 불러오지 않아서 아무 것도 안 보여요)
-let REDDIT = { mentions: {}, from: '', to: '' };
 // 데이터 기준일 → "today", "yesterday", "3 days ago"
 // data/parking.json: 스팟 근처 400m 안 주차장 (OpenStreetMap). { id: [{ m, fee?, kind?, name?, customers? }] }
 let PARKING = { spots: {}, radius: 400 };
@@ -841,7 +839,7 @@ class App {
     this.set({ loading: true, loadError: '' });
     try {
       // 데이터 파일은 한꺼번에(동시에) 받아요. 하나씩 기다리면 파일마다 네트워크 지연이 쌓여 첫 화면이 늦어져요
-      // 꺼 둔 기능(트렌드·Reddit)의 파일은 아예 받지 않아요. spots.json 말고는 없어도 괜찮아요
+      // 꺼 둔 기능(트렌드)의 파일은 아예 받지 않아요. spots.json 말고는 없어도 괜찮아요
       const get = (path, on = true) => on ? fetch(path, { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null) : Promise.resolve(null);
       const ohLib = window.opening_hours ? Promise.resolve() : loadScript(OH_LIB).catch(() => null);
       const [data, ed, status, td, gd, nd, md, pd, sd, pk, fd, sp] = await Promise.all([
@@ -2762,17 +2760,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             </p>
             <p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">Nearby lots from © OpenStreetMap contributors. Rates and time limits change, so check the signs.</p>
           </section>`;
-          })()}
-
-          ${(() => {
-            // Reddit: 제목에 이 장소가 나온 최근 글 (최대 3개). 사람들이 지금 무슨 얘기를 하는지 보는 근거 링크
-            const r = REDDIT.mentions[s.id];
-            return r && r.posts && r.posts.length ? `
-          <section>
-            <h3 class="font-bold">On Reddit lately</h3>
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">${plural(r.n, 'post')} naming this place in local subreddits, ${esc(REDDIT.from.slice(0, 7) === REDDIT.to.slice(0, 7) ? `${shortDate(REDDIT.from)}–${+REDDIT.to.slice(8, 10)}` : `${shortDate(REDDIT.from)}–${shortDate(REDDIT.to)}`)}. Opens Reddit.</p>
-            <ul class="mt-2 space-y-1.5">${r.posts.filter(p => /^https:\/\/(www\.)?reddit\.com\//.test(p.url)).map(p => `<li class="text-sm"><a href="${esc(p.url)}" target="_blank" rel="noopener" class="underline text-slate-700 dark:text-slate-300 hover:text-violet-700 dark:hover:text-violet-300">${esc(p.title)}</a> <span class="text-xs text-slate-500 dark:text-slate-400">r/${esc(p.sub)} · ${esc(shortDate(p.date))}</span></li>`).join('')}</ul>
-          </section>` : '';
           })()}
 
           ${(() => {

@@ -1,4 +1,4 @@
-﻿# 데이터 자동 점검: 검색 추세(trends-weekly.json), 시즌 태그(season.json), Reddit 언급(reddit.json)
+﻿# 데이터 자동 점검: 검색 추세(trends-weekly.json), 시즌 태그(season.json)
 # - 오류(구조가 깨짐, 없는 스팟 id, 날짜 계산이 안 맞음)가 있으면 exit 1
 # - 경고(데이터가 오래됨, 끝난 시즌 태그)는 출력만. -FailOnStale을 주면 오래된 데이터도 실패로 처리해요
 #   (GitHub Actions 주간 점검에서 실패하면 저장소 주인에게 메일이 가서 "수집할 때가 됐다" 알림이 돼요)
@@ -154,16 +154,6 @@ if ($pk) {
   Ok "parking $($n)곳"
 }
 
-# ── Reddit 언급 ──
-$rd = Load 'reddit.json'
-if ($rd) {
-  CheckAge 'reddit.json' $rd.updatedAt
-  foreach ($m in (Props $rd.mentions)) {
-    if (-not $ids[$m.Name]) { Err "reddit 에 없는 스팟 id: $($m.Name)" }
-    foreach ($p in @($m.Value.posts)) { if ($p.url -notmatch '^https://(www\.)?reddit\.com/') { Err "reddit.$($m.Name) 링크가 reddit.com 이 아니에요: $($p.url)" } }
-  }
-  Ok "reddit 언급 $((Props $rd.mentions).Count)곳 ($($rd.from) ~ $($rd.to))"
-}
 
 Write-Host ''
 Write-Host "오류 $($errors.Count)개, 경고 $($warns.Count)개"
