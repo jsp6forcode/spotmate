@@ -120,6 +120,11 @@
           "source" : "https://www.pac.dfo-mpo.gc.ca/sep-pmvs/hatcheries-ecloseries/capilano-eng.html",
           "why" : "Coho are returning now and Chinook come back in October and November. The hatchery has viewing windows."
         },
+        "inletpark" : {
+          "source" : "https://psf.ca/blog/salmon-spotting-tricities/",
+          "start" : "2026-10-01",
+          "why" : "Chum return to Noons Creek in October and November and coho in November. Family-friendly trails and a creekside boardwalk lead to the Noons Creek Hatchery next door."
+        },
         "kanaka" : {
           "source" : "https://metrovancouver.org/services/regional-parks/park/kanaka-creek-regional-park",
           "start" : "2026-10-10",
@@ -134,6 +139,11 @@
           "source" : "https://www.coquitlam.ca/991/Salmon-Come-Home",
           "start" : "2026-10-01",
           "why" : "Chum return from early October to mid-November and coho from late October to mid-December. Salmon Come Home is on Oct 25."
+        },
+        "hockadaypark" : {
+          "source" : "https://psf.ca/blog/salmon-spotting-tricities/",
+          "start" : "2026-10-01",
+          "why" : "Chum return to the Coquitlam River from early October to mid-November and coho from late October to mid-December. There is a family-friendly viewing area by the water."
         },
         "littlecampbellriverh" : {
           "source" : "https://psf.ca/blog/salmon-spotting-metro-vancouver/",
