@@ -908,6 +908,9 @@ class App {
       loading: true, loadError: ''
     };
     this.ai = {};
+    // 주소(?view=…&cat=…)에 남길 필터의 기본값. 기본값과 다른 것만 주소에 적어요
+    this.urlDefaults = { view: 'list', cat: 'all', tag: '', when: '', nearKey: this.state.nearKey, radius: this.state.radius, sort: 'fresh', indoor: this.state.indoor, kidsOnly: false, openNow: false };
+    this.urlReady = false;
     this.sample = null;
     this.root = document.getElementById('app');
     this.fbDraft = {};   // About 탭 피드백 폼에 쓰던 글
@@ -1016,7 +1019,8 @@ class App {
       // "Know it"(아는 곳 숨기기)은 없앴어요. 예전에 숨겨 둔 목록은 지워서 모든 곳이 다시 보이게 해요
       try { ['spotmate-known', 'spotmate-opennow', 'spotmate-price', 'spotmate-kids', 'spotmate-indoor', 'spotmate-browse'].forEach(k => localStorage.removeItem(k)); } catch (e) {}
       this.newIds = this.trackSeen();
-      this.set({ loading: false, plan });
+      this.set({ loading: false, plan, ...this.applyUrl() });
+      this.urlReady = true;
       // 검색 링크(?q=)로 들어오면 그 검색을 바로 해요
       const sq = new URLSearchParams(location.search).get('q');
       if (sq) this.runSearch(sq.slice(0, 200));
@@ -1206,7 +1210,46 @@ class App {
   set(patch) {
     // 목록이 바뀌는 필터를 건드리면 "Show more"로 늘린 개수를 처음으로 되돌려요
     if (['cat', 'view', 'tag', 'cuisine', 'price', 'hh', 'lunch', 'sort', 'nearKey', 'radius', 'kidsOnly', 'indoor', 'openNow', 'when'].some(k => k in patch && patch[k] !== this.state[k])) patch.restShown = REST_STEP;
-    Object.assign(this.state, patch); this.render();
+    Object.assign(this.state, patch); this.render(); this.syncUrl();
+  }
+
+  // ── 도시·필터·검색 상태를 주소(?…)에 반영 ──
+  // 기본값과 다른 것만 적어요. 북마크하거나 공유하면 같은 화면이 열려요. 기록(history)은 쌓지 않고 덮어써서 뒤로가기는 그대로예요
+  syncUrl() {
+    if (!this.urlReady) return;
+    const s = this.state, d = this.urlDefaults, p = new URLSearchParams();
+    if (s.view !== d.view) p.set('view', s.view);
+    if (['list', 'map'].includes(s.view)) {
+      if (s.cat !== d.cat) p.set('cat', s.cat);
+      if (s.tag !== d.tag) p.set('tag', s.tag);
+      if (s.when !== d.when) p.set('when', s.when);
+      if (s.nearKey !== d.nearKey && (ORIGINS[s.nearKey] || !s.nearKey)) p.set('near', s.nearKey || 'none');
+      if (s.radius !== d.radius) p.set('radius', String(s.radius));
+      if (s.sort !== d.sort) p.set('sort', s.sort);
+      if (s.indoor !== d.indoor) p.set('indoor', s.indoor ? '1' : '0');
+      if (s.kidsOnly !== d.kidsOnly) p.set('kids', s.kidsOnly ? '1' : '0');
+      if (s.openNow !== d.openNow) p.set('open', s.openNow ? '1' : '0');
+    }
+    if (s.q) p.set('q', s.q.slice(0, 200));
+    const qs = p.toString(), url = location.pathname + (qs ? '?' + qs : '') + location.hash;
+    if (url === location.pathname + location.search + location.hash) return;
+    try { history.replaceState(history.state, '', url); } catch (e) {}
+  }
+  // 주소의 ?view=…&cat=… 를 읽어 상태로 (모르는 값은 무시해요). 검색어(?q=)는 runSearch가 따로 처리해요
+  applyUrl() {
+    const p = new URLSearchParams(location.search), s = this.state, patch = {};
+    const v = p.get('view'); if (['list', 'map', 'events', 'markets', 'plan', 'about'].includes(v) || (v === 'eats' && EATS_ON)) patch.view = v;
+    const view = patch.view || s.view;
+    const cat = p.get('cat'); if (cat && (cat === 'all' ? hasAll(view) : catOptions(view).includes(cat))) patch.cat = cat;
+    const tag = p.get('tag'); if (tag && /^[\w-]{1,40}$/.test(tag)) patch.tag = tag;
+    const when = p.get('when'); if (['today', 'tomorrow', 'weekend', 'sat', 'sun'].includes(when)) patch.when = when;
+    const near = p.get('near'); if (near === 'none') patch.nearKey = ''; else if (near && ORIGINS[near]) patch.nearKey = near;
+    const rad = p.get('radius'); if (rad === 'any') patch.radius = 'any'; else if (RADII.includes(+rad)) patch.radius = +rad;
+    const sort = p.get('sort'); if (['fresh', 'distance'].includes(sort)) patch.sort = sort;
+    for (const [k, key] of [['indoor', 'indoor'], ['kids', 'kidsOnly'], ['open', 'openNow']]) { const b = p.get(k); if (b === '1' || b === '0') patch[key] = b === '1'; }
+    // 필터가 주소에 있으면 질문(Pick for me) 없이 바로 목록으로
+    if (Object.keys(patch).some(k => k !== 'view')) patch.browse = true;
+    return patch;
   }
 
   // 첫 방문 때 있던 스팟은 기준(0)으로, 그 뒤 새로 생긴 스팟은 처음 본 날짜로 기록해요.
