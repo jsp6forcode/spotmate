@@ -1,0 +1,272 @@
+﻿[
+    {
+        "id":  "jumpgymnastics",
+        "name":  "Jump Gymnastics",
+        "area":  "North Vancouver",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Kids gym with gymnastics and parkour",
+        "priorFound":  null,
+        "priorNote":  "Wheelchair and stroller accessible; free on-site parking; 120-2270 Dollarton Hwy; drop-in prices not published on site"
+    },
+    {
+        "id":  "laserdomeplus",
+        "name":  "Laserdome Plus",
+        "area":  "North Vancouver",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Laser tag arena",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "lionsgatecommunityrecrea",
+        "name":  "Lions Gate Community Recreation Centre",
+        "area":  "North Vancouver",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  null,
+        "priorNote":  "Gyms and studios, no pool listed; free underground parking and elevator access to upper floors"
+    },
+    {
+        "id":  "lynncreekcommunityrecrea",
+        "name":  "Lynn Creek Community Recreation Centre",
+        "area":  "North Vancouver",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  null,
+        "priorNote":  "Gym and multipurpose rooms, no pool listed"
+    },
+    {
+        "id":  "lynnvalleycommunityrecre",
+        "name":  "Lynn Valley Community Recreation Centre",
+        "area":  "North Vancouver",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  null,
+        "priorNote":  "NVRC lists it as open for scheduled programs only (no general drop-in) as of 2026-10-03"
+    },
+    {
+        "id":  "maplewoodfarm",
+        "name":  "Maplewood Farm",
+        "area":  "North Vancouver",
+        "price":  "$",
+        "env":  "outdoor",
+        "summary":  "Hobby farm with goats, sheep, rabbits and ponies, and hands-on animal time for kids",
+        "priorFound":  null,
+        "priorNote":  "Listings say open daily except non-holiday Mondays and Christmas, about 10-4; current fees not confirmed"
+    },
+    {
+        "id":  "parkgatecommunitycentre",
+        "name":  "Parkgate Community Centre",
+        "area":  "North Vancouver",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  null,
+        "priorNote":  "Gym, climbing wall and fitness centre, no pool listed"
+    },
+    {
+        "id":  "seymourcreekgolfcentre",
+        "name":  "Seymour Creek Golf Centre",
+        "area":  "North Vancouver",
+        "price":  "$",
+        "env":  "outdoor",
+        "summary":  "Floodlit driving range and 18-hole mini putt course",
+        "priorFound":  null,
+        "priorNote":  "Open Mon-Sat 9am-10pm, Sun 9am-9pm at 315 Seymour Blvd; driving range and mini putt; prices not confirmed"
+    },
+    {
+        "id":  "southbonsoncommunitycent",
+        "name":  "South Bonson Community Centre",
+        "area":  "Pitt Meadows",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  null,
+        "priorNote":  "Has a fitness room; drop-in rates for this centre not found"
+    },
+    {
+        "id":  "blakeburnlagoonspark",
+        "name":  "Blakeburn Lagoons Park",
+        "area":  "Port Coquitlam",
+        "price":  "$",
+        "env":  "outdoor",
+        "summary":  "Lagoon park with a playground and picnic tables",
+        "priorFound":  null,
+        "priorNote":  "City notice says park washroom is closed; playground is at adjacent Blakeburn Park"
+    },
+    {
+        "id":  "gforcegym",
+        "name":  "G Force Gym",
+        "area":  "Port Coquitlam",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Kids gym with gymnastics and parkour",
+        "priorFound":  null,
+        "priorNote":  "Cheer, tumbling and ninja classes plus camps; no drop-in pricing found"
+    },
+    {
+        "id":  "junglejacs",
+        "name":  "Jungle Jac\u0027s Play Centre",
+        "area":  "Port Coquitlam",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Big indoor jungle-themed play centre with climbing structures and slides",
+        "priorFound":  null,
+        "priorNote":  "Socks required for trampoline zone; ball pit, slides, bumper cars"
+    },
+    {
+        "id":  "ohmyland",
+        "name":  "Oh My Land Club",
+        "area":  "Port Coquitlam",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Indoor playground for young kids",
+        "priorFound":  null,
+        "priorNote":  "Aimed at children under 10"
+    },
+    {
+        "id":  "pomoarts",
+        "name":  "PoMoArts",
+        "area":  "Port Moody",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Arts centre with shows and classes",
+        "priorFound":  "Gallery free to visit",
+        "priorNote":  null
+    },
+    {
+        "id":  "fundays365",
+        "name":  "365Fundays family fun centre",
+        "area":  "Richmond",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "25,500 sq ft jungle-themed indoor play park, plus a laser tag maze",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "citycentrecommunitycentr",
+        "name":  "City Centre Community Centre",
+        "area":  "Richmond",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Recreation centre with a pool",
+        "priorFound":  "Richmond pool drop-in child (2-12) $4.80, youth $6.35, adult $7.85 (city-wide pool rate, not specific to this centre)",
+        "priorNote":  null
+    },
+    {
+        "id":  "extremeairrmd",
+        "name":  "Extreme Air Park",
+        "area":  "Richmond",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Large indoor trampoline park with dodgeball, foam pits and climbing",
+        "priorFound":  "About $27 for 1 hour, $32 for 2 hours (third-party listing, not official)",
+        "priorNote":  "Older article: kids 7 and under need an adult jumping"
+    },
+    {
+        "id":  "gameongo",
+        "name":  "Game On GO!",
+        "area":  "Richmond",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Arcade and claw machines",
+        "priorFound":  null,
+        "priorNote":  "Interactive game rooms, 6-12 minute sessions; open 12pm-12am; more a gamified gym than an arcade"
+    },
+    {
+        "id":  "gardencitylandscommunity",
+        "name":  "Garden City Lands: Community Farm and Bog Conservation Area",
+        "area":  "Richmond",
+        "price":  "$",
+        "env":  "outdoor",
+        "summary":  "Family farm",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "hamiltoncommunitycentre",
+        "name":  "Hamilton Community Centre",
+        "area":  "Richmond",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "jollybubblerichmond",
+        "name":  "Jolly Bubble Richmond",
+        "area":  "Richmond",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Arcade and claw machines",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "luckycatch",
+        "name":  "Lucky Catch",
+        "area":  "Richmond",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Arcade and claw machines",
+        "priorFound":  null,
+        "priorNote":  "Could not verify a Richmond location; the Lucky Catch found online is a Maine lobster tour"
+    },
+    {
+        "id":  "papaworldkidsindoorplayg",
+        "name":  "PAPA WORLD KIDS INDOOR PLAYGROUND",
+        "area":  "Richmond",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Indoor play centre for kids",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "planetlazertag",
+        "name":  "Planet Lazer Tag",
+        "area":  "Richmond",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Laser tag arena",
+        "priorFound":  "Three games about $20 plus tax (older listing; confirm current price)",
+        "priorNote":  null
+    },
+    {
+        "id":  "seaislandcommunitycentre",
+        "name":  "Sea Island Community Centre",
+        "area":  "Richmond",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "southarmoutdoorpool",
+        "name":  "South Arm Outdoor Pool",
+        "area":  "Richmond",
+        "price":  "$",
+        "env":  "outdoor",
+        "summary":  "Outdoor pool (summer season) with a playground, picnic tables and washrooms",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "speedersrichmond",
+        "name":  "SPEEDERS Richmond",
+        "area":  "Richmond",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Go-kart track",
+        "priorFound":  null,
+        "priorNote":  null
+    }
+]

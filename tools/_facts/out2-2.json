@@ -1,0 +1,713 @@
+﻿{
+    "aldergrovecommunitycentr":  {
+                                     "admission":  {
+                                                       "text":  "Township of Langley drop-in from Sep 1 2026: child 4-12 $3.70, youth 13-18 $4.70, adult $7.50, family (up to 5) $15; under 4 free",
+                                                       "booking":  null,
+                                                       "bookingNote":  null,
+                                                       "source":  "https://www.tol.ca/en/parks-recreation/admission-fees.aspx"
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "status":  "unknown",
+                                     "statusNote":  null,
+                                     "checked":  "2026-10-04",
+                                     "confidence":  "medium"
+                                 },
+    "brydonlagoon":  {
+                         "admission":  {
+                                           "text":  null,
+                                           "booking":  null,
+                                           "bookingNote":  null,
+                                           "source":  null
+                                       },
+                         "amenities":  {
+                                           "stroller":  null,
+                                           "changing":  null,
+                                           "nursing":  null,
+                                           "washrooms":  null,
+                                           "stairs":  null,
+                                           "note":  null
+                                       },
+                         "food":  {
+                                      "onsite":  null,
+                                      "outside":  null,
+                                      "nearby":  null
+                                  },
+                         "priceFix":  null,
+                         "status":  "unknown",
+                         "statusNote":  null,
+                         "checked":  "2026-10-04",
+                         "confidence":  "low"
+                     },
+    "canadianmuseumofflight":  {
+                                   "admission":  {
+                                                     "text":  "Adults $14, seniors/youth $10, under 6 free, family $35 (2 adults + up to 5 others); Wed-Sat 10-4, Sun 12-5",
+                                                     "booking":  null,
+                                                     "bookingNote":  null,
+                                                     "source":  "https://vancouversbestplaces.com/metro-vancouver/langley/canadian-museum-flight-langley/"
+                                                 },
+                                   "amenities":  {
+                                                     "stroller":  null,
+                                                     "changing":  null,
+                                                     "nursing":  null,
+                                                     "washrooms":  null,
+                                                     "stairs":  null,
+                                                     "note":  null
+                                                 },
+                                   "food":  {
+                                                "onsite":  null,
+                                                "outside":  null,
+                                                "nearby":  null
+                                            },
+                                   "priceFix":  null,
+                                   "status":  "open",
+                                   "statusNote":  null,
+                                   "checked":  "2026-10-04",
+                                   "confidence":  "medium"
+                               },
+    "georgeprestonrecreationc":  {
+                                     "admission":  {
+                                                       "text":  "Township of Langley drop-in from Sep 1 2026: child 4-12 $3.70, youth 13-18 $4.70, adult $7.50, family (up to 5) $15; under 4 free",
+                                                       "booking":  null,
+                                                       "bookingNote":  null,
+                                                       "source":  "https://www.tol.ca/en/parks-recreation/admission-fees.aspx"
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "status":  "unknown",
+                                     "statusNote":  null,
+                                     "checked":  "2026-10-04",
+                                     "confidence":  "medium"
+                                 },
+    "gvmezosoic":  {
+                       "admission":  {
+                                         "text":  null,
+                                         "booking":  null,
+                                         "bookingNote":  null,
+                                         "source":  null
+                                     },
+                       "amenities":  {
+                                         "stroller":  null,
+                                         "changing":  null,
+                                         "nursing":  null,
+                                         "washrooms":  null,
+                                         "stairs":  null,
+                                         "note":  null
+                                     },
+                       "food":  {
+                                    "onsite":  null,
+                                    "outside":  null,
+                                    "nearby":  null
+                                },
+                       "priceFix":  null,
+                       "status":  "unknown",
+                       "statusNote":  null,
+                       "checked":  "2026-10-04",
+                       "confidence":  "low"
+                   },
+    "laughingstockranch":  {
+                               "admission":  {
+                                                 "text":  null,
+                                                 "booking":  null,
+                                                 "bookingNote":  null,
+                                                 "source":  null
+                                             },
+                               "amenities":  {
+                                                 "stroller":  null,
+                                                 "changing":  null,
+                                                 "nursing":  null,
+                                                 "washrooms":  null,
+                                                 "stairs":  null,
+                                                 "note":  null
+                                             },
+                               "food":  {
+                                            "onsite":  null,
+                                            "outside":  null,
+                                            "nearby":  null
+                                        },
+                               "priceFix":  null,
+                               "status":  "unknown",
+                               "statusNote":  null,
+                               "checked":  "2026-10-04",
+                               "confidence":  "low"
+                           },
+    "nationalhockeytrainingce":  {
+                                     "admission":  {
+                                                       "text":  null,
+                                                       "booking":  null,
+                                                       "bookingNote":  null,
+                                                       "source":  null
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "status":  "unknown",
+                                     "statusNote":  null,
+                                     "checked":  "2026-10-04",
+                                     "confidence":  "low"
+                                 },
+    "playabbylangley":  {
+                            "admission":  {
+                                              "text":  "Day pass: baby under 1 free, toddler 1-4 $10, child 5+ $17; Mon-Fri 9-6, Sat-Sun 9-8",
+                                              "booking":  "none",
+                                              "bookingNote":  null,
+                                              "source":  "https://www.playabby.com/playparkb/langley"
+                                          },
+                            "amenities":  {
+                                              "stroller":  null,
+                                              "changing":  null,
+                                              "nursing":  null,
+                                              "washrooms":  null,
+                                              "stairs":  null,
+                                              "note":  "Socks required, waiver to sign"
+                                          },
+                            "food":  {
+                                         "onsite":  null,
+                                         "outside":  "allowed",
+                                         "nearby":  "no nut products or alcohol; cakes only with party booking"
+                                     },
+                            "priceFix":  {
+                                             "tier":  "$$",
+                                             "reason":  "child day pass $17"
+                                         },
+                            "status":  "open",
+                            "statusNote":  null,
+                            "checked":  "2026-10-04",
+                            "confidence":  "high"
+                        },
+    "projectplayactivitycentr":  {
+                                     "admission":  {
+                                                       "text":  null,
+                                                       "booking":  null,
+                                                       "bookingNote":  null,
+                                                       "source":  null
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "status":  "unknown",
+                                     "statusNote":  null,
+                                     "checked":  "2026-10-04",
+                                     "confidence":  "low"
+                                 },
+    "timmscommunitycentre":  {
+                                 "admission":  {
+                                                   "text":  "City of Langley drop-in 2026: child/youth 4-18 $3, adult 19-59 $6, senior 60+ $4.50, family $12; under 4 free",
+                                                   "booking":  null,
+                                                   "bookingNote":  null,
+                                                   "source":  "https://langleycity.ca/recreation-culture/recreation/admission-rates-passes-and-financial-assistance"
+                                               },
+                                 "amenities":  {
+                                                   "stroller":  null,
+                                                   "changing":  null,
+                                                   "nursing":  null,
+                                                   "washrooms":  null,
+                                                   "stairs":  null,
+                                                   "note":  null
+                                               },
+                                 "food":  {
+                                              "onsite":  null,
+                                              "outside":  null,
+                                              "nearby":  null
+                                          },
+                                 "priceFix":  null,
+                                 "status":  "open",
+                                 "statusNote":  null,
+                                 "checked":  "2026-10-04",
+                                 "confidence":  "high"
+                             },
+    "wcblairrecreationcentre":  {
+                                    "admission":  {
+                                                      "text":  "City of Langley drop-in 2026: child/youth 4-18 $3, adult 19-59 $6, senior 60+ $4.50, family $12; under 4 free",
+                                                      "booking":  null,
+                                                      "bookingNote":  null,
+                                                      "source":  "https://langleycity.ca/recreation-culture/recreation/admission-rates-passes-and-financial-assistance"
+                                                  },
+                                    "amenities":  {
+                                                      "stroller":  null,
+                                                      "changing":  null,
+                                                      "nursing":  null,
+                                                      "washrooms":  null,
+                                                      "stairs":  null,
+                                                      "note":  null
+                                                  },
+                                    "food":  {
+                                                 "onsite":  null,
+                                                 "outside":  null,
+                                                 "nearby":  null
+                                             },
+                                    "priceFix":  null,
+                                    "status":  "open",
+                                    "statusNote":  null,
+                                    "checked":  "2026-10-04",
+                                    "confidence":  "high"
+                                },
+    "walnutgrovecommunitycent":  {
+                                     "admission":  {
+                                                       "text":  "Township of Langley drop-in from Sep 1 2026: child 4-12 $3.70, youth 13-18 $4.70, adult $7.50, family (up to 5) $15; under 4 free",
+                                                       "booking":  null,
+                                                       "bookingNote":  null,
+                                                       "source":  "https://www.tol.ca/en/parks-recreation/admission-fees.aspx"
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "status":  "unknown",
+                                     "statusNote":  null,
+                                     "checked":  "2026-10-04",
+                                     "confidence":  "medium"
+                                 },
+    "meadowsfamilyfarmltd":  {
+                                 "admission":  {
+                                                   "text":  "Reported online tickets kids 3+ $18, adults $16 plus GST (not confirmed on official page)",
+                                                   "booking":  null,
+                                                   "bookingNote":  null,
+                                                   "source":  null
+                                               },
+                                 "amenities":  {
+                                                   "stroller":  "partial",
+                                                   "changing":  true,
+                                                   "nursing":  null,
+                                                   "washrooms":  true,
+                                                   "stairs":  null,
+                                                   "note":  "2020 review: walkable farm, leave stroller at home"
+                                               },
+                                 "food":  {
+                                              "onsite":  "snacks",
+                                              "outside":  null,
+                                              "nearby":  null
+                                          },
+                                 "priceFix":  null,
+                                 "status":  "unknown",
+                                 "statusNote":  null,
+                                 "checked":  "2026-10-04",
+                                 "confidence":  "low"
+                             },
+    "extremeairnw":  {
+                         "admission":  {
+                                           "text":  "About $27 for 1 hour, about $32 for 2 hours (secondary listing, age group not stated)",
+                                           "booking":  null,
+                                           "bookingNote":  null,
+                                           "source":  null
+                                       },
+                         "amenities":  {
+                                           "stroller":  null,
+                                           "changing":  null,
+                                           "nursing":  null,
+                                           "washrooms":  null,
+                                           "stairs":  null,
+                                           "note":  null
+                                       },
+                         "food":  {
+                                      "onsite":  null,
+                                      "outside":  null,
+                                      "nearby":  null
+                                  },
+                         "priceFix":  null,
+                         "status":  "unknown",
+                         "statusNote":  null,
+                         "checked":  "2026-10-04",
+                         "confidence":  "low"
+                     },
+    "climbbase5":  {
+                       "admission":  {
+                                         "text":  null,
+                                         "booking":  null,
+                                         "bookingNote":  null,
+                                         "source":  null
+                                     },
+                       "amenities":  {
+                                         "stroller":  null,
+                                         "changing":  null,
+                                         "nursing":  null,
+                                         "washrooms":  null,
+                                         "stairs":  null,
+                                         "note":  "Hours: Wed-Sat 10am-10pm, Sun 10am-8pm (official homepage); day pass price not shown"
+                                     },
+                       "food":  {
+                                    "onsite":  null,
+                                    "outside":  null,
+                                    "nearby":  null
+                                },
+                       "priceFix":  null,
+                       "status":  "unknown",
+                       "statusNote":  null,
+                       "checked":  "2026-10-04",
+                       "confidence":  "low"
+                   },
+    "griffinbowl":  {
+                        "admission":  {
+                                          "text":  null,
+                                          "booking":  null,
+                                          "bookingNote":  null,
+                                          "source":  null
+                                      },
+                        "amenities":  {
+                                          "stroller":  null,
+                                          "changing":  null,
+                                          "nursing":  null,
+                                          "washrooms":  null,
+                                          "stairs":  null,
+                                          "note":  "Likely a skatepark, not bowling"
+                                      },
+                        "food":  {
+                                     "onsite":  null,
+                                     "outside":  null,
+                                     "nearby":  null
+                                 },
+                        "priceFix":  {
+                                         "tier":  "Free",
+                                         "reason":  "Search results describe Griffin Bowl as a free skatepark at William Griffin Rec Centre, not a bowling alley"
+                                     },
+                        "status":  "unknown",
+                        "statusNote":  null,
+                        "checked":  "2026-10-04",
+                        "confidence":  "low"
+                    },
+    "davidsonspoolpark":  {
+                              "admission":  {
+                                                "text":  "No admission listed; natural swimming spot on the South Alouette River, no lifeguard",
+                                                "booking":  "none",
+                                                "bookingNote":  null,
+                                                "source":  "https://www.mapleridge.ca/facilities/facility/details/Davidsons-Pool-51"
+                                            },
+                              "amenities":  {
+                                                "stroller":  null,
+                                                "changing":  null,
+                                                "nursing":  null,
+                                                "washrooms":  true,
+                                                "stairs":  null,
+                                                "note":  "Portable washrooms in summer only; not an indoor pool; parking and picnic tables"
+                                            },
+                              "food":  {
+                                           "onsite":  null,
+                                           "outside":  "allowed",
+                                           "nearby":  "no glass containers"
+                                       },
+                              "priceFix":  {
+                                               "tier":  "Free",
+                                               "reason":  "Natural river swimming area, no fee listed"
+                                           },
+                              "status":  "open",
+                              "statusNote":  null,
+                              "checked":  "2026-10-04",
+                              "confidence":  "high"
+                          },
+    "mygymchildrensfitnesscen":  {
+                                     "admission":  {
+                                                       "text":  null,
+                                                       "booking":  null,
+                                                       "bookingNote":  null,
+                                                       "source":  null
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "status":  "unknown",
+                                     "statusNote":  null,
+                                     "checked":  "2026-10-04",
+                                     "confidence":  "low"
+                                 },
+    "theactartscentre":  {
+                             "admission":  {
+                                               "text":  "Tickets vary by show; e.g. 2026 youth showcase adult $31, under 18 $26 incl. fees",
+                                               "booking":  "recommended",
+                                               "bookingNote":  "Ticketed shows, tickets via Purchase.MapleRidgeACT.ca",
+                                               "source":  "https://www.mapleridge.ca/node/4898"
+                                           },
+                             "amenities":  {
+                                               "stroller":  null,
+                                               "changing":  null,
+                                               "nursing":  null,
+                                               "washrooms":  null,
+                                               "stairs":  null,
+                                               "note":  null
+                                           },
+                             "food":  {
+                                          "onsite":  null,
+                                          "outside":  null,
+                                          "nearby":  null
+                                      },
+                             "priceFix":  null,
+                             "status":  "open",
+                             "statusNote":  null,
+                             "checked":  "2026-10-04",
+                             "confidence":  "medium"
+                         },
+    "therockwallclimbinggym":  {
+                                   "admission":  {
+                                                     "text":  null,
+                                                     "booking":  null,
+                                                     "bookingNote":  null,
+                                                     "source":  null
+                                                 },
+                                   "amenities":  {
+                                                     "stroller":  null,
+                                                     "changing":  null,
+                                                     "nursing":  null,
+                                                     "washrooms":  null,
+                                                     "stairs":  null,
+                                                     "note":  "Address 6-11455 201A St; day pass price not found"
+                                                 },
+                                   "food":  {
+                                                "onsite":  null,
+                                                "outside":  null,
+                                                "nearby":  null
+                                            },
+                                   "priceFix":  null,
+                                   "status":  "unknown",
+                                   "statusNote":  null,
+                                   "checked":  "2026-10-04",
+                                   "confidence":  "low"
+                               },
+    "braidstartstudiosgallery":  {
+                                     "admission":  {
+                                                       "text":  null,
+                                                       "booking":  null,
+                                                       "bookingNote":  null,
+                                                       "source":  null
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  "Open studio first Saturday of month noon-5pm; parent-and-tot craft sessions ages 2-5 (older news reports)"
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "status":  "unknown",
+                                     "statusNote":  null,
+                                     "checked":  "2026-10-04",
+                                     "confidence":  "low"
+                                 },
+    "fraserriverdiscoverycent":  {
+                                     "admission":  {
+                                                       "text":  "Adult $8, child 3-12 $5, senior 65+/student $6, family $20 (2 adults + up to 4 children); 2 and under free",
+                                                       "booking":  null,
+                                                       "bookingNote":  null,
+                                                       "source":  "https://www.newwestcity.ca/calendar-of-events/events/8833.php"
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "status":  "open",
+                                     "statusNote":  null,
+                                     "checked":  "2026-10-04",
+                                     "confidence":  "medium"
+                                 },
+    "rainbowplayland":  {
+                            "admission":  {
+                                              "text":  null,
+                                              "booking":  null,
+                                              "bookingNote":  null,
+                                              "source":  null
+                                          },
+                            "amenities":  {
+                                              "stroller":  null,
+                                              "changing":  null,
+                                              "nursing":  null,
+                                              "washrooms":  null,
+                                              "stairs":  null,
+                                              "note":  null
+                                          },
+                            "food":  {
+                                         "onsite":  null,
+                                         "outside":  null,
+                                         "nearby":  null
+                                     },
+                            "priceFix":  null,
+                            "status":  "not-found",
+                            "statusNote":  "No listing found in searches for this name in New Westminster",
+                            "checked":  "2026-10-04",
+                            "confidence":  "low"
+                        },
+    "hanababy":  {
+                     "admission":  {
+                                       "text":  null,
+                                       "booking":  null,
+                                       "bookingNote":  null,
+                                       "source":  null
+                                   },
+                     "amenities":  {
+                                       "stroller":  null,
+                                       "changing":  null,
+                                       "nursing":  null,
+                                       "washrooms":  null,
+                                       "stairs":  null,
+                                       "note":  "Indoor play space for kids under 10 at 250-610 6th St, Royal City Centre; prices not found"
+                                   },
+                     "food":  {
+                                  "onsite":  null,
+                                  "outside":  null,
+                                  "nearby":  null
+                              },
+                     "priceFix":  null,
+                     "status":  "unknown",
+                     "statusNote":  null,
+                     "checked":  "2026-10-04",
+                     "confidence":  "low"
+                 },
+    "happyclaw":  {
+                      "admission":  {
+                                        "text":  null,
+                                        "booking":  null,
+                                        "bookingNote":  null,
+                                        "source":  null
+                                    },
+                      "amenities":  {
+                                        "stroller":  null,
+                                        "changing":  null,
+                                        "nursing":  null,
+                                        "washrooms":  null,
+                                        "stairs":  null,
+                                        "note":  null
+                                    },
+                      "food":  {
+                                   "onsite":  null,
+                                   "outside":  null,
+                                   "nearby":  null
+                               },
+                      "priceFix":  null,
+                      "status":  "not-found",
+                      "statusNote":  "No North Vancouver Happy Claw listing found",
+                      "checked":  "2026-10-04",
+                      "confidence":  "low"
+                  },
+    "harryjeromecommunityrecr":  {
+                                     "admission":  {
+                                                       "text":  null,
+                                                       "booking":  null,
+                                                       "bookingNote":  null,
+                                                       "source":  "https://www.cnv.org/City-Hall/News-Room/News-Releases/2026/7/25/City-of-North-Vancouver-opens-New-Harry-Jerome-Community-Recreation-Centre-Today"
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  "cafe",
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "status":  "open",
+                                     "statusNote":  "New centre opened 2026-07-25 (arena, aquatics, gym, cafe); old building closed",
+                                     "checked":  "2026-10-04",
+                                     "confidence":  "medium"
+                                 },
+    "johnbraithwaitecommunity":  {
+                                     "admission":  {
+                                                       "text":  null,
+                                                       "booking":  null,
+                                                       "bookingNote":  null,
+                                                       "source":  null
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "status":  "unknown",
+                                     "statusNote":  null,
+                                     "checked":  "2026-10-04",
+                                     "confidence":  "low"
+                                 }
+}

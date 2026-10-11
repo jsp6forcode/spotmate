@@ -1,0 +1,236 @@
+﻿[
+    {
+        "id":  "emmaleafarms",
+        "name":  "Emma Lea Farms",
+        "area":  "Delta",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Family farm with picnic tables and washrooms"
+    },
+    {
+        "id":  "ladnercommunitycentre",
+        "name":  "Ladner Community Centre",
+        "area":  "Delta",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "ladnerleisurecentre",
+        "name":  "Ladner Leisure Centre",
+        "area":  "Delta",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "both",
+        "summary":  "Recreation centre with sports fields"
+    },
+    {
+        "id":  "northdeltarecreationcent",
+        "name":  "North Delta Recreation Centre",
+        "area":  "Delta",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "owlrehab",
+        "name":  "OWL Raptor Rehabilitation",
+        "area":  "Delta",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Raptor rescue centre with weekend tours by reservation"
+    },
+    {
+        "id":  "southdeltarecreationcent",
+        "name":  "South Delta Recreation Centre",
+        "area":  "Delta",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "sungodrecreationcentre",
+        "name":  "Sungod Recreation Centre",
+        "area":  "Delta",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Recreation centre with a pool"
+    },
+    {
+        "id":  "westhamislandherbfarm",
+        "name":  "Westham Island Herb Farm",
+        "area":  "Delta",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Family farm"
+    },
+    {
+        "id":  "ladneroutdoorpool",
+        "name":  "Ladner Outdoor Pool",
+        "area":  "Delta (Ladner)",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Outdoor pool, open in summer (June to September)"
+    },
+    {
+        "id":  "vag",
+        "name":  "Vancouver Art Gallery",
+        "area":  "Downtown",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "The city\u0027s art museum, right in the middle of downtown"
+    },
+    {
+        "id":  "scienceworld",
+        "name":  "Science World",
+        "area":  "False Creek",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Hands-on, interactive science centre"
+    },
+    {
+        "id":  "playland",
+        "name":  "Playland",
+        "area":  "Hastings Park",
+        "price":  "$$$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Amusement park on the PNE grounds"
+    },
+    {
+        "id":  "academyfarms",
+        "name":  "Academy Farms",
+        "area":  "Langley",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Bison and water buffalo farm with wagon tours and a farm market"
+    },
+    {
+        "id":  "activate",
+        "name":  "Activate Langley",
+        "area":  "Langley",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Interactive game rooms, fun for older kids and families, recommended for ages 6 and up"
+    },
+    {
+        "id":  "alandersonmemorialpool",
+        "name":  "Al Anderson Memorial Pool",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Swimming pool"
+    },
+    {
+        "id":  "aldergrovecommunitycentr",
+        "name":  "Aldergrove Community Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "both",
+        "summary":  "Recreation centre with a spray park and a pool"
+    },
+    {
+        "id":  "aldor",
+        "name":  "Aldor Acres Family Farm",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Family farm with animals and seasonal activities"
+    },
+    {
+        "id":  "brydonlagoon",
+        "name":  "Brydon Lagoon",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Lagoon park with a walking loop and a playground"
+    },
+    {
+        "id":  "canadianmuseumofflight",
+        "name":  "Canadian Museum of Flight",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "chuckecheese",
+        "name":  "Chuck E. Cheese",
+        "area":  "Langley",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Indoor fun centre for kids"
+    },
+    {
+        "id":  "douglasrecreationcentre",
+        "name":  "Douglas Recreation Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "fasttrackindoorkartingpl",
+        "name":  "Fast Track Indoor Karting \u0026 PlayZone",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Indoor go-kart track with a play zone for younger kids"
+    },
+    {
+        "id":  "fortlangleynationalhisto",
+        "name":  "Fort Langley National Historic Site of Canada",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "georgeprestonrecreationc",
+        "name":  "George Preston Recreation Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "gobananas",
+        "name":  "Go Bananas",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Indoor play centre with a multi-level play structure for younger kids"
+    },
+    {
+        "id":  "gvmezosoic",
+        "name":  "Greater Vancouver Mesozoic Adventure",
+        "area":  "Langley",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Dinosaur-themed zoo and play park"
+    }
+]

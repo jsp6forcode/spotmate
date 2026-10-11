@@ -1,0 +1,159 @@
+{
+"abbotsfordrecreationcent": {
+ "admission": {"text": "Drop-in swim: ages 0-4 free, 5-24 $4.35, 25-64 $9.65, 65+ $5.10, family (2 adults + kids 18 and under) $19.35", "booking": "none", "bookingNote": null, "source": "https://www.abbotsford.ca/node/137"},
+ "amenities": {"stroller": null, "changing": true, "nursing": null, "washrooms": true, "stairs": null, "note": "City lists universal/family changerooms at both Abbotsford pools"},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "high"
+},
+"castlefunpark": {
+ "admission": {"text": "Free entry and parking; pay per attraction with a reloadable Playcard. Go-karts: solo drivers 10+ and 54 in tall, ages 3+ can ride as passengers with an adult", "booking": "none", "bookingNote": "Go-kart track and parties can be booked by phone", "source": "https://www.castlefunpark.com/faqs/"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": "some", "note": "Wheelchair lift between main floor and arcade floor"},
+ "food": {"onsite": "snacks", "outside": "not-allowed", "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "medium"
+},
+"cheerfulchatterplaycafe": {
+ "admission": {"text": "Kids 7 months+ $15.50 + GST per 2-hour session, adults $5.50 + GST, older kids $10.50; socks required", "booking": "recommended", "bookingNote": "Reservations encouraged; online booking closes 12 hours before, walk-ins possible", "source": "https://www.cheerfulchatterplaycafe.ca/faqs"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Socks-only play area; non-slip socks $2.95 + tax"},
+ "food": {"onsite": "cafe", "outside": "not-allowed", "nearby": null},
+ "priceFix": {"tier": "$$", "reason": "Child session is $15.50 + GST (adult extra $5.50), above the $10 cutoff"},
+ "checked": "2026-10-03", "confidence": "high"
+},
+"exitabbotsford": {
+ "admission": {"text": null, "booking": "recommended", "bookingNote": "Book 2-3 weeks ahead; walk-ins not guaranteed; min 2 players; pay in person", "source": "https://e-exit.ca/abbotsford/"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Free lockers"},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "medium"
+},
+"maanfarms": {
+ "admission": {"text": null, "booking": "recommended", "bookingNote": "Fall and Halloween tickets sold through online booking systems", "source": "https://www.maanfarms.com"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Site lists open daily 9am-6pm"},
+ "food": {"onsite": "snacks", "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "low"
+},
+"matsquirecreationcentre": {
+ "admission": {"text": "Drop-in swim: ages 0-4 free, 5-24 $4.35, 25-64 $9.65, 65+ $5.10, family $19.35", "booking": "none", "bookingNote": null, "source": "https://www.abbotsford.ca/node/137"},
+ "amenities": {"stroller": null, "changing": true, "nursing": null, "washrooms": true, "stairs": null, "note": "City lists universal/family changerooms at both Abbotsford pools; pool had annual maintenance closure through Sept 28"},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "high"
+},
+"mennoniteheritagemuseum": {
+ "admission": {"text": "Admission by donation", "booking": "none", "bookingNote": null, "source": "https://whichmuseum.com/museum/mennonite-heritage-museum-abbotsford-12871/tickets-prices"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+ "food": {"onsite": "cafe", "outside": null, "nearby": null},
+ "priceFix": {"tier": "Free", "reason": "Pay-what-you-can donation entry"}, "checked": "2026-10-03", "confidence": "medium"
+},
+"playabbyabbotsford": {
+ "admission": {"text": "Reported $8.99 for ages 1-3 and $12.99 for ages 3+ (third-party listing)", "booking": null, "bookingNote": null, "source": "https://www.playabby.com/"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Official site mentions toddler zones, lockers, Wi-Fi"},
+ "food": {"onsite": null, "outside": "allowed", "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "medium"
+},
+"singletreewinery": {
+ "admission": {"text": "No entry fee stated; walk-ins welcome, tastings can be reserved. Open Wed-Sun noon-5:30", "booking": "recommended", "bookingNote": "Reservations via Tock, walk-ins welcome", "source": "https://www.singletreewinery.com"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Picnic area described as child and pet friendly by Tourism Abbotsford"},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "low"
+},
+"tavesestatecidery": {
+ "admission": {"text": "Fall farm passes (Fun Pass, SuperFUN Pass) cover pumpkin garden, petting barn, mazes; gate prices $3 more than online advance. Open Sep 12-Oct 31", "booking": "recommended", "bookingNote": "Buy online 24+ hours ahead for cheaper tickets", "source": "https://www.tavesfamilyfarms.com"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+ "food": {"onsite": "snacks", "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "medium"
+},
+"thereachgallerymuseum": {
+ "admission": {"text": "Admission by donation", "booking": "none", "bookingNote": null, "source": "https://thereach.ca/location-hours/"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Closed Sun, Mon and holidays; Tue 10-8, Wed-Fri 10-5, Sat 12-5"},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": {"tier": "Free", "reason": "Donation-based admission per listings"}, "checked": "2026-10-03", "confidence": "medium"
+},
+"bonsorrecreationcomplex": {
+ "admission": {"text": "Drop-in day pass: child 5-14 $3.70, youth 15-25 $5.55, adult 26-64 $7.40, 65+ $5.55 (plus tax)", "booking": "none", "bookingNote": null, "source": "https://www.burnaby.ca/recreation-and-arts/activities-and-registration/be-active-pass"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": true, "stairs": "none", "note": "Accessible washrooms and elevators; childminding offered; leisure pool"},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "medium"
+},
+"burnabycentralrailway": {
+ "admission": {"text": "$5 per ride (ages 3+), under 3 free, 10 rides $45", "booking": "none", "bookingNote": "Tickets at on-site kiosk only; 2026 season ends Oct 12", "source": "https://bcsme.burnabyrailway.org/tickets"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Open 11am-5pm (last tickets 4:30)"},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "high"
+},
+"christinesinclaircommuni": {
+ "admission": {"text": "Drop-in day pass: child 5-14 $3.70, adult $7.40 (plus tax); PlayZone ages 1-5 $2 per child, Tiny Tikes adult $1.90 + tax", "booking": "none", "bookingNote": null, "source": "https://www.burnaby.ca/recreation-and-arts/recreation-facilities/christine-sinclair-community-centre"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+ "food": {"onsite": "cafe", "outside": null, "nearby": "Bastion Cafe on main level"},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "medium"
+},
+"clawzonearcade": {
+ "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Could not find any Burnaby listing; existence unverified"},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "low"
+},
+"confederationcommunityce": {
+ "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "low"
+},
+"edmondscommunitycentre": {
+ "admission": {"text": "Drop-in day pass: child 5-14 $3.70, youth $5.55, adult $7.40 (plus tax); Tiny Tikes (ages 1-5) adult $1.90 + tax", "booking": "none", "bookingNote": null, "source": "https://www.burnaby.ca/recreation-and-arts/recreation-facilities/edmonds-community-centre"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": true, "stairs": "none", "note": "Accessible changing facilities, zero-entry kids leisure pool, indoor playground for under 5; women's change room closing for maintenance from Oct 6"},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "medium"
+},
+"kensingtoncomplex": {
+ "admission": {"text": null, "booking": null, "bookingNote": "Toonie Skate session includes skate and helmet rental, first come first served", "source": "https://www.burnaby.ca/recreation-and-arts/recreation-facilities/kensington-complex"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": true, "stairs": null, "note": "Accessible washrooms and showers; skate rental shop; free parking"},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "low"
+},
+"kensingtonparkoutdoorpoo": {
+ "admission": {"text": "Drop-in day pass: child 5-14 $3.70, youth $5.55, adult $7.40 (plus tax); kids 4 and under free at Loonie Swims", "booking": "none", "bookingNote": null, "source": "https://www.burnaby.ca/recreation-and-arts/activities-and-registration/be-active-pass"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": true, "stairs": null, "note": "City page says pool is open year round with heated change rooms; kids 7 and under need an adult within arm's reach"},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "low"
+},
+"kidoodlesartstudio": {
+ "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Could not find any listing; existence unverified"},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "low"
+},
+"museumofarchaeologyethno": {
+ "admission": {"text": "Free entry. Open Mon-Thu 10am-4pm, closed Fri-Sun", "booking": "none", "bookingNote": null, "source": "https://www.sfu.ca/museum-archaeology/visit/plan-your-visit.html"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": {"tier": "Free", "reason": "SFU states entry is always free"}, "checked": "2026-10-03", "confidence": "high"
+},
+"nikkeinationalmuseumcult": {
+ "admission": {"text": "Admission by donation", "booking": "none", "bookingNote": null, "source": "https://whichmuseum.com/museum/nikkei-national-museum-cultural-centre-burnaby-14639/tickets-prices"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": {"tier": "Free", "reason": "Donation-based admission per listings"}, "checked": "2026-10-03", "confidence": "medium"
+},
+"shadboltcentreforthearts": {
+ "admission": {"text": null, "booking": "recommended", "bookingNote": "Tickets via the Shadbolt box office; family shows have been listed around $25-37.50", "source": "https://www.burnabynow.com/local-arts/whats-up-in-burnaby-new-arts-listings-feb-5-2993303"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "low"
+},
+"temporarycameroncommunit": {
+ "admission": {"text": "PlayZone drop-in for ages 1-5 $2 per child; day pass rates apply to other drop-ins", "booking": "none", "bookingNote": null, "source": "https://www.burnaby.ca/cameron"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": true, "stairs": "none", "note": "Inside City of Lougheed mall; accessible washrooms, mall elevators; open daily"},
+ "food": {"onsite": null, "outside": null, "nearby": "Mall food court in the same building"},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "medium"
+},
+"tumblecitycheergymnastic": {
+ "admission": {"text": null, "booking": "recommended", "bookingNote": "Programs and drop-ins booked through the studio's online store", "source": "https://www.amilia.com/store/en/tumblecity/shop/activities/4950779"},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Listed as 7844 Edmonds St; offers classes, camps and drop-ins"},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "low"
+},
+"wesburncommunitycentre": {
+ "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+ "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+ "food": {"onsite": null, "outside": null, "nearby": null},
+ "priceFix": null, "checked": "2026-10-03", "confidence": "low"
+}
+}

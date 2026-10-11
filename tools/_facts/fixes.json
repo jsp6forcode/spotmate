@@ -1,0 +1,266 @@
+﻿[
+    {
+        "id":  "30footpool",
+        "tier":  "Free",
+        "reason":  "Lynn Canyon Park states there is no admission fee",
+        "conf":  "high"
+    },
+    {
+        "id":  "beatybiodiversitymuseum",
+        "tier":  "$$",
+        "reason":  "Adult $18, child $10",
+        "conf":  "high"
+    },
+    {
+        "id":  "blakeburnlagoonspark",
+        "tier":  "Free",
+        "reason":  "Public city park with no admission",
+        "conf":  "medium"
+    },
+    {
+        "id":  "britanniashipyardsnation",
+        "tier":  "Free",
+        "reason":  "Site entry is free",
+        "conf":  "medium"
+    },
+    {
+        "id":  "cheerfulchatterplaycafe",
+        "tier":  "$$",
+        "reason":  "Child session is $15.50 + GST (adult extra $5.50), above the $10 cutoff",
+        "conf":  "high"
+    },
+    {
+        "id":  "chilliwackmuseum",
+        "tier":  "Free",
+        "reason":  "Museum site says admission is always free (older pages listed $7 adults)",
+        "conf":  "high"
+    },
+    {
+        "id":  "cipherxcoquitlamescapero",
+        "tier":  "$$$",
+        "reason":  "Escape rooms are $35 per person",
+        "conf":  "medium"
+    },
+    {
+        "id":  "cipherxsurreydeltaescape",
+        "tier":  "$$$",
+        "reason":  "Escape rooms are $35 per person",
+        "conf":  "medium"
+    },
+    {
+        "id":  "davidsonspoolpark",
+        "tier":  "Free",
+        "reason":  "Natural river swimming area, no fee listed",
+        "conf":  "high"
+    },
+    {
+        "id":  "fasttrackindoorkartingpl",
+        "tier":  "$$",
+        "reason":  "PlayZone $8.99-$14.99 per child, karting $28.95 per race",
+        "conf":  "high"
+    },
+    {
+        "id":  "funcircleindoorplaygroun",
+        "tier":  "$$",
+        "reason":  "child all-day pass $12.49 plus GST",
+        "conf":  "high"
+    },
+    {
+        "id":  "fundays365",
+        "tier":  "$$$",
+        "reason":  "Child session is $25 plus GST",
+        "conf":  "high"
+    },
+    {
+        "id":  "gameongo",
+        "tier":  "$$$",
+        "reason":  "Cheapest session is $26.99 per person",
+        "conf":  "high"
+    },
+    {
+        "id":  "gobananas",
+        "tier":  "$$",
+        "reason":  "Child admission is $10",
+        "conf":  "medium"
+    },
+    {
+        "id":  "greendaleacreschilliwack",
+        "tier":  "$$",
+        "reason":  "Admission about $17-22 per person",
+        "conf":  "medium"
+    },
+    {
+        "id":  "gulfofgeorgiacannerynati",
+        "tier":  "$$",
+        "reason":  "Adult admission $14.75 (kids free)",
+        "conf":  "medium"
+    },
+    {
+        "id":  "happyplayhouse",
+        "tier":  "$$",
+        "reason":  "Per child 60 min is $25, 120 min $34.99",
+        "conf":  "high"
+    },
+    {
+        "id":  "hologramzoovancouver",
+        "tier":  "$$$",
+        "reason":  "Adult $35, child $28 per person",
+        "conf":  "medium"
+    },
+    {
+        "id":  "innoplay",
+        "tier":  "$$",
+        "reason":  "Drop-in is $20.95 for 1 hour, $29.95 for 2 hours",
+        "conf":  "high"
+    },
+    {
+        "id":  "junglejacs",
+        "tier":  "$$",
+        "reason":  "Child admission is $21.99 plus GST",
+        "conf":  "high"
+    },
+    {
+        "id":  "kidtropolis",
+        "tier":  "$$",
+        "reason":  "Published drop-in $16-18 per child",
+        "conf":  "medium"
+    },
+    {
+        "id":  "kwantlenoutdoorpool",
+        "tier":  "Free",
+        "reason":  "City of Surrey outdoor pool swimming is free",
+        "conf":  "high"
+    },
+    {
+        "id":  "londonfarm",
+        "tier":  "Free",
+        "reason":  "Park and gardens free",
+        "conf":  "medium"
+    },
+    {
+        "id":  "mennoniteheritagemuseum",
+        "tier":  "Free",
+        "reason":  "Pay-what-you-can donation entry",
+        "conf":  "medium"
+    },
+    {
+        "id":  "monovamuseumofnorthvanco",
+        "tier":  "$$",
+        "reason":  "Adult $15, youth $10, family $38",
+        "conf":  "high"
+    },
+    {
+        "id":  "museumofarchaeologyethno",
+        "tier":  "Free",
+        "reason":  "SFU states entry is always free",
+        "conf":  "high"
+    },
+    {
+        "id":  "museumofvancouver",
+        "tier":  "$$",
+        "reason":  "Adult $24, kids 12 and under free",
+        "conf":  "high"
+    },
+    {
+        "id":  "nikkeinationalmuseumcult",
+        "tier":  "Free",
+        "reason":  "Donation-based admission per listings",
+        "conf":  "medium"
+    },
+    {
+        "id":  "olympicexperienceatrichm",
+        "tier":  "$$",
+        "reason":  "Kids 6-12 $11 and adults $17 per published rates",
+        "conf":  "medium"
+    },
+    {
+        "id":  "pacificmuseumofearth",
+        "tier":  "Free",
+        "reason":  "Admission is by donation",
+        "conf":  "high"
+    },
+    {
+        "id":  "peteyspumpkinpatch",
+        "tier":  "$$",
+        "reason":  "$17 per person admission",
+        "conf":  "high"
+    },
+    {
+        "id":  "pittmeadowsmuseumgeneral",
+        "tier":  "Free",
+        "reason":  "Museum entry is by donation",
+        "conf":  "medium"
+    },
+    {
+        "id":  "playabbylangley",
+        "tier":  "$$",
+        "reason":  "child day pass $17",
+        "conf":  "high"
+    },
+    {
+        "id":  "pomoarts",
+        "tier":  "Free",
+        "reason":  "Gallery admission is free per listing",
+        "conf":  "medium"
+    },
+    {
+        "id":  "pomomuseum",
+        "tier":  "Free",
+        "reason":  "Entry by donation",
+        "conf":  "high"
+    },
+    {
+        "id":  "richmondnaturehouse",
+        "tier":  "Free",
+        "reason":  "Nature House entry is by donation",
+        "conf":  "medium"
+    },
+    {
+        "id":  "rondrisofarmsgeneralstor",
+        "tier":  "$$",
+        "reason":  "Patch entry plus wagon ride is $12 per person in season",
+        "conf":  "medium"
+    },
+    {
+        "id":  "scienceworld",
+        "tier":  "$$$",
+        "reason":  "Child ticket $25.50, adult $37.50",
+        "conf":  "high"
+    },
+    {
+        "id":  "southlandsheritagefarm",
+        "tier":  "$$",
+        "reason":  "$15 per person during October Pumpkin Fest",
+        "conf":  "medium"
+    },
+    {
+        "id":  "stevestontram",
+        "tier":  "Free",
+        "reason":  "Admission is free",
+        "conf":  "medium"
+    },
+    {
+        "id":  "thereachgallerymuseum",
+        "tier":  "Free",
+        "reason":  "Donation-based admission per listings",
+        "conf":  "medium"
+    },
+    {
+        "id":  "urbansafarirescuesociety",
+        "tier":  "$$",
+        "reason":  "Admission is $10 child, $15 adult",
+        "conf":  "high"
+    },
+    {
+        "id":  "vancouvermaritimemuseum",
+        "tier":  "$$",
+        "reason":  "Adult $22, youth $17.50 plus GST",
+        "conf":  "medium"
+    },
+    {
+        "id":  "vancouverpolicemuseumarc",
+        "tier":  "$$",
+        "reason":  "Adult $14, youth $11",
+        "conf":  "high"
+    }
+]

@@ -1,0 +1,236 @@
+﻿[
+    {
+        "id":  "abbotsfordrecreationcent",
+        "name":  "Abbotsford Recreation Centre",
+        "area":  "Abbotsford",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Recreation centre with a pool and programs for kids"
+    },
+    {
+        "id":  "castlefunpark",
+        "name":  "Castle Fun Park",
+        "area":  "Abbotsford",
+        "price":  "$$$",
+        "priceEst":  false,
+        "env":  "both",
+        "summary":  "Family fun park with mini golf, go-karts and an arcade"
+    },
+    {
+        "id":  "cheerfulchatterplaycafe",
+        "name":  "Cheerful Chatter Play Cafe",
+        "area":  "Abbotsford",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Indoor play cafe"
+    },
+    {
+        "id":  "exitabbotsford",
+        "name":  "Exit Abbotsford",
+        "area":  "Abbotsford",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Escape room and games venue, for ages 6 and up"
+    },
+    {
+        "id":  "maanfarms",
+        "name":  "Maan Farms",
+        "area":  "Abbotsford",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Family farm with animals, mazes and u-pick"
+    },
+    {
+        "id":  "matsquirecreationcentre",
+        "name":  "Matsqui Recreation Centre",
+        "area":  "Abbotsford",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Recreation centre with a pool and programs for kids"
+    },
+    {
+        "id":  "mennoniteheritagemuseum",
+        "name":  "Mennonite Heritage Museum",
+        "area":  "Abbotsford",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "playabbyabbotsford",
+        "name":  "Play Abby Abbotsford",
+        "area":  "Abbotsford",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Indoor playground"
+    },
+    {
+        "id":  "singletreewinery",
+        "name":  "Singletree Winery",
+        "area":  "Abbotsford",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Family-owned winery with a child-friendly picnic lawn among the vines"
+    },
+    {
+        "id":  "tavesestatecidery",
+        "name":  "Taves Estate Cidery",
+        "area":  "Abbotsford",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Apple farm cidery with goats and a pumpkin garden"
+    },
+    {
+        "id":  "thereachgallerymuseum",
+        "name":  "The Reach Gallery Museum",
+        "area":  "Abbotsford",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Art gallery and museum"
+    },
+    {
+        "id":  "bonsorrecreationcomplex",
+        "name":  "Bonsor Recreation Complex",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "both",
+        "summary":  "Recreation centre with a playground and sports fields"
+    },
+    {
+        "id":  "burnabycentralrailway",
+        "name":  "Burnaby Central Railway",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Miniature railway with real mini steam trains, in Central Park (weekends, spring to fall)"
+    },
+    {
+        "id":  "christinesinclaircommuni",
+        "name":  "Christine Sinclair Community Centre",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "clawzonearcade",
+        "name":  "Clawzone Arcade",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Arcade and claw machines"
+    },
+    {
+        "id":  "confederationcommunityce",
+        "name":  "Confederation Community Centre",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "edmondscommunitycentre",
+        "name":  "Edmonds Community Centre",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "kensingtoncomplex",
+        "name":  "Kensington Complex",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Arena with public skating sessions"
+    },
+    {
+        "id":  "kensingtonparkoutdoorpoo",
+        "name":  "Kensington Park Outdoor Pool",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Outdoor pool (summer season) with picnic tables"
+    },
+    {
+        "id":  "kidoodlesartstudio",
+        "name":  "Kidoodles Art Studio",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Art studio"
+    },
+    {
+        "id":  "museumofarchaeologyethno",
+        "name":  "Museum of Archaeology \u0026 Ethnology",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "nikkeinationalmuseumcult",
+        "name":  "Nikkei National Museum \u0026 Cultural Centre",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "shadboltcentreforthearts",
+        "name":  "Shadbolt Centre For The Arts",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Arts centre with shows and classes"
+    },
+    {
+        "id":  "temporarycameroncommunit",
+        "name":  "Temporary Cameron Community Centre",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "tumblecitycheergymnastic",
+        "name":  "Tumble City Cheer, Gymnastics, and Parkour",
+        "area":  "Burnaby",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Kids gym with gymnastics and parkour"
+    },
+    {
+        "id":  "wesburncommunitycentre",
+        "name":  "Wesburn Community Centre",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    }
+]

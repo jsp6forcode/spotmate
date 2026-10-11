@@ -1,0 +1,210 @@
+{
+  "emmaleafarms": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": "https://www.emmaleafarms.com"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Picnic area at the farm market; Oct farm market Thu-Sun 9-5, pumpkin patch all October"},
+    "food": {"onsite": "snacks", "outside": null, "nearby": "Ice cream shop (Fri-Sun) and rotating food trucks on site in October"},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "ladnercommunitycentre": {
+    "admission": {"text": "Delta drop-in: residents child 2-9 and youth free, adult $7.25; non-residents child $5.60, youth $7.15, adult $8.75", "booking": null, "bookingNote": null, "source": "https://www.delta.ca/admission"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "ladnerleisurecentre": {
+    "admission": {"text": "Delta drop-in swim: residents child 2-9 and youth free, adult $7.25; non-residents child $5.60, youth $7.15, adult $8.75", "booking": null, "bookingNote": null, "source": "https://www.delta.ca/admission"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "northdeltarecreationcent": {
+    "admission": {"text": "Delta drop-in: residents child 2-9 and youth free, adult $7.25; non-residents child $5.60, youth $7.15, adult $8.75", "booking": null, "bookingNote": null, "source": "https://www.delta.ca/admission"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "owlrehab": {
+    "admission": {"text": "Tour entry by donation (per local news listings); weekend tours by online reservation, no walk-ins", "booking": "required", "bookingNote": "Reserve online; walk-ins not accepted", "source": "http://owlrehab.org/"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Outdoor tour, rain or shine"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "southdeltarecreationcent": {
+    "admission": {"text": "Delta drop-in: residents child 2-9 and youth free, adult $7.25; non-residents child $5.60, youth $7.15, adult $8.75", "booking": null, "bookingNote": null, "source": "https://www.delta.ca/admission"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "sungodrecreationcentre": {
+    "admission": {"text": "Delta drop-in swim: residents child 2-9 and youth free, adult $7.25; non-residents child $5.60, youth $7.15, adult $8.75", "booking": null, "bookingNote": null, "source": "https://www.delta.ca/admission"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "westhamislandherbfarm": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Listings say open daily 9-5 May to October with farm animals; not confirmed on an official page"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "ladneroutdoorpool": {
+    "admission": {"text": "Delta drop-in: residents child 2-9 and youth free, adult $7.25; non-residents child $5.60, youth $7.15, adult $8.75 (general Delta rates, pool-specific rate not confirmed)", "booking": null, "bookingNote": null, "source": "https://www.delta.ca/admission"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "vag": {
+    "admission": {"text": "Adults $29 BC residents, $35 non-BC; ages 18 and under free; free first Friday of month 4-8pm", "booking": "recommended", "bookingNote": "Reserve tickets online", "source": "https://www.vanartgallery.bc.ca/visit"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Street-level access; free lockers with admission; wheelchairs on request"},
+    "food": {"onsite": "cafe", "outside": null, "nearby": "1931 Gallery Bistro in the gallery"},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "high"
+  },
+  "scienceworld": {
+    "admission": {"text": "Adult $37.50, youth 13-18 $30.50, child 3-12 $25.50, 0-2 free", "booking": "recommended", "bookingNote": "Reserve tickets online", "source": "https://www.scienceworld.ca/your-visit/"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Allow about 2 hours"},
+    "food": {"onsite": "cafe", "outside": null, "nearby": "Triple O's closed for renovation through October; Snack Lab open instead"},
+    "priceFix": {"tier": "$$$", "reason": "Child ticket $25.50, adult $37.50"},
+    "checked": "2026-10-03",
+    "confidence": "high"
+  },
+  "playland": {
+    "admission": {"text": "2026 season ended; per a listing 2026 passes were Fun Pass $37.80 online / $42 gate, Thrill Pass $50.40 online / $56 gate, ages 3 and under free", "booking": null, "bookingNote": "Closed for the season, reopens 2027; Fright Nights runs this fall", "source": "https://www.pne.ca/playland/"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Playland itself is closed until 2027"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "academyfarms": {
+    "admission": {"text": "Wagon tour: ages 3-12 $15, 13+ $18, under 3 free; includes buffalo burger BBQ lunch and Calf Alley stop", "booking": "recommended", "bookingNote": "Book a tour online; up to 30 per wagon, arrive 10 min early", "source": "https://academyfarms.org/farm-tours/"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Tours run daily year-round, about 30 min wagon ride; wear closed-toe shoes"},
+    "food": {"onsite": "cafe", "outside": null, "nearby": "BBQ lunch served in the farm market"},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "high"
+  },
+  "activate": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Located at Unit 630, 19705 Fraser Hwy (Willowbrook)"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "alandersonmemorialpool": {
+    "admission": {"text": "City of Langley drop-in: child/youth 4-18 $3, adult $6, family (up to 5) $12, under 4 free", "booking": null, "bookingNote": null, "source": "https://www.langleycity.ca/node/1674"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "high"
+  },
+  "aldergrovecommunitycentr": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "aldor": {
+    "admission": {"text": null, "booking": "recommended", "bookingNote": "Fall pumpkin patch Sept 19-Oct 31, daily 9-6; buy tickets online ahead, 3 and up need a ticket", "source": "https://aldoracresfamilyfarm.ca/"},
+    "amenities": {"stroller": "yes", "changing": null, "nursing": null, "washrooms": true, "stairs": null, "note": "Strollers welcome on the 80-acre farm; covered areas; no dogs at pumpkin patch"},
+    "food": {"onsite": "snacks", "outside": null, "nearby": "Snack area with food on site"},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "brydonlagoon": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "canadianmuseumofflight": {
+    "admission": {"text": "Per a listing: adults $14, seniors and youth $10, under 6 free, family $35", "booking": "recommended", "bookingNote": "Listing says pre-booked time slots by phone 604-532-0035", "source": "https://vancouversbestplaces.com/metro-vancouver/langley/canadian-museum-flight-langley/"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": {"tier": "$$", "reason": "Adult $14, youth $10 per a third-party listing (unconfirmed on official site)"},
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "chuckecheese": {
+    "admission": {"text": "Free entry; games, Fun Pass and food extra", "booking": "none", "bookingNote": null, "source": "https://www.chuckecheese.com/langley-bc/experience"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Toddler rides; kid check stamps at entry and exit"},
+    "food": {"onsite": "cafe", "outside": null, "nearby": "Pizza served on site"},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "high"
+  },
+  "douglasrecreationcentre": {
+    "admission": {"text": "City of Langley drop-in: child/youth 4-18 $3, adult $6, family (up to 5) $12, under 4 free", "booking": null, "bookingNote": null, "source": "https://www.langleycity.ca/node/1674"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "high"
+  },
+  "fasttrackindoorkartingpl": {
+    "admission": {"text": "PlayZone: under 1 free, ages 1-5 $8.99, 6-12 $14.99, supervising adult free; kart races from $28.95", "booking": null, "bookingNote": null, "source": "https://www.fasttrackkarting.ca"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "PlayZone open 10am-8pm daily; junior karts 42-60 inches"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": {"tier": "$$", "reason": "PlayZone $8.99-$14.99 per child, karting $28.95 per race"},
+    "checked": "2026-10-03",
+    "confidence": "high"
+  },
+  "fortlangleynationalhisto": {
+    "admission": {"text": "Adults $10, seniors $8.50, youth 6-17 free", "booking": null, "bookingNote": null, "source": "https://parks.canada.ca/lhn-nhs/bc/langley/visit/tarifs-fees"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "high"
+  },
+  "georgeprestonrecreationc": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "gobananas": {
+    "admission": {"text": "Children $10, adults $5, 2 and under free; socks required", "booking": "none", "bookingNote": null, "source": "https://www.gobananaslangley.com"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Closed Wednesdays; Sat 10:30-6, other days 10:30-3:30"},
+    "food": {"onsite": "snacks", "outside": null, "nearby": "Across from Willowbrook Mall"},
+    "priceFix": {"tier": "$$", "reason": "Child admission is $10"},
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "gvmezosoic": {
+    "admission": {"text": "Included with Greater Vancouver Zoo admission (zoo listed around $62 per person per the zoo's own news post); daily 9:30-5:30", "booking": null, "bookingNote": null, "source": "https://gvzoo.com/news/journey-back-in-time"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Has picnic area and dinosaur fossil dig"},
+    "food": {"onsite": "snacks", "outside": null, "nearby": "Donut concession stand at the dinosaur area"},
+    "priceFix": {"tier": "$$$", "reason": "Dinosaur park is included with zoo admission, which is well over $25"},
+    "checked": "2026-10-03",
+    "confidence": "low"
+  }
+}

@@ -1,0 +1,236 @@
+﻿[
+    {
+        "id":  "willingdoncommunitycentr",
+        "name":  "Willingdon Community Centre",
+        "area":  "Burnaby",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "both",
+        "summary":  "Recreation centre with a playground, a pool and sports fields"
+    },
+    {
+        "id":  "bobchankentfamilyymca",
+        "name":  "Bob Chan-Kent Family YMCA",
+        "area":  "Chilliwack",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "YMCA with a pool and programs for kids"
+    },
+    {
+        "id":  "cheamleisurecentre",
+        "name":  "Cheam Leisure Centre",
+        "area":  "Chilliwack",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Recreation centre with a pool and programs for kids"
+    },
+    {
+        "id":  "chilliwacklandingleisure",
+        "name":  "Chilliwack Landing Leisure Centre",
+        "area":  "Chilliwack",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Recreation centre with a pool and programs for kids"
+    },
+    {
+        "id":  "chilliwackmuseum",
+        "name":  "Chilliwack Museum",
+        "area":  "Chilliwack",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "dickensbritishmuseum",
+        "name":  "Dickens British Museum",
+        "area":  "Chilliwack",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Museum and sweet shop"
+    },
+    {
+        "id":  "greendaleacreschilliwack",
+        "name":  "Greendale Acres/Chilliwack Corn Maze",
+        "area":  "Chilliwack",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Corn maze and farm in the fall"
+    },
+    {
+        "id":  "peteyspumpkinpatch",
+        "name":  "Petey\u0027s Pumpkin Patch",
+        "area":  "Chilliwack",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Pumpkin patch in the fall"
+    },
+    {
+        "id":  "playabbychilliwack",
+        "name":  "Play Abby Chilliwack",
+        "area":  "Chilliwack",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Indoor playground"
+    },
+    {
+        "id":  "serenestayplaycafe",
+        "name":  "Serene Stay \u0026 Play Cafe",
+        "area":  "Chilliwack",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Indoor play cafe"
+    },
+    {
+        "id":  "cipherxcoquitlamescapero",
+        "name":  "CipherX Coquitlam | Escape Room \u0026 VR Lounge",
+        "area":  "Coquitlam",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Escape rooms and VR games"
+    },
+    {
+        "id":  "eagleridgepoolgroundsand",
+        "name":  "Eagle Ridge Pool Grounds and Park",
+        "area":  "Coquitlam",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Outdoor pool (summer season) with a playground and washrooms"
+    },
+    {
+        "id":  "havenmovementcentre",
+        "name":  "Haven Movement Centre",
+        "area":  "Coquitlam",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Kids gym with gymnastics and parkour"
+    },
+    {
+        "id":  "mellowclaystudio",
+        "name":  "Mellow Clay Studio",
+        "area":  "Coquitlam",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Paint-your-own pottery studio"
+    },
+    {
+        "id":  "mundyparkpool",
+        "name":  "Mundy Park Pool",
+        "area":  "Coquitlam",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Swimming pool"
+    },
+    {
+        "id":  "ninjatag",
+        "name":  "Ninja Tag",
+        "area":  "Coquitlam",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Kids gym with gymnastics and parkour"
+    },
+    {
+        "id":  "pinetreecommunitycentre",
+        "name":  "Pinetree Community Centre",
+        "area":  "Coquitlam",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "placedesarts",
+        "name":  "Place des Arts",
+        "area":  "Coquitlam",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Arts centre with shows and classes"
+    },
+    {
+        "id":  "poiriersportleisurecompl",
+        "name":  "Poirier Sport \u0026 Leisure Complex",
+        "area":  "Coquitlam",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Sport and leisure complex with ice rinks, a pool and a library"
+    },
+    {
+        "id":  "smilingcreekactivitycent",
+        "name":  "Smiling Creek Activity Centre",
+        "area":  "Coquitlam",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "summitcommunitycentre",
+        "name":  "Summit Community Centre",
+        "area":  "Coquitlam",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "towncentreparkcommunityc",
+        "name":  "Town Centre Park Community Centre",
+        "area":  "Coquitlam",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "sumodinocoquitlam",
+        "name":  "Sumo Dino Coquitlam",
+        "area":  "Coquitlam (Coquitlam Centre)",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Indoor play centre at Coquitlam Centre"
+    },
+    {
+        "id":  "crashcrawlys",
+        "name":  "Crash Crawly’s",
+        "area":  "Coquitlam (Maillardville)",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Big indoor playground for kids"
+    },
+    {
+        "id":  "cipherxsurreydeltaescape",
+        "name":  "CipherX Surrey Delta",
+        "area":  "Delta",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Escape rooms and VR games"
+    },
+    {
+        "id":  "douglasjhusbanddiscovery",
+        "name":  "Douglas J. Husband Discovery Centre",
+        "area":  "Delta",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    }
+]

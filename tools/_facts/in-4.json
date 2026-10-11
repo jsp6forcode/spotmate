@@ -1,0 +1,236 @@
+﻿[
+    {
+        "id":  "greatervancouverzoo",
+        "name":  "Greater Vancouver Zoo",
+        "area":  "Langley",
+        "price":  "$$$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Zoo with animals to see, picnic tables and washrooms"
+    },
+    {
+        "id":  "langleysportsplex",
+        "name":  "Langley Sportsplex",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "both",
+        "summary":  "Recreation centre with a playground and a pool"
+    },
+    {
+        "id":  "laughingstockranch",
+        "name":  "Laughingstock Ranch",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Farm animals to pet, pony rides and a bouncy castle at a family ranch, popular for birthday parties"
+    },
+    {
+        "id":  "nationalhockeytrainingce",
+        "name":  "National Hockey Training Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Ice rink with public skating"
+    },
+    {
+        "id":  "playabbylangley",
+        "name":  "Play Abby Langley",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Indoor play centre for kids"
+    },
+    {
+        "id":  "projectplayactivitycentr",
+        "name":  "Project Play Activity Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Indoor play centre for kids"
+    },
+    {
+        "id":  "timmscommunitycentre",
+        "name":  "Timms Community Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "wcblairrecreationcentre",
+        "name":  "W.C. Blair Recreation Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "both",
+        "summary":  "Recreation centre with a playground, a spray park and sports fields"
+    },
+    {
+        "id":  "walnutgrovecommunitycent",
+        "name":  "Walnut Grove Community Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "albioncommunitycentreacc",
+        "name":  "Albion Community Centre",
+        "area":  "Maple Ridge",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "davidsonspoolpark",
+        "name":  "Davidson\u0027s Pool Park",
+        "area":  "Maple Ridge",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Swimming pool"
+    },
+    {
+        "id":  "laitypumpkinpatchnorth",
+        "name":  "Laity Pumpkin Patch (North)",
+        "area":  "Maple Ridge",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Pumpkin patch and farm play area for ages 0-6"
+    },
+    {
+        "id":  "mapleridgeleisurecentre",
+        "name":  "Maple Ridge Leisure Centre",
+        "area":  "Maple Ridge",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "mapleridgemuseumcommunit",
+        "name":  "Maple Ridge Museum \u0026 Community Archives",
+        "area":  "Maple Ridge",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "meadowsfamilyfarmltd",
+        "name":  "Meadows Family Farm Ltd.",
+        "area":  "Maple Ridge",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Family farm"
+    },
+    {
+        "id":  "mygymchildrensfitnesscen",
+        "name":  "My Gym Children\u0027s Fitness Centre",
+        "area":  "Maple Ridge",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Kids gym with gymnastics and parkour"
+    },
+    {
+        "id":  "theactartscentre",
+        "name":  "The ACT Arts Centre",
+        "area":  "Maple Ridge",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Arts centre with shows and classes"
+    },
+    {
+        "id":  "therockwallclimbinggym",
+        "name":  "The Rock Wall Climbing Gym",
+        "area":  "Maple Ridge",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Climbing gym"
+    },
+    {
+        "id":  "wildplaymr",
+        "name":  "WildPlay Maple Ridge",
+        "area":  "Maple Ridge",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Treetop ropes courses and ziplines, with a kids\u0027 course for younger climbers"
+    },
+    {
+        "id":  "braidstartstudiosgallery",
+        "name":  "Braid St Art Studios \u0026 Gallery",
+        "area":  "New Westminster",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Art studio"
+    },
+    {
+        "id":  "extremeairnw",
+        "name":  "Extreme Air Park",
+        "area":  "New Westminster",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Large indoor trampoline park with dodgeball, foam pits and climbing"
+    },
+    {
+        "id":  "fraserriverdiscoverycent",
+        "name":  "Fraser River Discovery Centre",
+        "area":  "New Westminster",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "irvinghouse",
+        "name":  "Irving House",
+        "area":  "New Westminster",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "queensboroughcommunityce",
+        "name":  "Queensborough Community Centre",
+        "area":  "New Westminster",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "rainbowplayland",
+        "name":  "Rainbow Playland",
+        "area":  "New Westminster",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Indoor play centre for kids"
+    },
+    {
+        "id":  "tamesew",
+        "name":  "təməsew̓txʷ Aquatic and Community Centre",
+        "area":  "New Westminster",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "New Westminster\u0027s aquatic centre with pools for kids"
+    }
+]

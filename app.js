@@ -139,8 +139,8 @@ const catOptions = view => PAGES[view] ? [...PAGES[view], ...(view !== 'eats' ? 
 // Eats에는 All이 없어요 (Food가 기본). 다른 페이지는 All부터
 const hasAll = view => view !== 'eats';
 const defaultCat = view => hasAll(view) ? 'all' : PAGES[view][0];
-// "Vancouver classic": 이미 많은 사람이 알고 좋아하는 곳. 데이터의 gem(평점 4.6+·리뷰 500+)과 검색량 상위(isClassic)를 합쳤어요
-const CLASSIC = { label: 'Vancouver classic', criteria: 'A local favourite that plenty of people already know and love: rated 4.6+ on Google from 500+ reviews, or one of the most searched places in BC.' };
+// "Vancouver classic": 이미 많은 사람이 알고 좋아하는 곳. 데이터의 gem(평점 4.6+·리뷰 300+)과 검색량 상위(isClassic)를 합쳤어요
+const CLASSIC = { label: 'Vancouver classic', criteria: 'A local favourite that plenty of people already know and love: rated 4.6+ on Google from 300+ reviews, or one of the most searched places in BC.' };
 // 🧸 Kids 필터: 아이 동반 장소(family: true, 놀이터·수영장·몰·농장 등)와 아이랑 가기 좋은 곳(kids: true)만 남겨요
 const KIDS_TAG = "Playgrounds, spray parks and pools built for kids, plus places Google marks as good for children or where Google reviews (4.0+ rating, 50+ reviews) say it's great for families.";
 const isVanClassic = s => !!s.gem || isClassic(s);
@@ -154,7 +154,7 @@ const openedLabel = s => `${MON[+s.opened.slice(5, 7) - 1]} ${s.opened.slice(0, 
 function pickOf(s) {
   const c = CATS[s.cat];
   if (isJustOpened(s)) return { label: JUST_OPENED.label, short: JUST_OPENED.short, heading: `New rising spot · opened ${openedLabel(s)}`, criteria: JUST_OPENED.criteria, source: s.openedSource };
-  if (s.gem) return { label: CLASSIC.label, short: 'Google 4.6+ · 500+ reviews', heading: "Why it's a Vancouver classic", criteria: CLASSIC.criteria };
+  if (s.gem) return { label: CLASSIC.label, short: 'Google 4.6+ · 300+ reviews', heading: "Why it's a Vancouver classic", criteria: CLASSIC.criteria };
   if (isClassic(s)) return { label: CLASSIC.label, short: 'Among the most searched', heading: "Why it's a Vancouver classic", criteria: CLASSIC.criteria };
   if (c.basis === 'reviews') return { label: 'Review pick', short: REVIEW_MIN[s.cat] || 'Google reviews', heading: "Why it's a review pick", criteria: c.criteria };
   if (s.family) return { label: 'Kid-friendly', short: 'Google 4.0+ · 50+ reviews', heading: "Why it's kid-friendly", criteria: KIDS_TAG };

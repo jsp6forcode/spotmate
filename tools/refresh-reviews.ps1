@@ -1,5 +1,5 @@
 ﻿# 월 1회 리뷰 기준 스팟 점검 (GitHub Actions에서 실행, 로컬에서도 실행 가능)
-# 대상: 히든젬(gem), Family pick(family), 먹거리(food), 디저트·카페(dessert)
+# 대상: 히든젬(gem), 아이 동반(family)
 # Places API로 영업 여부와 평점/리뷰 수 기준 충족 여부만 확인하고,
 # 결과는 data/review-status.json 에 "통과 못 한 스팟 id + 이유"만 기록해요.
 # (Google 약관상 평점·리뷰 수 값 자체는 저장하지 않아요)
@@ -14,15 +14,13 @@ if (-not $key -and (Test-Path (Join-Path $root '.env.local'))) {
 }
 if (-not $key) { throw 'GOOGLE_PLACES_API_KEY가 없어요.' }
 
-# 카테고리별 기준 (index.html의 안내 문구와 같아야 해요)
-# 새로 연 곳(opened: 'YYYY-MM')은 연 달부터 6개월 동안 "Just opened" 기준으로 보고, 그 뒤엔 원래 카테고리 기준을 넘어야 남아요
-$justOpened = { param($s) $s.opened -and (Get-Date) -lt ([datetime]::ParseExact("$($s.opened)-01", 'yyyy-MM-dd', $null)).AddMonths(7) }
+# 점검 기준 (app.js의 안내 문구와 같아야 해요). 두 가지만 봐요:
+#   gem    = 히든젬: 평점 4.6+ · 리뷰 300+ 못 넘으면 사이트에서 숨겨요
+#   family = 아이 동반: 평점 4.0+ · 리뷰 50+ 못 넘어도 숨기지 않고 lowFamily 에만 적어요
+# 모든 장소 공통: 폐업(영구·임시)이거나 Google 지도에서 사라졌으면 숨겨요
 $rules = @(
-  @{ name = 'just opened'; test = $justOpened; minRating = 4.9; minReviews = 30 },
-  @{ name = 'gem';    test = { param($s) $s.gem };             minRating = 4.6; minReviews = 500 },
-  @{ name = 'family'; test = { param($s) $s.family };          minRating = 4.0; minReviews = 50 },
-  @{ name = 'food';   test = { param($s) $s.cat -eq 'food' };  minRating = 4.0; minReviews = 300 },
-  @{ name = 'dessert'; test = { param($s) $s.cat -eq 'dessert' }; minRating = 4.5; minReviews = 300 }
+  @{ name = 'gem';    test = { param($s) $s.gem };    minRating = 4.6; minReviews = 300 },
+  @{ name = 'family'; test = { param($s) $s.family }; minRating = 4.0; minReviews = 50 }
 )
 
 $spots = (Get-Content (Join-Path $root 'data/spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots

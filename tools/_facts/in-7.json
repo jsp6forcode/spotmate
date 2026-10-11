@@ -1,0 +1,236 @@
+﻿[
+    {
+        "id":  "olympicexperienceatrichm",
+        "name":  "Olympic Experience at Richmond Olympic Oval",
+        "area":  "Richmond",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "papaworldkidsindoorplayg",
+        "name":  "PAPA WORLD KIDS INDOOR PLAYGROUND",
+        "area":  "Richmond",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Indoor play centre for kids"
+    },
+    {
+        "id":  "planetlazertag",
+        "name":  "Planet Lazer Tag",
+        "area":  "Richmond",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Laser tag arena"
+    },
+    {
+        "id":  "richmondnaturehouse",
+        "name":  "Richmond Nature House",
+        "area":  "Richmond",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "seaislandcommunitycentre",
+        "name":  "Sea Island Community Centre",
+        "area":  "Richmond",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "southarmoutdoorpool",
+        "name":  "South Arm Outdoor Pool",
+        "area":  "Richmond",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Outdoor pool (summer season) with a playground, picnic tables and washrooms"
+    },
+    {
+        "id":  "speedersrichmond",
+        "name":  "SPEEDERS Richmond",
+        "area":  "Richmond",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Go-kart track"
+    },
+    {
+        "id":  "stevestoncommunitycentre",
+        "name":  "Steveston Community Centre",
+        "area":  "Richmond",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "stevestontram",
+        "name":  "Steveston Tram",
+        "area":  "Richmond",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "sumodino",
+        "name":  "Sumo Dino",
+        "area":  "Richmond",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Indoor play centre at Lansdowne Centre"
+    },
+    {
+        "id":  "kidtropolis",
+        "name":  "The World of Kidtropolis",
+        "area":  "Richmond",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Indoor miniature city where kids play at being grown-ups: shops, a fire station, a clinic and more, made for ages 2-10"
+    },
+    {
+        "id":  "thompsoncommunitycentre",
+        "name":  "Thompson Community Centre",
+        "area":  "Richmond",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "both",
+        "summary":  "Recreation centre with a playground, a pool and sports fields"
+    },
+    {
+        "id":  "uufamilyfarm",
+        "name":  "UU Family Farm",
+        "area":  "Richmond",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Family farm"
+    },
+    {
+        "id":  "watermania",
+        "name":  "Watermania",
+        "area":  "Richmond",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Indoor aquatic centre with a wave pool and water slides"
+    },
+    {
+        "id":  "westcoastminiputt",
+        "name":  "West Coast Mini Putt",
+        "area":  "Richmond",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Indoor 18-hole mini golf with a glow-in-the-dark section"
+    },
+    {
+        "id":  "hillcrest",
+        "name":  "Hillcrest Aquatic Centre",
+        "area":  "Riley Park",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "both",
+        "summary":  "Indoor and outdoor pools next to Queen Elizabeth Park"
+    },
+    {
+        "id":  "vandusen",
+        "name":  "VanDusen Botanical Garden",
+        "area":  "Shaughnessy",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Large botanical garden that changes with every season"
+    },
+    {
+        "id":  "seatosky",
+        "name":  "Sea to Sky Gondola",
+        "area":  "Squamish",
+        "price":  "$$$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Gondola overlooking the Howe Sound fjord"
+    },
+    {
+        "id":  "aquarium",
+        "name":  "Vancouver Aquarium",
+        "area":  "Stanley Park",
+        "price":  "$$$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Aquarium inside Stanley Park"
+    },
+    {
+        "id":  "bridgeviewcommunitycentr",
+        "name":  "Bridgeview Community Centre",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "both",
+        "summary":  "Recreation centre with a playground, a spray park, a pool and sports fields"
+    },
+    {
+        "id":  "centralcity",
+        "name":  "Central City Fun Park",
+        "area":  "Surrey",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "both",
+        "summary":  "Family fun centre with arcade games and activities"
+    },
+    {
+        "id":  "claytoncommunitycentre",
+        "name":  "Clayton Community Centre",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "cloverdalearena",
+        "name":  "Cloverdale Arena",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Ice rink with public skating"
+    },
+    {
+        "id":  "cloverdalerecreationcent",
+        "name":  "Cloverdale Recreation Centre",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "cloverdalesporticecomple",
+        "name":  "Cloverdale Sport \u0026 Ice Complex",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Ice rink with public skating"
+    },
+    {
+        "id":  "coastalclimbingcentre",
+        "name":  "Coastal Climbing Centre",
+        "area":  "Surrey",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Climbing gym"
+    }
+]

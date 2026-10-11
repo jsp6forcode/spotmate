@@ -1,0 +1,210 @@
+{
+  "createitemporium": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "donchristianrecreationce": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": true, "nursing": null, "washrooms": true, "stairs": null, "note": "Baby change tables in washrooms; hosts preschool and childcare, listed hours Mon-Fri 9-2 only, so not a weekend drop-in spot"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "excellenticesurrey": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Triple-rink complex at 15000 54A Ave; public skate times/prices not published on homepage, call 604-576-0009"},
+    "food": {"onsite": "cafe", "outside": null, "nearby": "On Ice Grill on site"},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "fraserheightsrecreationc": {
+    "admission": {"text": "Drop-in $4 child/youth (2-18), $8 adult", "booking": "none", "bookingNote": "Free Recreation Passcard needed; some drop-ins need 72-hour signup", "source": "https://www.surrey.ca/parks-recreation/activities-registration/admissions-passes"},
+    "amenities": {"stroller": null, "changing": true, "nursing": null, "washrooms": true, "stairs": null, "note": "Universal changeroom plus baby change tables; level paved access from parking"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "fraservalleyheritagerail": {
+    "admission": {"text": "Train rides; prices only shown on online booking page (not retrieved)", "booking": "required", "bookingNote": "Tickets sold online only; 2026 weekend season ended Sept 27, Christmas Electric Express tickets from Oct 15", "source": "https://fvhrs.org"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "funcircleindoorplaygroun": {
+    "admission": {"text": "All-day pass: toddler (1-3) $7.49, child (3+) $11.49, under 1 and adults free", "booking": null, "bookingNote": null, "source": "https://www.funcircle.ca"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Address 102-15355 Fraser Hwy; prices from a third-party listing, not the site itself"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": {"tier": "$$", "reason": "Child all-day pass is $11.49"},
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "guildfordrecreationcentr": {
+    "admission": {"text": "Drop-in $4 child/youth (2-18), $8 adult; childminding $4 per child for 90 min", "booking": "none", "bookingNote": "Free Recreation Passcard needed; pool closed until Oct 20, 2026", "source": "https://www.surrey.ca/parks-recreation/activities-registration/admissions-passes"},
+    "amenities": {"stroller": null, "changing": true, "nursing": null, "washrooms": true, "stairs": null, "note": "Universal change rooms with baby change tables; ramps and accessible washrooms; pool closed Aug 31-Oct 19"},
+    "food": {"onsite": "cafe", "outside": null, "nearby": "Second-floor cafe, cash only"},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "hiknolldrivingrangeminig": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "18 holes with water features at 4955 192 St; listed open 9-6 daily (directory listing, unconfirmed)"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "kwantlenoutdoorpool": {
+    "admission": {"text": "Free public swim; summer season only (closed for the season now)", "booking": "none", "bookingNote": "Children must be accompanied in the water by a parent or guardian", "source": "https://www.surrey.ca/parks-recreation/recreation-facilities/kwantlen-outdoor-pool"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": true, "stairs": null, "note": "Change room facilities on site"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": {"tier": "Free", "reason": "City of Surrey outdoor pool swimming is free"},
+    "checked": "2026-10-03",
+    "confidence": "high"
+  },
+  "morganplaycenter": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Located at 101-15765 Croydon Dr, The Shops at Morgan Crossing; prices not found"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "newtonarena": {
+    "admission": {"text": "Public skate at regular drop-in rate: $4 child/youth, $8 adult; skate rental $3.75", "booking": "none", "bookingNote": "Free Recreation Passcard needed", "source": "https://www.surrey.ca/parks-recreation/recreation-programs/arena-programs"},
+    "amenities": {"stroller": "yes", "changing": true, "nursing": null, "washrooms": true, "stairs": null, "note": "Strollers allowed during open skate (helmets required); baby change table in womens lobby washroom; skate rental shop"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "newtonrecreationcentre": {
+    "admission": {"text": "Drop-in $4 child/youth (2-18), $8 adult", "booking": "none", "bookingNote": "Free Recreation Passcard needed", "source": "https://www.surrey.ca/parks-recreation/activities-registration/admissions-passes"},
+    "amenities": {"stroller": null, "changing": true, "nursing": null, "washrooms": true, "stairs": null, "note": "Wave pool, slides, tot pool; baby change tables in all three pool changerooms; outdoor playground; accessibility certified"},
+    "food": {"onsite": "cafe", "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "northsurreysporticecompl": {
+    "admission": {"text": "Public skate at regular drop-in rate: $4 child/youth, $8 adult; skate rental $3.75", "booking": "none", "bookingNote": "Free Recreation Passcard needed", "source": "https://www.surrey.ca/parks-recreation/recreation-programs/arena-programs"},
+    "amenities": {"stroller": "yes", "changing": true, "nursing": null, "washrooms": true, "stairs": null, "note": "Strollers allowed during open skate (helmets required); baby changerooms and universal washrooms"},
+    "food": {"onsite": null, "outside": null, "nearby": "On-site food service listed as currently closed"},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "planetlazer": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Could not confirm a Surrey location exists; only Kelowna branch surfaced"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "projectclimbingcloverdal": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Bouldering-only gym, about 8,000 sq ft, 119-17828 65A Ave; has an auto-belay wall; day pass prices not found"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "rondrisofarmsgeneralstor": {
+    "admission": {"text": "General store free; pumpkin patch entry $8 per person plus $4 wagon ride (patch open Sept 30-Oct 31)", "booking": "none", "bookingNote": null, "source": "https://vancouversbestplaces.com/surrey/rondriso-farms-pumpkin-patch/"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Farm animals in barn; patch hours weekdays 3-6pm, weekends 10am-6pm"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": {"tier": "$$", "reason": "Patch entry plus wagon ride is $12 per person in season"},
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "southsurreyarena": {
+    "admission": {"text": "Public skate at regular drop-in rate: $4 child/youth, $8 adult; skate rental $3.75", "booking": "none", "bookingNote": "Free Recreation Passcard needed", "source": "https://www.surrey.ca/parks-recreation/recreation-programs/arena-programs"},
+    "amenities": {"stroller": "yes", "changing": true, "nursing": null, "washrooms": true, "stairs": null, "note": "Strollers allowed during open skate (helmets required); universal washrooms with child change tables; skate shop"},
+    "food": {"onsite": "snacks", "outside": null, "nearby": "Food service listed on site"},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "southsurreyindoorpool": {
+    "admission": {"text": "Drop-in $4 child/youth (2-18), $8 adult", "booking": "none", "bookingNote": "Free Recreation Passcard needed; closed Sundays", "source": "https://www.surrey.ca/parks-recreation/activities-registration/admissions-passes"},
+    "amenities": {"stroller": null, "changing": true, "nursing": null, "washrooms": true, "stairs": null, "note": "Universal changerooms; children's pool, whirlpool, sauna; sensory kits at front desk"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "sullivanscommunityassoci": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Sullivan Community Hall at 6306 152 St (1932 heritage hall); rental details not confirmed"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "surreysportleisurecomple": {
+    "admission": {"text": "Drop-in $4 child/youth (2-18), $8 adult; childminding $4 per child (12 and under)", "booking": "none", "bookingNote": "Free Recreation Passcard needed; public swim needs no advance signup", "source": "https://www.surrey.ca/parks-recreation/activities-registration/admissions-passes"},
+    "amenities": {"stroller": null, "changing": true, "nursing": null, "washrooms": true, "stairs": null, "note": "Family change rooms; 50m pool, leisure pool, tots pool, 160 ft slide; hot tub closed at time of check"},
+    "food": {"onsite": "cafe", "outside": null, "nearby": "Booster Juice cafe on site"},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "high"
+  },
+  "tonglouiefamilyymca": {
+    "admission": {"text": "Membership needed for general access; non-member drop-in for kids playground about $10 per child", "booking": null, "bookingNote": null, "source": "https://www.ymcabc.ca/locations/tong-louie-ymca"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Pool, leisure pool, gym, Plus changerooms"},
+    "food": {"onsite": "cafe", "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "urbansafarirescuesociety": {
+    "admission": {"text": "Adults $15, children/seniors/students $10 (plus GST), under 3 free", "booking": "none", "bookingNote": "Advance booking not required; closed Tue-Wed", "source": "https://www.urbansafari.ca"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Open Mon, Thu-Sun 11am-4pm; 1395 176 St"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": {"tier": "$$", "reason": "Admission is $10 child, $15 adult"},
+    "checked": "2026-10-03",
+    "confidence": "high"
+  },
+  "wonderland": {
+    "admission": {"text": null, "booking": null, "bookingNote": null, "source": null},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Could not find any page confirming this play centre or its prices"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "low"
+  },
+  "moa": {
+    "admission": {"text": "Adults $26, youth 6-18 $13, 0-5 free; half price Thursday after 5pm", "booking": "none", "bookingNote": "Tickets sold in person only, not online", "source": "https://moa.ubc.ca/faq/how-much-is-museum-admission/"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "high"
+  },
+  "nitobe": {
+    "admission": {"text": "Adults $10, concession $8, family $25", "booking": "recommended", "bookingNote": "Tickets sold via the garden online shop; open Tue-Sun 10-4:30 until Oct 31, then 10-2", "source": "https://botanicalgarden.ubc.ca/nitobe-memorial-garden/"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": null},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": null,
+    "checked": "2026-10-03",
+    "confidence": "medium"
+  },
+  "beatybiodiversitymuseum": {
+    "admission": {"text": "Adults $18, children 6-18 $10, under 6 free; family pass $35 (1 adult + 2 kids) or $55 (2 adults + 4 kids)", "booking": "none", "bookingNote": "Walk-ins welcome; tickets also online", "source": "https://beatymuseum.ubc.ca/visit/admission/"},
+    "amenities": {"stroller": null, "changing": null, "nursing": null, "washrooms": null, "stairs": null, "note": "Children under 13 must be with an adult"},
+    "food": {"onsite": null, "outside": null, "nearby": null},
+    "priceFix": {"tier": "$$", "reason": "Adult $18, child $10"},
+    "checked": "2026-10-03",
+    "confidence": "high"
+  }
+}

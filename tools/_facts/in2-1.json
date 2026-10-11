@@ -1,0 +1,272 @@
+﻿[
+    {
+        "id":  "maanfarms",
+        "name":  "Maan Farms",
+        "area":  "Abbotsford",
+        "price":  "$$",
+        "env":  "outdoor",
+        "summary":  "Family farm with animals, mazes and u-pick",
+        "priorFound":  null,
+        "priorNote":  "Site lists open daily 9am-6pm"
+    },
+    {
+        "id":  "singletreewinery",
+        "name":  "Singletree Winery",
+        "area":  "Abbotsford",
+        "price":  "$$",
+        "env":  "outdoor",
+        "summary":  "Family-owned winery with a child-friendly picnic lawn among the vines",
+        "priorFound":  "No entry fee stated; walk-ins welcome, tastings can be reserved. Open Wed-Sun noon-5:30",
+        "priorNote":  "Picnic area described as child and pet friendly by Tourism Abbotsford"
+    },
+    {
+        "id":  "clawzonearcade",
+        "name":  "Clawzone Arcade",
+        "area":  "Burnaby",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Arcade and claw machines",
+        "priorFound":  null,
+        "priorNote":  "Could not find any Burnaby listing; existence unverified"
+    },
+    {
+        "id":  "confederationcommunityce",
+        "name":  "Confederation Community Centre",
+        "area":  "Burnaby",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "kensingtoncomplex",
+        "name":  "Kensington Complex",
+        "area":  "Burnaby",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Arena with public skating sessions",
+        "priorFound":  null,
+        "priorNote":  "Accessible washrooms and showers; skate rental shop; free parking"
+    },
+    {
+        "id":  "kensingtonparkoutdoorpoo",
+        "name":  "Kensington Park Outdoor Pool",
+        "area":  "Burnaby",
+        "price":  "$",
+        "env":  "outdoor",
+        "summary":  "Outdoor pool (summer season) with picnic tables",
+        "priorFound":  "Drop-in day pass: child 5-14 $3.70, youth $5.55, adult $7.40 (plus tax); kids 4 and under free at Loonie Swims",
+        "priorNote":  "City page says pool is open year round with heated change rooms; kids 7 and under need an adult within arm\u0027s reach"
+    },
+    {
+        "id":  "kidoodlesartstudio",
+        "name":  "Kidoodles Art Studio",
+        "area":  "Burnaby",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Art studio",
+        "priorFound":  null,
+        "priorNote":  "Could not find any listing; existence unverified"
+    },
+    {
+        "id":  "shadboltcentreforthearts",
+        "name":  "Shadbolt Centre For The Arts",
+        "area":  "Burnaby",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Arts centre with shows and classes",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "tumblecitycheergymnastic",
+        "name":  "Tumble City Cheer, Gymnastics, and Parkour",
+        "area":  "Burnaby",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Kids gym with gymnastics and parkour",
+        "priorFound":  null,
+        "priorNote":  "Listed as 7844 Edmonds St; offers classes, camps and drop-ins"
+    },
+    {
+        "id":  "wesburncommunitycentre",
+        "name":  "Wesburn Community Centre",
+        "area":  "Burnaby",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "willingdoncommunitycentr",
+        "name":  "Willingdon Community Centre",
+        "area":  "Burnaby",
+        "price":  "$",
+        "env":  "both",
+        "summary":  "Recreation centre with a playground, a pool and sports fields",
+        "priorFound":  null,
+        "priorNote":  "Burnaby page lists a wading pool outside in Willingdon Heights Park; no indoor pool mentioned. Drop-in fees not on page."
+    },
+    {
+        "id":  "dickensbritishmuseum",
+        "name":  "Dickens British Museum",
+        "area":  "Chilliwack",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Museum and sweet shop",
+        "priorFound":  null,
+        "priorNote":  "Could not verify current status: listing page shows Closed; an aggregator gave Tue-Sat 9-4. Verify before including."
+    },
+    {
+        "id":  "serenestayplaycafe",
+        "name":  "Serene Stay \u0026 Play Cafe",
+        "area":  "Chilliwack",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Indoor play cafe",
+        "priorFound":  "Day pass needed for games and billiards; coffee and food only has no game fee (amount not found)",
+        "priorNote":  "Tourism listing describes a board game and coffee shop at 107-7491 Vedder Rd, Sardis, not a kids play cafe; check kid suitability."
+    },
+    {
+        "id":  "havenmovementcentre",
+        "name":  "Haven Movement Centre",
+        "area":  "Coquitlam",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Kids gym with gymnastics and parkour",
+        "priorFound":  null,
+        "priorNote":  "Open gym sessions for ages 0-6 and 0-11 at 1564 Booth Ave; prices not published on site."
+    },
+    {
+        "id":  "mellowclaystudio",
+        "name":  "Mellow Clay Studio",
+        "area":  "Coquitlam",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Paint-your-own pottery studio",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "placedesarts",
+        "name":  "Place des Arts",
+        "area":  "Coquitlam",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Arts centre with shows and classes",
+        "priorFound":  null,
+        "priorNote":  "Arts centre at 1120 Brunette Ave; classes for kids 6 months-17. Show ticket prices not on homepage."
+    },
+    {
+        "id":  "smilingcreekactivitycent",
+        "name":  "Smiling Creek Activity Centre",
+        "area":  "Coquitlam",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  "Drop-in (ONE PASS rates, Apr 2026): child 0-12 $3.43, youth $5.10, adult $6.81",
+        "priorNote":  null
+    },
+    {
+        "id":  "towncentreparkcommunityc",
+        "name":  "Town Centre Park Community Centre",
+        "area":  "Coquitlam",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  "Drop-in (ONE PASS rates, Apr 2026): child 0-12 $3.43, youth $5.10, adult $6.81",
+        "priorNote":  null
+    },
+    {
+        "id":  "sumodinocoquitlam",
+        "name":  "Sumo Dino Coquitlam",
+        "area":  "Coquitlam (Coquitlam Centre)",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Indoor play centre at Coquitlam Centre",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "crashcrawlys",
+        "name":  "Crash Crawly’s",
+        "area":  "Coquitlam (Maillardville)",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Big indoor playground for kids",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "emmaleafarms",
+        "name":  "Emma Lea Farms",
+        "area":  "Delta",
+        "price":  "$",
+        "env":  "outdoor",
+        "summary":  "Family farm with picnic tables and washrooms",
+        "priorFound":  null,
+        "priorNote":  "Picnic area at the farm market; Oct farm market Thu-Sun 9-5, pumpkin patch all October"
+    },
+    {
+        "id":  "ladnercommunitycentre",
+        "name":  "Ladner Community Centre",
+        "area":  "Delta",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  "Delta drop-in: residents child 2-9 and youth free, adult $7.25; non-residents child $5.60, youth $7.15, adult $8.75",
+        "priorNote":  null
+    },
+    {
+        "id":  "northdeltarecreationcent",
+        "name":  "North Delta Recreation Centre",
+        "area":  "Delta",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  "Delta drop-in: residents child 2-9 and youth free, adult $7.25; non-residents child $5.60, youth $7.15, adult $8.75",
+        "priorNote":  null
+    },
+    {
+        "id":  "southdeltarecreationcent",
+        "name":  "South Delta Recreation Centre",
+        "area":  "Delta",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  "Delta drop-in: residents child 2-9 and youth free, adult $7.25; non-residents child $5.60, youth $7.15, adult $8.75",
+        "priorNote":  null
+    },
+    {
+        "id":  "westhamislandherbfarm",
+        "name":  "Westham Island Herb Farm",
+        "area":  "Delta",
+        "price":  "$",
+        "env":  "outdoor",
+        "summary":  "Family farm",
+        "priorFound":  null,
+        "priorNote":  "Listings say open daily 9-5 May to October with farm animals; not confirmed on an official page"
+    },
+    {
+        "id":  "ladneroutdoorpool",
+        "name":  "Ladner Outdoor Pool",
+        "area":  "Delta (Ladner)",
+        "price":  "$",
+        "env":  "outdoor",
+        "summary":  "Outdoor pool, open in summer (June to September)",
+        "priorFound":  "Delta drop-in: residents child 2-9 and youth free, adult $7.25; non-residents child $5.60, youth $7.15, adult $8.75 (general Delta rates, pool-specific rate not confirmed)",
+        "priorNote":  null
+    },
+    {
+        "id":  "activate",
+        "name":  "Activate Langley",
+        "area":  "Langley",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Interactive game rooms, fun for older kids and families, recommended for ages 6 and up",
+        "priorFound":  null,
+        "priorNote":  "Located at Unit 630, 19705 Fraser Hwy (Willowbrook)"
+    }
+]

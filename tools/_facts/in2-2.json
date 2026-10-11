@@ -1,0 +1,272 @@
+﻿[
+    {
+        "id":  "aldergrovecommunitycentr",
+        "name":  "Aldergrove Community Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "env":  "both",
+        "summary":  "Recreation centre with a spray park and a pool",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "brydonlagoon",
+        "name":  "Brydon Lagoon",
+        "area":  "Langley",
+        "price":  "$",
+        "env":  "outdoor",
+        "summary":  "Lagoon park with a walking loop and a playground",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "canadianmuseumofflight",
+        "name":  "Canadian Museum of Flight",
+        "area":  "Langley",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Museum",
+        "priorFound":  "Per a listing: adults $14, seniors and youth $10, under 6 free, family $35",
+        "priorNote":  null
+    },
+    {
+        "id":  "georgeprestonrecreationc",
+        "name":  "George Preston Recreation Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "gvmezosoic",
+        "name":  "Greater Vancouver Mesozoic Adventure",
+        "area":  "Langley",
+        "price":  "$$",
+        "env":  "outdoor",
+        "summary":  "Dinosaur-themed zoo and play park",
+        "priorFound":  "Included with Greater Vancouver Zoo admission (zoo listed around $62 per person per the zoo\u0027s own news post); daily 9:30-5:30",
+        "priorNote":  "Has picnic area and dinosaur fossil dig"
+    },
+    {
+        "id":  "laughingstockranch",
+        "name":  "Laughingstock Ranch",
+        "area":  "Langley",
+        "price":  "$",
+        "env":  "outdoor",
+        "summary":  "Farm animals to pet, pony rides and a bouncy castle at a family ranch, popular for birthday parties",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "nationalhockeytrainingce",
+        "name":  "National Hockey Training Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Ice rink with public skating",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "playabbylangley",
+        "name":  "Play Abby Langley",
+        "area":  "Langley",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Indoor play centre for kids",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "projectplayactivitycentr",
+        "name":  "Project Play Activity Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Indoor play centre for kids",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "timmscommunitycentre",
+        "name":  "Timms Community Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  "Drop-in: child $2.90, youth 13-18 $4.30, adult $5.80, senior $4.30 (Langley City rates)",
+        "priorNote":  null
+    },
+    {
+        "id":  "wcblairrecreationcentre",
+        "name":  "W.C. Blair Recreation Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "env":  "both",
+        "summary":  "Recreation centre with a playground, a spray park and sports fields",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "walnutgrovecommunitycent",
+        "name":  "Walnut Grove Community Centre",
+        "area":  "Langley",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "davidsonspoolpark",
+        "name":  "Davidson\u0027s Pool Park",
+        "area":  "Maple Ridge",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Swimming pool",
+        "priorFound":  null,
+        "priorNote":  "Reported as a natural river swimming spot (gates 8am-10pm), not a staffed indoor pool; no admission found"
+    },
+    {
+        "id":  "meadowsfamilyfarmltd",
+        "name":  "Meadows Family Farm Ltd.",
+        "area":  "Maple Ridge",
+        "price":  "$",
+        "env":  "outdoor",
+        "summary":  "Family farm",
+        "priorFound":  "Online tickets: kids 3+ $18, adults $16, plus GST",
+        "priorNote":  null
+    },
+    {
+        "id":  "mygymchildrensfitnesscen",
+        "name":  "My Gym Children\u0027s Fitness Centre",
+        "area":  "Maple Ridge",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Kids gym with gymnastics and parkour",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "theactartscentre",
+        "name":  "The ACT Arts Centre",
+        "area":  "Maple Ridge",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Arts centre with shows and classes",
+        "priorFound":  "Ticketed shows incl. family shows; price varies by show",
+        "priorNote":  null
+    },
+    {
+        "id":  "therockwallclimbinggym",
+        "name":  "The Rock Wall Climbing Gym",
+        "area":  "Maple Ridge",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Climbing gym",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "braidstartstudiosgallery",
+        "name":  "Braid St Art Studios \u0026 Gallery",
+        "area":  "New Westminster",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Art studio",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "extremeairnw",
+        "name":  "Extreme Air Park",
+        "area":  "New Westminster",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Large indoor trampoline park with dodgeball, foam pits and climbing",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "fraserriverdiscoverycent",
+        "name":  "Fraser River Discovery Centre",
+        "area":  "New Westminster",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Museum",
+        "priorFound":  "Adult $8, child 3-12 $5, senior/student $6, family $20, under 2 free (third-party listing)",
+        "priorNote":  null
+    },
+    {
+        "id":  "rainbowplayland",
+        "name":  "Rainbow Playland",
+        "area":  "New Westminster",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Indoor play centre for kids",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "hanababy",
+        "name":  "HANABaby Adventure World",
+        "area":  "New Westminster (Royal City Centre)",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Indoor playground on the second floor of Royal City Centre, best for ages 2-6",
+        "priorFound":  null,
+        "priorNote":  "Indoor play space for kids under 10 at #251-610 6th St, New Westminster; prices not found online"
+    },
+    {
+        "id":  "climbbase5",
+        "name":  "Climb Base5",
+        "area":  "North Vancouver",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Climbing gym",
+        "priorFound":  null,
+        "priorNote":  "Climb Base5 has a North Vancouver gym at 1485 Welch St #2; day pass prices not found"
+    },
+    {
+        "id":  "griffinbowl",
+        "name":  "Griffin Bowl",
+        "area":  "North Vancouver",
+        "price":  "$$",
+        "env":  "indoor",
+        "summary":  "Bowling",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "happyclaw",
+        "name":  "Happy Claw",
+        "area":  "North Vancouver",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Arcade and claw machines",
+        "priorFound":  null,
+        "priorNote":  null
+    },
+    {
+        "id":  "harryjeromecommunityrecr",
+        "name":  "Harry Jerome Community Recreation Centre",
+        "area":  "North Vancouver",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  null,
+        "priorNote":  "NVRC lists a Harry Jerome redevelopment updates section; check current status before visiting"
+    },
+    {
+        "id":  "johnbraithwaitecommunity",
+        "name":  "John Braithwaite Community Centre",
+        "area":  "North Vancouver",
+        "price":  "$",
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families",
+        "priorFound":  null,
+        "priorNote":  "Fitness centre and gym, no pool listed; drop-in swim rates do not apply"
+    }
+]

@@ -1,0 +1,647 @@
+﻿{
+    "pittmeadowsfamilyrecreat":  {
+                                     "admission":  {
+                                                       "text":  "Drop-in child (3-12) $2.74, youth/senior $3.70, adult $5.27, family $9.85 (rates from Apr 2023, tax extra)",
+                                                       "booking":  "none",
+                                                       "bookingNote":  null,
+                                                       "source":  "https://www.pittmeadows.ca/node/123"
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "checked":  "2026-10-03",
+                                     "confidence":  "medium"
+                                 },
+    "pittmeadowsmuseumgeneral":  {
+                                     "admission":  {
+                                                       "text":  "Admission by donation",
+                                                       "booking":  "none",
+                                                       "bookingNote":  null,
+                                                       "source":  "https://www.pittmeadowsmuseum.com/general-store-site"
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  {
+                                                      "tier":  "Free",
+                                                      "reason":  "Museum entry is by donation"
+                                                  },
+                                     "checked":  "2026-10-03",
+                                     "confidence":  "medium"
+                                 },
+    "southbonsoncommunitycent":  {
+                                     "admission":  {
+                                                       "text":  null,
+                                                       "booking":  null,
+                                                       "bookingNote":  null,
+                                                       "source":  null
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  "Has a fitness room; drop-in rates for this centre not found"
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "checked":  "2026-10-03",
+                                     "confidence":  "low"
+                                 },
+    "blakeburnlagoonspark":  {
+                                 "admission":  {
+                                                   "text":  null,
+                                                   "booking":  null,
+                                                   "bookingNote":  null,
+                                                   "source":  null
+                                               },
+                                 "amenities":  {
+                                                   "stroller":  null,
+                                                   "changing":  null,
+                                                   "nursing":  null,
+                                                   "washrooms":  false,
+                                                   "stairs":  null,
+                                                   "note":  "City notice says park washroom is closed; playground is at adjacent Blakeburn Park"
+                                               },
+                                 "food":  {
+                                              "onsite":  null,
+                                              "outside":  null,
+                                              "nearby":  null
+                                          },
+                                 "priceFix":  {
+                                                  "tier":  "Free",
+                                                  "reason":  "Public park, no admission"
+                                              },
+                                 "checked":  "2026-10-03",
+                                 "confidence":  "low"
+                             },
+    "gforcegym":  {
+                      "admission":  {
+                                        "text":  null,
+                                        "booking":  null,
+                                        "bookingNote":  null,
+                                        "source":  null
+                                    },
+                      "amenities":  {
+                                        "stroller":  null,
+                                        "changing":  null,
+                                        "nursing":  null,
+                                        "washrooms":  null,
+                                        "stairs":  null,
+                                        "note":  "Cheer, tumbling and ninja classes plus camps; no drop-in pricing found"
+                                    },
+                      "food":  {
+                                   "onsite":  null,
+                                   "outside":  null,
+                                   "nearby":  null
+                               },
+                      "priceFix":  null,
+                      "checked":  "2026-10-03",
+                      "confidence":  "low"
+                  },
+    "hydecreekrecreationcentr":  {
+                                     "admission":  {
+                                                       "text":  "Drop-in child (5-12) $3.49, youth (13-24) $5.24, adult $6.98, family $13.97; 4 and under free (from Jan 2026)",
+                                                       "booking":  "none",
+                                                       "bookingNote":  null,
+                                                       "source":  "https://www.portcoquitlam.ca/media/file/2026recreation-membership-optionsbrochurepdf"
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "checked":  "2026-10-03",
+                                     "confidence":  "high"
+                                 },
+    "junglejacs":  {
+                       "admission":  {
+                                         "text":  null,
+                                         "booking":  null,
+                                         "bookingNote":  null,
+                                         "source":  null
+                                     },
+                       "amenities":  {
+                                         "stroller":  null,
+                                         "changing":  null,
+                                         "nursing":  null,
+                                         "washrooms":  null,
+                                         "stairs":  null,
+                                         "note":  "Socks required for trampoline zone; ball pit, slides, bumper cars"
+                                     },
+                       "food":  {
+                                    "onsite":  "cafe",
+                                    "outside":  null,
+                                    "nearby":  null
+                                },
+                       "priceFix":  null,
+                       "checked":  "2026-10-03",
+                       "confidence":  "low"
+                   },
+    "ohmyland":  {
+                     "admission":  {
+                                       "text":  null,
+                                       "booking":  null,
+                                       "bookingNote":  null,
+                                       "source":  null
+                                   },
+                     "amenities":  {
+                                       "stroller":  null,
+                                       "changing":  null,
+                                       "nursing":  null,
+                                       "washrooms":  null,
+                                       "stairs":  null,
+                                       "note":  "Aimed at children under 10"
+                                   },
+                     "food":  {
+                                  "onsite":  null,
+                                  "outside":  null,
+                                  "nearby":  null
+                              },
+                     "priceFix":  null,
+                     "checked":  "2026-10-03",
+                     "confidence":  "low"
+                 },
+    "thehiveclimbingpoco":  {
+                                "admission":  {
+                                                  "text":  "Day pass adult $32, youth 6-17 $24, ages 0-5 $19; shoe rental $7",
+                                                  "booking":  "none",
+                                                  "bookingNote":  "Waiver required; under-18s need guardian-signed form",
+                                                  "source":  "https://www.hiveclimbing.com/pricing"
+                                              },
+                                "amenities":  {
+                                                  "stroller":  null,
+                                                  "changing":  null,
+                                                  "nursing":  null,
+                                                  "washrooms":  null,
+                                                  "stairs":  null,
+                                                  "note":  null
+                                              },
+                                "food":  {
+                                             "onsite":  null,
+                                             "outside":  null,
+                                             "nearby":  null
+                                         },
+                                "priceFix":  null,
+                                "checked":  "2026-10-03",
+                                "confidence":  "medium"
+                            },
+    "glenayrecommunitycentre":  {
+                                    "admission":  {
+                                                      "text":  null,
+                                                      "booking":  null,
+                                                      "bookingNote":  null,
+                                                      "source":  null
+                                                  },
+                                    "amenities":  {
+                                                      "stroller":  null,
+                                                      "changing":  null,
+                                                      "nursing":  null,
+                                                      "washrooms":  null,
+                                                      "stairs":  null,
+                                                      "note":  "Unstaffed; open only for scheduled registered programs, no drop-in"
+                                                  },
+                                    "food":  {
+                                                 "onsite":  null,
+                                                 "outside":  null,
+                                                 "nearby":  null
+                                             },
+                                    "priceFix":  null,
+                                    "checked":  "2026-10-03",
+                                    "confidence":  "medium"
+                                },
+    "inlettheatre":  {
+                         "admission":  {
+                                           "text":  null,
+                                           "booking":  null,
+                                           "bookingNote":  null,
+                                           "source":  null
+                                       },
+                         "amenities":  {
+                                           "stroller":  null,
+                                           "changing":  null,
+                                           "nursing":  null,
+                                           "washrooms":  null,
+                                           "stairs":  null,
+                                           "note":  "200-seat civic theatre, free onsite parking, wheelchair accessible; tickets sold by each show organizer"
+                                       },
+                         "food":  {
+                                      "onsite":  null,
+                                      "outside":  null,
+                                      "nearby":  null
+                                  },
+                         "priceFix":  null,
+                         "checked":  "2026-10-03",
+                         "confidence":  "medium"
+                     },
+    "littlebeans":  {
+                        "admission":  {
+                                          "text":  null,
+                                          "booking":  null,
+                                          "bookingNote":  null,
+                                          "source":  null
+                                      },
+                        "amenities":  {
+                                          "stroller":  null,
+                                          "changing":  null,
+                                          "nursing":  null,
+                                          "washrooms":  null,
+                                          "stairs":  null,
+                                          "note":  "Official site says the Port Moody location is permanently closed"
+                                      },
+                        "food":  {
+                                     "onsite":  null,
+                                     "outside":  null,
+                                     "nearby":  null
+                                 },
+                        "priceFix":  null,
+                        "checked":  "2026-10-03",
+                        "confidence":  "medium"
+                    },
+    "pomomuseum":  {
+                       "admission":  {
+                                         "text":  "Admission by donation, $5 suggested",
+                                         "booking":  "none",
+                                         "bookingNote":  null,
+                                         "source":  "https://pomo.museum/visit"
+                                     },
+                       "amenities":  {
+                                         "stroller":  null,
+                                         "changing":  null,
+                                         "nursing":  null,
+                                         "washrooms":  true,
+                                         "stairs":  null,
+                                         "note":  "Ramp into museum; train car not wheelchair accessible; washrooms not wheelchair accessible; free parking"
+                                     },
+                       "food":  {
+                                    "onsite":  null,
+                                    "outside":  null,
+                                    "nearby":  null
+                                },
+                       "priceFix":  {
+                                        "tier":  "Free",
+                                        "reason":  "Entry by donation"
+                                    },
+                       "checked":  "2026-10-03",
+                       "confidence":  "high"
+                   },
+    "pomoarts":  {
+                     "admission":  {
+                                       "text":  "Gallery free to visit",
+                                       "booking":  "none",
+                                       "bookingNote":  null,
+                                       "source":  "https://www.pomoarts.ca"
+                                   },
+                     "amenities":  {
+                                       "stroller":  null,
+                                       "changing":  null,
+                                       "nursing":  null,
+                                       "washrooms":  null,
+                                       "stairs":  null,
+                                       "note":  null
+                                   },
+                     "food":  {
+                                  "onsite":  null,
+                                  "outside":  null,
+                                  "nearby":  null
+                              },
+                     "priceFix":  {
+                                      "tier":  "Free",
+                                      "reason":  "Gallery admission free"
+                                  },
+                     "checked":  "2026-10-03",
+                     "confidence":  "low"
+                 },
+    "fundays365":  {
+                       "admission":  {
+                                         "text":  null,
+                                         "booking":  null,
+                                         "bookingNote":  null,
+                                         "source":  null
+                                     },
+                       "amenities":  {
+                                         "stroller":  null,
+                                         "changing":  null,
+                                         "nursing":  null,
+                                         "washrooms":  null,
+                                         "stairs":  null,
+                                         "note":  null
+                                     },
+                       "food":  {
+                                    "onsite":  null,
+                                    "outside":  null,
+                                    "nearby":  null
+                                },
+                       "priceFix":  null,
+                       "checked":  "2026-10-03",
+                       "confidence":  "low"
+                   },
+    "britanniashipyardsnation":  {
+                                     "admission":  {
+                                                       "text":  "Free entry to the site; 1-hour guided heritage tours $12 per person",
+                                                       "booking":  "none",
+                                                       "bookingNote":  null,
+                                                       "source":  "https://www.tourismvancouver.com/listings/britannia-shipyards-national-historic-site/53658/"
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  {
+                                                      "tier":  "Free",
+                                                      "reason":  "Site entry is free"
+                                                  },
+                                     "checked":  "2026-10-03",
+                                     "confidence":  "medium"
+                                 },
+    "citycentrecommunitycentr":  {
+                                     "admission":  {
+                                                       "text":  "Richmond pool drop-in child (2-12) $4.80, youth $6.35, adult $7.85 (city-wide pool rate, not specific to this centre)",
+                                                       "booking":  "none",
+                                                       "bookingNote":  null,
+                                                       "source":  "https://richmond.ca/__shared/assets/MCAL_Aquatic_and_Fitness_Schedule_Winter_202574979.pdf"
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "checked":  "2026-10-03",
+                                     "confidence":  "low"
+                                 },
+    "clipnclimb":  {
+                       "admission":  {
+                                         "text":  "Climb session: ages 5 and under $21, ages 6+ $25 (75 min incl. safety briefing); Tuesdays after 4pm $19.95",
+                                         "booking":  "none",
+                                         "bookingNote":  null,
+                                         "source":  "https://vancouversbestplaces.com/vancouver-climbing-centres/clip-n-climb-vancouver/"
+                                     },
+                       "amenities":  {
+                                         "stroller":  null,
+                                         "changing":  null,
+                                         "nursing":  null,
+                                         "washrooms":  null,
+                                         "stairs":  null,
+                                         "note":  null
+                                     },
+                       "food":  {
+                                    "onsite":  null,
+                                    "outside":  null,
+                                    "nearby":  null
+                                },
+                       "priceFix":  null,
+                       "checked":  "2026-10-03",
+                       "confidence":  "medium"
+                   },
+    "extremeairrmd":  {
+                          "admission":  {
+                                            "text":  "About $27 for 1 hour, $32 for 2 hours (third-party listing, not official)",
+                                            "booking":  "none",
+                                            "bookingNote":  "Walk-ins accepted per listing",
+                                            "source":  "https://www.poyst.com/business/extreme-air-park"
+                                        },
+                          "amenities":  {
+                                            "stroller":  null,
+                                            "changing":  null,
+                                            "nursing":  null,
+                                            "washrooms":  null,
+                                            "stairs":  null,
+                                            "note":  "Older article: kids 7 and under need an adult jumping"
+                                        },
+                          "food":  {
+                                       "onsite":  null,
+                                       "outside":  null,
+                                       "nearby":  null
+                                   },
+                          "priceFix":  null,
+                          "checked":  "2026-10-03",
+                          "confidence":  "low"
+                      },
+    "gameongo":  {
+                     "admission":  {
+                                       "text":  null,
+                                       "booking":  "recommended",
+                                       "bookingNote":  "Walk-ins welcome, online slots available",
+                                       "source":  "https://gameongo.ca"
+                                   },
+                     "amenities":  {
+                                       "stroller":  null,
+                                       "changing":  null,
+                                       "nursing":  null,
+                                       "washrooms":  null,
+                                       "stairs":  null,
+                                       "note":  "Interactive game rooms, 6-12 minute sessions; open 12pm-12am; more a gamified gym than an arcade"
+                                   },
+                     "food":  {
+                                  "onsite":  null,
+                                  "outside":  null,
+                                  "nearby":  null
+                              },
+                     "priceFix":  null,
+                     "checked":  "2026-10-03",
+                     "confidence":  "low"
+                 },
+    "gardencitylandscommunity":  {
+                                     "admission":  {
+                                                       "text":  null,
+                                                       "booking":  null,
+                                                       "bookingNote":  null,
+                                                       "source":  null
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  null,
+                                     "checked":  "2026-10-03",
+                                     "confidence":  "low"
+                                 },
+    "gulfofgeorgiacannerynati":  {
+                                     "admission":  {
+                                                       "text":  "Adults $14.75, seniors 65+ $12.50, youth 17 and under free (2026); free summer days via Canada Strong Pass",
+                                                       "booking":  "none",
+                                                       "bookingNote":  null,
+                                                       "source":  "https://gulfofgeorgiacannery.org/events/canada-strong-pass-free-admission-to-the-cannery-2/"
+                                                   },
+                                     "amenities":  {
+                                                       "stroller":  null,
+                                                       "changing":  null,
+                                                       "nursing":  null,
+                                                       "washrooms":  null,
+                                                       "stairs":  null,
+                                                       "note":  null
+                                                   },
+                                     "food":  {
+                                                  "onsite":  null,
+                                                  "outside":  null,
+                                                  "nearby":  null
+                                              },
+                                     "priceFix":  {
+                                                      "tier":  "$$",
+                                                      "reason":  "Adult admission $14.75 (kids free)"
+                                                  },
+                                     "checked":  "2026-10-03",
+                                     "confidence":  "medium"
+                                 },
+    "hamiltoncommunitycentre":  {
+                                    "admission":  {
+                                                      "text":  null,
+                                                      "booking":  null,
+                                                      "bookingNote":  null,
+                                                      "source":  null
+                                                  },
+                                    "amenities":  {
+                                                      "stroller":  null,
+                                                      "changing":  null,
+                                                      "nursing":  null,
+                                                      "washrooms":  null,
+                                                      "stairs":  null,
+                                                      "note":  null
+                                                  },
+                                    "food":  {
+                                                 "onsite":  null,
+                                                 "outside":  null,
+                                                 "nearby":  null
+                                             },
+                                    "priceFix":  null,
+                                    "checked":  "2026-10-03",
+                                    "confidence":  "low"
+                                },
+    "jollybubblerichmond":  {
+                                "admission":  {
+                                                  "text":  null,
+                                                  "booking":  null,
+                                                  "bookingNote":  null,
+                                                  "source":  null
+                                              },
+                                "amenities":  {
+                                                  "stroller":  null,
+                                                  "changing":  null,
+                                                  "nursing":  null,
+                                                  "washrooms":  null,
+                                                  "stairs":  null,
+                                                  "note":  null
+                                              },
+                                "food":  {
+                                             "onsite":  null,
+                                             "outside":  null,
+                                             "nearby":  null
+                                         },
+                                "priceFix":  null,
+                                "checked":  "2026-10-03",
+                                "confidence":  "low"
+                            },
+    "londonfarm":  {
+                       "admission":  {
+                                         "text":  "Park and gardens free, dawn to dusk; farmhouse open Fri-Sun 10am-4pm",
+                                         "booking":  "none",
+                                         "bookingNote":  null,
+                                         "source":  "https://richmond.ca/city-hall/news/2023/londonfarm03aug2023.htm"
+                                     },
+                       "amenities":  {
+                                         "stroller":  null,
+                                         "changing":  null,
+                                         "nursing":  null,
+                                         "washrooms":  true,
+                                         "stairs":  null,
+                                         "note":  "Gender-neutral public washrooms reported; benches and picnic areas"
+                                     },
+                       "food":  {
+                                    "onsite":  null,
+                                    "outside":  null,
+                                    "nearby":  null
+                                },
+                       "priceFix":  {
+                                        "tier":  "Free",
+                                        "reason":  "Park and gardens free"
+                                    },
+                       "checked":  "2026-10-03",
+                       "confidence":  "medium"
+                   },
+    "luckycatch":  {
+                       "admission":  {
+                                         "text":  null,
+                                         "booking":  null,
+                                         "bookingNote":  null,
+                                         "source":  null
+                                     },
+                       "amenities":  {
+                                         "stroller":  null,
+                                         "changing":  null,
+                                         "nursing":  null,
+                                         "washrooms":  null,
+                                         "stairs":  null,
+                                         "note":  "Could not verify a Richmond location; the Lucky Catch found online is a Maine lobster tour"
+                                     },
+                       "food":  {
+                                    "onsite":  null,
+                                    "outside":  null,
+                                    "nearby":  null
+                                },
+                       "priceFix":  null,
+                       "checked":  "2026-10-03",
+                       "confidence":  "low"
+                   }
+}

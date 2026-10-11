@@ -1,0 +1,173 @@
+﻿[
+    {
+        "id":  "templetonparkpool",
+        "name":  "Templeton Park Pool",
+        "area":  "Vancouver",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Swimming pool"
+    },
+    {
+        "id":  "troutlakecommunitycentre",
+        "name":  "Trout Lake Community Centre",
+        "area":  "Vancouver",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "ubcbotanicalgarden",
+        "name":  "UBC Botanical Garden",
+        "area":  "Vancouver",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Botanical garden on the UBC campus, with washrooms"
+    },
+    {
+        "id":  "vancouvermaritimemuseum",
+        "name":  "Vancouver Maritime Museum",
+        "area":  "Vancouver",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "vancouverpolicemuseumarc",
+        "name":  "Vancouver Police Museum \u0026 Archives",
+        "area":  "Vancouver",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "westendcommunitycentre",
+        "name":  "West End Community Centre",
+        "area":  "Vancouver",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "westpointgreycommunityce",
+        "name":  "West Point Grey Community Centre",
+        "area":  "Vancouver",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "cypress",
+        "name":  "Cypress Mountain",
+        "area":  "West Vancouver",
+        "price":  "Free–$$$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Ski hill in winter, with a city lookout on the way up"
+    },
+    {
+        "id":  "gleneaglescommunitycentr",
+        "name":  "Gleneagles Community Centre",
+        "area":  "West Vancouver",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "icearenawestvancouver",
+        "name":  "Ice Arena | West Vancouver",
+        "area":  "West Vancouver",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Ice rink with public skating"
+    },
+    {
+        "id":  "littlelegendsplayhouse",
+        "name":  "Little Legends Playhouse",
+        "area":  "West Vancouver",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Indoor play space for little kids"
+    },
+    {
+        "id":  "silkpurseartscentrewestv",
+        "name":  "Silk Purse Arts Centre | West Vancouver",
+        "area":  "West Vancouver",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Arts centre with shows and classes"
+    },
+    {
+        "id":  "westvancouveraquaticcent",
+        "name":  "West Vancouver Aquatic Centre",
+        "area":  "West Vancouver",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Swimming pool"
+    },
+    {
+        "id":  "westvancouvercommunityce",
+        "name":  "West Vancouver Community Centre",
+        "area":  "West Vancouver",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "castleroyale",
+        "name":  "Castle Royale",
+        "area":  "West Vancouver (Park Royal)",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Indoor playground at Park Royal with active play for kids of all ages"
+    },
+    {
+        "id":  "centennialarena",
+        "name":  "Centennial Arena",
+        "area":  "White Rock",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Ice rink with public skating"
+    },
+    {
+        "id":  "creartstudio",
+        "name":  "CREŌ ART STUDIO",
+        "area":  "White Rock",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Art studio"
+    },
+    {
+        "id":  "whiterockcommunitycentre",
+        "name":  "White Rock Community Centre",
+        "area":  "White Rock",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "whiterockmuseumarchives",
+        "name":  "White Rock Museum \u0026 Archives",
+        "area":  "White Rock",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    }
+]

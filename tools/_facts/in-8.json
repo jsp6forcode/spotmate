@@ -1,0 +1,236 @@
+﻿[
+    {
+        "id":  "createitemporium",
+        "name":  "Create-It Emporium",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Paint-your-own pottery studio"
+    },
+    {
+        "id":  "donchristianrecreationce",
+        "name":  "Don Christian Recreation Centre",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "excellenticesurrey",
+        "name":  "Excellent Ice Surrey",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Ice rink with public skating"
+    },
+    {
+        "id":  "fraserheightsrecreationc",
+        "name":  "Fraser Heights Recreation Centre",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "fraservalleyheritagerail",
+        "name":  "Fraser Valley Heritage Railway",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    },
+    {
+        "id":  "funcircleindoorplaygroun",
+        "name":  "Fun Circle - Indoor Playground and Activity Centre",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Indoor play centre for kids"
+    },
+    {
+        "id":  "guildfordrecreationcentr",
+        "name":  "Guildford Recreation Centre",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "both",
+        "summary":  "Recreation centre with a playground and a pool"
+    },
+    {
+        "id":  "hiknolldrivingrangeminig",
+        "name":  "Hi-Knoll Driving Range \u0026 Minigolf",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Mini golf"
+    },
+    {
+        "id":  "kwantlenoutdoorpool",
+        "name":  "Kwantlen Outdoor Pool",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Outdoor pool (summer season) with a playground, picnic tables and washrooms"
+    },
+    {
+        "id":  "morganplaycenter",
+        "name":  "Morgan Play Center",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Indoor play centre for kids"
+    },
+    {
+        "id":  "newtonarena",
+        "name":  "Newton Arena",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Ice rink with public skating"
+    },
+    {
+        "id":  "newtonrecreationcentre",
+        "name":  "Newton Recreation Centre",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Community centre with programs for kids and families"
+    },
+    {
+        "id":  "northsurreysporticecompl",
+        "name":  "North Surrey Sport \u0026 Ice Complex",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Ice rink with public skating"
+    },
+    {
+        "id":  "planetlazer",
+        "name":  "Planet Lazer",
+        "area":  "Surrey",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Laser tag arena"
+    },
+    {
+        "id":  "projectclimbingcloverdal",
+        "name":  "Project Climbing Cloverdale",
+        "area":  "Surrey",
+        "price":  "$$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Climbing gym"
+    },
+    {
+        "id":  "rondrisofarmsgeneralstor",
+        "name":  "Rondriso Farms General Store and Pumpkin Patch",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Family farm"
+    },
+    {
+        "id":  "southsurreyarena",
+        "name":  "South Surrey Arena",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Ice rink with public skating"
+    },
+    {
+        "id":  "southsurreyindoorpool",
+        "name":  "South Surrey Indoor Pool",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Swimming pool"
+    },
+    {
+        "id":  "sullivanscommunityassoci",
+        "name":  "Sullivan\u0027s Community Association",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Community hall with a room big enough for bouncy-castle parties, and a kitchen"
+    },
+    {
+        "id":  "surreysportleisurecomple",
+        "name":  "Surrey Sport \u0026 Leisure Complex - Aquatics",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Swimming pool"
+    },
+    {
+        "id":  "tonglouiefamilyymca",
+        "name":  "Tong Louie Family YMCA",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Family YMCA with a pool, hot tub and kids\u0027 programs"
+    },
+    {
+        "id":  "urbansafarirescuesociety",
+        "name":  "Urban Safari Rescue Society",
+        "area":  "Surrey",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "outdoor",
+        "summary":  "Reptile and animal rescue where kids can see and pet tortoises, snakes and bugs"
+    },
+    {
+        "id":  "wonderland",
+        "name":  "Wonderland Kids Indoor Play Center",
+        "area":  "Tsawwassen",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "Indoor playground at Tsawwassen Mills"
+    },
+    {
+        "id":  "moa",
+        "name":  "Museum of Anthropology",
+        "area":  "UBC",
+        "price":  "$$",
+        "priceEst":  false,
+        "env":  "indoor",
+        "summary":  "UBC museum famous for its Indigenous art and totem pole collection"
+    },
+    {
+        "id":  "nitobe",
+        "name":  "Nitobe Memorial Garden",
+        "area":  "UBC",
+        "price":  "$",
+        "priceEst":  false,
+        "env":  "outdoor",
+        "summary":  "Traditional Japanese garden on the UBC campus"
+    },
+    {
+        "id":  "beatybiodiversitymuseum",
+        "name":  "Beaty Biodiversity Museum",
+        "area":  "Vancouver",
+        "price":  "$",
+        "priceEst":  true,
+        "env":  "indoor",
+        "summary":  "Museum"
+    }
+]
