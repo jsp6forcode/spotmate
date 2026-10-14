@@ -93,30 +93,33 @@ Write-Host "아이 동반 장소 $(@($spots).Count)곳"
 $KP = @{}; foreach ($k in $KINDS) { if (-not $KP[$k[0]]) { $KP[$k[0]] = $k[2] } }
 $rows = foreach ($s in $spots) { foreach ($kk in $s.kinds) { $c = $s.psobject.Copy(); $c.kind = $kk; $c.kindPlural = $KP[$kk]; $c } }
 
+# 제목: 종류 이름에 이미 'Kid'가 들어 있으면 'for kids'를 또 붙이지 않아요 (Kids gyms for kids 같은 겹침 방지)
+function KindHead($kp, $where) { if ($kp -match '^kid' -or "$kp $where".Length -gt 38) { "$kp $where" } else { "$kp $where for kids" } }
+function Spots($n) { if ($n -eq 1) { '1 spot' } else { "$n spots" } }
 # 만들 페이지 정하기
-$pages = New-Object System.Collections.ArrayList
+$pages =New-Object System.Collections.ArrayList
 foreach ($g in $rows | Group-Object kind, city) {
   $f = $g.Group[0]
   if ($g.Count -ge $MinKindCity -and $f.kind -notin 'sight') {
-    [void]$pages.Add([pscustomobject]@{ slug = Slug "$($f.kindPlural) $($f.city)"; title = "$($f.kindPlural) in $($f.city) for kids"; h1 = "$($f.kindPlural) in $($f.city) for kids"; city = $f.city; kind = $f.kind; kindPlural = $f.kindPlural; spots = $g.Group })
+    [void]$pages.Add([pscustomobject]@{ slug = Slug "$($f.kindPlural) $($f.city)"; title = "$(KindHead $f.kindPlural "in $($f.city)"): $(Spots $g.Count)"; h1 = (KindHead $f.kindPlural "in $($f.city)"); city = $f.city; kind = $f.kind; kindPlural = $f.kindPlural; spots = $g.Group })
   }
 }
 foreach ($g in $spots | Group-Object city) {
-  if ($g.Count -ge $MinCity) { [void]$pages.Add([pscustomobject]@{ slug = Slug "places to take kids $($g.Name)"; title = "Places to take kids in $($g.Name): things to do with kids"; h1 = "Places to take kids in $($g.Name)"; city = $g.Name; kind = ''; kindPlural = ''; spots = $g.Group }) }
+  if ($g.Count -ge $MinCity) { [void]$pages.Add([pscustomobject]@{ slug = Slug "places to take kids $($g.Name)"; title = "Places to take kids in $($g.Name): $($g.Count) things to do"; h1 = "Places to take kids in $($g.Name)"; city = $g.Name; kind = ''; kindPlural = ''; spots = $g.Group }) }
 }
 # 硫뷀듃濡?諛댁퓼踰??꾩껜: "places to take kids" 寃?됱슜. ?μ냼媛 ?덈Т 留롮븘??異붿쿇(gem) ?꾩＜ 30怨노쭔 ?ｊ퀬 ?꾩떆蹂??덈궡濡??댁뼱以섏슂
 $gems = @($spots | Where-Object { $_.gem } | Select-Object -First 30)
 if ($gems.Count -ge 6) { [void]$pages.Add([pscustomobject]@{ slug = 'places-to-take-kids-metro-vancouver'; title = 'Places to take kids in Metro Vancouver: top picks by city'; h1 = 'Places to take kids in Metro Vancouver'; city = ''; kind = ''; kindPlural = ''; spots = $gems }) }
 foreach ($g in $rows | Group-Object kind) {
   $f = $g.Group[0]
-  if ($g.Count -ge $MinKind -and $f.kind -notin 'sight') { [void]$pages.Add([pscustomobject]@{ slug = Slug "$($f.kindPlural) metro vancouver"; title = "$($f.kindPlural) for kids in Metro Vancouver"; h1 = "$($f.kindPlural) for kids in Metro Vancouver"; city = ''; kind = $f.kind; kindPlural = $f.kindPlural; spots = $g.Group }) }
+  if ($g.Count -ge $MinKind -and $f.kind -notin 'sight') { [void]$pages.Add([pscustomobject]@{ slug = Slug "$($f.kindPlural) metro vancouver"; title = "$(KindHead $f.kindPlural "in Metro Vancouver"): $(Spots $g.Count)"; h1 = (KindHead $f.kindPlural "in Metro Vancouver"); city = ''; kind = $f.kind; kindPlural = $f.kindPlural; spots = $g.Group }) }
 }
 # "indoor places to take kids (near me)" 검색용: 놀이센터·도서관·박물관·수영장 등 실내(env=indoor) 장소를 도시별로 한데 묶어요
 foreach ($g in $spots | Where-Object { $_.env -eq 'indoor' } | Group-Object city) {
-  if ($g.Count -ge $MinIndoorCity) { [void]$pages.Add([pscustomobject]@{ slug = Slug "indoor places to take kids $($g.Name)"; title = "Indoor places to take kids in $($g.Name): rainy day ideas"; h1 = "Indoor places to take kids in $($g.Name)"; city = $g.Name; kind = ''; kindPlural = 'indoor places'; spots = $g.Group }) }
+  if ($g.Count -ge $MinIndoorCity) { [void]$pages.Add([pscustomobject]@{ slug = Slug "indoor places to take kids $($g.Name)"; title = "Indoor places to take kids in $($g.Name): $($g.Count) rainy day ideas"; h1 = "Indoor places to take kids in $($g.Name)"; city = $g.Name; kind = ''; kindPlural = 'indoor places'; spots = $g.Group }) }
 }
 $ind = @($spots | Where-Object { $_.env -eq 'indoor' })
-if ($ind.Count -ge $MinKind) { [void]$pages.Add([pscustomobject]@{ slug = 'indoor-places-to-take-kids-metro-vancouver'; title = 'Indoor places to take kids in Metro Vancouver: rainy day ideas'; h1 = 'Indoor places to take kids in Metro Vancouver'; city = ''; kind = ''; kindPlural = 'indoor places'; spots = $ind }) }
+if ($ind.Count -ge $MinKind) { [void]$pages.Add([pscustomobject]@{ slug = 'indoor-places-to-take-kids-metro-vancouver'; title = "Indoor places to take kids in Metro Vancouver: $($ind.Count) rainy day ideas"; h1 = 'Indoor places to take kids in Metro Vancouver'; city = ''; kind = ''; kindPlural = 'indoor places'; spots = $ind }) }
 # 정렬·묶기 순서는 Windows(내 PC)와 Linux(GitHub Actions)가 달라서, 같은 데이터로 빌드해도 링크 순서가 바뀌어 파일 1,000개가 매번 달라졌어요.
 # 문자열 비교는 항상 코드 값(Ordinal) 순서로 고정해요. key 는 겹치지 않는 문자열이어야 해요
 function SortOrd($items, [scriptblock]$key) {
@@ -206,7 +209,14 @@ foreach ($p in $pages) {
   if ($indoor -and -not $isIndoorPage) { $bits += "$indoor indoor" }
   $lead = if ($isIndoorPage) { "$(Plural $n 'indoor place') to take kids ${where}, good for rainy days: play centres, libraries, museums, pools and more for babies, toddlers and school-age kids." } else { "$(Plural $n 'kid-friendly place') ${where}: $what picked for families with babies, toddlers and school-age kids." }
   $lead += $(if ($bits) { " $($bits -join ', ')." } else { '' }) + ' Open any spot in Tiny Trips for hours, parking and what parents say.'
-  $desc = ($lead -replace '\s+', ' ')
+  # 검색 결과 설명문: 개수와 대표 장소 이름을 앞에, 무료·실내 수를 뒤에 (모든 페이지가 같은 문장으로 시작하지 않게)
+  # 길면(검색 결과에서 잘려요) 이름을 3개에서 2개, 1개로 줄여요
+  foreach ($k in 3, 2, 1) {
+    $top = NameList $list $k
+    $d1 = if ($isIndoorPage) { "Rainy day ideas: $n indoor places ${where} for kids, including $top." } elseif ($p.kindPlural) { "$n kid-friendly spots ${where}: $what, including $top." } else { "$n places to take kids ${where}, including $top." }
+    $desc = ($d1 + $(if ($bits) { " $($bits -join ', ')." } else { '' }) + ' Hours, parking and what parents say for each.') -replace '\s+', ' '
+    if ($desc.Length -le 165) { break }
+  }
   if ($desc.Length -gt 300) { $desc = $desc.Substring(0, 297) + '...' }
   $url = "$site/guides/$($p.slug)/"
   $items = for ($i = 0; $i -lt $n; $i++) { [ordered]@{ '@type' = 'ListItem'; position = $i + 1; name = $list[$i].name; url = "$site/spots/$($list[$i].id)/" } }
@@ -240,7 +250,7 @@ foreach ($p in $pages) {
   $body = "<nav class=""mb-2""><a class=""$L"" href=""/"">Tiny Trips</a> › <a class=""$L"" href=""/guides/"">Guides</a></nav><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">$(Esc $p.h1)</h1><p class=""mb-4"">$(Esc $lead)</p>" + $qaHtml + "<h2 class=""font-bold text-base mt-6 mb-2 text-slate-900 dark:text-slate-100"">All spots</h2>" + $sb.ToString() + $relHtml + "<p class=""mt-6 text-xs"">Details change, so check the official site before you go.</p>"
   $body = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">About this guide: $(Esc $p.h1)</summary><div class=""mt-3"">" + $body + "</div></details>"
   $html = $shell
-  $html = Sub $html '<title>[^<]*</title>' "<title>$(Esc $p.title) | Tiny Trips</title>"
+  $html = Sub $html '<title>[^<]*</title>' "<title>$(Esc $(if (($p.title.Length + 13) -le 68) { "$($p.title) | Tiny Trips" } else { $p.title }))</title>"
   $html = Sub $html '<link rel="canonical" href="[^"]*">' "<link rel=""canonical"" href=""$url"">"
   $html = Sub $html '<meta name="description" content="[^"]*">' "<meta name=""description"" content=""$(Esc $desc)"">"
   $html = Sub $html '<meta property="og:title" content="[^"]*">' "<meta property=""og:title"" content=""$(Esc $p.title)"">"
