@@ -113,7 +113,7 @@
                                            },
                   "bloedelconservatory":  {
                                               "admission":  {
-                                                                "text":  "Adult $9, youth 13-18 $6.30, child 5-12 $4.50, 4 and under free (2025 rates, plus tax); $1 off adult online",
+                                                                "text":  "Adult $9.50, senior $7.60, youth 13-18 $6.65, child 5-12 $4.75, 4 and under free (plus tax); $1 off adult online",
                                                                 "booking":  "recommended",
                                                                 "bookingNote":  "Tickets sold online via Showpass, small discount online",
                                                                 "source":  "https://vancouver.ca/parks-recreation-culture/Prices-and-memberships.aspx"
@@ -1473,7 +1473,7 @@
                                                          "source":  "https://www.scienceworld.ca/your-visit/"
                                                      },
                                        "amenities":  {
-                                                         "note":  "Allow about 2 hours"
+                                                         "note":  "Allow 2–3 hours"
                                                      },
                                        "food":  {
                                                     "onsite":  "cafe",

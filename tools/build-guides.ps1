@@ -60,8 +60,11 @@ function KindOf($s) {
 }
 # 도시: area 에 도시 이름이 들어 있으면 그 도시, 없으면(동네 이름) 밴쿠버. 긴 이름부터 맞춰요 (Port Coquitlam > Coquitlam, North Vancouver > Vancouver)
 $CITIES = 'Port Coquitlam', 'Port Moody', 'North Vancouver', 'West Vancouver', 'New Westminster', 'Pitt Meadows', 'Maple Ridge', 'White Rock', 'Abbotsford', 'Chilliwack', 'Coquitlam', 'Burnaby', 'Richmond', 'Surrey', 'Langley', 'Delta', 'Vancouver'
+# 동네 이름이 다른 도시에 속하는 곳은 밴쿠버로 세지 않아요 (Tsawwassen은 Delta, Deep Cove는 North Vancouver, Horseshoe Bay는 West Vancouver). 도시 안내가 없는 곳(Squamish, Anmore)은 자기 이름으로 둬서 어느 도시 안내에도 안 들어가요
+$CITY_ALIAS = @{ 'Tsawwassen' = 'Delta'; 'Deep Cove' = 'North Vancouver'; 'Horseshoe Bay' = 'West Vancouver'; 'Squamish' = 'Squamish'; 'Anmore' = 'Anmore' }
 function CityOf($s) {
   foreach ($c in $CITIES) { if ($s.area -match [regex]::Escape($c)) { return $c } }
+  foreach ($a in $CITY_ALIAS.Keys) { if ($s.area -match [regex]::Escape($a)) { return $CITY_ALIAS[$a] } }
   return 'Vancouver'
 }
 
