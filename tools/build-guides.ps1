@@ -306,6 +306,18 @@ foreach ($p in ($pages | Where-Object { $_.slug -like 'places-to-take-kids-*' })
   New-Item -ItemType Directory $d -Force | Out-Null
   [IO.File]::WriteAllText((Join-Path $d 'index.html'), $stub, $enc)
 }
+# 사라진 안내 주소 → 가장 가까운 안내 (구글이 이미 아는 주소가 404가 되지 않게). 안내가 없어지면 여기에 한 줄 추가해요
+$MOVED = [ordered]@{ 'indoor-play-centres-vancouver' = 'indoor-places-to-take-kids-vancouver' }
+foreach ($old in $MOVED.Keys) {
+  $newPage = $pages | Where-Object { $_.slug -eq $MOVED[$old] } | Select-Object -First 1
+  if (-not $newPage) { Write-Host "이동할 안내가 없어요: $old -> $($MOVED[$old])"; continue }
+  if ($pages | Where-Object { $_.slug -eq $old }) { continue }   # 다시 생긴 안내는 이동하지 않아요
+  $to = "$site/guides/$($newPage.slug)/"
+  $stub = "<!doctype html><html lang=""en""><head><meta charset=""utf-8""><title>Moved: $(Esc $newPage.h1)</title><link rel=""canonical"" href=""$to""><meta http-equiv=""refresh"" content=""0; url=/guides/$($newPage.slug)/""><script>location.replace('/guides/$($newPage.slug)/' + location.hash)</script></head><body><p>This page moved to <a href=""/guides/$($newPage.slug)/"">$(Esc $newPage.h1)</a>.</p></body></html>"
+  $d = Join-Path $guideDir $old
+  New-Item -ItemType Directory $d -Force | Out-Null
+  [IO.File]::WriteAllText((Join-Path $d 'index.html'), $stub, $enc)
+}
 # 안내 목록 페이지 (도시별로 묶어서)
 $idx = New-Object System.Text.StringBuilder
 foreach ($c in (SortOrd $CITIES { param($c) $c })) {
