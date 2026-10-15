@@ -381,7 +381,7 @@ const BOX_TONE = {
   slate: { bg: 'bg-slate-50 dark:bg-slate-800/50   ', h: 'text-slate-900 dark:text-slate-100', dot: 'text-slate-500 dark:text-slate-400' }
 };
 const infoBox = (tone, title, itemsHtml, footerHtml = '', label = '') => `
-          <section class="rounded-2xl p-5 ${BOX_TONE[tone].bg}"${label ? ` aria-label="${label}"` : ''}>
+          <section class="rounded-2xl -mx-4 px-4 py-5 ${BOX_TONE[tone].bg}"${label ? ` aria-label="${label}"` : ''}>
             <h3 class="font-bold ${BOX_TONE[tone].h}">${title}</h3>
             <ul class="mt-2 space-y-1.5 text-sm text-slate-800 dark:text-slate-200">${itemsHtml.map(x => `<li class="flex gap-2"><span aria-hidden="true" class="${BOX_TONE[tone].dot}">•</span><span>${x}</span></li>`).join('')}</ul>
             ${footerHtml ? `<p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">${footerHtml}</p>` : ''}
@@ -1020,7 +1020,7 @@ class App {
     const d = reviewDraft && reviewDraft.id === s.id ? reviewDraft : null;
     const stars = n => `<span class="text-amber-500" aria-label="${n} out of 5 stars">${'★'.repeat(n)}<span class="text-slate-300 dark:text-slate-600">${'★'.repeat(5 - n)}</span></span>`;
     const form = d ? `
-            <div class="mt-3 rounded-xl p-4 bg-slate-50 dark:bg-slate-800/60   ">
+            <div class="mt-3 rounded-xl -mx-4 px-4 py-4 bg-slate-50 dark:bg-slate-800/60   ">
               <div class="flex items-center gap-1" role="radiogroup" aria-label="Your rating">${[1, 2, 3, 4, 5].map(n => `<button data-act="rvstar" data-val="${n}" role="radio" aria-checked="${d.rating === n}" aria-label="${n} star${n > 1 ? 's' : ''}" class="text-3xl leading-none ${n <= (d.rating || 0) ? 'text-amber-500' : 'text-slate-300 dark:text-slate-600'}">★</button>`).join('')}</div>
               <textarea data-act="rvtext" maxlength="${REVIEW_MAX}" rows="3" placeholder="What did your kids like? Anything parents should know (washrooms, stroller access, busy times)?" class="mt-3 w-full rounded-lg   bg-slate-100 p-3 text-sm  dark:bg-slate-800">${esc(d.text || '')}</textarea>
               <div class="mt-2 flex flex-wrap items-center gap-3">
@@ -1044,7 +1044,7 @@ class App {
             ${form}
             ${reviewMsg ? `<p class="mt-2 text-sm text-slate-600 dark:text-slate-300" role="status">${esc(reviewMsg)}</p>` : ''}
             ${list.length ? `<ul class="mt-4 space-y-3">${list.slice(0, 20).map(r => `
-              <li class="rounded-xl p-3 bg-slate-50 dark:bg-slate-800/60">
+              <li class="rounded-xl -mx-3 px-3 py-3 bg-slate-50 dark:bg-slate-800/60">
                 <p class="text-sm">${stars(r.rating)} <span class="font-semibold">${esc(r.name)}</span> <span class="text-xs text-slate-500 dark:text-slate-400">· ${esc(`${MON[r.date.getMonth()]} ${r.date.getDate()}, ${r.date.getFullYear()}`)}</span></p>
                 ${r.text ? `<p class="mt-1 text-sm text-slate-700 dark:text-slate-200 whitespace-pre-line">${esc(r.text)}</p>` : ''}
               </li>`).join('')}</ul>` : '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">No reviews yet. Be the first parent to share how it went.</p>'}
@@ -2108,7 +2108,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           : HOURS_READY ? '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
         <p class="hidden sm:block mt-2 sm:mt-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(s.summary)}</p>
         ${why ? `
-        <div class="mt-2 sm:mt-3 border-l-4 border-amber-400 rounded-r-lg bg-amber-50 dark:bg-amber-500/10 pl-2 pr-2 sm:pl-3 sm:pr-3 py-1 sm:py-2">
+        <div class="mt-2 sm:mt-3 rounded-lg bg-amber-50 dark:bg-amber-500/10 -mx-1.5 px-1.5 sm:-mx-3 sm:px-3 py-1 sm:py-2">
           <p class="text-xs sm:text-sm leading-snug text-slate-800 dark:text-slate-100 clamp2 max-sm:[-webkit-line-clamp:4]">${esc(why.text)}</p>
           ${evExtra ? `<p class="mt-1 text-xs sm:text-sm leading-snug text-slate-800 dark:text-slate-100 clamp2">${esc(evExtra)}</p>` : ''}
         </div>` : ''}
@@ -2117,9 +2117,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           const tip = this.tipItems(s, 'card')[0];
           // 휴대폰에서는 What parents say → Tiny Trips tip → Good to know(입장료) 중 있는 첫 번째 하나만, 3줄까지 (사용자 요청, 2026-10-04)
           const mobLabel = SAYS[s.id] ? ['What parents say:', SAYS[s.id]] : tip ? ['Tiny Trips tip:', tip] : null;
-          const mob = mobLabel ? `<div class="sm:hidden mt-2 text-xs text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2 py-1.5"><p class="${LINES3}"><span class="font-semibold">${mobLabel[0]}</span> ${esc(mobLabel[1])}</p></div>` : this.factsLine(s, true);
+          const mob = mobLabel ? `<div class="sm:hidden mt-2 text-xs text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg -mx-1.5 px-1.5 py-1.5"><p class="${LINES3}"><span class="font-semibold">${mobLabel[0]}</span> ${esc(mobLabel[1])}</p></div>` : this.factsLine(s, true);
           if (!tip && !SAYS[s.id]) return mob;
-          return mob + `<div class="max-sm:hidden mt-2 sm:mt-3 text-xs sm:text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2 sm:px-2.5 py-1 sm:py-1.5">${SAYS[s.id] ? `<p class="[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden"><span class="font-semibold">What parents say:</span> ${esc(SAYS[s.id])}</p>` : ''}${tip ? `<p class="${SAYS[s.id] ? 'mt-1 ' : ''}[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold">Tiny Trips tip:</span> ${esc(tip)}</p>` : ''}</div>`;
+          return mob + `<div class="max-sm:hidden mt-2 sm:mt-3 text-xs sm:text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg -mx-1.5 px-1.5 sm:-mx-3 sm:px-3 py-1 sm:py-1.5">${SAYS[s.id] ? `<p class="[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden"><span class="font-semibold">What parents say:</span> ${esc(SAYS[s.id])}</p>` : ''}${tip ? `<p class="${SAYS[s.id] ? 'mt-1 ' : ''}[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold">Tiny Trips tip:</span> ${esc(tip)}</p>` : ''}</div>`;
         })()}
 
         ${TRENDS_ON && s.rise != null && s.rise >= RISING_MIN && !(why && why.icon === RISE_ICON) ? `<p class="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-300" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
@@ -2717,7 +2717,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             // 평소보다 5% 이상(RISING_MIN) 많이 검색될 때만: 이유(notes.why)와 최근 7일 급상승 연관 검색어
             const n = RISE_NOTES[s.id] || {};
             return `
-          <section class="rounded-2xl p-5 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-500/10 dark:to-fuchsia-500/10   ">
+          <section class="rounded-2xl -mx-4 px-4 py-5 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-500/10 dark:to-fuchsia-500/10   ">
             <h3 class="font-bold text-rose-800 dark:text-rose-300">Why more people are searching</h3>
             <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">Searched ${fmtRise(s.rise)} its usual amount over ${esc(recentLabel())}.</p>
             ${n.why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(n.why)}${/^https:\/\//i.test(n.source || '') ? ` <a href="${esc(n.source)}" target="_blank" rel="noopener" class=" text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>` : ''}
