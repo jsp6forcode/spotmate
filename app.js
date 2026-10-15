@@ -2696,7 +2696,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const chip = (h, cls = 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100') => `<span class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-full ${cls}">${h}</span>`;
             const line = h => `<p class="mt-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${h}</p>`;
             const evShown = evs;   // 카드에 "Event" 칩이 뜬 행사는 모달에도 항상 보여요 (태그 설명과 겹쳐도 숨기지 않아요. 사용자, 2026-10-14)
-            const chips = evShown.map(ev => chip(`<span aria-hidden="true">${esc(ev.icon || '🎪')}</span> ${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}`, ev.type === 'market' ? 'bg-lime-50 text-lime-800 dark:bg-lime-500/15 dark:text-lime-300' : 'bg-teal-50 text-teal-800 dark:bg-teal-500/15 dark:text-teal-300')).join('');
+            // 행사는 칩 하나에 (여러 개면 한 줄씩). 색은 카드의 Event 칩과 같은 계열 (마켓만 있으면 연두, 아니면 청록)
+            const evCls = evShown.every(ev => ev.type === 'market') ? 'bg-lime-50 text-lime-800 dark:bg-lime-500/15 dark:text-lime-300' : 'bg-teal-50 text-teal-800 dark:bg-teal-500/15 dark:text-teal-300';
+            const evLabel = (evShown.every(ev => ev.type === 'market') ? '🥕 Market' : '🎪 Event') + (evShown.length > 1 ? 's' : '');
+            const chips = evShown.length ? `<span class="inline-flex flex-col gap-0.5 max-w-full text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-2xl ${evCls}"><span class="font-bold">${evLabel}</span>${evShown.map(ev => `<span class="font-normal"><span aria-hidden="true">${esc(ev.icon || '🎪')}</span> ${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}</span>`).join('')}</span>` : '';
             // 시즌 태그: 주황 칩 바로 뒤에 같은 줄로 이유가 이어져요 (#태그를 다시 쓰지 않아요). 이유가 없으면 칩만
             const extra = tags.map(t => { const x = t.spots[s.id]; return !dd.fresh(x.why)
               ? `<div class="mt-2 flex">${chip(`#${esc(t.label)}`, tagStyle(t.id).soft)}</div>`
