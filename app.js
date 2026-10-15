@@ -1940,7 +1940,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (!s.when) {
       const h = vanWallClock().getHours();
       return s.view === 'list' && s.cat !== 'events' && (h >= 20 || h < 6) ? `
-    <p class="mt-6 text-sm text-slate-600 dark:text-slate-300">It's late, so most places are closed. <button data-act="whenset" data-val="${h < 6 ? 'today' : 'tomorrow'}" class="font-semibold underline text-violet-700 dark:text-violet-300">See what's worth it ${h < 6 ? 'today' : 'tomorrow'} →</button></p>` : '';
+    <p class="mt-6 text-sm text-slate-600 dark:text-slate-300">It's late, so most places are closed. <button data-act="whenset" data-val="${h < 6 ? 'today' : 'tomorrow'}" class="font-semibold text-violet-700 dark:text-violet-300">See what's worth it ${h < 6 ? 'today' : 'tomorrow'} →</button></p>` : '';
     }
     const ds = whenDates(s.when), fc = s.forecast || {};
     const rainy = ds.some(d => fc[d] && (fc[d].pop >= 60 || fc[d].kind === 'rain'));
@@ -1961,7 +1961,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   seasonChips() {
     const tags = activeTags().filter(t => this._tagCounts && this._tagCounts[t.id]);
     if (!tags.length) return '';
-    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1 sm:py-2 rounded-full border ${on ? 'bg-orange-500 border-orange-500 text-white' : 'border-orange-200 text-orange-800 hover:border-orange-400 dark:border-orange-500/30 dark:text-orange-300'}">#${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
+    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1 sm:py-2 rounded-full ${on ? 'bg-orange-500 text-white' : 'bg-orange-50 text-orange-800 hover:bg-orange-100 dark:bg-orange-500/15 dark:text-orange-300 dark:hover:bg-orange-500/25'}">#${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
     return `
     <div class="mt-3 sm:mt-4 flex flex-wrap items-center gap-x-1.5 sm:gap-x-2 gap-y-1.5 [&>*]:whitespace-nowrap">
       ${tags.length ? `<span class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>${tags.map(chip).join('')}` : ''}
@@ -2087,7 +2087,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const why = baseWhy || (evText ? { pick: true, label: this.eventTitle(evHere.ev, s), text: evText } : null);
     const evExtra = evText && why && why.text !== evText ? evText : '';
     return `
-    <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl sm:rounded-[20px] bg-white dark:bg-slate-900 ring-1 ring-slate-100 dark:ring-slate-800 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:ring-2 hover:ring-violet-400 dark:hover:ring-violet-600 hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition overflow-hidden">
+    <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl sm:rounded-[20px] bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition overflow-hidden">
       <div class="relative">
         ${this.cover(s, 'h-24 sm:h-40')}
         <span class="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 text-[10px] sm:text-xs font-bold px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full max-w-[60%] truncate bg-white/90 text-slate-900 shadow-sm">${esc(c.label)}</span>
@@ -2139,8 +2139,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         </div>
         ${this.state.reviewsOn && this.reviewStats(s.id) ? (() => { const st = this.reviewStats(s.id); return `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm"><span class="text-amber-500" aria-hidden="true">★</span> <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'parent review')}</span></p>`; })() : ''}
         <div class="pt-2.5 sm:pt-4 ${this.state.reviewsOn ? 'flex gap-2' : ''}">
-        ${this.state.reviewsOn ? `<button data-act="rvcard" data-val="${s.id}" class="shrink-0 px-2.5 sm:px-4 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">★ Review</button>` : ''}
-          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="w-full py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm border ${saved ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-300' : 'border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200'}">${saved ? '♥ Saved' : '♡ Save'}</button>
+        ${this.state.reviewsOn ? `<button data-act="rvcard" data-val="${s.id}" class="shrink-0 px-2.5 sm:px-4 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">★ Review</button>` : ''}
+          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="w-full py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm ${saved ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'}">${saved ? '♥ Saved' : '♡ Save'}</button>
 
         </div>
       </div>
