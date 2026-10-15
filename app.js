@@ -2126,8 +2126,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.factsLine(s)}
         ${this.state.reviewsOn && this.reviewStats(s.id) ? (() => { const st = this.reviewStats(s.id); return `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm"><span class="text-amber-500" aria-hidden="true">★</span> <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'parent review')}</span></p>`; })() : ''}
         <div class="mt-auto pt-2.5 sm:pt-4 flex gap-2">
-        <button data-act="share" data-val="${s.id}" class="shrink-0 px-2.5 sm:px-4 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">${this.state.shareMsg && this.state.shareMsg.id === s.id ? esc(this.state.shareMsg.text) : '↗ Share'}</button>
-          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="w-full py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm ${saved ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'}">${saved ? '♥ Saved' : '♡ Save'}</button>
+        <button data-act="share" data-val="${s.id}" class="w-full min-w-0 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">${this.state.shareMsg && this.state.shareMsg.id === s.id ? esc(this.state.shareMsg.text) : '↗ Share'}</button>
+          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="w-full min-w-0 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm ${saved ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'}">${saved ? '♥ Saved' : '♡ Save'}</button>
 
         </div>
       </div>
