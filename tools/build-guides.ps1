@@ -208,13 +208,13 @@ foreach ($p in $pages) {
   if ($free) { $bits += $(if ($isIndoorPage) { "$free of them free" } else { "$free free" }) }
   if ($indoor -and -not $isIndoorPage) { $bits += "$indoor indoor" }
   $lead = if ($isIndoorPage) { "$(Plural $n 'indoor place') to take kids ${where}, good for rainy days: play centres, libraries, museums, pools and more for babies, toddlers and school-age kids." } else { "$(Plural $n 'kid-friendly place') ${where}: $what picked for families with babies, toddlers and school-age kids." }
-  $lead += $(if ($bits) { " $($bits -join ', ')." } else { '' }) + ' Open any spot in Tiny Trips for hours, parking and what parents say.'
+  $lead += $(if ($bits) { " $($bits -join ', ')." } else { '' }) + ' Open any spot in Tiny Trips for hours and what parents say.'
   # 검색 결과 설명문: 개수와 대표 장소 이름을 앞에, 무료·실내 수를 뒤에 (모든 페이지가 같은 문장으로 시작하지 않게)
   # 길면(검색 결과에서 잘려요) 이름을 3개에서 2개, 1개로 줄여요
   foreach ($k in 3, 2, 1) {
     $top = NameList $list $k
     $d1 = if ($isIndoorPage) { "Rainy day ideas: $n indoor places ${where} for kids, including $top." } elseif ($p.kindPlural) { "$n kid-friendly spots ${where}: $what, including $top." } else { "$n places to take kids ${where}, including $top." }
-    $desc = ($d1 + $(if ($bits) { " $($bits -join ', ')." } else { '' }) + ' Hours, parking and what parents say for each.') -replace '\s+', ' '
+    $desc = ($d1 + $(if ($bits) { " $($bits -join ', ')." } else { '' }) + ' Hours and what parents say for each.') -replace '\s+', ' '
     if ($desc.Length -le 165) { break }
   }
   if ($desc.Length -gt 300) { $desc = $desc.Substring(0, 297) + '...' }
@@ -226,7 +226,7 @@ foreach ($p in $pages) {
   $sb = New-Object System.Text.StringBuilder
   foreach ($s in $list) {
     $meta = @($s.area, $(if ($s.price) { $s.price }), $(if ($s.time) { $s.time }), $(if ($s.env) { (Get-Culture).TextInfo.ToTitleCase($s.env) })) | Where-Object { $_ }
-    [void]$sb.AppendLine("<div class=""rounded-xl border border-slate-200 dark:border-slate-700 p-3 mb-3""><h2 class=""font-bold text-base text-slate-900 dark:text-slate-100"">$(Esc $s.name)</h2><p class=""text-xs mb-1"">$(Esc ($meta -join ' · '))</p><p class=""mb-2"">$(Esc $s.summary)</p><a class=""$L"" href=""/spots/$(Esc $s.id)/"">Hours, parking &amp; tips</a></div>")
+    [void]$sb.AppendLine("<div class=""rounded-xl border border-slate-200 dark:border-slate-700 p-3 mb-3""><h2 class=""font-bold text-base text-slate-900 dark:text-slate-100"">$(Esc $s.name)</h2><p class=""text-xs mb-1"">$(Esc ($meta -join ' · '))</p><p class=""mb-2"">$(Esc $s.summary)</p><a class=""$L"" href=""/spots/$(Esc $s.id)/"">Hours &amp; tips</a></div>")
   }
   $rel = Related $p
   $relHtml = if ($rel) { '<div class="mt-6"><strong>More guides</strong><ul class="list-disc pl-5 mt-1">' + (($rel | ForEach-Object { "<li><a class=""$L"" href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a></li>" }) -join '') + '</ul></div>' } else { '' }
@@ -281,7 +281,7 @@ foreach ($s in $spots) {
   $surl = "$site/spots/$($s.id)/"
   $meta = @($s.area, $(if ($s.price) { $s.price }), $(if ($s.time) { $s.time }), $(if ($s.env) { (Get-Culture).TextInfo.ToTitleCase($s.env) })) | Where-Object { $_ }
   $title = "$($s.name) with kids: $($s.area)"
-  $sdesc = (("$($s.name) in $($s.area): $($s.summary). Hours, parking and tips for families on Tiny Trips.") -replace '\s+', ' ')
+  $sdesc = (("$($s.name) in $($s.area): $($s.summary). Hours and tips for families on Tiny Trips.") -replace '\s+', ' ')
   if ($sdesc.Length -gt 300) { $sdesc = $sdesc.Substring(0, 297) + '...' }
   $more = @($guideOf[$s.id] | Select-Object -First 6)
   $moreHtml = if ($more) { '<div class="mt-4"><strong>Guides with this spot</strong><ul class="list-disc pl-5 mt-1">' + (($more | ForEach-Object { "<li><a class=""$L"" href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a></li>" }) -join '') + '</ul></div>' } else { '' }
@@ -340,7 +340,7 @@ $mp = @($pages | Where-Object { -not $_.city })
 # 안내 목록도 진짜 앱을 보여주고, 도시·종류별 목록은 아래에 접어 둬요 (다른 안내 페이지와 같은 방식)
 $L = 'underline text-teal-700 dark:text-teal-300'
 $idxBody = ($idx.ToString()).Replace('<h2>', '<h2 class="font-bold mt-5 mb-1">').Replace('<ul>', '<ul class="list-disc pl-5 space-y-0.5">').Replace('<a href', "<a class=""$L"" href")
-$idxBody = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">Places to take kids in Metro Vancouver: guides by city and kind</summary><div class=""mt-3""><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">Places to take kids in Metro Vancouver</h1><p class=""mb-2"">Pick a city or a kind of place. Each guide lists the spots with a short description, and links to the Tiny Trips app for hours, parking and what parents say.</p>" + $idxBody + "</div></details>"
+$idxBody = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">Places to take kids in Metro Vancouver: guides by city and kind</summary><div class=""mt-3""><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">Places to take kids in Metro Vancouver</h1><p class=""mb-2"">Pick a city or a kind of place. Each guide lists the spots with a short description, and links to the Tiny Trips app for hours and what parents say.</p>" + $idxBody + "</div></details>"
 $idxDesc = 'Guides to playgrounds, spray parks, farms, museums and indoor play for kids in Metro Vancouver, Abbotsford and Chilliwack, by city and by kind.'
 $idxTitle = 'Places to take kids in Metro Vancouver: guides by city and kind'
 $idxHtml = $shell

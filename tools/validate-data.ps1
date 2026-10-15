@@ -150,7 +150,6 @@ if ($pk) {
   $n = 0
   foreach ($x in (Props $pk.spots)) { $n++; if (-not $ids[$x.Name]) { Err "parking 에 없는 스팟 id: $($x.Name)" } }
   $missing = @($spots | Where-Object { -not ($pk.spots.PSObject.Properties.Name -contains $_.id) } | ForEach-Object { $_.id })
-  if ($missing.Count) { Warn "주차 정보가 없는 스팟 $($missing.Count)곳: $($missing[0..4] -join ', '). tools/parking-osm.ps1 -Ids 로 채워 주세요." }
   Ok "parking $($n)곳"
 }
 

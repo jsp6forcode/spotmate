@@ -2132,7 +2132,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           return `
         <p class="max-sm:hidden mt-2 sm:mt-3 text-xs sm:text-sm font-semibold text-teal-700 dark:text-teal-300">${esc(kp.agesText)}</p>`; })() : ''}
         <div class="mt-2 sm:mt-3 flex flex-wrap gap-x-2 sm:gap-x-3 gap-y-0.5 sm:gap-y-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-          ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}${parkShort(s) ? `<span class="max-sm:hidden">${esc(parkShort(s))}</span>` : ''}
+          ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}
           ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
         </div>
         </div>
@@ -2728,38 +2728,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </section>`; })() : ''}
 
           ${this.reviewSection(s)}
-          ${(() => {
-            // 주차: 근처(400m) 주차장이 무료인지 유료인지, 요금(OSM에 있으면)과 요금을 확인할 링크. 거리는 보여주지 않아요
-            const p = parkingOf(s);
-            if (!p) return '';
-            // 이름·운영사나 실제 요금이 있는 주차장만 한 줄로 (지상 주차장·유료 같은 일반 설명만 있는 줄은 빼요)
-            const lots = p.filter(x => x.name || x.operator || x.charge).map(x => [x.name || x.operator, x.charge ? parkRate(x.charge) : x.fee === 'no' ? 'free' : x.fee === 'yes' ? 'paid' : '', x.customers ? 'customers only' : ''].filter(Boolean).join(' · ')).filter((x, i, a) => x && a.indexOf(x) === i);
-            const site = p.map(x => x.site).find(u => /^https?:\/\//.test(u || ''));
-            return `
-          <section>
-            <h3 class="font-bold">Parking</h3>
-            <p class="mt-2 text-sm font-semibold text-slate-800 dark:text-slate-200">${esc(parkSummary(s))}</p>
-            ${lots.length ? `<ul class="mt-1.5 space-y-1">${lots.map(x => `<li class="text-sm text-slate-600 dark:text-slate-300">• ${esc(x)}</li>`).join('')}</ul>` : ''}
-            ${(() => {
-              // 밴쿠버시 길거리 미터: 낮·저녁 요금, 시간 제한, 결제 방법
-              const m = METERS.spots[s.id];
-              if (!m || m.day == null) return '';
-              const range = m.dayMin != null && m.dayMax != null && m.dayMin !== m.dayMax ? ` (${money(m.dayMin)}–${money(m.dayMax)} depending on the block)` : '';
-              return `
-            <details class="mt-2 rounded-xl p-3 bg-slate-50 dark:bg-slate-800/60 text-sm text-slate-700 dark:text-slate-300">
-              <summary class="cursor-pointer font-semibold">City street meters nearby: about ${money(m.day)}/hr daytime</summary>
-              <p class="mt-2">Within ${METERS.radius} m: about ${money(m.day)}/hr 9am–6pm${range}${m.eve != null ? `, ${money(m.eve)}/hr 6pm–10pm` : ''}, free 10pm–9am.${m.limit ? ` Usually a ${esc(m.limit.replace(/\s*Hr$/i, '-hour'))} limit.` : ''}</p>
-              <p class="mt-1">Pay ${m.card ? 'by card at the meter or ' : ''}with the PayByPhone app.</p>
-              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Rates: City of Vancouver Open Data, <a href="https://opendata.vancouver.ca/pages/licence/" target="_blank" rel="noopener" class="">Open Government Licence – Vancouver</a>.</p>
-            </details>`;
-            })()}
-            <p class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold">
-              <a href="${parkingUrl(s)}" target="_blank" rel="noopener" class=" text-indigo-700 dark:text-indigo-300">Parking and rates on Google Maps ↗</a>
-              ${site ? `<a href="${esc(site)}" target="_blank" rel="noopener" class=" text-indigo-700 dark:text-indigo-300">Lot website ↗</a>` : ''}
-            </p>
-            <p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">Nearby lots from © OpenStreetMap contributors. Rates and time limits change, so check the signs.</p>
-          </section>`;
-          })()}
 
           ${(() => {
             // 할 거리 · 먹을 것 · 준비물 (안내 파일 + 자동 준비물, 겹치면 한 번만)

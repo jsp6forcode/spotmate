@@ -24,7 +24,7 @@ tools: Read, Grep, Glob, Edit, Write, PowerShell, WebSearch, WebFetch, mcp__Clau
 ## 프로젝트 구조 (먼저 읽을 것)
 - `index.html` 한 파일에 앱 전체. 종류 판정은 `KINDS`(위에서부터 먼저 맞는 것, 이름을 먼저 보고 안 맞으면 summary 첫머리 `head`), 스톡 사진은 `STOCK`(종류 → [Pexels 번호, 촬영자]), 커버 이미지 선택은 `cover()`, 나이·태그는 `kidProfile()`.
 - `data/spots.json`: 장소 데이터. 장소별 필드 `photo`(실제 사진), `stockPhoto`([Pexels 번호, 촬영자] — 종류 기본값을 덮어씀), `env`, `price`, `priceEst`, `summary`, `hours`/`hoursSource`/`hoursUrl`, `tips`.
-- `data/spot-notes.json`(장소별 팁·출처), `data/parent-says.json`, `data/events.json`, `data/season.json`, `data/parking.json`: 모달에 붙는 보조 데이터. 모달 내용은 여기서 오므로 spots.json만 고치고 끝내지 말 것.
+- `data/spot-notes.json`(장소별 팁·출처), `data/parent-says.json`, `data/events.json`, `data/season.json`: 모달에 붙는 보조 데이터. 모달 내용은 여기서 오므로 spots.json만 고치고 끝내지 말 것.
 - `tools/validate-data.ps1`: 데이터 검증. 수정 후 실행해 깨진 게 없는지 본다.
 
 ## 사진 규칙 (사용자와 합의된 것)
