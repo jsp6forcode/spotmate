@@ -1846,7 +1846,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </div>
           ${s.cat === 'events' ? '' : `
           <label class="flex shrink-0 items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300"><span class="hidden sm:inline">When</span>
-            <select data-act="when" aria-label="When are you going" class="max-sm:w-[5.5rem] min-h-[34px] sm:min-h-[44px] px-2 sm:px-3 py-1 sm:py-2 rounded-lg ${s.when ? 'bg-violet-100 text-violet-900 dark:bg-violet-500/25 dark:text-violet-100' : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100'} text-xs sm:text-sm font-semibold">
+            <select data-act="when" aria-label="When are you going" class="max-sm:w-[5.5rem] min-h-[34px] sm:min-h-[44px] px-2 sm:px-3 py-1 sm:py-2 rounded-lg ${s.when ? 'bg-violet-100 text-violet-900 dark:bg-violet-900 dark:text-violet-100' : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100'} text-xs sm:text-sm font-semibold">
               ${['', 'today', 'tomorrow', 'weekend', 'sat', 'sun'].map(w => `<option value="${w}" ${s.when === w ? 'selected' : ''}>${esc(w ? whenLabel(w) : 'Any time')}</option>`).join('')}
             </select>
           </label>`}
