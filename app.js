@@ -383,7 +383,7 @@ const BOX_TONE = {
 const infoBox = (tone, title, itemsHtml, footerHtml = '', label = '') => `
           <section class="rounded-2xl -mx-4 px-4 py-5 ${BOX_TONE[tone].bg}"${label ? ` aria-label="${label}"` : ''}>
             <h3 class="font-bold ${BOX_TONE[tone].h}">${title}</h3>
-            <ul class="mt-2 space-y-1.5 text-sm text-slate-800 dark:text-slate-200">${itemsHtml.map(x => `<li class="flex gap-2"><span aria-hidden="true" class="${BOX_TONE[tone].dot}">•</span><span>${x}</span></li>`).join('')}</ul>
+            <ul class="mt-2 space-y-1.5 text-sm text-slate-800 dark:text-slate-200">${itemsHtml.map(x => `<li>${x}</li>`).join('')}</ul>
             ${footerHtml ? `<p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">${footerHtml}</p>` : ''}
           </section>`;
 let NOTES = {}, NOTES_META = { updatedAt: '', note: '' };
