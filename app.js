@@ -1837,17 +1837,17 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${s.cat === 'events' ? '' : `
           <button data-act="filters" aria-expanded="${!!open}" class="sm:hidden order-first shrink-0 min-h-[30px] sm:min-h-[34px] px-2.5 sm:px-2.5 py-1 sm:py-1 rounded-lg sm:rounded-xl text-xs sm:text-[13px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">${open ? 'Hide filters' : `Filters${more ? ` · ${more}` : ''}`}</button>`}
           <div class="${s.cat === 'events' ? 'contents' : this._moreCls}">
-          <label class="flex shrink-0 items-center gap-1 rounded-lg pl-2 sm:pl-3 bg-slate-100 dark:bg-slate-800 text-xs sm:text-[13px] font-semibold text-slate-500 dark:text-slate-400"><span class="${open ? '' : 'hidden sm:inline'}">Category</span>
-            <select data-act="cat" aria-label="Category" class="min-h-[34px] sm:min-h-[34px] pl-1 pr-2 sm:pr-2.5 py-1 sm:py-1 rounded-lg bg-transparent text-slate-900 dark:text-slate-100 text-xs sm:text-[13px] font-semibold [&>option]:bg-white [&>option]:text-slate-900 dark:[&>option]:bg-slate-800 dark:[&>option]:text-slate-100">
-              ${[['all', 'All'], ...catOptions().map(k => [k, k === 'events' ? 'Events' : CATS[k].label])]
+          <label class="flex shrink-0 items-center">
+            <select data-act="cat" aria-label="Category" class="min-h-[34px] sm:min-h-[34px] px-2 sm:px-2.5 py-1 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs sm:text-[13px] font-semibold">
+              ${[['all', 'Category'], ...catOptions().map(k => [k, k === 'events' ? 'Events' : CATS[k].label])]
                 .map(([k, label]) => `<option value="${k}" ${s.cat === k ? 'selected' : ''}>${label}</option>`).join('')}
             </select>
           </label>
           </div>
           ${s.cat === 'events' ? '' : `
-          <label class="flex shrink-0 items-center gap-1 rounded-lg pl-2 sm:pl-3 ${s.when ? 'bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-200' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'} text-xs sm:text-[13px] font-semibold"><span class="hidden sm:inline">When</span>
-            <select data-act="when" aria-label="When are you going" class="max-sm:w-[5.5rem] min-h-[30px] sm:min-h-[34px] pl-1 pr-2 sm:pr-2.5 py-1 sm:py-1 rounded-lg bg-transparent ${s.when ? 'text-violet-900 dark:text-violet-100' : 'text-slate-900 dark:text-slate-100'} text-xs sm:text-[13px] font-semibold [&>option]:bg-white [&>option]:text-slate-900 dark:[&>option]:bg-slate-800 dark:[&>option]:text-slate-100">
-              ${['', 'today', 'tomorrow', 'weekend', 'sat', 'sun'].map(w => `<option value="${w}" ${s.when === w ? 'selected' : ''}>${esc(w ? whenLabel(w) : 'Any time')}</option>`).join('')}
+          <label class="flex shrink-0 items-center">
+            <select data-act="when" aria-label="When are you going" class="max-sm:w-[5.5rem] min-h-[30px] sm:min-h-[34px] px-2 sm:px-2.5 py-1 sm:py-1 rounded-lg ${s.when ? 'bg-violet-100 text-violet-900 dark:bg-violet-900 dark:text-violet-100' : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100'} text-xs sm:text-[13px] font-semibold">
+              ${['', 'today', 'tomorrow', 'weekend', 'sat', 'sun'].map(w => `<option value="${w}" ${s.when === w ? 'selected' : ''}>${esc(w ? whenLabel(w) : 'When')}</option>`).join('')}
             </select>
           </label>`}
           ${s.cat === 'events' || !HOURS_READY ? '' : `
