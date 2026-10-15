@@ -2696,11 +2696,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const chip = (h, cls = 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100') => `<span class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-full ${cls}">${h}</span>`;
             const line = h => `<p class="mt-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${h}</p>`;
             const evShown = evs;   // 카드에 "Event" 칩이 뜬 행사는 모달에도 항상 보여요 (태그 설명과 겹쳐도 숨기지 않아요. 사용자, 2026-10-14)
-            const chips = evShown.map(ev => chip(`<span aria-hidden="true">${esc(ev.icon || '🎪')}</span> ${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}`, ev.type === 'market' ? 'bg-lime-700 text-white' : 'bg-teal-600 text-white')).join('');
+            const chips = evShown.map(ev => chip(`<span aria-hidden="true">${esc(ev.icon || '🎪')}</span> ${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}`, ev.type === 'market' ? 'bg-lime-50 text-lime-800 dark:bg-lime-500/15 dark:text-lime-300' : 'bg-teal-50 text-teal-800 dark:bg-teal-500/15 dark:text-teal-300')).join('');
             // 시즌 태그: 주황 칩 바로 뒤에 같은 줄로 이유가 이어져요 (#태그를 다시 쓰지 않아요). 이유가 없으면 칩만
             const extra = tags.map(t => { const x = t.spots[s.id]; return !dd.fresh(x.why)
-              ? `<div class="mt-2 flex">${chip(`#${esc(t.label)}`, tagStyle(t.id).solid)}</div>`
-              : `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${chip(`#${esc(t.label)}`, tagStyle(t.id).solid)} ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class=" text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('');
+              ? `<div class="mt-2 flex">${chip(`#${esc(t.label)}`, tagStyle(t.id).soft)}</div>`
+              : `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${chip(`#${esc(t.label)}`, tagStyle(t.id).soft)} ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class=" text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('');
             const chipsBlock = `${chips || extra ? `
           <div>
             ${chips ? `<div class="flex flex-wrap gap-2">${chips}</div>` : ''}${extra}
