@@ -2126,13 +2126,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.factsLine(s)}
         <!-- 태그·나이·시간·가격 줄은 카드 높이와 상관없이 늘 카드 아래쪽(버튼 바로 위)에 맞춰요 -->
         <div class="mt-auto">
-        ${KIDS_ONLY && isKid(s) ? (() => {
-          // 아이 동반 장소: 무료/유료·실내/야외·종류 태그와 맞는 나이
-          const kp = kidProfile(s);
-          return `
-        <p class="max-sm:hidden mt-2 sm:mt-3 text-xs sm:text-sm font-semibold text-teal-700 dark:text-teal-300">${esc(kp.agesText)}</p>`; })() : ''}
         <div class="mt-2 sm:mt-3 flex flex-wrap gap-x-2 sm:gap-x-3 gap-y-0.5 sm:gap-y-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-          ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}
+          ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(kidProfile(s).agesText)}</span><span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}
           ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
         </div>
         </div>
