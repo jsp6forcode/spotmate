@@ -1857,9 +1857,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${KIDS_ONLY ? '' : `<button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="shrink-0 whitespace-nowrap min-h-[30px] sm:min-h-[34px] px-2.5 sm:px-2.5 py-1 sm:py-1 rounded-lg sm:rounded-xl text-xs sm:text-[13px] font-semibold transition-colors ${s.kidsOnly ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Kids</button>`}`}
           ${s.cat === 'events' ? '' : `
           <div class="${this._moreCls}">
-          <label class="sm:ml-auto flex shrink-0 items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300"><span class="${s.filtersOpen ? '' : 'hidden sm:inline'}">Sort</span>
-            <select data-act="sort" aria-label="Sort" class="min-h-[34px] sm:min-h-[34px] px-2 sm:px-2.5 py-1 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[13px]">
-              <option value="fresh" ${s.sort === 'fresh' ? 'selected' : ''}>Worth going now</option>
+          <label class="sm:ml-auto flex shrink-0 items-center">
+            <select data-act="sort" aria-label="Sort" class="min-h-[34px] sm:min-h-[34px] px-2 sm:px-2.5 py-1 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs sm:text-[13px] font-semibold">
+              <option value="fresh" ${s.sort === 'fresh' ? 'selected' : ''}>Sort</option>
               <option value="distance" ${s.sort === 'distance' ? 'selected' : ''}>Distance</option>
             </select>
           </label>
