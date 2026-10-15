@@ -941,7 +941,7 @@ class App {
   }
   aboutView() {
     const d = this.fbDraft, { feedbackBusy, feedbackMsg, feedbackSent } = this.state;
-    const field = 'mt-1 w-full min-h-[40px] sm:min-h-[44px] px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300 bg-white text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500';
+    const field = 'mt-1 w-full min-h-[40px] sm:min-h-[44px] px-3 py-1.5 sm:py-2 rounded-xl   bg-slate-100 text-slate-900  dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500';
     const types = [['wrong', 'Something’s wrong (hours, details, a closed place)'], ['place', 'Suggest a place'], ['idea', 'An idea or other feedback']];
     return `
     <section class="mt-5 sm:mt-8 max-w-2xl mx-auto">
@@ -952,11 +952,11 @@ class App {
         <p class="font-semibold">Have fun out there! — A Vancouver dad</p>
       </div>
     </section>
-    <section id="feedback" class="mt-6 sm:mt-10 max-w-2xl mx-auto rounded-2xl p-4 sm:p-6 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
+    <section id="feedback" class="mt-6 sm:mt-10 max-w-2xl mx-auto rounded-2xl p-4 sm:p-6 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]   ">
       <h3 class="text-base sm:text-xl font-bold">Send feedback</h3>
       ${feedbackSent ? `
       <p class="mt-3 text-sm sm:text-base text-slate-700 dark:text-slate-200" role="status">Thank you so much! Your note is on its way. <span aria-hidden="true">💜</span></p>
-      <button data-act="fbagain" class="mt-4 min-h-[44px] px-4 rounded-xl font-semibold border border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-200">Send another</button>` : `
+      <button data-act="fbagain" class="mt-4 min-h-[44px] px-4 rounded-xl font-semibold   text-slate-700  dark:text-slate-200">Send another</button>` : `
       <p class="mt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300">Wrong hours, a place that closed, a spot we should add, or anything else. I read every one.</p>
       <form data-act="feedback" class="mt-4 space-y-3 sm:space-y-4">
         <label class="block text-xs sm:text-sm font-semibold">What’s it about?
@@ -1700,7 +1700,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.controls(items)}
         <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
           ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : view === 'about' ? this.aboutView() : view === 'events' || view === 'markets' ? this.eventsView(view) : this.pickMode() && !this.state.q ? this.wizardView()
-            : this.pickMode() ? `<button data-act="qclear" class="mt-6 inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">← Back to the picker</button>${this.planBar()}${this.listView(items)}` : this.state.cat === 'events' ? this.eventsView() : `
+            : this.pickMode() ? `<button data-act="qclear" class="mt-6 inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-lg text-sm font-semibold   text-slate-700   dark:text-slate-200">← Back to the picker</button>${this.planBar()}${this.listView(items)}` : this.state.cat === 'events' ? this.eventsView() : `
             ${this.guideBanner()}
             ${this.planBar()}
             ${view !== 'map' ? this.seasonChips() : ''}
@@ -1709,7 +1709,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           `}
         </main>
         <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-6 text-[11px] text-slate-400 dark:text-slate-500">
-          <a class="underline" href="/guides/">Guides by city and kind</a> · Data: <a class="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a> · <a class="underline" href="https://opendata.vancouver.ca/pages/licence/" target="_blank" rel="noopener">City of Vancouver Open Data</a> · Open-Meteo · Photos: Wikimedia Commons, Pexels
+          <a class="" href="/guides/">Guides by city and kind</a> · Data: <a class="" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a> · <a class="" href="https://opendata.vancouver.ca/pages/licence/" target="_blank" rel="noopener">City of Vancouver Open Data</a> · Open-Meteo · Photos: Wikimedia Commons, Pexels
         </footer>
 
       </div>
@@ -1734,7 +1734,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   statusView() {
     const { loadError } = this.state;
     return `
-      <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center" role="status">
+      <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    p-12 text-center" role="status">
         <p class="text-lg font-bold">${loadError ? 'Something went wrong' : 'Loading spots...'}</p>
         ${loadError ? `
           <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">${esc(loadError)}</p>
@@ -1780,7 +1780,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             <div class="flex items-center gap-2">
               ${wxSmall}
               <span class="hidden sm:inline-block text-sm font-semibold text-white/85">Vancouver</span>
-              <button data-act="dark" aria-label="${dark ? 'Switch to light mode' : 'Switch to dark mode'}" title="${dark ? 'Light mode' : 'Dark mode'}" class="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 border border-white/25 flex items-center justify-center">${contrast}</button>
+              <button data-act="dark" aria-label="${dark ? 'Switch to light mode' : 'Switch to dark mode'}" title="${dark ? 'Light mode' : 'Dark mode'}" class="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25   flex items-center justify-center">${contrast}</button>
             </div>
             ${wx || '<div class="hidden sm:block mt-3 h-12" aria-hidden="true"></div>'}
           </div>
@@ -1789,7 +1789,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${tab('list', 'Explore')}${tab('map', 'Map')}${tab('events', 'Events')}${tab('markets', 'Markets')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}${tab('about', 'About')}
         </nav>
       </div>
-      <a href="https://www.pexels.com/photo/7669218/" target="_blank" rel="noopener" class="absolute right-3 bottom-1.5 text-[10px] leading-none text-white/70 hover:text-white underline-offset-2 hover:underline">Photo: Kampus · Pexels</a>
+      <a href="https://www.pexels.com/photo/7669218/" target="_blank" rel="noopener" class="absolute right-3 bottom-1.5 text-[10px] leading-none text-white/70 hover:text-white underline-offset-2 ">Photo: Kampus · Pexels</a>
     </header>`;
   }
 
@@ -1822,8 +1822,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <span class="text-slate-500 dark:text-slate-400">${chips.length || near ? 'Looking for:' : `Search: “${esc(s.q)}”`}</span>
           ${chips.map(([k, label]) => chip(k, label)).join('')}
           ${near ? chip('near', near, 'sm:hidden') : ''}
-          ${s.unused && s.unused.length ? `<span class="px-2.5 py-1 rounded-full text-slate-500 ring-1 ring-slate-300 dark:text-slate-400 dark:ring-slate-600" title="These words didn't match any filter or place">Not used: ${esc(s.unused.join(', '))}</span>` : ''}
-          <button data-act="qclear" class="ml-1 min-h-[32px] font-semibold underline text-slate-600 dark:text-slate-300">Clear search</button>
+          ${s.unused && s.unused.length ? `<span class="px-2.5 py-1 rounded-full text-slate-500   dark:text-slate-400 " title="These words didn't match any filter or place">Not used: ${esc(s.unused.join(', '))}</span>` : ''}
+          <button data-act="qclear" class="ml-1 min-h-[32px] font-semibold  text-slate-600 dark:text-slate-300">Clear search</button>
         </div>`; })() : ''}
         ${lite ? (s.q ? `<div>${this.locationBar(items)}</div><p class="text-xs text-slate-500 dark:text-slate-400">${this.countLine(items)}</p>` : '') : `
         ${(() => {
@@ -1869,7 +1869,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${s.geoMsg ? `<p class="text-xs text-slate-600 dark:text-slate-300" role="status">${esc(s.geoMsg)}</p>` : ''}
         <p class="text-xs text-slate-500 dark:text-slate-400">${this.countLine(items)}</p>
         ${s.cat !== 'events' && s.openNow && HOURS_READY && (this._hidden.closed + this._hidden.unknown) ? `
-        <p class="text-xs text-slate-600 dark:text-slate-300">Hidden: ${this._hidden.closed} closed right now${this._hidden.unknown ? `, ${this._hidden.unknown} with unknown hours` : ''}. <button data-act="opennow" class="font-semibold underline text-violet-700 dark:text-violet-300">Show all</button></p>` : ''}
+        <p class="text-xs text-slate-600 dark:text-slate-300">Hidden: ${this._hidden.closed} closed right now${this._hidden.unknown ? `, ${this._hidden.unknown} with unknown hours` : ''}. <button data-act="opennow" class="font-semibold  text-violet-700 dark:text-violet-300">Show all</button></p>` : ''}
 
         `}
       </div>
@@ -1896,7 +1896,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div class="inline-flex max-w-full p-0.5 sm:p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Radius">
             ${RADII.map(r => seg(r, radiusLabel(r), s.radius === r)).join('')}
           </div>
-          <button data-act="nearoff" class="min-h-[30px] sm:min-h-[36px] text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 underline">Clear location</button>` : ''}
+          <button data-act="nearoff" class="min-h-[30px] sm:min-h-[36px] text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 ">Clear location</button>` : ''}
         </div>`;
   }
   // 필터 아래 한 줄: 개수 + 위치(반경) + 검색량 데이터 기준 (모바일은 검색량 설명 없이 짧게)
@@ -1914,7 +1914,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   eventRow(ev, compact = false, hideDay = false) {
     const spot = ev.spotId && byId(ev.spotId);
     return `
-      <div id="ev-${esc(ev.id)}" class="flex gap-3 rounded-xl p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
+      <div id="ev-${esc(ev.id)}" class="flex gap-3 rounded-xl p-4 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]   ">
         <div class="w-16 shrink-0 text-center">
           <p class="text-2xl" aria-hidden="true">${esc(ev.icon || '🎪')}</p>
           <p class="mt-1 text-xs font-bold text-violet-700 dark:text-violet-300 leading-tight">${hideDay ? '' : esc(dayLabel(ev.next))}</p>
@@ -1926,7 +1926,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${compact ? '' : `<p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(ev.summary)}</p>`}
           <p class="mt-1 flex flex-wrap gap-x-4 text-sm font-semibold">
             ${ev.lat != null ? `<a href="${eventMapsUrl(ev)}" target="_blank" rel="noopener" class="inline-flex items-center py-2 text-indigo-700 dark:text-indigo-300">Directions</a>` : ''}
-            <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="inline-flex items-center py-2 text-slate-600 dark:text-slate-300 underline">Official info ↗</a>
+            <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="inline-flex items-center py-2 text-slate-600 dark:text-slate-300 ">Official info ↗</a>
             ${spot ? `<button data-act="open" data-val="${spot.id}" class="inline-flex items-center py-2 text-violet-700 dark:text-violet-300 text-left">See ${esc(spot.name)} →</button>` : ''}
             <button data-act="shareev" data-val="${esc(ev.id)}" class="inline-flex items-center py-2 text-slate-600 dark:text-slate-300">${this.state.shareMsg && this.state.shareMsg.id === ev.id ? esc(this.state.shareMsg.text) : 'Share'}</button>
           </p>
@@ -1977,16 +1977,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const note = (tabPage ? `
       <h2 class="mt-6 text-2xl font-extrabold tracking-tight">${kind === 'markets' ? '<span aria-hidden="true">🥕</span> Farmers markets' : 'Events for families'}</h2>
       <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">${kind === 'markets' ? 'Weekly markets with local produce and food trucks.' : 'Festivals, seasonal events and sales in the next 6 weeks.'}</p>
-      ${this.state.when ? `<p class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl px-3 py-2 text-sm bg-violet-50 ring-1 ring-violet-200 dark:bg-violet-500/10 dark:ring-violet-500/30"><span class="font-semibold text-violet-900 dark:text-violet-100">Showing ${esc(whenLabel(this.state.when))}</span><button data-act="whenoff" class="font-semibold underline text-violet-800 dark:text-violet-200">Show all dates</button></p>` : ''}
-      <div class="mt-4 rounded-2xl p-3 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
+      ${this.state.when ? `<p class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl px-3 py-2 text-sm bg-violet-50   dark:bg-violet-500/10 "><span class="font-semibold text-violet-900 dark:text-violet-100">Showing ${esc(whenLabel(this.state.when))}</span><button data-act="whenoff" class="font-semibold  text-violet-800 dark:text-violet-200">Show all dates</button></p>` : ''}
+      <div class="mt-4 rounded-2xl p-3 sm:p-4 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]   ">
         <input type="search" data-act="evsearch" data-kind="${kind}" value="${esc(this.evq || '')}" autocomplete="off" enterkeyhint="search" aria-label="Search ${noun}s"
           placeholder="${kind === 'markets' ? 'Search markets: name, area, day' : 'Search events: pumpkin, Halloween, Surrey, free'}"
-          class="w-full min-h-[40px] sm:min-h-[44px] px-3 sm:px-4 text-sm sm:text-base rounded-lg sm:rounded-xl border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500">
+          class="w-full min-h-[40px] sm:min-h-[44px] px-3 sm:px-4 text-sm sm:text-base rounded-lg sm:rounded-xl   bg-slate-100 text-slate-900 placeholder:text-slate-400  dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500">
         <p id="ev-count" class="mt-2 sm:mt-3 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">${r.count}</p>
         <div class="mt-2 sm:mt-3">${this.locationBar([])}</div>
       </div>`
       // "See all"로 들어온 행사 목록에서 장소 목록으로 돌아가는 버튼 (카테고리 드롭다운을 몰라도 나갈 수 있게)
-      : `<button data-act="cat" data-val="all" class="mt-6 inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:text-slate-200">← Back to all spots</button>`) + `
+      : `<button data-act="cat" data-val="all" class="mt-6 inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold   text-slate-700   dark:text-slate-200">← Back to all spots</button>`) + `
       <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Check each source before you go.</p>`;
     return `${note}<div id="ev-results">${r.html}</div>`;
   }
@@ -2002,7 +2002,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const count = `${plural(evs.length, noun)}${only ? ` on ${esc(whenLabel(this.state.when))}` : ''}${words.length ? ` for “${esc(this.evq.trim())}”` : ''}${this.nearActive() ? `, near ${esc(this.originLabel())}` : ''}`;
     const group = (title, list, hideDay) => list.length ? `<h2 class="mt-8 text-lg font-bold">${title}</h2><div class="mt-3 grid gap-3 md:grid-cols-2">${list.map(ev => this.eventRow(ev, false, hideDay)).join('')}</div>` : '';
     if (!evs.length) return { count, html: `
-      <div class="mt-6 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
+      <div class="mt-6 rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    p-12 text-center">
         <p class="text-lg font-bold">${words.length ? `No ${noun}s match “${esc(this.evq.trim())}”` : `No ${noun}s ${only ? "on " + esc(whenLabel(this.state.when)) : "coming up"}${this.nearActive() ? ` within ${radiusLabel(this.state.radius)}` : ''}`}</p>
         ${this.nearActive() ? '<button data-act="radius" data-val="any" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Show any distance</button>' : ''}
       </div>` };
@@ -2163,7 +2163,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   guideBanner() {
     const g = this.state.guide;
     if (!g) return '';
-    const box = 'mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-3 py-2 text-sm text-teal-900 dark:border-teal-800 dark:bg-teal-950 dark:text-teal-100', btn = 'ml-auto min-h-[36px] px-3 py-1 rounded-lg font-semibold border border-teal-300 hover:border-teal-500 dark:border-teal-700';
+    const box = 'mt-4 flex flex-wrap items-center gap-2 rounded-xl   bg-teal-50 px-3 py-2 text-sm text-teal-900  dark:bg-teal-950 dark:text-teal-100', btn = 'ml-auto min-h-[36px] px-3 py-1 rounded-lg font-semibold    ';
     // "Show all places"를 눌러 전체를 보는 중: 안내 이름과 되돌아가는 버튼만
     if (this.state.guideAll) return `<div class="${box}"><span class="font-semibold">Showing all places</span><button data-act="guideback" class="${btn}">Back to ${esc(g.title)}</button></div>`;
     // 실내·도시 필터를 끄면 안내 목록 제한이 풀려 개수가 맞지 않으니 띠도 숨겨요
@@ -2255,7 +2255,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="flex items-center justify-between text-sm font-semibold text-slate-600 dark:text-slate-300">
           <span>Step ${w.step + 1} of ${WIZ.length}</span>
           <span class="flex items-center gap-4">
-            ${w.step || Object.keys(a).length ? '<button data-act="wizreset" class="underline">Start over</button>' : ''}
+            ${w.step || Object.keys(a).length ? '<button data-act="wizreset" class="">Start over</button>' : ''}
           </span>
         </div>
         <div class="mt-2 h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden" role="progressbar" aria-valuemin="1" aria-valuemax="${WIZ.length}" aria-valuenow="${w.step + 1}" aria-label="Progress">
@@ -2264,13 +2264,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <h2 class="mt-4 sm:mt-6 text-xl sm:text-3xl font-extrabold tracking-tight">${esc(st.q)}</h2>
         <div class="mt-3 sm:mt-5 grid grid-cols-2 gap-2 sm:gap-3" role="radiogroup" aria-label="${esc(st.q)}">
           ${st.opts.map(([v, label, sub]) => { const on = pick === v; return `
-          <button data-act="wizopt" data-val="${st.key}:${v}" role="radio" aria-checked="${on}" class="text-left min-h-[56px] sm:min-h-[72px] rounded-xl sm:rounded-2xl px-3 py-2 sm:p-4 border-2 transition-colors ${on ? 'border-violet-600 bg-violet-50 dark:bg-violet-500/15 dark:border-violet-400' : 'border-slate-200 bg-white hover:border-violet-300 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-violet-500/60'}">
+          <button data-act="wizopt" data-val="${st.key}:${v}" role="radio" aria-checked="${on}" class="text-left min-h-[56px] sm:min-h-[72px] rounded-xl sm:rounded-2xl px-3 py-2 sm:p-4 border-2 transition-colors ${on ? ' bg-violet-50 dark:bg-violet-500/15 ' : ' bg-white   dark:bg-slate-900 '}">
             <span class="flex items-center justify-between gap-2"><span class="text-[15px] sm:text-lg font-bold leading-snug ${on ? 'text-violet-800 dark:text-violet-200' : ''}">${esc(label)}</span>${on ? '<span class="w-6 h-6 shrink-0 rounded-full bg-violet-600 text-white text-sm flex items-center justify-center" aria-hidden="true">✓</span>' : ''}</span>
             ${sub ? `<span class="mt-0.5 sm:mt-1 block text-xs sm:text-sm text-slate-600 dark:text-slate-300">${esc(sub)}</span>` : ''}
           </button>`; }).join('')}
         </div>
         <div class="mt-4 sm:mt-6 flex items-center justify-between gap-3">
-          <button data-act="wizback" ${w.step ? '' : 'disabled'} class="min-h-[48px] px-5 rounded-xl font-semibold border border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-200 disabled:opacity-40">← Back</button>
+          <button data-act="wizback" ${w.step ? '' : 'disabled'} class="min-h-[48px] px-5 rounded-xl font-semibold   text-slate-700  dark:text-slate-200 disabled:opacity-40">← Back</button>
           <button data-act="wiznext" ${pick ? '' : 'disabled'} class="min-h-[48px] px-6 rounded-xl font-bold bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-40">${w.editing ? 'Update results' : w.step === WIZ.length - 1 ? 'Get recommendations' : 'Next →'}</button>
         </div>
         ${/* 답 옵션과 헷갈리지 않게 Back/Next 아래 별도 동작으로: 5개 질문을 모두 "상관없음"으로 두고 바로 결과 (Browse all 대신, 2026-10-01) */ w.editing ? '' : `
@@ -2279,7 +2279,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">We’ll pick from every age, time, length and kind of outing.</p>
         </div>`}
       </section>
-      ${w.editing ? '' : `<div class="max-w-2xl mx-auto mt-8 pt-5 border-t border-slate-200 dark:border-slate-800"><p class="text-sm text-slate-600 dark:text-slate-300">Or jump straight to what's in season:</p>${this.seasonChips()}</div>`}</div>`;
+      ${w.editing ? '' : `<div class="max-w-2xl mx-auto mt-8 pt-5   "><p class="text-sm text-slate-600 dark:text-slate-300">Or jump straight to what's in season:</p>${this.seasonChips()}</div>`}</div>`;
     }
     const r = this.wizResults();
     const grid = list => `<div class="mt-5 grid grid-cols-2 gap-2.5 sm:gap-5 md:grid-cols-3">${list.map(s => this.card(s)).join('')}</div>`;
@@ -2289,7 +2289,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
           ${WIZ.map((st, i) => `<button data-act="wizedit" data-val="${i}" title="Change: ${esc(st.q)}" class="min-h-[28px] sm:min-h-[36px] px-2.5 sm:px-3 py-0.5 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 dark:bg-violet-500/20 dark:text-violet-200">${esc(optLabel(st.key, a[st.key]))}</button>`).join('')}
           ${/* 고른 조건이 하나라도 있으면: 한 번에 모두 "상관없음"으로 바꾸고 목록 새로 */ WIZ.some(st => a[st.key] && a[st.key] !== 'any') ? `<button data-act="wizany" class="ml-1 min-h-[28px] sm:min-h-[36px] px-2.5 sm:px-3 py-0.5 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">Set all to Any <span aria-hidden="true">⏭</span></button>` : ''}
-          <button data-act="wizreset" class="ml-1 min-h-[28px] sm:min-h-[36px] text-xs sm:text-sm font-semibold underline text-slate-600 dark:text-slate-300">Start over</button>
+          <button data-act="wizreset" class="ml-1 min-h-[28px] sm:min-h-[36px] text-xs sm:text-sm font-semibold  text-slate-600 dark:text-slate-300">Start over</button>
         </div>
         ${this.seasonChips()}
         ${this.fxChips()}
@@ -2297,13 +2297,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.state.geoMsg ? `<p class="mt-1 text-xs text-slate-600 dark:text-slate-300" role="status">${esc(this.state.geoMsg)}</p>` : ''}
       </section>
       ${this.planBar()}
-      ${late ? `<p class="mt-4 text-sm text-slate-600 dark:text-slate-300">It's late, so most places are closed. <button data-act="wizset" data-val="when:tomorrow" class="font-semibold underline text-violet-700 dark:text-violet-300">See what's good tomorrow →</button></p>` : ''}
+      ${late ? `<p class="mt-4 text-sm text-slate-600 dark:text-slate-300">It's late, so most places are closed. <button data-act="wizset" data-val="when:tomorrow" class="font-semibold  text-violet-700 dark:text-violet-300">See what's good tomorrow →</button></p>` : ''}
       <div id="list-top" class="mt-8 scroll-mt-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
         <h2 class="text-2xl font-extrabold tracking-tight">${r.top.length ? (r.top.length >= 10 ? `Your top ${r.top.length}` : `${r.top.length} ${r.top.length === 1 ? 'match' : 'matches'}`) + (this.nearActive() ? ` near ${esc(this.originLabel())}` : '') : 'No places match all your choices'}</h2>
         <p class="text-sm text-slate-500 dark:text-slate-400">${r.top.length ? `${plural(r.total, 'place')} fit everything you picked. Best picks first.` : 'Here are close matches instead.'}</p>
       </div>
       ${r.top.length ? grid(r.top) : ''}
-      ${r.total > r.top.length ? `<div class="mt-6 text-center"><button data-act="wizmore" class="min-h-[44px] px-5 py-2.5 rounded-xl font-semibold border border-slate-300 text-slate-700 hover:border-slate-500 dark:border-slate-700 dark:text-slate-200">Show more matches <span class="font-normal text-slate-500 dark:text-slate-400">(${r.total - r.top.length} left)</span></button></div>` : ''}
+      ${r.total > r.top.length ? `<div class="mt-6 text-center"><button data-act="wizmore" class="min-h-[44px] px-5 py-2.5 rounded-xl font-semibold   text-slate-700   dark:text-slate-200">Show more matches <span class="font-normal text-slate-500 dark:text-slate-400">(${r.total - r.top.length} left)</span></button></div>` : ''}
       ${r.also.length ? `
       <div class="mt-10">
         <h3 class="text-xl font-bold">Also worth a try</h3>
@@ -2324,7 +2324,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         const n = all.filter(s => target === 'any' || s.dist <= target).length;
         const what = this.state.q ? (this.state.kw.length ? this.state.kw.map(k => k.label).join(' or ') : `matches for “${esc(this.state.q)}”`) : 'spots';
         return `
-      <div id="list-top" class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-10 text-center">
+      <div id="list-top" class="mt-8 rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    p-10 text-center">
         <p class="text-lg font-bold">No ${esc(what)} within ${radiusLabel(radius)} of ${esc(this.originLabel())}</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">${nearest != null ? `The nearest is ${fmtDist(nearest)} away.` : `Try a wider radius${this.state.cat !== 'all' ? ' or another category' : ''}.`}</p>
         <button data-act="radius" data-val="${target}" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">${target === 'any' ? `Show ${nearest != null ? plural(n, 'place') : 'any distance'}` : `Show ${nearest != null ? `${plural(n, 'place')} within` : 'within'} ${radiusLabel(target)}`}</button>
@@ -2333,16 +2333,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     }
     // 검색 결과가 없을 때: 조건을 하나 빼 보라고 안내하고 예시 검색어를 보여줘요
     if (!items.length && this.state.q) return `
-      <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-10 text-center">
+      <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    p-10 text-center">
         <p class="text-lg font-bold">Nothing matched “${esc(this.state.q)}”</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Remove one of the chips above, or try another search.</p>
         <div class="mt-4 flex flex-wrap justify-center gap-2">
-          ${(['free things to do this weekend', 'spray park near me', 'playground in burnaby', 'rainy day indoor', 'farm this saturday', 'museum tomorrow']).map(x => `<button data-act="qtry" data-val="${esc(x)}" class="px-3 py-1.5 rounded-full text-sm font-semibold border border-slate-300 text-slate-700 hover:border-violet-400 dark:border-slate-600 dark:text-slate-200">${esc(x)}</button>`).join('')}
+          ${(['free things to do this weekend', 'spray park near me', 'playground in burnaby', 'rainy day indoor', 'farm this saturday', 'museum tomorrow']).map(x => `<button data-act="qtry" data-val="${esc(x)}" class="px-3 py-1.5 rounded-full text-sm font-semibold   text-slate-700   dark:text-slate-200">${esc(x)}</button>`).join('')}
         </div>
         <button data-act="qclear" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Clear search</button>
       </div>`;
     if (!items.length) return `
-      <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
+      <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    p-12 text-center">
         ${this.state.openNow && this._hidden && (this._hidden.closed + this._hidden.unknown) ? `
         <p class="text-lg font-bold">Nothing here is open right now</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">${this._hidden.closed} closed and ${this._hidden.unknown} with unknown hours are hidden.</p>
@@ -2371,7 +2371,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       const shown = rest.slice(0, this.state.restShown);
       return `${grid(shown)}${rest.length > shown.length ? `
       <div class="mt-6 text-center">
-        <button data-act="more" class="min-h-[44px] px-5 py-2.5 rounded-xl font-semibold border border-slate-300 text-slate-700 hover:border-slate-500 dark:border-slate-700 dark:text-slate-200">Show more <span class="font-normal text-slate-500 dark:text-slate-400">(${rest.length - shown.length} left)</span></button>
+        <button data-act="more" class="min-h-[44px] px-5 py-2.5 rounded-xl font-semibold   text-slate-700   dark:text-slate-200">Show more <span class="font-normal text-slate-500 dark:text-slate-400">(${rest.length - shown.length} left)</span></button>
       </div>` : ''}`;
     };
     // 키워드 검색: 관련도 순 결과 하나로 (지금 가 볼 이유 순위는 카드 배지·이유 박스에 그대로 남아요)
@@ -2413,17 +2413,17 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const evPin = ev => ({ id: ev.id, name: ev.name, forParents: !!ev.forParents, lat: ev.lat, lng: ev.lng, market: ev.type === 'market', icon: ev.icon || (ev.type === 'market' ? '🥕' : '🎪'), when: `${dayLabel(ev.next)} · ${eventHours(ev)}`, spotId: ev.spotId && byId(ev.spotId) ? ev.spotId : '', source: ev.source || '' });
     this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: CATS[s.cat].dot, mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks,
       events: [...(showEv ? evOthers : []), ...(showMk ? evMarkets : [])].map(evPin) };
-    const evToggle = (act, on, label, n) => `<button data-act="${act}" aria-pressed="${on}" class="flex items-center gap-1 px-2 py-0.5 rounded-full border ${on ? 'bg-amber-100 border-amber-300 text-amber-900 dark:bg-amber-500/20 dark:border-amber-500/40 dark:text-amber-100' : 'border-slate-300 text-slate-500 dark:border-slate-600 dark:text-slate-400'}">${label} <span class="font-normal">${n}</span></button>`;
+    const evToggle = (act, on, label, n) => `<button data-act="${act}" aria-pressed="${on}" class="flex items-center gap-1 px-2 py-0.5 rounded-full  ${on ? 'bg-amber-100  text-amber-900 dark:bg-amber-500/20  dark:text-amber-100' : ' text-slate-500  dark:text-slate-400'}">${label} <span class="font-normal">${n}</span></button>`;
     const picksBar = picks ? `
-    <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl p-4 bg-violet-50 ring-1 ring-violet-200 dark:bg-violet-500/10 dark:ring-violet-500/30">
+    <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl p-4 bg-violet-50   dark:bg-violet-500/10 ">
       <p class="font-semibold text-violet-900 dark:text-violet-100">Showing your ${items.length} picks from Explore</p>
-      <button data-act="view" data-val="list" class="text-sm font-semibold underline text-violet-800 dark:text-violet-200">← Back to the list</button>
-      <button data-act="mapall" class="ml-auto text-sm font-semibold underline text-slate-600 dark:text-slate-300">Show all places</button>
+      <button data-act="view" data-val="list" class="text-sm font-semibold  text-violet-800 dark:text-violet-200">← Back to the list</button>
+      <button data-act="mapall" class="ml-auto text-sm font-semibold  text-slate-600 dark:text-slate-300">Show all places</button>
     </div>` : '';
     return `${picksBar}
     <div class="mt-3 sm:mt-6 grid grid-cols-1 gap-2 sm:gap-4 md:grid-cols-3">
-      <div class="min-w-0 md:col-span-2 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 overflow-hidden">
-        <div class="px-3 sm:px-5 py-1.5 sm:py-3 flex flex-wrap gap-x-2.5 gap-y-0.5 sm:gap-3 text-[11px] sm:text-xs font-semibold border-b border-slate-100 dark:border-slate-800">
+      <div class="min-w-0 md:col-span-2 rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    overflow-hidden">
+        <div class="px-3 sm:px-5 py-1.5 sm:py-3 flex flex-wrap gap-x-2.5 gap-y-0.5 sm:gap-3 text-[11px] sm:text-xs font-semibold   ">
           ${Object.entries(CATS).map(([, c]) => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-3 h-3 rounded-full" style="background:${c.dot}"></span>${c.label}</span>`).join('')}
           <span class="hidden sm:inline text-slate-500 dark:text-slate-400">◆ classic</span>
           ${picks ? '' : `${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}<span class="hidden sm:inline text-slate-500 dark:text-slate-400">next 6 weeks</span>`}
@@ -2432,7 +2432,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       </div>
       <div data-keep-scroll="maplist" class="space-y-1.5 sm:space-y-3 max-h-[36vh] overflow-y-auto sm:max-h-[40vh] md:max-h-[calc(100vh-14rem)] lg:max-h-[650px]">
         ${this._map.events.length ? `<p class="px-1 pt-0.5 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Events & markets · next 6 weeks</p>${this._map.events.map((ev, i) => `
-          <div class="relative"><button data-act="evfocus" data-val="${i}" data-maphl="ev:${i}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-violet-300 dark:hover:ring-violet-700 flex gap-3">
+          <div class="relative"><button data-act="evfocus" data-val="${i}" data-maphl="ev:${i}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]      flex gap-3">
             <span class="w-7 h-7 shrink-0 rounded-full bg-white text-base flex items-center justify-center border-2 ${ev.market ? 'border-emerald-600' : 'border-fuchsia-700'}" aria-hidden="true">${esc(ev.icon)}</span>
             <span class="flex-1 min-w-0 pr-14">
               <span class="block font-bold truncate">${esc(ev.name)}${ev.forParents ? ' <span class="text-[11px] font-bold text-amber-700 dark:text-amber-300">😉 For parents</span>' : ''}</span>
@@ -2440,7 +2440,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             </span>
           </button><button data-act="shareev" data-val="${esc(ev.id)}" aria-label="Share ${esc(ev.name)}" class="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">${this.state.shareMsg && this.state.shareMsg.id === ev.id ? esc(this.state.shareMsg.text) : 'Share'}</button></div>`).join('')}<p class="px-1 pt-1 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Places</p>` : ''}
         ${items.map(s => `
-          <button data-act="open" data-val="${s.id}" data-maphl="${s.id}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-violet-300 dark:hover:ring-violet-700 flex gap-3">
+          <button data-act="open" data-val="${s.id}" data-maphl="${s.id}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]      flex gap-3">
             <span class="w-7 h-7 shrink-0 rounded-full text-white text-xs font-extrabold flex items-center justify-center" style="background:${CATS[s.cat].dot}">${mark(s)}</span>
             <span class="flex-1 min-w-0">
               <span class="block font-bold truncate">${esc(s.name)}</span>
@@ -2478,7 +2478,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     (this._map.events || []).forEach((ev, ei) => {
       const icon = L.divIcon({ className: '', html: `<div class="spot-pin ev${ev.market ? ' mk' : ''}">${esc(ev.icon)}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] });
       const html = `<div style="min-width:180px"><p style="font-weight:700;margin:0">${esc(ev.name)}${ev.forParents ? ' <span style="font-size:11px;font-weight:700;background:#fef3c7;color:#78350f;padding:1px 6px;border-radius:4px;white-space:nowrap">For parents 😉</span>' : ''}</p><p style="margin:4px 0">${esc(ev.when)}</p>
-        <p style="margin:0">${ev.spotId ? `<button data-act="open" data-val="${esc(ev.spotId)}" style="text-decoration:underline;font-weight:600;margin-right:10px">Place details</button>` : ''}${/^https:\/\//.test(ev.source) ? `<a href="${esc(ev.source)}" target="_blank" rel="noopener" style="text-decoration:underline">Official info ↗</a>` : ''}</p></div>`;
+        <p style="margin:0">${ev.spotId ? `<button data-act="open" data-val="${esc(ev.spotId)}" style="font-weight:600;margin-right:10px">Place details</button>` : ''}${/^https:\/\//.test(ev.source) ? `<a href="${esc(ev.source)}" target="_blank" rel="noopener" >Official info ↗</a>` : ''}</p></div>`;
       const emk = L.marker([ev.lat, ev.lng], { icon, title: ev.name, keyboard: true, zIndexOffset: 2000 }).addTo(map).bindPopup(html);
       this._pins['ev:' + ei] = { mk: emk, base: 2000 };
     });
@@ -2545,7 +2545,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   }
   myReviewsView() {
     const { user, reviewsOn } = this.state;
-    const box = body => `<div class="mt-6 max-w-2xl rounded-2xl bg-white dark:bg-slate-900    p-8 text-center">${body}</div>`;
+    const box = body => `<div class="mt-6 max-w-2xl rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    p-8 text-center">${body}</div>`;
     if (!FIREBASE_CONFIG) return box('<p class="font-bold">Reviews aren’t available right now.</p>');
     if (!reviewsOn) return box('<p class="text-slate-600 dark:text-slate-300" role="status">Loading reviews…</p>');
     if (!user) return box('<p class="text-lg font-bold">Sign in to see your reviews</p><p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Sign in with the same Google account you used to write them.</p><button data-act="rvsignin" class="mt-4 min-h-[44px] px-5 rounded-xl font-semibold bg-violet-600 text-white">Sign in with Google</button>');
@@ -2557,7 +2557,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <h2 class="text-2xl font-bold">My reviews</h2>
       <p class="text-sm text-slate-500 dark:text-slate-400">${plural(mine.length, 'place')} you’ve reviewed, newest first. Tap one to edit or delete your review.</p>
       <div class="mt-4 space-y-2">${mine.map(r => { const s = byId(r.spotId); return `
-        <button data-act="open" data-val="${s.id}" class="w-full text-left flex items-start gap-3 rounded-xl p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 hover:ring-violet-300 dark:hover:ring-violet-700">
+        <button data-act="open" data-val="${s.id}" class="w-full text-left flex items-start gap-3 rounded-xl p-4 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]     ">
           <span class="w-8 h-8 shrink-0 rounded-full text-white text-sm flex items-center justify-center" style="background:${CATS[s.cat].dot}" aria-hidden="true">${CATS[s.cat].icon}</span>
           <span class="flex-1 min-w-0">
             <span class="block font-bold truncate">${esc(s.name)}</span>
@@ -2571,7 +2571,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   savedList() {
     const spots = this.state.plan.map(byId);
     if (!spots.length) return `
-      <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-12 text-center">
+      <div class="mt-8 rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    p-12 text-center">
         <p class="text-lg font-bold">Nothing saved yet</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Tap ♡ Save on any card to keep it here. Saved spots stay in this browser.</p>
         <button data-act="view" data-val="list" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Browse spots</button>
@@ -2581,7 +2581,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       const leg = i > 0 ? km(spots[i - 1], s) : null; if (leg) total += leg;
       return `
       ${leg != null ? `<p class="pl-12 text-xs text-slate-500 dark:text-slate-400">↓ ${leg.toFixed(1)} km straight-line</p>` : ''}
-      <div class="flex items-center gap-3 rounded-xl p-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800">
+      <div class="flex items-center gap-3 rounded-xl p-4 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]   ">
         <span class="w-8 h-8 shrink-0 rounded-full text-white text-sm font-extrabold flex items-center justify-center" style="background:${CATS[s.cat].dot}">${i + 1}</span>
         <button data-act="open" data-val="${s.id}" class="flex-1 min-w-0 text-left">
           <span class="block font-bold truncate">${esc(s.name)}</span>
@@ -2600,11 +2600,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         </div>
         <div class="flex gap-2">
           <button data-act="copyplan" class="px-4 py-2 rounded-lg font-semibold bg-violet-600 hover:bg-violet-700 text-white">Copy to share</button>
-          <button data-act="clearplan" class="px-4 py-2 rounded-lg font-semibold border border-slate-200 dark:border-slate-700">Clear all</button>
+          <button data-act="clearplan" class="px-4 py-2 rounded-lg font-semibold   ">Clear all</button>
         </div>
       </div>
       ${this.state.copyMsg ? `<p class="mt-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300">${esc(this.state.copyMsg)}</p>` : ''}
-      ${this.state.copyText ? `<textarea readonly class="mt-2 w-full h-40 p-3 rounded-lg text-sm bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-700">${esc(this.state.copyText)}</textarea>` : ''}
+      ${this.state.copyText ? `<textarea readonly class="mt-2 w-full h-40 p-3 rounded-lg text-sm bg-white dark:bg-slate-900   ">${esc(this.state.copyText)}</textarea>` : ''}
       <div class="mt-5 space-y-2">${rows}</div>
     </div>`;
   }
