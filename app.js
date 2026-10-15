@@ -2095,9 +2095,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(kidProfile(s).agesText)}</span><span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}
           ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
         </div></div>
+        <div class="absolute inset-x-0 bottom-0 px-2.5 sm:px-5 pb-5 sm:pb-6 pt-8 flex items-end justify-between gap-2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"><p class="min-w-0 text-xs sm:text-sm text-white/90 truncate [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p>${spotTags(s).length ? `<p class="max-sm:hidden shrink-0 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-500/85 text-white">#${esc(t.label)}</span>`).join('')}</p>` : ''}</div>
       </div>
       <div class="p-2.5 sm:p-5 flex flex-col flex-1">
-        <div class="flex items-center justify-between gap-2"><p class="min-w-0 text-xs sm:text-sm text-slate-500 dark:text-slate-400 truncate">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p>${spotTags(s).length ? `<p class="max-sm:hidden shrink-0 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300">#${esc(t.label)}</span>`).join('')}</p>` : ''}</div>
         ${this.planLater() && HOURS_READY ? (() => {
           // 날짜 계획: 그날(들) 영업시간
           const ph = this.planHours(s);
