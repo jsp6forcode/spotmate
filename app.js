@@ -2089,7 +2089,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     return `
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl sm:rounded-[20px] bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition overflow-hidden">
       <div class="relative">
-        ${this.cover(s, 'h-24 sm:h-40')}
+        ${this.cover(s, 'h-36 sm:h-60')}
         <div class="absolute inset-x-0 top-0 px-2.5 sm:px-5 pt-2 sm:pt-4 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="text-sm sm:text-lg font-bold leading-snug text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
         <div class="mt-0.5 flex flex-wrap gap-x-2 sm:gap-x-3 text-xs sm:text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">
           ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(kidProfile(s).agesText)}</span><span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}
