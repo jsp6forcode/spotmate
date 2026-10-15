@@ -1940,7 +1940,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (!s.when) {
       const h = vanWallClock().getHours();
       return s.view === 'list' && s.cat !== 'events' && (h >= 20 || h < 6) ? `
-    <p class="mt-6 text-sm text-slate-600 dark:text-slate-300">It's late, so most places are closed. <button data-act="whenset" data-val="${h < 6 ? 'today' : 'tomorrow'}" class="font-semibold text-violet-700 dark:text-violet-300">See what's worth it ${h < 6 ? 'today' : 'tomorrow'} →</button></p>` : '';
+    <p class="mt-4 sm:mt-6 text-xs sm:text-sm text-slate-600 dark:text-slate-300">It's late, so most places are closed. <button data-act="whenset" data-val="${h < 6 ? 'today' : 'tomorrow'}" class="font-semibold text-violet-700 dark:text-violet-300">See what's worth it ${h < 6 ? 'today' : 'tomorrow'} →</button></p>` : '';
     }
     const ds = whenDates(s.when), fc = s.forecast || {};
     const rainy = ds.some(d => fc[d] && (fc[d].pop >= 60 || fc[d].kind === 'rain'));
@@ -1961,10 +1961,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   seasonChips() {
     const tags = activeTags().filter(t => this._tagCounts && this._tagCounts[t.id]);
     if (!tags.length) return '';
-    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1 sm:py-2 rounded-full ${on ? 'bg-orange-500 text-white' : 'bg-orange-50 text-orange-800 hover:bg-orange-100 dark:bg-orange-500/15 dark:text-orange-300 dark:hover:bg-orange-500/25'}">#${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
+    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-[11px] sm:text-sm font-semibold px-2 sm:px-3 py-0.5 sm:py-2 rounded-full ${on ? 'bg-orange-500 text-white' : 'bg-orange-50 text-orange-800 hover:bg-orange-100 dark:bg-orange-500/15 dark:text-orange-300 dark:hover:bg-orange-500/25'}">#${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
     return `
-    <div class="mt-3 sm:mt-4 flex flex-wrap items-center gap-x-1.5 sm:gap-x-2 gap-y-1.5 [&>*]:whitespace-nowrap">
-      ${tags.length ? `<span class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>${tags.map(chip).join('')}` : ''}
+    <div class="mt-2 sm:mt-4 flex flex-wrap items-center gap-x-1 sm:gap-x-2 gap-y-1 [&>*]:whitespace-nowrap">
+      ${tags.length ? `<span class="text-[11px] sm:text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>${tags.map(chip).join('')}` : ''}
     </div>`;
   }
   // Events 탭(마켓 빼고) · Markets 탭(파머스 마켓만). kind 없이 부르면 예전처럼 둘 다 (카테고리 "Events")
@@ -2297,7 +2297,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.state.geoMsg ? `<p class="mt-1 text-xs text-slate-600 dark:text-slate-300" role="status">${esc(this.state.geoMsg)}</p>` : ''}
       </section>
       ${this.planBar()}
-      ${late ? `<p class="mt-4 text-sm text-slate-600 dark:text-slate-300">It's late, so most places are closed. <button data-act="wizset" data-val="when:tomorrow" class="font-semibold  text-violet-700 dark:text-violet-300">See what's good tomorrow →</button></p>` : ''}
+      ${late ? `<p class="mt-3 sm:mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300">It's late, so most places are closed. <button data-act="wizset" data-val="when:tomorrow" class="font-semibold  text-violet-700 dark:text-violet-300">See what's good tomorrow →</button></p>` : ''}
       <div id="list-top" class="mt-8 scroll-mt-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
         <h2 class="text-2xl font-extrabold tracking-tight">${r.top.length ? (r.top.length >= 10 ? `Your top ${r.top.length}` : `${r.top.length} ${r.top.length === 1 ? 'match' : 'matches'}`) + (this.nearActive() ? ` near ${esc(this.originLabel())}` : '') : 'No places match all your choices'}</h2>
         <p class="text-sm text-slate-500 dark:text-slate-400">${r.top.length ? `${plural(r.total, 'place')} fit everything you picked. Best picks first.` : 'Here are close matches instead.'}</p>
