@@ -2668,15 +2668,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
           <div class="absolute inset-x-0 top-0 pl-5 pr-16 pt-5 pb-12 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none"><h2 class="text-2xl sm:text-3xl font-bold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h2>
           <p class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${KIDS_ONLY && isKid(s) ? `<span>${esc(kidProfile(s).agesText)}</span><span>${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span>${esc(s.price)}</span>` : ''}` : `${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>`}</p></div>
+          <div class="absolute inset-x-0 bottom-0 px-5 pb-6 pt-10 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"><p class="text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">${esc(s.area)}${cur && cur.dist != null ? `, ${fmtDist(cur.dist)}` : ''}</p></div>
         </div>
         <div class="px-5 pt-5">
-          <div class="flex items-baseline justify-between gap-3"><p class="mt-1 text-slate-600 dark:text-slate-300">${esc(s.area)}${cur && cur.dist != null ? `, ${fmtDist(cur.dist)}` : ''}</p><button data-act="report" data-val="${esc(s.id)}" class="shrink-0 text-xs  font-semibold text-violet-700 dark:text-violet-300">Something wrong? Tell us</button></div>
+          <div class="flex justify-end"><button data-act="report" data-val="${esc(s.id)}" class="shrink-0 text-xs  font-semibold text-violet-700 dark:text-violet-300">Something wrong? Tell us</button></div>
           ${this.planLater() && HOURS_READY && this.planHours(s) ? (() => { const ph = this.planHours(s); return `
           <p class="mt-1 text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)} <span class="font-normal text-slate-500 dark:text-slate-400">(${WHEN_PHRASE[this.state.when]})</span></p>`; })()
           : (() => { const oi = openInfo(s); return oi ? `
           <p class="mt-1 text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>${(s.hoursSource === 'osm' || s.hoursSource === 'web') && !isDaylight(s) ? `
           <p class="text-xs text-slate-500 dark:text-slate-400">Hours: ${esc(weekHours(s) || s.hours)}</p>` : ''}`
-            : '<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Opening hours unknown. Check Google Maps.</p>'; })()}
+            : ''; })()}
           ${TRENDS_ON && s.rise != null ? `
           <p class="mt-2 text-sm ${s.rise >= RISING_MIN ? 'font-semibold text-rose-600 dark:text-rose-300' : 'text-slate-600 dark:text-slate-300'}">${riseText(s.rise, 'search level')}
             <span class="block text-xs font-normal text-slate-500 dark:text-slate-400">Google searches in BC over ${esc(recentLabel())}, compared with the 4 weeks before.</span></p>` : ''}
