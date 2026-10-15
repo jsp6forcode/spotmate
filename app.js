@@ -817,7 +817,7 @@ class App {
     this.root.addEventListener('change', e => this.onChange(e));
     // 검색창: 입력 중인 글은 다시 그려져도 남도록 따로 들고 있다가, Enter/Search에 검색
     this.root.addEventListener('input', e => {
-      if (e.target.name === 'q') this.qDraft = e.target.value;
+      if (e.target.name === 'q') { this.qDraft = e.target.value; this.showSuggest(e.target); }
       if (e.target.dataset.act === 'evsearch') {
         this.evq = e.target.value;
         const r = this.eventsResults(e.target.dataset.kind), box = document.getElementById('ev-results'), cnt = document.getElementById('ev-count');
@@ -828,6 +828,20 @@ class App {
       // 피드백 폼: 다른 이유로 화면이 다시 그려져도 쓰던 글이 남게
       if (e.target.form && e.target.form.dataset.act === 'feedback') this.fbDraft[e.target.name] = e.target.value;
     });
+    this.root.addEventListener('keydown', e => {
+      if (e.target.name !== 'q') return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { if (this.moveSuggest(e.key === 'ArrowDown' ? 1 : -1)) e.preventDefault(); }
+      else if (e.key === 'Escape') this.hideSuggest();
+      else if (e.key === 'Enter' && this.sugIdx >= 0) {
+        const b = document.querySelector(`#q-suggest [data-i="${this.sugIdx}"]`);
+        if (b) { e.preventDefault(); const id = b.dataset.suggest; this.hideSuggest(); this.opener = null; this.openModal(id); }
+      }
+    });
+    this.root.addEventListener('mousedown', e => {
+      const b = e.target.closest && e.target.closest('[data-suggest]');
+      if (b) { e.preventDefault(); const id = b.dataset.suggest; this.hideSuggest(); this.opener = null; this.openModal(id); }
+    });
+    this.root.addEventListener('focusout', e => { if (e.target.name === 'q') setTimeout(() => this.hideSuggest(), 120); });
     this.root.addEventListener('submit', e => {
       if (e.target.matches('form[data-act="feedback"]')) { e.preventDefault(); return this.sendFeedback(); }
       if (!e.target.matches('form[data-act="search"]')) return;
@@ -1223,6 +1237,39 @@ class App {
 
 
   // ── 데이터 ──
+  // 검색창 자동완성: 글자를 치기 시작하면 이름이 맞는 장소를 밑에 추천해요 (누르면 그 장소 창이 열려요)
+  suggestions(q) {
+    const t = q.trim().toLowerCase();
+    if (t.length < 2) return [];
+    const words = t.split(/\s+/);
+    const scored = [];
+    for (const s of SPOTS) {
+      if (!isKid(s) || (s.venue && !(this._spotEvents && this._spotEvents[s.id]))) continue;
+      const name = s.name.toLowerCase(), hay = `${name} ${(s.area || '').toLowerCase()}`;
+      if (!words.every(w => hay.includes(w))) continue;
+      const sc = name.startsWith(t) ? 0 : name.split(/[\s\-/&]+/).some(w => w.startsWith(words[0])) && words.every(w => name.includes(w)) ? 1 : words.every(w => name.includes(w)) ? 2 : 3;
+      scored.push([sc, name.length, s]);
+    }
+    return scored.sort((a, b) => a[0] - b[0] || a[1] - b[1]).slice(0, 6).map(x => x[2]);
+  }
+  showSuggest(input) {
+    const form = input.closest('form'); if (!form) return;
+    let box = form.querySelector('#q-suggest');
+    const list = this.suggestions(input.value);
+    if (!list.length) { if (box) box.remove(); return; }
+    if (!box) { box = document.createElement('div'); box.id = 'q-suggest'; box.setAttribute('role', 'listbox'); box.className = 'absolute left-0 right-0 top-full mt-1 z-40 rounded-xl bg-white dark:bg-slate-800 shadow-[0_8px_30px_rgba(15,23,42,.25)] overflow-hidden'; form.appendChild(box); }
+    box.innerHTML = list.map((s, i) => `<button type="button" role="option" data-suggest="${esc(s.id)}" data-i="${i}" class="w-full text-left px-4 py-2.5 flex items-baseline justify-between gap-3 text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-700"><span class="min-w-0 truncate text-sm font-semibold">${esc(s.name)}</span><span class="shrink-0 text-xs text-slate-500 dark:text-slate-400">${esc(s.area || '')}</span></button>`).join('');
+    this.sugIdx = -1;
+  }
+  hideSuggest() { const b = document.getElementById('q-suggest'); if (b) b.remove(); this.sugIdx = -1; }
+  moveSuggest(dir) {
+    const items = [...document.querySelectorAll('#q-suggest [data-suggest]')]; if (!items.length) return false;
+    let i = (this.sugIdx ?? -1) + dir;
+    if (i >= items.length) i = -1; else if (i < -1) i = items.length - 1;
+    this.sugIdx = i;
+    items.forEach((b, k) => { b.classList.toggle('bg-slate-100', k === i); b.classList.toggle('dark:bg-slate-700', k === i); });
+    return true;
+  }
   list() {
     const { cat, sort, radius } = this.state;
     if (cat === 'events') return [];
