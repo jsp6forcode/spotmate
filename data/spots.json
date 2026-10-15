@@ -218,7 +218,7 @@
       "signals": [], "why": "", "tips": ["There are rocky sections, so wear sneakers"]
     },
     {
-      "id": "bvm", "hours": "Oct 23-25 16:00-21:00; Oct 30-31 16:00-21:00; Nov 25-Dec 20 We-Su 14:00-21:00; Dec 21-Dec 23 14:00-21:00; Dec 26-Dec 31 14:00-21:00", "hoursSource": "web", "hoursUrl": "https://www.burnabyvillagemuseum.ca/EN/main/visit/hours-rates.html", "hoursUntil": "2026-12-31", "cat": "city", "kids": true, "gem": true, "name": "Burnaby Village Museum", "area": "Burnaby",
+      "id": "bvm", "hours": "Oct 23-25 16:00-21:00; Oct 30-31 16:00-21:00; Nov 25-Dec 13 We-Su 14:00-21:00; Dec 16-Dec 23 14:00-21:00; Dec 26-Dec 31 14:00-21:00", "hoursSource": "web", "hoursUrl": "https://www.burnabyvillagemuseum.ca/EN/main/visit/hours-rates.html", "hoursUntil": "2026-12-31", "cat": "city", "kids": true, "gem": true, "name": "Burnaby Village Museum", "area": "Burnaby",
       "lat": 49.2399, "lng": -122.9669, "emoji": "🎠", "placeId": "ChIJA288NqZ3hlQRdrlOknfGAMk",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/Vorce_Station%2C_Burnaby%2C_BC_01.jpg/960px-Vorce_Station%2C_Burnaby%2C_BC_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Xiao23","license":"CC BY-SA 3.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/3.0","source":"https://commons.wikimedia.org/wiki/File:Vorce_Station,_Burnaby,_BC_01.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "attraction", "weather": ["sunny", "cloudy"],

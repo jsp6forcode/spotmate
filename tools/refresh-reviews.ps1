@@ -24,6 +24,7 @@ $rules = @(
 )
 
 $spots = (Get-Content (Join-Path $root 'data/spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots
+$keepWhenTempClosed = @('bvm')   # 시즌 한정으로 열리는 곳 (Burnaby Village Museum): Google은 임시 휴업으로 표시하지만 행사 때 열려서 계속 보여줘요 (사용자, 2026-10-14)
 $inactive = [ordered]@{}
 $lowFamily = [ordered]@{}   # family 인데 평점·리뷰 수 기준엔 못 미치는 곳 (숨기지 않고 표시만 달라져요)
 $checked = 0; $calls = 0; $errors = 0
@@ -53,7 +54,7 @@ foreach ($s in $spots) {
     $errors++; $failed.Add($s.id); continue
   }
   if ($p.businessStatus -eq 'CLOSED_PERMANENTLY') { $inactive[$s.id] = 'permanently closed'; continue }
-  if ($p.businessStatus -eq 'CLOSED_TEMPORARILY') { $inactive[$s.id] = 'temporarily closed'; continue }
+  if ($p.businessStatus -eq 'CLOSED_TEMPORARILY' -and $keepWhenTempClosed -notcontains $s.id) { $inactive[$s.id] = 'temporarily closed'; continue }
   if ([double]$p.rating -lt $rule.minRating -or [int]$p.userRatingCount -lt $rule.minReviews) {
     # 아이 동반(family) 장소는 평점·리뷰 수가 모자라도 숨기지 않아요 (동네 공원·시설은 리뷰가 적어요). 기준 문구만 빼도록 lowFamily 에 적고, 폐업·Google에서 사라짐만 숨겨요
     if ($rule.name -eq 'family') { $lowFamily[$s.id] = 'below the Google rating or review minimum' }
