@@ -2686,13 +2686,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             // 같은 시즌 설명(#태그 줄)이 이미 그 행사를 말하면 행사 칩은 생략 ("Pumpkin patch"가 칩과 줄에 두 번 나오지 않게)
             const tagSeen = new Set(); tags.forEach(t => keyWords(t.spots[s.id].why).forEach(w => tagSeen.add(w)));
             const evShown = evs.filter(ev => !overlapsSeen(eventReason(ev, s, ev.next).replace(/^[^:]*:\s*/, ''), tagSeen));
-            const chips = [
-              ...evShown.map(ev => chip(`<span aria-hidden="true">${esc(ev.icon || '🎪')}</span> ${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}`)),
-              ...tags.map(t => chip(`#${esc(t.label)}`)),
-            ].join('');
-            const extra = [
-              ...tags.map(t => { const x = t.spots[s.id]; return !dd.fresh(x.why) ? '' : line(`<span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class=" text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}`); }),
-            ].join('');
+            const chips = evShown.map(ev => chip(`<span aria-hidden="true">${esc(ev.icon || '🎪')}</span> ${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}`)).join('');
+            // 시즌 태그: 주황 칩 바로 뒤에 같은 줄로 이유가 이어져요 (#태그를 다시 쓰지 않아요). 이유가 없으면 칩만
+            const extra = tags.map(t => { const x = t.spots[s.id]; return !dd.fresh(x.why)
+              ? `<div class="mt-2 flex">${chip(`#${esc(t.label)}`)}</div>`
+              : `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${chip(`#${esc(t.label)}`)} ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class=" text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('');
             const chipsBlock = `${chips || extra ? `
           <div>
             ${chips ? `<div class="flex flex-wrap gap-2">${chips}</div>` : ''}${extra}
@@ -2736,7 +2734,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const list = (title, items, mark) => items && items.length ? `
             <div>
               <h3 class="font-bold">${title}</h3>
-              <ul class="mt-2 space-y-1.5">${items.map(t => `<li class="text-sm text-slate-700 dark:text-slate-300 flex gap-2"><span class="shrink-0" aria-hidden="true">${mark}</span>${esc(t)}</li>`).join('')}</ul>
+              <ul class="mt-2 space-y-1.5">${items.map(t => `<li class="text-sm text-slate-700 dark:text-slate-300">${esc(t)}</li>`).join('')}</ul>
             </div>` : '';
             // 앞 칸(Good to know·tip·후기·시즌)에서 이미 한 말은 빼요
             const body = list('Things to do', (g.do || []).filter(dd.fresh), '•') + list('What to eat', (g.eat || []).filter(dd.fresh), '•');
