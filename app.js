@@ -2741,7 +2741,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             return body ? `
           <section class="space-y-5">
             ${body}
-            ${g.do || g.eat ? `<p class="text-xs text-slate-500 dark:text-slate-400">${esc(GUIDES_NOTE || 'Check the official site before you go.')}</p>` : ''}
           </section>` : '';
           })()}
 
