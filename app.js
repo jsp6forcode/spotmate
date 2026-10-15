@@ -2090,13 +2090,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl sm:rounded-[20px] bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition overflow-hidden">
       <div class="relative">
         ${this.cover(s, 'h-24 sm:h-40')}
-        <span class="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 text-[10px] sm:text-xs font-bold px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full max-w-[60%] truncate bg-white/90 text-slate-900 shadow-sm">${esc(c.label)}</span>
-        ${badge ? `<div class="absolute top-1.5 right-1.5 sm:top-3 sm:right-3 flex flex-col items-end gap-1 max-sm:scale-90 origin-top-right">
-          ${badge ? `<span class="${rank ? `text-sm font-extrabold px-3 py-1 shadow ring-2 ring-white/80 ${rank <= 3 ? 'bg-amber-400 text-slate-950' : 'bg-violet-700 text-white'}` : `text-xs font-bold px-2.5 py-1 text-white ${badge === 'New' ? 'bg-fuchsia-600' : 'bg-slate-900/75'}`} rounded-full">${badge}</span>` : ''}
-        </div>` : ''}
+        <div class="absolute inset-x-0 top-0 px-2.5 sm:px-5 pt-2 sm:pt-4 pb-6 sm:pb-8 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="text-sm sm:text-lg font-bold leading-snug text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3></div>
       </div>
       <div class="p-2.5 sm:p-5 flex flex-col flex-1">
-        <h3 class="text-sm sm:text-lg font-bold leading-snug group-hover:text-violet-700 dark:group-hover:text-violet-300">${esc(s.name)}</h3>
         <div class="flex items-center justify-between gap-2"><p class="min-w-0 text-xs sm:text-sm text-slate-500 dark:text-slate-400 truncate">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p>${spotTags(s).length ? `<p class="max-sm:hidden shrink-0 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300">#${esc(t.label)}</span>`).join('')}</p>` : ''}</div>
         ${this.planLater() && HOURS_READY ? (() => {
           // 날짜 계획: 그날(들) 영업시간
