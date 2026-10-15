@@ -1457,8 +1457,8 @@ class App {
         if (p && map) { map.setView(p.mk.getLatLng(), Math.max(map.getZoom(), 13), { animate: true }); p.mk.openPopup(); }
         return;
       }
-      case 'mapevents':return this.set({ mapEvents: this.state.mapEvents === false });
-      case 'mapmarkets': return this.set({ mapMarkets: this.state.mapMarkets === false });
+      case 'mapevents':return this.set({ mapEvents: !this.state.mapEvents });
+      case 'mapmarkets': return this.set({ mapMarkets: !this.state.mapMarkets });
       case 'mode': return this.set({ browse: val === 'browse', q: '', kw: [], unused: [] });
       // "I'm flexible, show me ideas": 남은 질문을 모두 "상관없음"으로 두고 바로 결과
       // "Anything works for us": 5개 질문 모두 "상관없음"으로 바로 결과
@@ -2481,7 +2481,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 행사·파머스 마켓 핀: Events·Markets 탭과 같은 기준(앞으로 6주, 위치 필터). 추천 장소만 보는 지도엔 안 그려요
     const evAll = picks ? [] : this.upcomingEvents(45).map(ev => { const sp = ev.spotId && byId(ev.spotId); return ev.lat != null ? ev : sp ? { ...ev, lat: sp.lat, lng: sp.lng } : null; }).filter(Boolean).filter(ev => !this.state.kw.length || this.state.kw.some(k => k.re.test(`${ev.name} ${ev.summary || ""} ${ev.venue || ""} ${ev.area || ""} ${ev.type === "market" ? "market farmers market" : ev.type}`)));   // 검색 중이면 검색어에 맞는 행사·마켓만
     const evMarkets = evAll.filter(ev => ev.type === 'market'), evOthers = evAll.filter(ev => ev.type !== 'market');
-    const showEv = this.state.mapEvents !== false, showMk = this.state.mapMarkets !== false;
+    const showEv = this.state.mapEvents === true, showMk = this.state.mapMarkets === true;
     const evPin = ev => ({ id: ev.id, name: ev.name, forParents: !!ev.forParents, lat: ev.lat, lng: ev.lng, market: ev.type === 'market', icon: ev.icon || (ev.type === 'market' ? '🥕' : '🎪'), when: `${dayLabel(ev.next)} · ${eventHours(ev)}`, spotId: ev.spotId && byId(ev.spotId) ? ev.spotId : '', source: ev.source || '' });
     this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: CATS[s.cat].dot, mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks,
       events: [...(showEv ? evOthers : []), ...(showMk ? evMarkets : [])].map(evPin) };
