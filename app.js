@@ -2404,7 +2404,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // Explore 추천 결과에서 왔으면 그 장소들만, 추천 순서 번호(1, 2, 3…)로
     const picks = this.state.mapPicks;
     if (picks) items = picks.map(byId).filter(Boolean).map((s, i) => ({ ...s, pickNo: i + 1, dist: origin ? km(origin, s) : null }));
-    const mark = s => (isVanClassic(s) ? '◆' : '★');
+    const mark = s => '★';
     // 실제 지도는 다 그린 뒤 drawMap()이 #lmap에 그려요 (핀·기준 위치·반경 원)
     // 행사·파머스 마켓 핀: Events·Markets 탭과 같은 기준(앞으로 6주, 위치 필터). 추천 장소만 보는 지도엔 안 그려요
     const evAll = picks ? [] : this.upcomingEvents(45).map(ev => { const sp = ev.spotId && byId(ev.spotId); return ev.lat != null ? ev : sp ? { ...ev, lat: sp.lat, lng: sp.lng } : null; }).filter(Boolean).filter(ev => !this.state.kw.length || this.state.kw.some(k => k.re.test(`${ev.name} ${ev.summary || ""} ${ev.venue || ""} ${ev.area || ""} ${ev.type === "market" ? "market farmers market" : ev.type}`)));   // 검색 중이면 검색어에 맞는 행사·마켓만
@@ -2425,7 +2425,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <div class="min-w-0 md:col-span-2 rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    overflow-hidden">
         <div class="px-3 sm:px-5 py-1.5 sm:py-3 flex flex-wrap gap-x-2.5 gap-y-0.5 sm:gap-3 text-[11px] sm:text-xs font-semibold   ">
           ${Object.entries(CATS).map(([, c]) => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-3 h-3 rounded-full" style="background:${c.dot}"></span>${c.label}</span>`).join('')}
-          <span class="hidden sm:inline text-slate-500 dark:text-slate-400">◆ classic</span>
           ${picks ? '' : `${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}<span class="hidden sm:inline text-slate-500 dark:text-slate-400">next 6 weeks</span>`}
         </div>
         <div id="lmap" class="h-[32vh] min-h-[200px] sm:h-[50vh] sm:min-h-[320px] md:h-[calc(100vh-14rem)] md:min-h-[420px] lg:h-[600px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
