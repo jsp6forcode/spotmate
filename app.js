@@ -391,6 +391,14 @@ let NOTES = {}, NOTES_META = { updatedAt: '', note: '' };
 let SEASON = [], SEASON_NOTE = '';
 const activeTags = () => { const d = vanDate(0); return SEASON.filter(t => t.from <= d && d <= t.to && t.spots); };
 const spotTags = s => activeTags().filter(t => t.spots[s.id]);
+// 태그별 색 (카드 사진 모서리 칩 = solid, 목록 위 칩 = soft). 새 태그는 회색 기본값
+const TAG_STYLE = {
+  fallcolours: { solid: 'bg-amber-600 text-white', soft: 'bg-amber-50 text-amber-800 hover:bg-amber-100 dark:bg-amber-500/15 dark:text-amber-300 dark:hover:bg-amber-500/25' },
+  halloween: { solid: 'bg-purple-600 text-white', soft: 'bg-purple-50 text-purple-800 hover:bg-purple-100 dark:bg-purple-500/15 dark:text-purple-300 dark:hover:bg-purple-500/25' },
+  salmonrun: { solid: 'bg-rose-500 text-white', soft: 'bg-rose-50 text-rose-800 hover:bg-rose-100 dark:bg-rose-500/15 dark:text-rose-300 dark:hover:bg-rose-500/25' },
+  skiseasonsoon: { solid: 'bg-sky-600 text-white', soft: 'bg-sky-50 text-sky-800 hover:bg-sky-100 dark:bg-sky-500/15 dark:text-sky-300 dark:hover:bg-sky-500/25' }
+};
+const tagStyle = id => TAG_STYLE[id] || { solid: 'bg-slate-600 text-white', soft: 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700' };
 // 데이터 기준일 → "today", "yesterday", "3 days ago"
 // data/parking.json: 스팟 근처 400m 안 주차장 (OpenStreetMap). { id: [{ m, fee?, kind?, name?, customers? }] }
 let PARKING = { spots: {}, radius: 400 };
@@ -1961,7 +1969,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   seasonChips() {
     const tags = activeTags().filter(t => this._tagCounts && this._tagCounts[t.id]);
     if (!tags.length) return '';
-    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-[11px] sm:text-sm font-semibold px-2 sm:px-3 py-0.5 sm:py-2 rounded-full ${on ? 'bg-orange-500 text-white' : 'bg-orange-50 text-orange-800 hover:bg-orange-100 dark:bg-orange-500/15 dark:text-orange-300 dark:hover:bg-orange-500/25'}">#${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
+    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-[11px] sm:text-sm font-semibold px-2 sm:px-3 py-0.5 sm:py-2 rounded-full ${on ? tagStyle(t.id).solid : tagStyle(t.id).soft}">#${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
     return `
     <div class="mt-2 sm:mt-4 flex flex-wrap items-center gap-x-1 sm:gap-x-2 gap-y-1 [&>*]:whitespace-nowrap">
       ${tags.length ? `<span class="text-[11px] sm:text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>${tags.map(chip).join('')}` : ''}
@@ -2088,10 +2096,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const evExtra = evText && why && why.text !== evText ? evText : '';
     return `
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group relative cursor-pointer flex flex-col rounded-2xl sm:rounded-[20px] bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition">
-      ${spotTags(s).length ? `<p class="max-sm:hidden absolute -top-2 -left-2 z-10 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-500 text-white shadow-md">#${esc(t.label)}</span>`).join('')}</p>` : ''}
+      ${spotTags(s).length ? `<p class="absolute -top-1.5 -left-1.5 sm:-top-2 sm:-left-2 z-10 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}</p>` : ''}
       <div class="relative rounded-t-2xl sm:rounded-t-[20px] overflow-hidden">
         ${this.cover(s, 'h-36 sm:h-60')}
-        <div class="absolute inset-x-0 top-0 px-2.5 sm:px-5 pt-2 sm:pt-4 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="text-sm sm:text-lg font-bold leading-snug text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
+        <div class="absolute inset-x-0 top-0 px-2.5 sm:px-5 pt-3.5 sm:pt-4 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="text-sm sm:text-lg font-bold leading-snug text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
         <div class="mt-0.5 flex flex-wrap gap-x-2 sm:gap-x-3 text-xs sm:text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">
           ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(kidProfile(s).agesText)}</span><span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}
           ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
