@@ -1839,15 +1839,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div class="${s.cat === 'events' ? 'contents' : this._moreCls}">
           <label class="flex shrink-0 items-center">
             <select data-act="cat" aria-label="Category" class="min-h-[34px] sm:min-h-[34px] px-2 sm:px-2.5 py-1 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs sm:text-[13px] font-semibold">
-              ${[['all', 'Category'], ...catOptions().map(k => [k, k === 'events' ? 'Events' : CATS[k].label])]
-                .map(([k, label]) => `<option value="${k}" ${s.cat === k ? 'selected' : ''}>${label}</option>`).join('')}
+              <option value="__ph" disabled hidden ${s.cat === 'all' ? 'selected' : ''}>Category</option>${[['all', 'All'], ...catOptions().map(k => [k, k === 'events' ? 'Events' : CATS[k].label])]
+                .map(([k, label]) => `<option value="${k}" ${s.cat === k && k !== 'all' ? 'selected' : ''}>${label}</option>`).join('')}
             </select>
           </label>
           </div>
           ${s.cat === 'events' ? '' : `
           <label class="flex shrink-0 items-center">
             <select data-act="when" aria-label="When are you going" class="max-sm:w-[5.5rem] min-h-[30px] sm:min-h-[34px] px-2 sm:px-2.5 py-1 sm:py-1 rounded-lg ${s.when ? 'bg-violet-100 text-violet-900 dark:bg-violet-900 dark:text-violet-100' : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100'} text-xs sm:text-[13px] font-semibold">
-              ${['', 'today', 'tomorrow', 'weekend', 'sat', 'sun'].map(w => `<option value="${w}" ${s.when === w ? 'selected' : ''}>${esc(w ? whenLabel(w) : 'When')}</option>`).join('')}
+              <option value="__ph" disabled hidden ${!s.when ? 'selected' : ''}>When</option>${['', 'today', 'tomorrow', 'weekend', 'sat', 'sun'].map(w => `<option value="${w}" ${s.when === w && w ? 'selected' : ''}>${esc(w ? whenLabel(w) : 'Any time')}</option>`).join('')}
             </select>
           </label>`}
           ${s.cat === 'events' || !HOURS_READY ? '' : `
@@ -1859,7 +1859,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div class="${this._moreCls}">
           <label class="sm:ml-auto flex shrink-0 items-center">
             <select data-act="sort" aria-label="Sort" class="min-h-[34px] sm:min-h-[34px] px-2 sm:px-2.5 py-1 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs sm:text-[13px] font-semibold">
-              <option value="fresh" ${s.sort === 'fresh' ? 'selected' : ''}>Sort</option>
+              <option value="__ph" disabled hidden ${s.sort === 'fresh' ? 'selected' : ''}>Sort</option><option value="fresh">Worth going now</option>
               <option value="distance" ${s.sort === 'distance' ? 'selected' : ''}>Distance</option>
             </select>
           </label>
