@@ -2101,11 +2101,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.planLater() && HOURS_READY ? (() => {
           // 날짜 계획: 그날(들) 영업시간
           const ph = this.planHours(s);
-          if (!ph) return '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>';
+          if (!ph) return '';   // 규칙 (사용자, 2026-10-14): 영업시간을 모르면 카드에 "Hours unknown"을 보여주지 않아요
           return `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)}</p>`; })()
         : (() => { const oi = openInfo(s); return oi
           ? `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>`
-          : HOURS_READY ? '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Hours unknown</p>' : ''; })()}
+          : ''; })()}
         <p class="hidden sm:block mt-2 sm:mt-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(s.summary)}</p>
         ${why ? `
         <div class="mt-2 sm:mt-3 rounded-lg bg-amber-50 dark:bg-amber-500/10 -mx-1.5 px-1.5 sm:-mx-3 sm:px-3 py-1 sm:py-2">
