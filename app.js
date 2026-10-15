@@ -1835,10 +1835,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           return `
         <div class="flex flex-wrap items-center gap-1.5 sm:gap-x-3 sm:gap-y-2">
           ${s.cat === 'events' ? '' : `
-          <button data-act="filters" aria-expanded="${!!open}" class="sm:hidden order-first shrink-0 min-h-[30px] sm:min-h-[34px] px-2.5 sm:px-2.5 py-1 sm:py-1 rounded-lg sm:rounded-xl text-xs sm:text-[13px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">${open ? 'Hide filters' : `Filters${more ? ` · ${more}` : ''}`}</button>`}
+          <button data-act="filters" aria-expanded="${!!open}" class="sm:hidden order-first shrink-0 min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">${open ? 'Hide filters' : `Filters${more ? ` · ${more}` : ''}`}</button>`}
           <div class="${s.cat === 'events' ? 'contents' : this._moreCls}">
           <label class="flex shrink-0 items-center">
-            <select data-act="cat" aria-label="Category" class="min-h-[34px] sm:min-h-[34px] px-2 sm:px-2.5 py-1 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs sm:text-[13px] font-semibold">
+            <select data-act="cat" aria-label="Category" class="min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[11px] sm:text-[13px] font-semibold">
               <option value="__ph" disabled hidden ${s.cat === 'all' ? 'selected' : ''}>Category</option>${[['all', 'All'], ...catOptions().map(k => [k, k === 'events' ? 'Events' : CATS[k].label])]
                 .map(([k, label]) => `<option value="${k}" ${s.cat === k && k !== 'all' ? 'selected' : ''}>${label}</option>`).join('')}
             </select>
@@ -1846,19 +1846,19 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </div>
           ${s.cat === 'events' ? '' : `
           <label class="flex shrink-0 items-center">
-            <select data-act="when" aria-label="When are you going" class="max-sm:w-[5.5rem] min-h-[30px] sm:min-h-[34px] px-2 sm:px-2.5 py-1 sm:py-1 rounded-lg ${s.when ? 'bg-violet-100 text-violet-900 dark:bg-violet-900 dark:text-violet-100' : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100'} text-xs sm:text-[13px] font-semibold">
+            <select data-act="when" aria-label="When are you going" class="max-sm:w-[5.5rem] min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg ${s.when ? 'bg-violet-100 text-violet-900 dark:bg-violet-900 dark:text-violet-100' : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100'} text-[11px] sm:text-[13px] font-semibold">
               <option value="__ph" disabled hidden ${!s.when ? 'selected' : ''}>When</option>${['', 'today', 'tomorrow', 'weekend', 'sat', 'sun'].map(w => `<option value="${w}" ${s.when === w && w ? 'selected' : ''}>${esc(w ? whenLabel(w) : 'Any time')}</option>`).join('')}
             </select>
           </label>`}
           ${s.cat === 'events' || !HOURS_READY ? '' : `
-          <button data-act="opennow" aria-pressed="${s.openNow}" class="shrink-0 whitespace-nowrap min-h-[30px] sm:min-h-[34px] px-2.5 sm:px-2.5 py-1 sm:py-1 rounded-lg sm:rounded-xl text-xs sm:text-[13px] font-semibold transition-colors ${s.openNow ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Open now</button>`}
+          <button data-act="opennow" aria-pressed="${s.openNow}" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.openNow ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Open now</button>`}
           ${s.cat === 'events' ? '' : `
-          <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="shrink-0 whitespace-nowrap min-h-[30px] sm:min-h-[34px] px-2.5 sm:px-2.5 py-1 sm:py-1 rounded-lg sm:rounded-xl text-xs sm:text-[13px] font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Indoor</button>
-          ${KIDS_ONLY ? '' : `<button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="shrink-0 whitespace-nowrap min-h-[30px] sm:min-h-[34px] px-2.5 sm:px-2.5 py-1 sm:py-1 rounded-lg sm:rounded-xl text-xs sm:text-[13px] font-semibold transition-colors ${s.kidsOnly ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Kids</button>`}`}
+          <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Indoor</button>
+          ${KIDS_ONLY ? '' : `<button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.kidsOnly ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Kids</button>`}`}
           ${s.cat === 'events' ? '' : `
           <div class="${this._moreCls}">
           <label class="sm:ml-auto flex shrink-0 items-center">
-            <select data-act="sort" aria-label="Sort" class="min-h-[34px] sm:min-h-[34px] px-2 sm:px-2.5 py-1 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs sm:text-[13px] font-semibold">
+            <select data-act="sort" aria-label="Sort" class="min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[11px] sm:text-[13px] font-semibold">
               <option value="__ph" disabled hidden ${s.sort === 'fresh' ? 'selected' : ''}>Sort</option><option value="fresh">Worth going now</option>
               <option value="distance" ${s.sort === 'distance' ? 'selected' : ''}>Distance</option>
             </select>
@@ -1880,23 +1880,23 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   // withIndoor: 추천 결과 화면에선 위치 옆에 "Indoor only" 버튼도 (비 오는 날 실내만 보기)
   locationBar(items, withIndoor) {
     const s = this.state, near = this.nearActive();
-    const seg = (val, label, on) => `<button data-act="radius" data-val="${val}" aria-pressed="${on}" class="whitespace-nowrap min-h-[30px] sm:min-h-[36px] px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
+    const seg = (val, label, on) => `<button data-act="radius" data-val="${val}" aria-pressed="${on}" class="whitespace-nowrap min-h-[28px] sm:min-h-[36px] px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
     return `
-        <div class="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1.5 sm:gap-y-2 text-xs sm:text-[13px]">
-          <button data-act="geo" ${s.geoBusy ? 'disabled' : ''} class="min-h-[30px] sm:min-h-[34px] px-2.5 sm:px-2.5 py-1 sm:py-1 rounded-lg font-semibold ${s.nearKey === 'here' && near ? 'bg-violet-200 text-violet-800 dark:bg-violet-500/30 dark:text-violet-200' : 'bg-violet-50 text-violet-700 hover:bg-violet-100 dark:bg-violet-500/15 dark:text-violet-300 dark:hover:bg-violet-500/25'} disabled:opacity-60">${s.geoBusy ? 'Locating...' : s.nearKey === 'here' && near ? 'Near me ✓' : 'Near me'}</button>
+        <div class="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1.5 sm:gap-y-2 text-[11px] sm:text-[13px]">
+          <button data-act="geo" ${s.geoBusy ? 'disabled' : ''} class="min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-semibold ${s.nearKey === 'here' && near ? 'bg-violet-200 text-violet-800 dark:bg-violet-500/30 dark:text-violet-200' : 'bg-violet-50 text-violet-700 hover:bg-violet-100 dark:bg-violet-500/15 dark:text-violet-300 dark:hover:bg-violet-500/25'} disabled:opacity-60">${s.geoBusy ? 'Locating...' : s.nearKey === 'here' && near ? 'Near me ✓' : 'Near me'}</button>
           <label class="flex items-center gap-2 font-semibold text-slate-600 dark:text-slate-300 flex-1 basis-0 min-w-[6.5rem] sm:flex-none sm:basis-auto"><span class="hidden sm:inline">or</span>
-            <select data-act="near" aria-label="Location" class="w-full min-w-0 sm:w-auto min-h-[30px] sm:min-h-[34px] px-2 sm:px-2.5 py-1 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+            <select data-act="near" aria-label="Location" class="w-full min-w-0 sm:w-auto min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
               <option value="" ${!near ? 'selected' : ''}>Anywhere</option>
               ${s.nearKey === 'here' && near ? '<option value="here" selected>My location</option>' : '<option value="gps">My location</option>'}
               ${Object.entries(ORIGINS).filter(([k, o]) => !o.extra || s.nearKey === k).map(([k, o]) => `<option value="${k}" ${s.nearKey === k ? 'selected' : ''}>Near ${o.label}</option>`).join('')}
             </select>
           </label>
-          ${withIndoor ? `<button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="min-h-[30px] sm:min-h-[34px] px-2.5 sm:px-2.5 py-1 sm:py-1 rounded-lg font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-sky-50 text-sky-800 hover:bg-sky-100 dark:bg-sky-500/15 dark:text-sky-300 dark:hover:bg-sky-500/25'}">${s.indoor ? 'Indoor only ✓' : 'Indoor only'}</button>` : ''}
+          ${withIndoor ? `<button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-sky-50 text-sky-800 hover:bg-sky-100 dark:bg-sky-500/15 dark:text-sky-300 dark:hover:bg-sky-500/25'}">${s.indoor ? 'Indoor only ✓' : 'Indoor only'}</button>` : ''}
           ${near ? `
           <div class="inline-flex max-w-full p-0.5 sm:p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Radius">
             ${RADII.map(r => seg(r, radiusLabel(r), s.radius === r)).join('')}
           </div>
-          <button data-act="nearoff" class="min-h-[30px] sm:min-h-[36px] text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 ">Clear location</button>` : ''}
+          <button data-act="nearoff" class="min-h-[28px] sm:min-h-[36px] text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 ">Clear location</button>` : ''}
         </div>`;
   }
   // 필터 아래 한 줄: 개수 + 위치(반경) + 검색량 데이터 기준 (모바일은 검색량 설명 없이 짧게)
