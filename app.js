@@ -2087,15 +2087,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const why = baseWhy || (evText ? { pick: true, label: this.eventTitle(evHere.ev, s), text: evText } : null);
     const evExtra = evText && why && why.text !== evText ? evText : '';
     return `
-    <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl sm:rounded-[20px] bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition overflow-hidden">
-      <div class="relative">
+    <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group relative cursor-pointer flex flex-col rounded-2xl sm:rounded-[20px] bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition">
+      ${spotTags(s).length ? `<p class="max-sm:hidden absolute -top-2 -left-2 z-10 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-500 text-white shadow-md">#${esc(t.label)}</span>`).join('')}</p>` : ''}
+      <div class="relative rounded-t-2xl sm:rounded-t-[20px] overflow-hidden">
         ${this.cover(s, 'h-36 sm:h-60')}
         <div class="absolute inset-x-0 top-0 px-2.5 sm:px-5 pt-2 sm:pt-4 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="text-sm sm:text-lg font-bold leading-snug text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
         <div class="mt-0.5 flex flex-wrap gap-x-2 sm:gap-x-3 text-xs sm:text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">
           ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(kidProfile(s).agesText)}</span><span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}
           ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
         </div></div>
-        <div class="absolute inset-x-0 bottom-0 px-2.5 sm:px-5 pb-5 sm:pb-6 pt-8 flex items-end justify-between gap-2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"><p class="min-w-0 text-xs sm:text-sm text-white/90 truncate [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p>${spotTags(s).length ? `<p class="max-sm:hidden shrink-0 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-500/85 text-white">#${esc(t.label)}</span>`).join('')}</p>` : ''}</div>
+        <div class="absolute inset-x-0 bottom-0 px-2.5 sm:px-5 pb-5 sm:pb-6 pt-8 flex items-end justify-between gap-2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"><p class="min-w-0 text-xs sm:text-sm text-white/90 truncate [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p></div>
       </div>
       <div class="p-2.5 sm:p-5 flex flex-col flex-1">
         ${this.planLater() && HOURS_READY ? (() => {
