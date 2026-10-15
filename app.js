@@ -376,9 +376,9 @@ const fx = id => FACTS[id] || null;
 const LINES3 = '[display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden';
 // 장소 창의 세 상자(What parents say · Tiny Trips tip · Good to know)가 같은 모양이 되게: 제목은 굵게, 내용은 점(•) 목록, 맨 아래 작은 출처 줄. 배경색만 상자마다 달라요 (사용자 요청, 2026-10-04)
 const BOX_TONE = {
-  pink: { bg: 'bg-pink-50 dark:bg-pink-500/10 ring-1 ring-pink-200 dark:ring-pink-500/25', h: 'text-pink-900 dark:text-pink-200', dot: 'text-pink-600 dark:text-pink-300' },
-  sky: { bg: 'bg-sky-50 dark:bg-sky-500/10 ring-1 ring-sky-200 dark:ring-sky-500/25', h: 'text-sky-900 dark:text-sky-200', dot: 'text-sky-600 dark:text-sky-300' },
-  slate: { bg: 'bg-slate-50 dark:bg-slate-800/50 ring-1 ring-slate-200 dark:ring-slate-700', h: 'text-slate-900 dark:text-slate-100', dot: 'text-slate-500 dark:text-slate-400' }
+  pink: { bg: 'bg-pink-50 dark:bg-pink-500/10   ', h: 'text-pink-900 dark:text-pink-200', dot: 'text-pink-600 dark:text-pink-300' },
+  sky: { bg: 'bg-sky-50 dark:bg-sky-500/10   ', h: 'text-sky-900 dark:text-sky-200', dot: 'text-sky-600 dark:text-sky-300' },
+  slate: { bg: 'bg-slate-50 dark:bg-slate-800/50   ', h: 'text-slate-900 dark:text-slate-100', dot: 'text-slate-500 dark:text-slate-400' }
 };
 const infoBox = (tone, title, itemsHtml, footerHtml = '', label = '') => `
           <section class="rounded-2xl p-5 ${BOX_TONE[tone].bg}"${label ? ` aria-label="${label}"` : ''}>
@@ -1020,12 +1020,12 @@ class App {
     const d = reviewDraft && reviewDraft.id === s.id ? reviewDraft : null;
     const stars = n => `<span class="text-amber-500" aria-label="${n} out of 5 stars">${'★'.repeat(n)}<span class="text-slate-300 dark:text-slate-600">${'★'.repeat(5 - n)}</span></span>`;
     const form = d ? `
-            <div class="mt-3 rounded-xl p-4 ring-1 ring-slate-200 dark:ring-slate-700">
+            <div class="mt-3 rounded-xl p-4 bg-slate-50 dark:bg-slate-800/60   ">
               <div class="flex items-center gap-1" role="radiogroup" aria-label="Your rating">${[1, 2, 3, 4, 5].map(n => `<button data-act="rvstar" data-val="${n}" role="radio" aria-checked="${d.rating === n}" aria-label="${n} star${n > 1 ? 's' : ''}" class="text-3xl leading-none ${n <= (d.rating || 0) ? 'text-amber-500' : 'text-slate-300 dark:text-slate-600'}">★</button>`).join('')}</div>
-              <textarea data-act="rvtext" maxlength="${REVIEW_MAX}" rows="3" placeholder="What did your kids like? Anything parents should know (washrooms, stroller access, busy times)?" class="mt-3 w-full rounded-lg border border-slate-300 bg-white p-3 text-sm dark:border-slate-700 dark:bg-slate-800">${esc(d.text || '')}</textarea>
+              <textarea data-act="rvtext" maxlength="${REVIEW_MAX}" rows="3" placeholder="What did your kids like? Anything parents should know (washrooms, stroller access, busy times)?" class="mt-3 w-full rounded-lg   bg-slate-100 p-3 text-sm  dark:bg-slate-800">${esc(d.text || '')}</textarea>
               <div class="mt-2 flex flex-wrap items-center gap-3">
                 <button data-act="rvpost" data-val="${s.id}" ${reviewBusy ? 'disabled' : ''} class="min-h-[40px] px-4 rounded-lg font-semibold bg-violet-600 text-white disabled:opacity-60">${reviewBusy ? 'Posting…' : mine ? 'Update review' : 'Post review'}</button>
-                <button data-act="rvcancel" class="text-sm underline text-slate-600 dark:text-slate-300">Cancel</button>
+                <button data-act="rvcancel" class="text-sm  text-slate-600 dark:text-slate-300">Cancel</button>
                 <span class="text-xs text-slate-500 dark:text-slate-400">Shown with your first name.</span>
               </div>
             </div>` : '';
@@ -1036,10 +1036,10 @@ class App {
               ${st ? `<p class="text-sm">${stars(Math.round(st.avg))} <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'review')}</span></p>` : ''}
             </div>
             ${!d ? `<div class="mt-2 flex flex-wrap items-center gap-3 text-sm">
-              ${user ? `<button data-act="rvwrite" data-val="${s.id}" class="min-h-[40px] px-4 rounded-lg font-semibold border border-violet-300 text-violet-700 dark:border-violet-500/50 dark:text-violet-300">${mine ? 'Edit your review' : 'Write a review'}</button>
-              ${mine ? `<button data-act="rvdelete" data-val="${s.id}" class="underline text-slate-600 dark:text-slate-300">Delete</button>` : ''}
-              <button data-act="rvsignout" class="underline text-slate-500 dark:text-slate-400">Sign out (${esc(user.name)})</button>`
-              : `<button data-act="rvsignin" class="min-h-[40px] px-4 rounded-lg font-semibold border border-violet-300 text-violet-700 dark:border-violet-500/50 dark:text-violet-300">Sign in with Google to write a review</button>`}
+              ${user ? `<button data-act="rvwrite" data-val="${s.id}" class="min-h-[40px] px-4 rounded-lg font-semibold   bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300">${mine ? 'Edit your review' : 'Write a review'}</button>
+              ${mine ? `<button data-act="rvdelete" data-val="${s.id}" class=" text-slate-600 dark:text-slate-300">Delete</button>` : ''}
+              <button data-act="rvsignout" class=" text-slate-500 dark:text-slate-400">Sign out (${esc(user.name)})</button>`
+              : `<button data-act="rvsignin" class="min-h-[40px] px-4 rounded-lg font-semibold   bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300">Sign in with Google to write a review</button>`}
             </div>` : ''}
             ${form}
             ${reviewMsg ? `<p class="mt-2 text-sm text-slate-600 dark:text-slate-300" role="status">${esc(reviewMsg)}</p>` : ''}
@@ -2541,14 +2541,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (!items.length) return '';
     // 확인된 사실은 가장 먼저 장소 창의 "이미 나온 말"에 올려서, 뒤에 나오는 tip·후기·할 거리가 같은 말을 반복하지 않게 해요
     if (dd) items.forEach(x => dd.add(x.replace(/<[^>]+>/g, ' ')));
-    const src = /^https:\/\//.test(a.source || '') ? ` · <a href="${esc(a.source)}" target="_blank" rel="noopener" class="underline">source</a>` : '';
+    const src = /^https:\/\//.test(a.source || '') ? ` · <a href="${esc(a.source)}" target="_blank" rel="noopener" class="">source</a>` : '';
     const checked = f && f.checked ? `Info checked ${esc(shortDate(f.checked))}${src}` : '';
     return infoBox('slate', 'Good to know', items, checked, 'Good to know');
   }
   // 결과 위 체크 필터 칩 (숫자 = 지금 조건에 맞는 곳 중 그 필터에 해당하는 곳)
   fxChips() {
     const on = this.state.fxOn, n = this._fxCounts || {};
-    const chip = (k, label) => `<button data-act="fxtoggle" data-val="${k}" aria-pressed="${on[k]}" class="min-h-[36px] px-3 rounded-full text-xs sm:text-sm font-semibold border ${on[k] ? 'bg-violet-600 border-violet-600 text-white' : 'border-slate-300 bg-white text-slate-800 hover:border-violet-400 dark:bg-slate-900 dark:border-slate-600 dark:text-slate-100'}">${label}${n[k] != null ? ` <span class="font-normal opacity-80">${n[k]}</span>` : ''}</button>`;
+    const chip = (k, label) => `<button data-act="fxtoggle" data-val="${k}" aria-pressed="${on[k]}" class="min-h-[36px] px-3 rounded-full text-xs sm:text-sm font-semibold  ${on[k] ? 'bg-violet-600  text-white' : ' bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100'}">${label}${n[k] != null ? ` <span class="font-normal opacity-80">${n[k]}</span>` : ''}</button>`;
     return `<div class="mt-3 flex flex-wrap items-center gap-1.5 sm:gap-2" role="group" aria-label="Narrow the results"><span class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">Narrow down:</span>${chip('free', 'Free only')}${chip('stroller', 'Stroller OK')}${chip('rain', 'Rain OK')}${chip('short', '2 hrs or less')}</div>`;
   }
   planView() {
@@ -2557,7 +2557,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   }
   myReviewsView() {
     const { user, reviewsOn } = this.state;
-    const box = body => `<div class="mt-6 max-w-2xl rounded-2xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-8 text-center">${body}</div>`;
+    const box = body => `<div class="mt-6 max-w-2xl rounded-2xl bg-white dark:bg-slate-900    p-8 text-center">${body}</div>`;
     if (!FIREBASE_CONFIG) return box('<p class="font-bold">Reviews aren’t available right now.</p>');
     if (!reviewsOn) return box('<p class="text-slate-600 dark:text-slate-300" role="status">Loading reviews…</p>');
     if (!user) return box('<p class="text-lg font-bold">Sign in to see your reviews</p><p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Sign in with the same Google account you used to write them.</p><button data-act="rvsignin" class="mt-4 min-h-[44px] px-5 rounded-xl font-semibold bg-violet-600 text-white">Sign in with Google</button>');
@@ -2633,12 +2633,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     let aiBlock = '';
     if (this.sample) {
       if (ai && ai.status === 'loading') aiBlock = `
-        <div class="mt-3 rounded-lg p-3 bg-white dark:bg-slate-800 ring-1 ring-violet-200 dark:ring-violet-500/30">
+        <div class="mt-3 rounded-lg p-3 bg-white dark:bg-slate-800   ">
           <p id="ai-out" class="text-sm text-slate-800 dark:text-slate-200 whitespace-pre-line">${esc(ai.text || 'Analyzing...')}</p>
           <button data-act="aistop" class="mt-2 text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">Stop</button>
         </div>`;
       else if (ai && (ai.status === 'done' || ai.status === 'error')) aiBlock = `
-        <div class="mt-3 rounded-lg p-3 bg-white dark:bg-slate-800 ring-1 ring-violet-200 dark:ring-violet-500/30">
+        <div class="mt-3 rounded-lg p-3 bg-white dark:bg-slate-800   ">
           ${ai.text ? `<p class="text-xs font-bold text-violet-700 dark:text-violet-300">AI analysis (${tf.label.toLowerCase()}, ${WEATHER[st.weather].label.toLowerCase()})</p><p class="mt-1 text-sm text-slate-800 dark:text-slate-200 whitespace-pre-line">${esc(ai.text)}</p>` : ''}
           ${ai.msg ? `<p class="mt-1 text-sm text-rose-600 dark:text-rose-400">${esc(ai.msg)}</p>` : ''}
           <button data-act="ai" data-val="${s.id}" class="mt-2 text-xs font-semibold text-violet-700 dark:text-violet-300">Analyze again</button>
@@ -2656,7 +2656,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
         </div>
         <div class="px-6 pt-5">
-          <div class="flex items-baseline justify-between gap-3"><p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.label}</p><button data-act="report" data-val="${esc(s.id)}" class="shrink-0 text-xs underline font-semibold text-violet-700 dark:text-violet-300">Something wrong? Tell us</button></div>
+          <div class="flex items-baseline justify-between gap-3"><p class="text-sm font-semibold text-slate-500 dark:text-slate-400">${c.label}</p><button data-act="report" data-val="${esc(s.id)}" class="shrink-0 text-xs  font-semibold text-violet-700 dark:text-violet-300">Something wrong? Tell us</button></div>
           <h2 class="mt-1 text-3xl font-bold leading-tight pr-2">${esc(s.name)}</h2>
           <p class="mt-1 text-slate-600 dark:text-slate-300">${esc(s.area)}${cur && cur.dist != null ? `, ${fmtDist(cur.dist)}` : ''}</p>
           ${this.planLater() && HOURS_READY && this.planHours(s) ? (() => { const ph = this.planHours(s); return `
@@ -2681,7 +2681,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const says = SAYS[s.id] && dd.fresh(SAYS[s.id]) ? SAYS[s.id] : '';
             if (!evs.length && !tags.length && !notes.length && !says) return factsHtml;
             // 정리 (사용자 결정, 2026-10-02): 파란 창에는 공식 정보인 Tiny Trips tip만. "지금"(행사·시즌)은 칩 한 줄로, 부모 후기는 파란 창 밖으로. 앞에 나온 말과 겹치는 문장은 숨겨요
-            const chip = h => `<span class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-900 ring-1 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-200 dark:ring-amber-500/30">${h}</span>`;
+            const chip = h => `<span class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-900   dark:bg-amber-500/10 dark:text-amber-200 ">${h}</span>`;
             const line = h => `<p class="mt-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${h}</p>`;
             // 같은 시즌 설명(#태그 줄)이 이미 그 행사를 말하면 행사 칩은 생략 ("Pumpkin patch"가 칩과 줄에 두 번 나오지 않게)
             const tagSeen = new Set(); tags.forEach(t => keyWords(t.spots[s.id].why).forEach(w => tagSeen.add(w)));
@@ -2691,13 +2691,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               ...tags.map(t => chip(`#${esc(t.label)}`)),
             ].join('');
             const extra = [
-              ...tags.map(t => { const x = t.spots[s.id]; return !dd.fresh(x.why) ? '' : line(`<span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}`); }),
+              ...tags.map(t => { const x = t.spots[s.id]; return !dd.fresh(x.why) ? '' : line(`<span class="font-semibold">#${esc(t.label)}</span> · ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class=" text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}`); }),
             ].join('');
             const chipsBlock = `${chips || extra ? `
           <div>
             ${chips ? `<div class="flex flex-wrap gap-2">${chips}</div>` : ''}${extra}
           </div>` : ''}`;
-            const tipBlock = notes.length ? infoBox('sky', 'Tiny Trips tip', notes.slice(0, 2).map(esc), `Checked ${esc(shortDate(NOTES_META.updatedAt))} · ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'official site'}. Hours can change.`) : '';
+            const tipBlock = notes.length ? infoBox('sky', 'Tiny Trips tip', notes.slice(0, 2).map(esc), `Checked ${esc(shortDate(NOTES_META.updatedAt))} · ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="">${esc(host)} ↗</a>` : 'official site'}. Hours can change.`) : '';
             const saysBlock = says ? infoBox('pink', 'What parents say', [esc(says)]) : '';
             // 순서 (사용자 결정, 2026-10-04): What parents say → Tiny Trips tip → Good to know → 행사·시즌 칩
             return saysBlock + tipBlock + factsHtml + chipsBlock; })()}
@@ -2705,10 +2705,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
 
           <div class="grid grid-cols-2 gap-3">
-            <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/20 hover:ring-amber-400">
+            <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-amber-50 dark:bg-amber-500/10    ">
               <p class="font-bold">Google Reviews ↗</p><p class="text-xs text-slate-500 dark:text-slate-400">Ratings from other parents</p>
             </a>
-            <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-emerald-50 dark:bg-emerald-500/10 ring-1 ring-emerald-200 dark:ring-emerald-500/20 hover:ring-emerald-400">
+            <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-emerald-50 dark:bg-emerald-500/10    ">
               <p class="font-bold">${s.price ? esc(s.price) : 'Prices'} ↗</p><p class="text-xs text-slate-500 dark:text-slate-400">Search prices online</p>
             </a>
           </div>
@@ -2717,10 +2717,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             // 평소보다 5% 이상(RISING_MIN) 많이 검색될 때만: 이유(notes.why)와 최근 7일 급상승 연관 검색어
             const n = RISE_NOTES[s.id] || {};
             return `
-          <section class="rounded-2xl p-5 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-500/10 dark:to-fuchsia-500/10 ring-1 ring-rose-200 dark:ring-rose-500/20">
+          <section class="rounded-2xl p-5 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-500/10 dark:to-fuchsia-500/10   ">
             <h3 class="font-bold text-rose-800 dark:text-rose-300">Why more people are searching</h3>
             <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">Searched ${fmtRise(s.rise)} its usual amount over ${esc(recentLabel())}.</p>
-            ${n.why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(n.why)}${/^https:\/\//i.test(n.source || '') ? ` <a href="${esc(n.source)}" target="_blank" rel="noopener" class="underline text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>` : ''}
+            ${n.why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(n.why)}${/^https:\/\//i.test(n.source || '') ? ` <a href="${esc(n.source)}" target="_blank" rel="noopener" class=" text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>` : ''}
             ${n.rising && n.rising.length ? `
             <p class="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">Searches that rose alongside it in the past 7 days (Google Trends, BC)</p>
             <div class="mt-1.5 flex flex-wrap gap-1.5">${n.rising.map(x => `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/80 dark:bg-slate-800 text-rose-700 dark:text-rose-300">${esc(x)}</span>`).join('')}</div>` : ''}
@@ -2750,12 +2750,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               <summary class="cursor-pointer font-semibold">City street meters nearby: about ${money(m.day)}/hr daytime</summary>
               <p class="mt-2">Within ${METERS.radius} m: about ${money(m.day)}/hr 9am–6pm${range}${m.eve != null ? `, ${money(m.eve)}/hr 6pm–10pm` : ''}, free 10pm–9am.${m.limit ? ` Usually a ${esc(m.limit.replace(/\s*Hr$/i, '-hour'))} limit.` : ''}</p>
               <p class="mt-1">Pay ${m.card ? 'by card at the meter or ' : ''}with the PayByPhone app.</p>
-              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Rates: City of Vancouver Open Data, <a href="https://opendata.vancouver.ca/pages/licence/" target="_blank" rel="noopener" class="underline">Open Government Licence – Vancouver</a>.</p>
+              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Rates: City of Vancouver Open Data, <a href="https://opendata.vancouver.ca/pages/licence/" target="_blank" rel="noopener" class="">Open Government Licence – Vancouver</a>.</p>
             </details>`;
             })()}
             <p class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold">
-              <a href="${parkingUrl(s)}" target="_blank" rel="noopener" class="underline text-indigo-700 dark:text-indigo-300">Parking and rates on Google Maps ↗</a>
-              ${site ? `<a href="${esc(site)}" target="_blank" rel="noopener" class="underline text-indigo-700 dark:text-indigo-300">Lot website ↗</a>` : ''}
+              <a href="${parkingUrl(s)}" target="_blank" rel="noopener" class=" text-indigo-700 dark:text-indigo-300">Parking and rates on Google Maps ↗</a>
+              ${site ? `<a href="${esc(site)}" target="_blank" rel="noopener" class=" text-indigo-700 dark:text-indigo-300">Lot website ↗</a>` : ''}
             </p>
             <p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">Nearby lots from © OpenStreetMap contributors. Rates and time limits change, so check the signs.</p>
           </section>`;
@@ -2786,10 +2786,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
         </div>
         </div>
-        <div class="shrink-0 grid grid-cols-[1fr_1fr_auto] gap-2 px-4 py-3 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <div class="shrink-0 grid grid-cols-[1fr_1fr_auto] gap-2 px-4 py-3    bg-white dark:bg-slate-900">
           <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="min-h-[44px] flex items-center justify-center rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700">Directions</a>
-          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="min-h-[44px] rounded-xl font-semibold border ${saved ? 'bg-rose-100 border-rose-300 text-rose-700 dark:bg-rose-500/15 dark:border-rose-500/40 dark:text-rose-300' : 'border-slate-200 dark:border-slate-700'}">${saved ? '♥ Saved' : '♡ Save'}</button>
-          <button data-act="share" data-val="${s.id}" class="min-h-[44px] px-4 rounded-xl font-semibold border border-slate-200 dark:border-slate-700">${st.shareMsg && st.shareMsg.id === s.id ? esc(st.shareMsg.text) : 'Share'}</button>
+          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="min-h-[44px] rounded-xl font-semibold  ${saved ? 'bg-rose-100  text-rose-700 dark:bg-rose-500/15  dark:text-rose-300' : 'bg-slate-100 dark:bg-slate-800'}">${saved ? '♥ Saved' : '♡ Save'}</button>
+          <button data-act="share" data-val="${s.id}" class="min-h-[44px] px-4 rounded-xl font-semibold bg-slate-100 dark:bg-slate-800">${st.shareMsg && st.shareMsg.id === s.id ? esc(st.shareMsg.text) : 'Share'}</button>
         </div>
       </div>
     </div>`;
