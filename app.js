@@ -2022,8 +2022,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (s.photo) return `<div class="w-full ${h} relative overflow-hidden bg-slate-200 dark:bg-slate-800">
         <img src="${esc(s.photo.url)}" alt="${esc(s.name)}" loading="lazy" class="w-full h-full object-cover">
         <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-        ${s.photo.own ? `<span class="absolute right-2 bottom-2 max-w-[45%] truncate text-[9px] leading-tight text-white/80 [text-shadow:0_1px_2px_rgba(0,0,0,.7)]">${esc(s.photo.credit)}</span>` : `<a data-act="noop" href="${esc(s.photo.source)}" target="_blank" rel="noopener" title="Photo: ${esc(s.photo.credit)} (${esc(s.photo.license)}), via Wikimedia Commons"
-          class="absolute right-2 bottom-2 max-w-[45%] truncate text-[9px] leading-tight text-white/80 [text-shadow:0_1px_2px_rgba(0,0,0,.7)] hover:text-white">${esc(s.photo.credit)} · ${esc(s.photo.license)}</a>`}
+        ${s.photo.own ? `<span class="absolute right-2 bottom-2 max-w-[45%] truncate text-[7px] leading-tight text-white/70 [text-shadow:0_1px_2px_rgba(0,0,0,.7)]">${esc(s.photo.credit)}</span>` : `<a data-act="noop" href="${esc(s.photo.source)}" target="_blank" rel="noopener" title="Photo: ${esc(s.photo.credit)} (${esc(s.photo.license)}), via Wikimedia Commons"
+          class="absolute right-2 bottom-2 max-w-[45%] truncate text-[7px] leading-tight text-white/70 [text-shadow:0_1px_2px_rgba(0,0,0,.7)] hover:text-white">${esc(s.photo.credit)} · ${esc(s.photo.license)}</a>`}
       </div>`;
     // 실제 사진이 없으면 장소 종류에 맞는 무료 스톡 사진 (Pexels). 그 장소가 아닐 수 있다고 사진 구석에 꼭 밝혀요 (사용자 결정, 2026-10-02)
     if (STOCK_ON) {
@@ -2057,8 +2057,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       return `<div class="w-full ${h} relative overflow-hidden bg-slate-200 dark:bg-slate-800" role="img" aria-label="${esc(s.name)} (stock photo, may differ from the actual place)">
         <img src="https://images.pexels.com/photos/${st[0]}/pexels-photo-${st[0]}.jpeg?auto=compress&cs=tinysrgb&w=${big ? 960 : 640}" alt="" loading="lazy" class="w-full h-full object-cover">
         <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-        <span class="absolute left-2 bottom-2 max-w-[70%] truncate text-[9px] leading-tight text-white/80 [text-shadow:0_1px_2px_rgba(0,0,0,.7)]"><span class="sm:hidden">Stock photo, may differ</span><span class="hidden sm:inline">Stock photo · may differ from the actual place</span></span>
-        ${big ? `<a data-act="noop" href="https://www.pexels.com/photo/${st[0]}/" target="_blank" rel="noopener" class="absolute right-2 bottom-2 max-w-[40%] truncate text-[9px] leading-tight text-white/80 [text-shadow:0_1px_2px_rgba(0,0,0,.7)] hover:text-white">Photo: ${esc(st[1])} · Pexels</a>` : ''}
+        <span class="absolute left-2 bottom-2 max-w-[70%] truncate text-[7px] leading-tight text-white/70 [text-shadow:0_1px_2px_rgba(0,0,0,.7)]"><span class="sm:hidden">Stock photo, may differ</span><span class="hidden sm:inline">Stock photo · may differ from the actual place</span></span>
+        ${big ? `<a data-act="noop" href="https://www.pexels.com/photo/${st[0]}/" target="_blank" rel="noopener" class="absolute right-2 bottom-2 max-w-[40%] truncate text-[7px] leading-tight text-white/70 [text-shadow:0_1px_2px_rgba(0,0,0,.7)] hover:text-white">Photo: ${esc(st[1])} · Pexels</a>` : ''}
       </div>`;
     }
     // 스톡 사진을 끄면 장소 종류에 맞는 일러스트 (사진처럼 보이지 않게 "Illustration" 표시)
