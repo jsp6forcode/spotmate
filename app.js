@@ -397,7 +397,7 @@ const BOX_TONE = {
   slate: { bg: 'bg-slate-50 dark:bg-slate-800/50   ', h: 'text-slate-900 dark:text-slate-100', dot: 'text-slate-500 dark:text-slate-400' }
 };
 const infoBox = (tone, title, itemsHtml, footerHtml = '', label = '') => `
-          <section class="rounded-2xl -mx-4 px-4 py-5 ${BOX_TONE[tone].bg}"${label ? ` aria-label="${label}"` : ''}>
+          <section class="rounded-2xl px-4 py-5 ${BOX_TONE[tone].bg}"${label ? ` aria-label="${label}"` : ''}>
             <h3 class="font-bold ${BOX_TONE[tone].h}">${title}</h3>
             <ul class="mt-2 space-y-1.5 text-sm text-slate-800 dark:text-slate-200">${itemsHtml.map(x => `<li>${x}</li>`).join('')}</ul>
             ${footerHtml ? `<p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">${footerHtml}</p>` : ''}
@@ -1054,7 +1054,7 @@ class App {
               </div>
             </div>` : '';
     return `
-          <section id="reviews" class="scroll-mt-4">
+          <section id="reviews" class="scroll-mt-4 px-4">
             <div class="flex flex-wrap items-baseline justify-between gap-2">
               <h3 class="font-bold">Parent reviews</h3>
               ${st ? `<p class="text-sm">${stars(Math.round(st.avg))} <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'review')}</span></p>` : ''}
@@ -2666,10 +2666,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="relative">
           ${this.cover(s, 'h-56')}
           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-          <div class="absolute inset-x-0 top-0 pl-6 pr-16 pt-5 pb-12 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none"><h2 class="text-2xl sm:text-3xl font-bold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h2>
+          <div class="absolute inset-x-0 top-0 pl-9 pr-16 pt-5 pb-12 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none"><h2 class="text-2xl sm:text-3xl font-bold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h2>
           <p class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${KIDS_ONLY && isKid(s) ? `<span>${esc(kidProfile(s).agesText)}</span><span>${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span>${esc(s.price)}</span>` : ''}` : `${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>`}</p></div>
         </div>
-        <div class="px-6 pt-5">
+        <div class="px-9 pt-5">
           <div class="flex items-baseline justify-between gap-3"><p class="mt-1 text-slate-600 dark:text-slate-300">${esc(s.area)}${cur && cur.dist != null ? `, ${fmtDist(cur.dist)}` : ''}</p><button data-act="report" data-val="${esc(s.id)}" class="shrink-0 text-xs  font-semibold text-violet-700 dark:text-violet-300">Something wrong? Tell us</button></div>
           ${this.planLater() && HOURS_READY && this.planHours(s) ? (() => { const ph = this.planHours(s); return `
           <p class="mt-1 text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)} <span class="font-normal text-slate-500 dark:text-slate-400">(${WHEN_PHRASE[this.state.when]})</span></p>`; })()
@@ -2682,7 +2682,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             <span class="block text-xs font-normal text-slate-500 dark:text-slate-400">Google searches in BC over ${esc(recentLabel())}, compared with the 4 weeks before.</span></p>` : ''}
         </div>
 
-        <div class="p-6 space-y-6">
+        <div class="px-5 py-6 space-y-6">
           ${(() => {
             // 지금 가 볼 이유: 이 장소의 행사(60일 안) + 시즌 태그를 한 곳에, 영업시간 바로 밑에
             const evs = EVENTS.filter(ev => ev.spotId === s.id).map(ev => ({ ...ev, next: upcomingDates(ev, 60)[0] })).filter(ev => ev.next).sort((a, b) => a.next.localeCompare(b.next));
@@ -2705,7 +2705,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               ? `<div class="mt-2 flex">${chip(`#${esc(t.label)}`, tagStyle(t.id).soft)}</div>`
               : `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${chip(`#${esc(t.label)}`, tagStyle(t.id).soft)} ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class=" text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('');
             const chipsBlock = `${chips || extra ? `
-          <div>
+          <div class="px-4">
             ${chips ? `<div class="flex flex-wrap gap-2">${chips}</div>` : ''}${extra}
           </div>` : ''}`;
             const tipBlock = notes.length ? infoBox('sky', 'Tiny Trips tip', notes.slice(0, 2).map(esc), `Checked ${esc(shortDate(NOTES_META.updatedAt))} · ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="">${esc(host)} ↗</a>` : 'official site'}. Hours can change.`) : '';
@@ -2728,7 +2728,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             // 평소보다 5% 이상(RISING_MIN) 많이 검색될 때만: 이유(notes.why)와 최근 7일 급상승 연관 검색어
             const n = RISE_NOTES[s.id] || {};
             return `
-          <section class="rounded-2xl -mx-4 px-4 py-5 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-500/10 dark:to-fuchsia-500/10   ">
+          <section class="rounded-2xl px-4 py-5 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-500/10 dark:to-fuchsia-500/10   ">
             <h3 class="font-bold text-rose-800 dark:text-rose-300">Why more people are searching</h3>
             <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">Searched ${fmtRise(s.rise)} its usual amount over ${esc(recentLabel())}.</p>
             ${n.why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(n.why)}${/^https:\/\//i.test(n.source || '') ? ` <a href="${esc(n.source)}" target="_blank" rel="noopener" class=" text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>` : ''}
@@ -2752,7 +2752,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             // 앞 칸(Good to know·tip·후기·시즌)에서 이미 한 말은 빼요
             const body = list('Things to do', (g.do || []).filter(dd.fresh), '•') + list('What to eat', (g.eat || []).filter(dd.fresh), '•');
             return body ? `
-          <section class="space-y-5">
+          <section class="space-y-5 px-4">
             ${body}
           </section>` : '';
           })()}
