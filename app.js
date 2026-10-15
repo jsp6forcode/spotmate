@@ -1789,7 +1789,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${tab('list', 'Explore')}${tab('map', 'Map')}${tab('events', 'Events')}${tab('markets', 'Markets')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}${tab('about', 'About')}
         </nav>
       </div>
-      <a href="https://www.pexels.com/photo/7669218/" target="_blank" rel="noopener" class="absolute right-3 bottom-1.5 text-[10px] leading-none text-white/70 hover:text-white underline-offset-2 ">Photo: Kampus · Pexels</a>
+      <a href="https://www.pexels.com/photo/7669218/" target="_blank" rel="noopener" class="absolute right-3 bottom-1.5 text-[8px] leading-none text-white/60 hover:text-white underline-offset-2 ">Photo: Kampus · Pexels</a>
     </header>`;
   }
 
