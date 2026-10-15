@@ -2090,14 +2090,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group cursor-pointer flex flex-col rounded-2xl sm:rounded-[20px] bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition overflow-hidden">
       <div class="relative">
         ${this.cover(s, 'h-24 sm:h-40')}
-        <div class="absolute inset-x-0 top-0 px-2.5 sm:px-5 pt-2 sm:pt-4 pb-6 sm:pb-8 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="text-sm sm:text-lg font-bold leading-snug text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3></div>
+        <div class="absolute inset-x-0 top-0 px-2.5 sm:px-5 pt-2 sm:pt-4 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="text-sm sm:text-lg font-bold leading-snug text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
+        <div class="mt-0.5 flex flex-wrap gap-x-2 sm:gap-x-3 text-xs sm:text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">
+          ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(kidProfile(s).agesText)}</span><span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}
+          ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
+        </div></div>
       </div>
       <div class="p-2.5 sm:p-5 flex flex-col flex-1">
         <div class="flex items-center justify-between gap-2"><p class="min-w-0 text-xs sm:text-sm text-slate-500 dark:text-slate-400 truncate">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p>${spotTags(s).length ? `<p class="max-sm:hidden shrink-0 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300">#${esc(t.label)}</span>`).join('')}</p>` : ''}</div>
-        <div class="mt-1 sm:mt-1.5 flex flex-wrap gap-x-2 sm:gap-x-3 gap-y-0.5 sm:gap-y-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-          ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(kidProfile(s).agesText)}</span><span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}
-          ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
-        </div>
         ${this.planLater() && HOURS_READY ? (() => {
           // 날짜 계획: 그날(들) 영업시간
           const ph = this.planHours(s);
@@ -2642,11 +2642,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="relative">
           ${this.cover(s, 'h-56')}
           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-          <div class="absolute inset-x-0 top-0 pl-6 pr-16 pt-5 pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none"><h2 class="text-2xl sm:text-3xl font-bold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h2></div>
+          <div class="absolute inset-x-0 top-0 pl-6 pr-16 pt-5 pb-12 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none"><h2 class="text-2xl sm:text-3xl font-bold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h2>
+          <p class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${KIDS_ONLY && isKid(s) ? `<span>${esc(kidProfile(s).agesText)}</span><span>${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span>${esc(s.price)}</span>` : ''}` : `${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>`}</p></div>
         </div>
         <div class="px-6 pt-5">
           <div class="flex items-baseline justify-between gap-3"><p class="mt-1 text-slate-600 dark:text-slate-300">${esc(s.area)}${cur && cur.dist != null ? `, ${fmtDist(cur.dist)}` : ''}</p><button data-act="report" data-val="${esc(s.id)}" class="shrink-0 text-xs  font-semibold text-violet-700 dark:text-violet-300">Something wrong? Tell us</button></div>
-          <p class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-sm text-slate-600 dark:text-slate-300">${KIDS_ONLY && isKid(s) ? `<span>${esc(kidProfile(s).agesText)}</span><span>${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span>${esc(s.price)}</span>` : ''}` : `${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>`}</p>
           ${this.planLater() && HOURS_READY && this.planHours(s) ? (() => { const ph = this.planHours(s); return `
           <p class="mt-1 text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)} <span class="font-normal text-slate-500 dark:text-slate-400">(${WHEN_PHRASE[this.state.when]})</span></p>`; })()
           : (() => { const oi = openInfo(s); return oi ? `
