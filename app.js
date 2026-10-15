@@ -1785,7 +1785,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             ${wx || '<div class="hidden sm:block mt-3 h-12" aria-hidden="true"></div>'}
           </div>
         </div>
-        <nav class="mt-4 inline-flex max-w-full overflow-x-auto no-scrollbar gap-0 sm:gap-1 p-1 rounded-full bg-white/10 border border-white/25 backdrop-blur">
+        <nav class="mt-4 inline-flex max-w-full overflow-x-auto no-scrollbar gap-0 sm:gap-1 p-1 rounded-full bg-white/10 backdrop-blur">
           ${tab('list', 'Explore')}${tab('map', 'Map')}${tab('events', 'Events')}${tab('markets', 'Markets')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}${tab('about', 'About')}
         </nav>
       </div>
