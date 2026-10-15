@@ -2695,9 +2695,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             // 정리 (사용자 결정, 2026-10-02): 파란 창에는 공식 정보인 Tiny Trips tip만. "지금"(행사·시즌)은 칩 한 줄로, 부모 후기는 파란 창 밖으로. 앞에 나온 말과 겹치는 문장은 숨겨요
             const chip = h => `<span class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-900   dark:bg-amber-500/10 dark:text-amber-200 ">${h}</span>`;
             const line = h => `<p class="mt-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${h}</p>`;
-            // 같은 시즌 설명(#태그 줄)이 이미 그 행사를 말하면 행사 칩은 생략 ("Pumpkin patch"가 칩과 줄에 두 번 나오지 않게)
-            const tagSeen = new Set(); tags.forEach(t => keyWords(t.spots[s.id].why).forEach(w => tagSeen.add(w)));
-            const evShown = evs.filter(ev => !overlapsSeen(eventReason(ev, s, ev.next).replace(/^[^:]*:\s*/, ''), tagSeen));
+            const evShown = evs;   // 카드에 "Event" 칩이 뜬 행사는 모달에도 항상 보여요 (태그 설명과 겹쳐도 숨기지 않아요. 사용자, 2026-10-14)
             const chips = evShown.map(ev => chip(`<span aria-hidden="true">${esc(ev.icon || '🎪')}</span> ${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}`)).join('');
             // 시즌 태그: 주황 칩 바로 뒤에 같은 줄로 이유가 이어져요 (#태그를 다시 쓰지 않아요). 이유가 없으면 칩만
             const extra = tags.map(t => { const x = t.spots[s.id]; return !dd.fresh(x.why)
