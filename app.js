@@ -1044,7 +1044,7 @@ class App {
     const d = reviewDraft && reviewDraft.id === s.id ? reviewDraft : null;
     const stars = n => `<span class="text-amber-500" aria-label="${n} out of 5 stars">${'★'.repeat(n)}<span class="text-slate-300 dark:text-slate-600">${'★'.repeat(5 - n)}</span></span>`;
     const form = d ? `
-            <div class="mt-3 rounded-xl -mx-4 px-4 py-4 bg-slate-50 dark:bg-slate-800/60   ">
+            <div class="mt-3 rounded-xl px-4 py-4 bg-slate-50 dark:bg-slate-800/60   ">
               <div class="flex items-center gap-1" role="radiogroup" aria-label="Your rating">${[1, 2, 3, 4, 5].map(n => `<button data-act="rvstar" data-val="${n}" role="radio" aria-checked="${d.rating === n}" aria-label="${n} star${n > 1 ? 's' : ''}" class="text-3xl leading-none ${n <= (d.rating || 0) ? 'text-amber-500' : 'text-slate-300 dark:text-slate-600'}">★</button>`).join('')}</div>
               <textarea data-act="rvtext" maxlength="${REVIEW_MAX}" rows="3" placeholder="What did your kids like? Anything parents should know (washrooms, stroller access, busy times)?" class="mt-3 w-full rounded-lg   bg-slate-100 p-3 text-sm  dark:bg-slate-800">${esc(d.text || '')}</textarea>
               <div class="mt-2 flex flex-wrap items-center gap-3">
@@ -1054,7 +1054,7 @@ class App {
               </div>
             </div>` : '';
     return `
-          <section id="reviews" class="scroll-mt-4 px-4">
+          <section id="reviews" class="scroll-mt-4">
             <div class="flex flex-wrap items-baseline justify-between gap-2">
               <h3 class="font-bold">Parent reviews</h3>
               ${st ? `<p class="text-sm">${stars(Math.round(st.avg))} <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'review')}</span></p>` : ''}
@@ -1068,7 +1068,7 @@ class App {
             ${form}
             ${reviewMsg ? `<p class="mt-2 text-sm text-slate-600 dark:text-slate-300" role="status">${esc(reviewMsg)}</p>` : ''}
             ${list.length ? `<ul class="mt-4 space-y-3">${list.slice(0, 20).map(r => `
-              <li class="rounded-xl -mx-3 px-3 py-3 bg-slate-50 dark:bg-slate-800/60">
+              <li class="rounded-xl px-3 py-3 bg-slate-50 dark:bg-slate-800/60">
                 <p class="text-sm">${stars(r.rating)} <span class="font-semibold">${esc(r.name)}</span> <span class="text-xs text-slate-500 dark:text-slate-400">· ${esc(`${MON[r.date.getMonth()]} ${r.date.getDate()}, ${r.date.getFullYear()}`)}</span></p>
                 ${r.text ? `<p class="mt-1 text-sm text-slate-700 dark:text-slate-200 whitespace-pre-line">${esc(r.text)}</p>` : ''}
               </li>`).join('')}</ul>` : '<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">No reviews yet. Be the first parent to share how it went.</p>'}
@@ -2666,10 +2666,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="relative">
           ${this.cover(s, 'h-56')}
           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-          <div class="absolute inset-x-0 top-0 pl-9 pr-16 pt-5 pb-12 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none"><h2 class="text-2xl sm:text-3xl font-bold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h2>
+          <div class="absolute inset-x-0 top-0 pl-5 pr-16 pt-5 pb-12 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none"><h2 class="text-2xl sm:text-3xl font-bold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h2>
           <p class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${KIDS_ONLY && isKid(s) ? `<span>${esc(kidProfile(s).agesText)}</span><span>${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span>${esc(s.price)}</span>` : ''}` : `${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>`}</p></div>
         </div>
-        <div class="px-9 pt-5">
+        <div class="px-5 pt-5">
           <div class="flex items-baseline justify-between gap-3"><p class="mt-1 text-slate-600 dark:text-slate-300">${esc(s.area)}${cur && cur.dist != null ? `, ${fmtDist(cur.dist)}` : ''}</p><button data-act="report" data-val="${esc(s.id)}" class="shrink-0 text-xs  font-semibold text-violet-700 dark:text-violet-300">Something wrong? Tell us</button></div>
           ${this.planLater() && HOURS_READY && this.planHours(s) ? (() => { const ph = this.planHours(s); return `
           <p class="mt-1 text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)} <span class="font-normal text-slate-500 dark:text-slate-400">(${WHEN_PHRASE[this.state.when]})</span></p>`; })()
@@ -2699,13 +2699,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             // 행사는 칩 하나에 (여러 개면 한 줄씩). 색은 카드의 Event 칩과 같은 계열 (마켓만 있으면 연두, 아니면 청록)
             const evCls = evShown.every(ev => ev.type === 'market') ? 'bg-lime-50 text-lime-800 dark:bg-lime-500/15 dark:text-lime-300' : 'bg-teal-50 text-teal-800 dark:bg-teal-500/15 dark:text-teal-300';
             const evLabel = (evShown.every(ev => ev.type === 'market') ? 'Market' : 'Event') + (evShown.length > 1 ? 's' : '');
-            const chips = evShown.length ? `<span class="inline-flex flex-col gap-0.5 max-w-full text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-2xl ${evCls}"><span class="font-bold">${evLabel}</span>${evShown.map(ev => `<span class="font-normal">${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}</span>`).join('')}</span>` : '';
+            const chips = evShown.length ? `<span class="inline-flex flex-col gap-0.5 max-w-full text-xs sm:text-sm font-semibold px-4 py-2 rounded-2xl ${evCls}"><span class="font-bold">${evLabel}</span>${evShown.map(ev => `<span class="font-normal">${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}</span>`).join('')}</span>` : '';
             // 시즌 태그: 주황 칩 바로 뒤에 같은 줄로 이유가 이어져요 (#태그를 다시 쓰지 않아요). 이유가 없으면 칩만
             const extra = tags.map(t => { const x = t.spots[s.id]; return !dd.fresh(x.why)
               ? `<div class="mt-2 flex">${chip(`#${esc(t.label)}`, tagStyle(t.id).soft)}</div>`
               : `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${chip(`#${esc(t.label)}`, tagStyle(t.id).soft)} ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class=" text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('');
             const chipsBlock = `${chips || extra ? `
-          <div class="px-4">
+          <div>
             ${chips ? `<div class="flex flex-wrap gap-2">${chips}</div>` : ''}${extra}
           </div>` : ''}`;
             const tipBlock = notes.length ? infoBox('sky', 'Tiny Trips tip', notes.slice(0, 2).map(esc), `Checked ${esc(shortDate(NOTES_META.updatedAt))} · ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="">${esc(host)} ↗</a>` : 'official site'}. Hours can change.`) : '';
@@ -2752,7 +2752,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             // 앞 칸(Good to know·tip·후기·시즌)에서 이미 한 말은 빼요
             const body = list('Things to do', (g.do || []).filter(dd.fresh), '•') + list('What to eat', (g.eat || []).filter(dd.fresh), '•');
             return body ? `
-          <section class="space-y-5 px-4">
+          <section class="space-y-5">
             ${body}
           </section>` : '';
           })()}
