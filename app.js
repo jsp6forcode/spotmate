@@ -1946,13 +1946,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const rainy = ds.some(d => fc[d] && (fc[d].pop >= 60 || fc[d].kind === 'rain'));
     const day = d => d === vanDate(0) ? 'Today' : d === vanDate(1) ? 'Tomorrow' : DOW[dowOf(d)];
     return `
-    <section class="mt-6 rounded-2xl p-4 bg-violet-50 ring-1 ring-violet-200 dark:bg-violet-500/10 dark:ring-violet-500/30" aria-label="Your plan">
+    <section class="mt-6 rounded-2xl p-4 bg-violet-50 dark:bg-violet-500/10" aria-label="Your plan">
       <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
         <p class="font-bold text-violet-900 dark:text-violet-100">Planning for ${esc(whenLabel(s.when))}</p>
         ${ds.map(d => fc[d] ? `<span class="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-slate-100"><span class="text-xl" aria-hidden="true">${fc[d].icon}</span><span>${esc(day(d))} ${fc[d].max}°C<span class="font-normal text-slate-600 dark:text-slate-300">, ${esc(fc[d].desc)}${fc[d].pop >= 30 ? `, ${fc[d].pop}% chance of rain` : ''}</span></span></span>` : '').join('')}
-        <button data-act="whenoff" class="ml-auto text-sm font-semibold underline text-violet-800 dark:text-violet-200">Back to right now</button>
+        <button data-act="whenoff" class="ml-auto text-sm font-semibold text-violet-800 dark:text-violet-200">Back to right now</button>
       </div>
-      ${rainy && s.view === 'list' && !s.indoor ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-200">Rain is likely. <button data-act="indoor" class="font-semibold underline text-sky-700 dark:text-sky-300">Show indoor places</button></p>` : ''}
+      ${rainy && s.view === 'list' && !s.indoor ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-200">Rain is likely. <button data-act="indoor" class="font-semibold text-sky-700 dark:text-sky-300">Show indoor places</button></p>` : ''}
       ${this._hidden && this._hidden.closed && !s.openNow ? `<p class="mt-1 text-xs text-slate-600 dark:text-slate-300">${plural(this._hidden.closed, 'place')} closed ${ds.length > 1 ? 'on both days' : ds[0] === vanDate(0) ? 'for the rest of today' : 'that day'} ${this._hidden.closed === 1 ? 'is' : 'are'} hidden.</p>` : ''}
       ${this.planLater() ? `<p class="mt-1 text-xs text-slate-600 dark:text-slate-300">Cards show the hours for ${ds.length > 1 ? 'those days' : 'that day'}. Check the Google Maps link before you go.</p>` : ''}
     </section>`;
