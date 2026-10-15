@@ -1803,11 +1803,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     <section class="bg-white/80 dark:bg-slate-900/80">
       <div class="max-w-6xl mx-auto px-4 md:px-6 py-2 sm:py-3 space-y-1.5 sm:space-y-2">
         ${lite && !s.q && !s.wiz.done ? '' : `
-        <form data-act="search" role="search" class="flex gap-1.5 sm:gap-2">
+        <form data-act="search" role="search" class="relative">
+          <button type="submit" aria-label="Search" ${s.qBusy ? 'disabled aria-busy="true"' : ''} class="absolute left-0 inset-y-0 w-10 sm:w-12 flex items-center justify-center rounded-lg sm:rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 disabled:opacity-60"><svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
           <input name="q" type="search" value="${esc(this.qDraft ?? s.q)}" autocomplete="off" enterkeyhint="search" aria-label="Search"
-            placeholder="Try “${this.exampleQ()}”"
-            class="flex-1 min-w-0 min-h-[36px] sm:min-h-[44px] px-3 sm:px-4 text-sm sm:text-base rounded-lg sm:rounded-xl bg-slate-100 text-slate-900 placeholder:text-slate-400 dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500">
-          <button type="submit" ${s.qBusy ? 'disabled aria-busy="true"' : ''} class="min-h-[36px] sm:min-h-[44px] px-3 sm:px-4 text-sm sm:text-base rounded-lg sm:rounded-xl font-semibold bg-violet-600 hover:bg-violet-700 disabled:opacity-70 text-white">${s.qBusy ? 'Thinking…' : AI_SEARCH_URL ? '✨ Search' : 'Search'}</button>
+            placeholder="${s.qBusy ? 'Thinking…' : `Try “${this.exampleQ()}”`}"
+            class="w-full min-w-0 min-h-[36px] sm:min-h-[44px] pl-9 sm:pl-11 pr-3 sm:pr-4 text-sm sm:text-base rounded-lg sm:rounded-xl bg-slate-100 text-slate-900 placeholder:text-slate-400 dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500">
         </form>
         `}
         ${s.q && s.aiSay ? `<p class="text-sm font-semibold text-violet-700 dark:text-violet-300"><span aria-hidden="true">✨</span> ${esc(s.aiSay)}</p>` : ''}
