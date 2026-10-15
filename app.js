@@ -32,7 +32,7 @@ const KINDS = [
   ['pool', 'Pool', /pool|aquatic|swim/i, 'both', 'bps'],
   ['rec', 'Rec centre', /recreation|sports complex|community cent|leisure|ymca|family place|sportsplex/i, 'both', 'bps'],
   // 센터 이름에 쇼핑몰 단어(Town Centre, Oakridge)가 들어간 곳이 쇼핑몰 사진이 되지 않게, 쇼핑몰은 센터 다음에 판단해요
-  ['mall', 'Shopping', /\bikea\b|kids market|\bmall\b|park royal|metropolis|coquitlam centre|richmond centre|town centre|tsawwassen mills|oakridge|lansdowne|shopping/i, 'family', 'bps'],
+  ['mall', 'Shopping', /\bikea\b|kids market|\bmall\b|park royal|metropolis|coquitlam centre|richmond centre|town centre(?! park)|tsawwassen mills|oakridge|lansdowne|shopping/i, 'family', 'bps'],
   ['museum', 'Museum', /olympic experience/i, 'family', 'ps'],
   ['rink', 'Ice rink', /ice rink|skating|arena|\bice\b|oval|canlan/i, 'both', 'ps'],
   // 단어 경계로 ("Branch"의 ranch, "Libraries"가 농장이 되지 않게). 농장은 아이 중심 활동에도 맞아요
@@ -128,8 +128,24 @@ function kidProfile(s) {
   const mins = (() => { const m = /(\d+)(?:–(\d+))? hrs?/.exec(s.time || ''); return /half day|full day/i.test(s.time || '') ? [3, 5] : m ? [+m[1], +(m[2] || m[1])] : [1, 2]; })();
   return (s._kp = { kind: k[0], label: k[1], purpose, ages, agesText: agesText || (ages.length === 3 ? 'Ages 0–12' : `Ages ${AGE_LABEL[ages[0]].split('–')[0]}–${AGE_LABEL[ages[ages.length - 1]].split('–')[1]}`), tags: tags.filter(Boolean), hours: mins });
 }
-// 카테고리 드롭다운 항목 ('all' 제외). 행사도 고를 수 있어요
-const catOptions = () => [...Object.keys(CATS), 'events'];
+// 카테고리 드롭다운: 장소 종류(kidProfile().kind)를 묶은 그룹 (사용자 요청, 2026-10-14). 지도 핀 색은 예전 CATS(nature/city)를 그대로 써요
+const CAT_GROUPS = {
+  playground: { label: 'Playground', kinds: ['play', 'water'] },
+  park:       { label: 'Park & garden', kinds: ['park', 'garden', 'trail', 'beach'] },
+  pool:       { label: 'Pool', kinds: ['pool'] },
+  museum:     { label: 'Museum', kinds: ['museum', 'aquarium'] },
+  mall:       { label: 'Mall & shops', kinds: ['mall', 'shop'] },
+  indoor:     { label: 'Indoor play', kinds: ['indoorplay', 'gym', 'trampoline', 'active', 'games', 'arcade', 'minigolf'] },
+  farm:       { label: 'Farm & animals', kinds: ['farm', 'pumpkin', 'berry', 'birds', 'salmon'] },
+  sports:     { label: 'Skating & sports', kinds: ['rink', 'wheels', 'golf'] },
+  library:    { label: 'Library & rec centre', kinds: ['library', 'rec'] },
+  arts:       { label: 'Arts & crafts', kinds: ['arts'] },
+  fun:        { label: 'Rides & attractions', kinds: ['rides', 'hologram', 'sight'] }
+};
+const KIND_GROUP = {}; Object.entries(CAT_GROUPS).forEach(([g, v]) => v.kinds.forEach(k => { KIND_GROUP[k] = g; }));
+const kindGroup = s => KIND_GROUP[kidProfile(s).kind] || 'fun';
+// 카테고리 드롭다운 항목 ('all' 제외): 아이 동반 장소가 하나라도 있는 그룹만, 그리고 행사
+const catOptions = () => [...Object.keys(CAT_GROUPS).filter(g => SPOTS.some(s => isKid(s) && kindGroup(s) === g)), 'events'];
 // "Vancouver classic": 이미 많은 사람이 알고 좋아하는 곳. 데이터의 gem(평점 4.6+·리뷰 300+)과 검색량 상위(isClassic)를 합쳤어요
 const CLASSIC = { label: 'Vancouver classic', criteria: 'A local favourite that plenty of people already know and love: rated 4.6+ on Google from 300+ reviews, or one of the most searched places in BC.' };
 // 🧸 Kids 필터: 아이 동반 장소(family: true, 놀이터·수영장·몰·농장 등)와 아이랑 가기 좋은 곳(kids: true)만 남겨요
@@ -1213,7 +1229,7 @@ class App {
     const origin = this.origin();
     // "Indoor": 비 오는 날용. 실내와 실내+야외(both) 장소만 남겨요.
     let items = SPOTS.filter(s =>
-      (cat === 'all' || s.cat === cat)
+      (cat === 'all' || kindGroup(s) === cat)
       && (!this.state.indoor || s.env !== 'outdoor') && (!(this.state.kidsOnly || KIDS_ONLY) || isKid(s))
       // 행사 장소(Pacific Coliseum, 컨벤션센터, 마켓이 열리는 공원 등)는 7일 안에 그곳 행사가 있을 때만
       && (!s.venue || !!(this._spotEvents && this._spotEvents[s.id]))
@@ -1847,7 +1863,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div class="${s.cat === 'events' ? 'contents' : this._moreCls}">
           <label class="flex shrink-0 items-center">
             <select data-act="cat" aria-label="Category" class="min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[11px] sm:text-[13px] font-semibold">
-              <option value="__ph" disabled hidden ${s.cat === 'all' ? 'selected' : ''}>Category</option>${[['all', 'All'], ...catOptions().map(k => [k, k === 'events' ? 'Events' : CATS[k].label])]
+              <option value="__ph" disabled hidden ${s.cat === 'all' ? 'selected' : ''}>Category</option>${[['all', 'All'], ...catOptions().map(k => [k, k === 'events' ? 'Events' : CAT_GROUPS[k].label])]
                 .map(([k, label]) => `<option value="${k}" ${s.cat === k && k !== 'all' ? 'selected' : ''}>${label}</option>`).join('')}
             </select>
           </label>
