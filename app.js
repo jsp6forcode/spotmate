@@ -770,7 +770,7 @@ class App {
       when: '',
       view: 'list', dark: savedDark === null ? prefersDark : savedDark === '1',
       // nearKey: '' = 위치 필터 없음, 'here' = GPS 현재 위치(origin), 그 외 = ORIGINS의 지역
-      nearKey: guideCityKey(), origin: null, geoMsg: '', geoBusy: false,
+      nearKey: guideCityKey(), radiusExact: false, origin: null, geoMsg: '', geoBusy: false,
       // "Open now"는 늘 꺼진 채로 시작해요 (밤에 켜 두면 추천이 몇 곳만 남아서, 켠 상태를 기억하지 않아요)
       openNow: false,
       // Indoor·Kids도 기억하지 않아요 (검색·비 안내로 켜진 게 다음 방문까지 남아 목록이 몰래 좁혀지지 않게)
@@ -1144,6 +1144,7 @@ class App {
     const when = p.get('when'); if (['today', 'tomorrow', 'weekend', 'sat', 'sun'].includes(when)) patch.when = when;
     const near = p.get('near'); if (near === 'none') patch.nearKey = ''; else if (near && ORIGINS[near]) patch.nearKey = near;
     const rad = p.get('radius'); if (rad === 'any') patch.radius = 'any'; else if (RADII.includes(+rad)) patch.radius = +rad;
+    if (patch.radius != null) patch.radiusExact = true;
     const sort = p.get('sort'); if (['fresh', 'distance'].includes(sort)) patch.sort = sort;
     for (const [k, key] of [['indoor', 'indoor'], ['kids', 'kidsOnly'], ['open', 'openNow']]) { const b = p.get(k); if (b === '1' || b === '0') patch[key] = b === '1'; }
     // 필터가 주소에 있으면 질문(Pick for me) 없이 바로 목록으로
@@ -1289,7 +1290,7 @@ class App {
     // 안내 페이지에서 실내만 껐고 도시는 남았으면, 그 도시 안(기본 반경)의 모든 장소를 보여줘요
     const g0 = this.state.guide, radius2 = g0 && g0.cityKey && this.state.nearKey === g0.cityKey && !this.guideActive() && !this.state.guideAll ? placeRadius(g0.cityKey) : radius;
     if (this.nearActive() && radius2 !== 'any') {
-      const o = ORIGINS[this.state.nearKey], inArea = o ? new RegExp(`(^|[(,] ?)${o.label}\\b`, 'i') : null;
+      const o = ORIGINS[this.state.nearKey], inArea = o && !this.state.radiusExact ? new RegExp(`(^|[(,] ?)${o.label}\\b`, 'i') : null;
       items = items.filter(s => s.dist <= radius2 || (inArea && inArea.test(s.area || '')));
     }
     // 검색 키워드: 이름·설명에 하나라도 맞는 곳만. "무료"는 입장료 없는 곳만
@@ -1508,7 +1509,7 @@ class App {
       }
       case 'indoor': return this.set({ indoor: !this.state.indoor });
       case 'radius': {
-        const radius = val === 'any' ? 'any' : +val; store('spotmate-radius', String(radius)); this.set({ radius, wizMore: 10 }); return this.wizLocScroll();
+        const radius = val === 'any' ? 'any' : +val; store('spotmate-radius', String(radius)); this.set({ radius, radiusExact: true, wizMore: 10 }); return this.wizLocScroll();
       }
       case 'nearoff': this.geoToken = (this.geoToken || 0) + 1; this.set({ nearKey: '', geoMsg: '', geoBusy: false, wizMore: 10 }); return this.wizLocScroll();
       case 'copyplan': return this.copyPlan();
@@ -1530,7 +1531,7 @@ class App {
       // 진행 중인 위치 요청이 나중에 도착해도 사용자가 고른 지역을 덮어쓰지 않도록 토큰을 올려요
       this.geoToken = (this.geoToken || 0) + 1;
       if (el.value === 'gps') return this.locate();
-      this.set({ nearKey: el.value, geoMsg: '', geoBusy: false, ...this.wizLocPatch(el.value) });
+      this.set({ nearKey: el.value, radiusExact: false, geoMsg: '', geoBusy: false, ...this.wizLocPatch(el.value) });
       this.wizLocScroll();
     }
   }
@@ -1582,7 +1583,7 @@ class App {
     if (p.place && ORIGINS[p.place]) {
       this.geoToken = (this.geoToken || 0) + 1;
       this.qPlace = p.place;
-      Object.assign(patch, { nearKey: p.place, radius: placeRadius(p.place), geoMsg: '', geoBusy: false });
+      Object.assign(patch, { nearKey: p.place, radius: placeRadius(p.place), radiusExact: false, geoMsg: '', geoBusy: false });
     }
     this.set(patch);
     // 가까운 곳: 이미 위치를 골랐으면 그대로, 아니면 현재 위치를 물어요 (반경 2 km)
@@ -1975,7 +1976,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const s = this.state, near = this.nearActive();
     if (s.cat === 'events') return esc(`${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks`);
     const what = plural(items.length, [s.kidsOnly && 'kid-friendly', s.indoor && 'indoor', 'spot'].filter(Boolean).join(' ')) + (s.openNow && HOURS_READY ? ' open now' : '');
-    const where = near ? (s.radius === 'any' ? `, distances from ${this.originLabel()}` : ` ${ORIGINS[s.nearKey] ? 'in or ' : ''}within ${radiusLabel(s.radius)} of ${this.originLabel()}`)
+    const where = near ? (s.radius === 'any' ? `, distances from ${this.originLabel()}` : ` ${ORIGINS[s.nearKey] && !s.radiusExact ? 'in or ' : ''}within ${radiusLabel(s.radius)} of ${this.originLabel()}`)
       : s.sort === 'distance' ? ', distances from Downtown (pick a location to change that)' : '';
     const trends = TRENDS_ON && RISE_META.recentThrough ? `<span class="hidden sm:inline"> · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}${RISE_META.updatedAt ? `, updated ${esc(ago(RISE_META.updatedAt))}` : ''}</span>` : '';
     return esc(what + where) + trends;
@@ -2284,7 +2285,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   // 추천 결과: { top: 조건에 모두 맞는 곳(점수 순), also: 조건을 하나씩 풀어서 채운 곳, relaxed: 푼 단계 }
   wizResults() {
     const a = this.state.wiz.ans, origin = this.origin(), radius = this.state.radius;
-    const o = ORIGINS[this.state.nearKey], inArea = o ? new RegExp(`(^|[(,] ?)${o.label}\\b`, 'i') : null;
+    const o = ORIGINS[this.state.nearKey], inArea = o && !this.state.radiusExact ? new RegExp(`(^|[(,] ?)${o.label}\\b`, 'i') : null;
     let pool = SPOTS.filter(s => isKid(s) && (!s.venue || EVENTS.some(ev => ev.spotId === s.id && upcomingDates(ev, 14).length)))   // 행사 장소(호박밭 등)는 2주 안에 그곳 행사가 있으면
       .map(s => ({ ...s, dist: origin ? km(origin, s) : null }));
     if (this.nearActive() && radius !== 'any') pool = pool.filter(s => s.dist <= radius || (inArea && inArea.test(s.area || '')));
