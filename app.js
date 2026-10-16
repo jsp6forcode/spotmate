@@ -790,7 +790,7 @@ class App {
       user: null, reviewsOn: false, reviewDraft: null, reviewBusy: false, reviewMsg: '',
       feedbackBusy: false, feedbackMsg: '', feedbackSent: false, savedTab: 'saved',
       q: '', kw: [], unused: [], free: false, qBusy: false, aiSay: '',
-      radius: guideCityKey() ? 'any' : RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
+      radius: guideCityKey() ? 10 : RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
       // "Good any day" 목록에서 보여줄 개수 (Show more로 12개씩 늘어나요)
       restShown: REST_STEP,
@@ -799,7 +799,7 @@ class App {
     };
     this.ai = {};
     // 주소(?view=…&cat=…)에 남길 필터의 기본값. 기본값과 다른 것만 주소에 적어요
-    this.urlDefaults = { view: 'list', cat: 'all', tag: '', when: '', nearKey: this.state.nearKey, radius: this.state.radius, sort: 'fresh', indoor: this.state.indoor, kidsOnly: false, openNow: false };
+    this.urlDefaults = { view: 'list', cat: this.state.cat, tag: '', when: '', nearKey: this.state.nearKey, radius: this.state.radius, sort: 'fresh', indoor: this.state.indoor, kidsOnly: false, openNow: false };
     this.urlReady = false;
     this.sample = null;
     this.root = document.getElementById('app');
@@ -919,7 +919,7 @@ class App {
       // "Know it"(아는 곳 숨기기)은 없앴어요. 예전에 숨겨 둔 목록은 지워서 모든 곳이 다시 보이게 해요
       try { ['spotmate-known', 'spotmate-opennow', 'spotmate-price', 'spotmate-kids', 'spotmate-indoor', 'spotmate-browse'].forEach(k => localStorage.removeItem(k)); } catch (e) {}
       this.newIds = this.trackSeen();
-      this.set({ loading: false, plan, ...this.applyUrl() });
+      this.set({ loading: false, plan, ...this.guideCat(), ...this.applyUrl() });
       this.urlReady = true;
       // 검색 링크(?q=)로 들어오면 그 검색을 바로 해요
       const sq = new URLSearchParams(location.search).get('q');
@@ -1288,7 +1288,7 @@ class App {
     // 위치 필터가 켜져 있으면 반경 안의 스팟만 남기고, 순위도 그 안에서 다시 매겨요
     // 지역(도시)을 골랐으면 반경 밖이어도 그 도시 이름이 지역에 있는 곳은 넣어요 (Burke Mountain, Coquitlam 등 넓은 도시)
     // 안내 페이지에서 실내만 껐고 도시는 남았으면, 그 도시 안(기본 반경)의 모든 장소를 보여줘요
-    const g0 = this.state.guide, radius2 = g0 && g0.cityKey && this.state.nearKey === g0.cityKey && !this.guideActive() && !this.state.guideAll ? placeRadius(g0.cityKey) : radius;
+    const radius2 = radius;
     if (this.nearActive() && radius2 !== 'any') {
       const o = ORIGINS[this.state.nearKey], inArea = o && !this.state.radiusExact ? new RegExp(`(^|[(,] ?)${o.label}\\b`, 'i') : null;
       items = items.filter(s => s.dist <= radius2 || (inArea && inArea.test(s.area || '')));
@@ -2248,8 +2248,18 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const g = this.state.guide;
     if (!g || this.state.guideAll) return false;
     if (g.indoor && !this.state.indoor) return false;
-    if (g.cityKey && this.state.nearKey !== g.cityKey) return false;
+    if (g.cityKey) return false;   // 도시 안내는 그 도시 기준 10 km 안의 모든 장소 (이웃 도시 포함), 안내 목록으로 좁히지 않아요
     return true;
+  }
+  // 안내 페이지로 들어오면 카테고리 필터를 그 안내의 종류로 맞춰요 (안내 장소의 60% 이상이 한 그룹일 때, 아니면 All). 주소의 ?cat= 가 있으면 그게 우선
+  guideCat() {
+    const g = this.state.guide; if (!g) return {};
+    const n = {}; let tot = 0;
+    g.set.forEach(id => { const s = byId(id); if (s) { const k = kindGroup(s); n[k] = (n[k] || 0) + 1; tot++; } });
+    const top = Object.keys(n).sort((a, b) => n[b] - n[a])[0];
+    if (!top || n[top] < tot * 0.6) return {};
+    this.urlDefaults.cat = top;
+    return { cat: top };
   }
   pickMode() { return WIZARD && this.state.view === 'list' && !this.state.browse; }
   // 추천 결과에서 위치를 고르면: 그 지역에 맞는 반경(도시 5 km, 동네 2 km, 내 위치 5 km)으로 10곳부터 다시 보여줘요
