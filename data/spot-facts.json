@@ -1,5 +1,5 @@
 {
-    "updatedAt":  "2026-10-03",
+    "updatedAt":  "2026-10-15",
     "note":  "Verified from official or published sources; blank means not verified. Prices change, so check the source.",
     "spots":  {
                   "30footpool":  {
@@ -1926,6 +1926,75 @@
                                                            "source":  "https://clawzonearcade.com/"
                                                        },
                                          "checked":  "2026-10-04"
-                                     }
+                                     },
+                  "bounceplaycafe":  {
+                                         "checked":  "2026-10-15",
+                                         "amenities":  {
+                                                           "note":  "Play space for ages 0-9 with a soft-play area for babies and toddlers. A parent must stay with kids at all times, and everyone wears socks (grip socks suit little ones)"
+                                                       },
+                                         "food":  {
+                                                      "outside":  "not-allowed",
+                                                      "onsite":  "cafe"
+                                                  },
+                                         "admission":  {
+                                                           "source":  "https://bounceplaycafe.ca/",
+                                                           "bookingNote":  "required on weekends",
+                                                           "booking":  "recommended"
+                                                       }
+                                     },
+                  "twistersgymnastics":  {
+                                             "checked":  "2026-10-15",
+                                             "amenities":  {
+                                                               "note":  "Preschool drop-in for walking to age 5 needs a parent on the floor; a one-time Gymnastics BC waiver is required"
+                                                           },
+                                             "admission":  {
+                                                               "source":  "https://www.twistersgymbc.com/drop-in/",
+                                                               "bookingNote":  "register online through the club portal, opens 24 hours before",
+                                                               "booking":  "required",
+                                                               "text":  "Family drop-in/open gym $20 per family (up to 2 adults and 3 kids) or $10 each; kids 6-12 drop-in $10. First-timers also pay a club and Gymnastics BC insurance membership (about $32, covers 8 visits)"
+                                                           }
+                                         },
+                  "flipcitygymnastics":  {
+                                             "checked":  "2026-10-15",
+                                             "amenities":  {
+                                                               "note":  "The club says drop-in times are not available at this Pitt Meadows location while construction is under way, so check before going"
+                                                           },
+                                             "admission":  {
+                                                               "source":  "https://flipcitygym.com/drop-in/",
+                                                               "bookingNote":  "register online first to make sign-in easier",
+                                                               "booking":  "recommended",
+                                                               "text":  "Open gym $10 a visit plus Gymnastics BC insurance ($17 covers 8 visits); preschool open gym for ages 18 months to 5 on Wed, Thu and Fri mornings"
+                                                           }
+                                         },
+                  "clubavivagymnastics":  {
+                                              "checked":  "2026-10-15",
+                                              "amenities":  {
+                                                                "note":  "Create an account before your first visit; the class is cancelled if nobody arrives within 15 minutes of the start"
+                                                            },
+                                              "admission":  {
+                                                                "source":  "https://clubaviva.ca/drop-in-programs",
+                                                                "booking":  "none",
+                                                                "text":  "Preschool casual class (ages 3-5) $15 on Wed 11:30am-12:30pm and Fri 11am-12pm; annual memberships ($45 Gymnastics BC + $25 club) are due after the first class"
+                                                            }
+                                          },
+                  "surreygymnasticsociety":  {
+                                                 "checked":  "2026-10-15",
+                                                 "amenities":  {
+                                                                   "note":  "Drop-in times are not posted online, so call 604-594-1555 to confirm"
+                                                               },
+                                                 "admission":  {
+                                                                   "text":  "School-age drop-in (ages 5-13) $12 a visit plus a $46 annual registration fee; teen and adult drop-in is 13+",
+                                                                   "source":  "https://www.surreygym.com/recreational/drop-in/"
+                                                               }
+                                             },
+                  "vancouvercircusschool":  {
+                                                "checked":  "2026-10-15",
+                                                "admission":  {
+                                                                  "source":  "https://vancouvercircusschool.ca/classes-drop-ins/drop-in/",
+                                                                  "bookingNote":  "register up to 14 days ahead, or until 15 minutes before class",
+                                                                  "booking":  "required",
+                                                                  "text":  "Drop-in is open for many classes for ages 6 and up; check the class schedule"
+                                                              }
+                                            }
               }
 }
