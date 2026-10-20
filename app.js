@@ -130,8 +130,9 @@ function kidProfile(s) {
 }
 // 카테고리 드롭다운: 장소 종류(kidProfile().kind)를 묶은 그룹 (사용자 요청, 2026-10-14). 지도 핀 색은 예전 CATS(nature/city)를 그대로 써요
 const CAT_GROUPS = {
-  playground: { label: 'Playground', kinds: ['play', 'water'] },
-  park:       { label: 'Park & garden', kinds: ['park', 'garden', 'trail', 'beach'] },
+  playground: { label: 'Playground & park', kinds: ['play', 'water', 'park'] },
+  garden:     { label: 'Garden', kinds: ['garden'] },
+  outdoors:   { label: 'Trail & beach', kinds: ['trail', 'beach'] },
   pool:       { label: 'Pool', kinds: ['pool'] },
   museum:     { label: 'Museum', kinds: ['museum', 'aquarium'] },
   mall:       { label: 'Mall & shops', kinds: ['mall', 'shop'] },
