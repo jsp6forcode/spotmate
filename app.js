@@ -548,6 +548,19 @@ const TILE_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">Open
 // 메트로 밴쿠버 전체가 보이는 기본 범위
 const METRO_BOUNDS = [[48.98, -123.30], [49.42, -121.85]];
 let leafletReady = null;
+// 예쁜 벡터 지도: OpenFreeMap(키 없이 무료) 스타일을 MapLibre로 그려요. 라이브러리가 안 불러와지면 OSM 기본 타일로 돌아가요
+const MAPLIBRE = 'https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl';
+const MAPLIBRE_LEAFLET = 'https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js';
+const VEC_STYLE = { light: 'https://tiles.openfreemap.org/styles/bright', dark: 'https://tiles.openfreemap.org/styles/fiord' };
+const VEC_ATTR = '<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> &copy; <a href="https://openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+let vecReady;
+function loadVector() {
+  if (!vecReady) {
+    const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = MAPLIBRE + '.css'; document.head.appendChild(css);
+    vecReady = loadScript(MAPLIBRE + '.js').then(() => loadScript(MAPLIBRE_LEAFLET)).then(() => !!(window.L && L.maplibreGL), () => false);
+  }
+  return vecReady;
+}
 function loadLeaflet() {
   if (window.L) return Promise.resolve();
   if (!leafletReady) {
@@ -1305,8 +1318,14 @@ class App {
       items = items.filter(s => s.kwScore > 0);
     }
     if (this.state.free) items = items.filter(s => /^free/i.test(s.price || ''));
-    // 지도 카테고리 목록에 보여줄 개수: 카테고리를 고르기 전 목록 기준
-    this._catCounts = {}; items.forEach(s => { const g = kindGroup(s); this._catCounts[g] = (this._catCounts[g] || 0) + 1; });
+    // 지도 카테고리 목록에 보여줄 개수: 카테고리만 빼고 나머지 필터(태그·Open now·날짜)를 모두 적용한 목록 기준
+    const tag0 = activeTags().find(t => t.id === this.state.tag), ds0 = this.state.when && HOURS_READY ? whenDates(this.state.when) : null;
+    this._catCounts = {}; items.forEach(s => {
+      if (tag0 && !tag0.spots[s.id]) return;
+      if (this.state.openNow && HOURS_READY) { const o = openInfo(s); if (!o || !o.open) return; }
+      if (ds0 && ds0.every(d => closedOn(s, d))) return;
+      const g = kindGroup(s); this._catCounts[g] = (this._catCounts[g] || 0) + 1;
+    });
     items = evCat ? [] : cat === 'all' ? items : items.filter(s => kindGroup(s) === cat);
     // 시즌 태그 필터: 칩에 보여줄 개수는 태그를 고르기 전 목록 기준
     this._tagCounts = Object.fromEntries(activeTags().map(t => [t.id, items.filter(s => t.spots[s.id]).length]));
@@ -1558,12 +1577,15 @@ class App {
   // 검색 제안에서 장소를 고르면 모달 대신 지도에서 그 장소로 확대하고 카드 팝업을 띄워요
   async showOnMap(id) {
     const s = byId(id); if (!s) return;
+    // 고른 장소가 지금 위치·날짜 조건 밖이면 지도에 안 보이니, 위치·날짜·Open now 조건은 풀고 찾아요
+    this.geoToken = (this.geoToken || 0) + 1; this.qPlace = null;
+    this.set({ nearKey: '', geoMsg: '', geoBusy: false, when: '', openNow: false, indoor: false });
     await this.runSearch(s.name);
     setTimeout(() => {
       const map = this._leaflet, p = this._pins && this._pins[id];
       if (!map || !p) return;
       map.setView([s.lat, s.lng], 15, { animate: false });
-      p.mk.openTooltip();
+      if (matchMedia('(pointer: coarse)').matches) p.mk.fire('click'); else p.mk.openTooltip();   // 터치 화면은 핀을 누른 것처럼 작은 카드를 띄워요
     }, 50);
   }
   // 검색: 질문을 해석해서 기존 필터(페이지·지금 영업·아이·실내·가격·해피아워·런치·가까운 곳)를 켜고, 키워드로 좁혀요
@@ -2593,12 +2615,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   async drawMap() {
     const el = document.getElementById('lmap'); if (!el || !this._map) return;
     try { await loadLeaflet(); } catch (e) { el.innerHTML = '<p class="p-6 text-sm text-slate-500">The map could not load. Check your connection.</p>'; return; }
+    const vec = await loadVector();
     if (!el.isConnected) return;
     const { items, picks } = this._map, L = window.L;
-    const map = L.map(el, { zoomControl: true, attributionControl: true, scrollWheelZoom: true });
+    const map = L.map(el, { zoomControl: true, attributionControl: true, scrollWheelZoom: true, maxZoom: 19 });
+    el.classList.toggle('vec', !!vec);
     map.zoomControl.setPosition('topright');
     map.attributionControl.setPrefix(false);   // Leaflet 로고·링크는 빼고 지도 출처(OpenStreetMap)만 작게
-    L.tileLayer(TILES, { attribution: TILE_ATTR, maxZoom: 19 }).addTo(map);
+    if (vec) L.maplibreGL({ style: this.state.dark ? VEC_STYLE.dark : VEC_STYLE.light, attribution: VEC_ATTR }).addTo(map);
+    else L.tileLayer(TILES, { attribution: TILE_ATTR, maxZoom: 19 }).addTo(map);
     // 핀: 번호가 작을수록(순위가 높을수록) 위에 오게
     const z = m => typeof m === 'number' ? 1000 - m : 0;
     this._pins = {};
