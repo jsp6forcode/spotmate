@@ -1295,7 +1295,7 @@ class App {
     // 안내 페이지에서 실내만 껐고 도시는 남았으면, 그 도시 안(기본 반경)의 모든 장소를 보여줘요
     const radius2 = radius;
     if (this.nearActive() && radius2 !== 'any') {
-      const o = ORIGINS[this.state.nearKey], inArea = o && !this.state.radiusExact ? new RegExp(`(^|[(,] ?)${o.label}\\b`, 'i') : null;
+      const o = ORIGINS[this.state.nearKey], inArea = o && !this.state.radiusExact && this.state.view !== 'map' ? new RegExp(`(^|[(,] ?)${o.label}\\b`, 'i') : null;
       items = items.filter(s => s.dist <= radius2 || (inArea && inArea.test(s.area || '')));
     }
     // 검색 키워드: 이름·설명에 하나라도 맞는 곳만. "무료"는 입장료 없는 곳만
@@ -1536,7 +1536,7 @@ class App {
       // 진행 중인 위치 요청이 나중에 도착해도 사용자가 고른 지역을 덮어쓰지 않도록 토큰을 올려요
       this.geoToken = (this.geoToken || 0) + 1;
       if (el.value === 'gps') return this.locate();
-      this.set({ nearKey: el.value, radiusExact: false, geoMsg: '', geoBusy: false, ...this.wizLocPatch(el.value) });
+      this.set({ nearKey: el.value, geoMsg: '', geoBusy: false, ...this.wizLocPatch(el.value) });
       this.wizLocScroll();
     }
   }
@@ -1777,7 +1777,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.controls(items)}
         <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
           ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : view === 'about' ? this.aboutView() : view === 'events' || view === 'markets' ? this.eventsView(view) : this.pickMode() && !this.state.q ? this.wizardView()
-            : this.pickMode() ? `<button data-act="qclear" class="mt-6 inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-lg text-sm font-semibold   text-slate-700   dark:text-slate-200">← Back to the picker</button>${this.planBar()}${this.listView(items)}` : this.state.cat === 'events' ? this.eventsView() : `
+            : this.pickMode() ? `<button data-act="qclear" class="mt-6 inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-lg text-sm font-semibold   text-slate-700   dark:text-slate-200">← Back to the picker</button>${this.planBar()}${this.listView(items)}` : this.state.cat === 'events' && view !== 'map' ? this.eventsView() : `
             ${this.guideBanner()}
             ${this.planBar()}
             ${view !== 'map' ? this.seasonChips() : ''}
@@ -1981,7 +1981,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const s = this.state, near = this.nearActive();
     if (s.cat === 'events') return esc(`${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks`);
     const what = plural(items.length, [s.kidsOnly && 'kid-friendly', s.indoor && 'indoor', 'spot'].filter(Boolean).join(' ')) + (s.openNow && HOURS_READY ? ' open now' : '');
-    const where = near ? (s.radius === 'any' ? `, distances from ${this.originLabel()}` : ` ${ORIGINS[s.nearKey] && !s.radiusExact ? 'in or ' : ''}within ${radiusLabel(s.radius)} of ${this.originLabel()}`)
+    const where = near ? (s.radius === 'any' ? `, distances from ${this.originLabel()}` : ` ${ORIGINS[s.nearKey] && !s.radiusExact && s.view !== 'map' ? 'in or ' : ''}within ${radiusLabel(s.radius)} of ${this.originLabel()}`)
       : s.sort === 'distance' ? ', distances from Downtown (pick a location to change that)' : '';
     const trends = TRENDS_ON && RISE_META.recentThrough ? `<span class="hidden sm:inline"> · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}${RISE_META.updatedAt ? `, updated ${esc(ago(RISE_META.updatedAt))}` : ''}</span>` : '';
     return esc(what + where) + trends;
@@ -2497,7 +2497,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 행사·파머스 마켓 핀: Events·Markets 탭과 같은 기준(앞으로 6주, 위치 필터). 추천 장소만 보는 지도엔 안 그려요
     const evAll = picks ? [] : this.upcomingEvents(45).map(ev => { const sp = ev.spotId && byId(ev.spotId); return ev.lat != null ? ev : sp ? { ...ev, lat: sp.lat, lng: sp.lng } : null; }).filter(Boolean).filter(ev => !this.state.kw.length || this.state.kw.some(k => k.re.test(`${ev.name} ${ev.summary || ""} ${ev.venue || ""} ${ev.area || ""} ${ev.type === "market" ? "market farmers market" : ev.type}`)));   // 검색 중이면 검색어에 맞는 행사·마켓만
     const evMarkets = evAll.filter(ev => ev.type === 'market'), evOthers = evAll.filter(ev => ev.type !== 'market');
-    const showEv = this.state.mapEvents === true, showMk = this.state.mapMarkets === true;
+    const evCat = this.state.cat === 'events', showEv = evCat || this.state.mapEvents === true, showMk = evCat || this.state.mapMarkets === true;   // 카테고리에서 Events를 고르면 행사·마켓을 지도에 바로 켜요
     const evPin = ev => ({ id: ev.id, name: ev.name, forParents: !!ev.forParents, lat: ev.lat, lng: ev.lng, market: ev.type === 'market', icon: ev.icon || (ev.type === 'market' ? '🥕' : '🎪'), when: `${dayLabel(ev.next)} · ${eventHours(ev)}`, spotId: ev.spotId && byId(ev.spotId) ? ev.spotId : '', source: ev.source || '' });
     this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: groupColor(s), mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks,
       events: [...(showEv ? evOthers : []), ...(showMk ? evMarkets : [])].map(evPin) };
@@ -2515,7 +2515,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${[...new Set(items.map(kindGroup))].map(g => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-5 h-5 rounded-full text-[11px] leading-5 text-center" style="background:${CAT_GROUPS[g].color}">${CAT_GROUPS[g].icon}</span>${CAT_GROUPS[g].label}</span>`).join('')}
           ${picks ? '' : `${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}`}
         </div>
-        <div id="lmap" class="h-[26vh] min-h-[160px] sm:h-[44vh] sm:min-h-[256px] md:h-[calc(80vh-9.6rem)] md:min-h-[384px] lg:h-[calc(80vh-8rem)] lg:min-h-[448px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
+        <div id="lmap" class="h-[21vh] min-h-[128px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(64vh-7.7rem)] md:min-h-[307px] lg:h-[calc(64vh-6.4rem)] lg:min-h-[358px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
       </div>
       <div data-keep-scroll="maplist" class="grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
         ${this._map.events.length ? `<p class="px-1 pt-0.5 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Events & markets · next 6 weeks</p>${this._map.events.map((ev, i) => `
@@ -2533,7 +2533,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="text-center">
           <button data-act="more" class="min-h-[44px] px-5 py-2.5 rounded-xl font-semibold   text-slate-700   dark:text-slate-200">Show more <span class="font-normal text-slate-500 dark:text-slate-400">(${items.length - shown.length} left)</span></button>
         </div>` : ''}`;
-      })() : '<p class="text-sm text-slate-500">No spots match these filters.</p>'}
+      })() : evCat ? '' : '<p class="text-sm text-slate-500">No spots match these filters.</p>'}
     </div>`;
   }
   // 목록에서 가리킨 장소의 핀 강조 (맨 위로 올리고, 지도 밖이면 살짝 옮겨 보이게)
@@ -2578,6 +2578,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 보던 위치 이어가기: 같은 목록이면 저장한 위치로, 아니면 추천 장소에 맞춰 확대(전체 목록은 메트로 밴쿠버 범위)
     const key = (picks ? 'p:' : 'a:') + items.length + ':' + (items[0] ? items[0].id : '') + ':' + this.state.nearKey + ':' + this.state.radius;
     if (this._mapSaved && this._mapSaved.key === key) map.setView(this._mapSaved.center, this._mapSaved.zoom, { animate: false });
+    else if (o && !picks && this.nearActive() && this.state.radius !== 'any') map.fitBounds(L.latLngBounds([o.lat - this.state.radius / 111, o.lng - this.state.radius / (111 * Math.cos(o.lat * Math.PI / 180))], [o.lat + this.state.radius / 111, o.lng + this.state.radius / (111 * Math.cos(o.lat * Math.PI / 180))]).pad(0.05), { maxZoom: 16, animate: false });   // 반경을 고르면 그 원이 지도에 꽉 차게
     else if ((picks || this.nearActive()) && items.length) map.fitBounds(L.latLngBounds(items.map(s => [s.lat, s.lng])).pad(0.15), { maxZoom: 14, animate: false });
     else map.fitBounds(METRO_BOUNDS, { animate: false });
     const save = () => { this._mapSaved = { key, center: map.getCenter(), zoom: map.getZoom() }; };
