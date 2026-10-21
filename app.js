@@ -773,7 +773,7 @@ class App {
       weather: 'cloudy', live: null, forecast: {},
       // when: 날짜 계획 ('' = 지금 기준, 'today' · 'tomorrow' · 'weekend' · 'sat' · 'sun'). 날짜가 지나면 의미가 바뀌어서 기억하지 않아요
       when: '',
-      view: 'list', dark: savedDark === null ? prefersDark : savedDark === '1',
+      view: 'map', dark: savedDark === null ? prefersDark : savedDark === '1',
       // nearKey: '' = 위치 필터 없음, 'here' = GPS 현재 위치(origin), 그 외 = ORIGINS의 지역
       nearKey: guideCityKey(), radiusExact: false, origin: null, geoMsg: '', geoBusy: false,
       // "Open now"는 늘 꺼진 채로 시작해요 (밤에 켜 두면 추천이 몇 곳만 남아서, 켠 상태를 기억하지 않아요)
@@ -804,7 +804,7 @@ class App {
     };
     this.ai = {};
     // 주소(?view=…&cat=…)에 남길 필터의 기본값. 기본값과 다른 것만 주소에 적어요
-    this.urlDefaults = { view: 'list', cat: this.state.cat, tag: '', when: '', nearKey: this.state.nearKey, radius: this.state.radius, sort: 'fresh', indoor: this.state.indoor, kidsOnly: false, openNow: false };
+    this.urlDefaults = { view: 'map', cat: this.state.cat, tag: '', when: '', nearKey: this.state.nearKey, radius: this.state.radius, sort: 'fresh', indoor: this.state.indoor, kidsOnly: false, openNow: false };
     this.urlReady = false;
     this.sample = null;
     this.root = document.getElementById('app');
@@ -1577,7 +1577,7 @@ class App {
     // 지도 탭에서 검색하면 Explore로 가지 않고 지도에 머물러요 (결과는 지도·오른쪽 목록에 바로 반영)
     const stay = this.state.view === 'map';
     const patch = {
-      q, kw: p.kw, unused: p.unused || [], free: p.free && p.view === 'list', view: stay ? 'map' : p.view, mapPicks: stay ? null : this.state.mapPicks, cat: p.cat, tag: '', when,
+      q, kw: p.kw, unused: p.unused || [], free: p.free && p.view === 'list', view: 'map', mapPicks: stay ? null : this.state.mapPicks, cat: p.cat, tag: '', when,
       openNow: p.now && HOURS_READY && !later, kidsOnly: p.kids && p.view === 'list', indoor: p.indoor && p.view === 'list',
       modal: null,
       qBusy: false, aiSay: ai ? p.say : '',
@@ -1863,7 +1863,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </div>
         </div>
         <nav class="mt-4 inline-flex max-w-full overflow-x-auto no-scrollbar gap-0 sm:gap-1 p-1 rounded-full bg-white/10 backdrop-blur">
-          ${tab('list', 'Explore')}${tab('map', 'Map')}${tab('events', 'Events')}${tab('markets', 'Markets')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}${tab('about', 'About')}
+          ${tab('map', 'Explore')}${tab('events', 'Events')}${tab('markets', 'Markets')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}${tab('about', 'About')}
         </nav>
       </div>
       <a href="https://www.pexels.com/photo/7669218/" target="_blank" rel="noopener" class="absolute right-3 bottom-1.5 text-[8px] leading-none text-white/60 hover:text-white underline-offset-2 ">Photo: Kampus · Pexels</a>
@@ -2016,7 +2016,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 밤(8pm~6am)에 장소 목록을 보면 대부분 닫혀 있어서, 내일 계획으로 바로 넘어갈 수 있게 안내해요
     if (!s.when) {
       const h = vanWallClock().getHours();
-      return s.view === 'list' && s.cat !== 'events' && (h >= 20 || h < 6) ? `
+      return (s.view === 'list' || s.view === 'map') && s.cat !== 'events' && (h >= 20 || h < 6) ? `
     <p class="mt-4 sm:mt-6 text-xs sm:text-sm text-slate-600 dark:text-slate-300">It's late, so most places are closed. <button data-act="whenset" data-val="${h < 6 ? 'today' : 'tomorrow'}" class="font-semibold text-violet-700 dark:text-violet-300">See what's worth it ${h < 6 ? 'today' : 'tomorrow'} →</button></p>` : '';
     }
     const ds = whenDates(s.when), fc = s.forecast || {};
@@ -2029,7 +2029,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${ds.map(d => fc[d] ? `<span class="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-slate-100"><span class="text-xl" aria-hidden="true">${fc[d].icon}</span><span>${esc(day(d))} ${fc[d].max}°C<span class="font-normal text-slate-600 dark:text-slate-300">, ${esc(fc[d].desc)}${fc[d].pop >= 30 ? `, ${fc[d].pop}% chance of rain` : ''}</span></span></span>` : '').join('')}
         <button data-act="whenoff" class="ml-auto text-sm font-semibold text-violet-800 dark:text-violet-200">Back to right now</button>
       </div>
-      ${rainy && s.view === 'list' && !s.indoor ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-200">Rain is likely. <button data-act="indoor" class="font-semibold text-sky-700 dark:text-sky-300">Show indoor places</button></p>` : ''}
+      ${rainy && (s.view === 'list' || s.view === 'map') && !s.indoor ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-200">Rain is likely. <button data-act="indoor" class="font-semibold text-sky-700 dark:text-sky-300">Show indoor places</button></p>` : ''}
       ${this._hidden && this._hidden.closed && !s.openNow ? `<p class="mt-1 text-xs text-slate-600 dark:text-slate-300">${plural(this._hidden.closed, 'place')} closed ${ds.length > 1 ? 'on both days' : ds[0] === vanDate(0) ? 'for the rest of today' : 'that day'} ${this._hidden.closed === 1 ? 'is' : 'are'} hidden.</p>` : ''}
       ${this.planLater() ? `<p class="mt-1 text-xs text-slate-600 dark:text-slate-300">Cards show the hours for ${ds.length > 1 ? 'those days' : 'that day'}. Check the Google Maps link before you go.</p>` : ''}
     </section>`;
