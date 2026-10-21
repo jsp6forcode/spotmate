@@ -1278,11 +1278,11 @@ class App {
   }
   list() {
     const { cat, sort, radius } = this.state;
-    if (cat === 'events') return [];
+    const evCat = cat === 'events';   // 행사 카테고리는 장소가 없지만 다른 카테고리 개수는 계산해 둬요
     const origin = this.origin();
     // "Indoor": 비 오는 날용. 실내와 실내+야외(both) 장소만 남겨요.
     let items = SPOTS.filter(s =>
-      (cat === 'all' || kindGroup(s) === cat)
+      true
       && (!this.state.indoor || s.env !== 'outdoor') && (!(this.state.kidsOnly || KIDS_ONLY) || isKid(s))
       // 행사 장소(Pacific Coliseum, 컨벤션센터, 마켓이 열리는 공원 등)는 7일 안에 그곳 행사가 있을 때만
       && (!s.venue || !!(this._spotEvents && this._spotEvents[s.id]))
@@ -1305,6 +1305,9 @@ class App {
       items = items.filter(s => s.kwScore > 0);
     }
     if (this.state.free) items = items.filter(s => /^free/i.test(s.price || ''));
+    // 지도 카테고리 목록에 보여줄 개수: 카테고리를 고르기 전 목록 기준
+    this._catCounts = {}; items.forEach(s => { const g = kindGroup(s); this._catCounts[g] = (this._catCounts[g] || 0) + 1; });
+    items = evCat ? [] : cat === 'all' ? items : items.filter(s => kindGroup(s) === cat);
     // 시즌 태그 필터: 칩에 보여줄 개수는 태그를 고르기 전 목록 기준
     this._tagCounts = Object.fromEntries(activeTags().map(t => [t.id, items.filter(s => t.spots[s.id]).length]));
     const tag = activeTags().find(t => t.id === this.state.tag);
@@ -2034,15 +2037,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const rainy = ds.some(d => fc[d] && (fc[d].pop >= 60 || fc[d].kind === 'rain'));
     const day = d => d === vanDate(0) ? 'Today' : d === vanDate(1) ? 'Tomorrow' : DOW[dowOf(d)];
     return `
-    <section class="mt-6 rounded-2xl p-4 bg-violet-50 dark:bg-violet-500/10" aria-label="Your plan">
-      <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <p class="font-bold text-violet-900 dark:text-violet-100">Planning for ${esc(whenLabel(s.when))}</p>
-        ${ds.map(d => fc[d] ? `<span class="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-slate-100"><span class="text-xl" aria-hidden="true">${fc[d].icon}</span><span>${esc(day(d))} ${fc[d].max}°C<span class="font-normal text-slate-600 dark:text-slate-300">, ${esc(fc[d].desc)}${fc[d].pop >= 30 ? `, ${fc[d].pop}% chance of rain` : ''}</span></span></span>` : '').join('')}
-        <button data-act="whenoff" class="ml-auto text-sm font-semibold text-violet-800 dark:text-violet-200">Back to right now</button>
+    <section class="mt-2 sm:mt-6 rounded-xl sm:rounded-2xl px-3 py-2 sm:p-4 bg-violet-50 dark:bg-violet-500/10" aria-label="Your plan">
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-0.5 sm:gap-y-1.5">
+        <p class="order-1 text-xs sm:text-base font-bold text-violet-900 dark:text-violet-100"><span class="max-sm:hidden">Planning for </span>${esc(whenLabel(s.when))}</p>
+        <button data-act="whenoff" class="order-2 sm:order-3 ml-auto text-[11px] sm:text-sm font-semibold text-violet-800 dark:text-violet-200">Back to right now</button>
+        <div class="order-3 sm:order-2 w-full sm:w-auto flex flex-wrap items-center gap-x-3 gap-y-0.5">
+        ${ds.map(d => fc[d] ? `<span class="inline-flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-sm font-semibold text-slate-800 dark:text-slate-100"><span class="text-sm sm:text-xl" aria-hidden="true">${fc[d].icon}</span><span>${esc(day(d))} ${fc[d].max}°C<span class="font-normal text-slate-600 dark:text-slate-300 max-sm:hidden">, ${esc(fc[d].desc)}${fc[d].pop >= 30 ? `, ${fc[d].pop}% chance of rain` : ''}</span></span></span>` : '').join('')}
+        </div>
       </div>
       ${rainy && (s.view === 'list' || s.view === 'map') && !s.indoor ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-200">Rain is likely. <button data-act="indoor" class="font-semibold text-sky-700 dark:text-sky-300">Show indoor places</button></p>` : ''}
-      ${this._hidden && this._hidden.closed && !s.openNow ? `<p class="mt-1 text-xs text-slate-600 dark:text-slate-300">${plural(this._hidden.closed, 'place')} closed ${ds.length > 1 ? 'on both days' : ds[0] === vanDate(0) ? 'for the rest of today' : 'that day'} ${this._hidden.closed === 1 ? 'is' : 'are'} hidden.</p>` : ''}
-      ${this.planLater() ? `<p class="mt-1 text-xs text-slate-600 dark:text-slate-300">Cards show the hours for ${ds.length > 1 ? 'those days' : 'that day'}. Check the Google Maps link before you go.</p>` : ''}
     </section>`;
   }
   // 목록 맨 위: 지금 시즌 태그 칩 (누르면 그 태그의 장소만). 순위와 이유는 카드에서 보여줘요
@@ -2540,9 +2543,22 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${picks ? [...new Set(items.map(kindGroup))].map(g => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-5 h-5 rounded-full text-[11px] leading-5 text-center" style="background:${CAT_GROUPS[g].color}">${CAT_GROUPS[g].icon}</span>${CAT_GROUPS[g].label}</span>`).join('') : `<span class="text-slate-500 dark:text-slate-400">Also on the map:</span>${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}`}
         </div>
         <div class="relative">
-          ${picks ? '' : `<div class="md:absolute md:left-0 md:top-2 md:bottom-2 md:z-10 md:w-32 md:pointer-events-none"><div role="group" aria-label="Category" class="md:pointer-events-auto md:absolute md:inset-0 p-1 md:p-0.5 flex flex-row md:flex-col gap-1 md:gap-0.5 overflow-x-auto md:overflow-x-hidden md:overflow-y-auto md:rounded-r-xl md:bg-white/50 md:dark:bg-slate-900/50 md:backdrop-blur-sm md:shadow text-[10px] md:text-[11px] font-semibold no-scrollbar">
-            ${[['all', 'All', '🗺️', '#64748b'], ...catOptions().map(k => k === 'events' ? ['events', 'Events', '🎪', '#a21caf'] : [k, CAT_GROUPS[k].label, CAT_GROUPS[k].icon, CAT_GROUPS[k].color])].map(([k, label, icon, color]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1 px-1.5 md:px-1 py-0.5 rounded-md text-left leading-tight whitespace-nowrap md:whitespace-normal ${this.state.cat === k ? 'bg-violet-100 text-violet-900 dark:bg-violet-500/20 dark:text-violet-100' : 'text-slate-700 dark:text-slate-200'}"><span class="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0 rounded-full text-[8px] md:text-[9px] leading-[14px] md:leading-4 text-center text-white" style="background:${color}">${icon}</span>${label}</button>`).join('')}
-          </div></div>`}
+          ${(() => {
+            if (picks) return '';
+            const cc = this._catCounts || {}, total = Object.values(cc).reduce((a, b) => a + b, 0);
+            const cats = [['all', `(${total}) All`, '🗺️', '#64748b'], ...catOptions().map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '🎪', '#a21caf', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, CAT_GROUPS[k].icon, CAT_GROUPS[k].color, CAT_GROUPS[k].label]).sort((a, b) => a[4].localeCompare(b[4]))];
+            const cur = cats.find(c => c[0] === this.state.cat) || cats[0];
+            const btn = ([k, label, icon, color], cls, ic) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="${cls} ${this.state.cat === k ? 'bg-violet-100 text-violet-900 dark:bg-violet-500/20 dark:text-violet-100' : 'text-slate-700 dark:text-slate-200'}"><span class="${ic} shrink-0 rounded-full text-center text-white" style="background:${color}">${icon}</span>${label}</button>`;
+            // 폰: "Category" 버튼 하나 (누르면 목록이 펼쳐져요) / 데스크톱: 지도 왼쪽 위에 반투명 세로 목록
+            return `<details class="md:hidden relative px-2 pb-1.5 text-xs font-semibold">
+              <summary class="list-none cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 [&::-webkit-details-marker]:hidden"><span class="w-4 h-4 rounded-full text-[9px] leading-4 text-center text-white" style="background:${cur[3]}">${cur[2]}</span>${cur[1]} <span aria-hidden="true" class="text-slate-500">▾</span></summary>
+              <div role="group" aria-label="Category" class="absolute left-2 top-full z-20 mt-1 w-[14rem] p-1 grid grid-cols-2 gap-0.5 rounded-lg bg-white/65 dark:bg-slate-900/65 backdrop-blur-md shadow-lg text-[10px]">
+                ${cats.map(c => btn(c, 'flex items-center gap-1 px-1.5 py-1 rounded-md text-left leading-tight', 'w-3.5 h-3.5 text-[8px] leading-[14px]')).join('')}
+              </div></details>
+            <div class="hidden md:block md:absolute md:left-0 md:top-2 md:bottom-2 md:z-10 md:w-32 pointer-events-none"><div role="group" aria-label="Category" class="pointer-events-auto absolute inset-0 p-0.5 flex flex-col gap-0.5 overflow-y-auto rounded-r-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow text-[11px] font-semibold no-scrollbar">
+              ${cats.map(c => btn(c, 'shrink-0 flex items-center gap-1 px-1 py-0.5 rounded-md text-left leading-tight', 'w-4 h-4 text-[9px] leading-4')).join('')}
+            </div></div>`;
+          })()}
           <div id="lmap" class="w-full h-[32vh] min-h-[192px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(64vh-7.7rem)] md:min-h-[307px] lg:h-[calc(64vh-6.4rem)] lg:min-h-[358px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
         </div>
       </div>
