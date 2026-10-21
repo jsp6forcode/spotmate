@@ -45,6 +45,8 @@ const KINDS = [
   // 이름에 Zoo가 들어가도 홀로그램 쇼는 동물 농장이 아니에요 (Hologram Zoo Vancouver). 생물다양성 보호공원(Godwin Farm)은 농장이 아니라 산책로예요
   ['hologram', 'Hologram show', /hologram/i, 'family', 'ps'],
   ['trail', 'Trail', /biodiversity preserve/i, 'family', 'ps'],
+  // Garden City(Richmond)는 이름에 garden·farm이 들어가도 공원이에요 (사용자 요청, 2026-10-21)
+  ['park', 'Park', /garden city/i, 'both', 'bps'],
   ['farm', 'Farm & animals', /\bfarms?\b|\bzoo\b|petting|animal/i, 'both', 'bps'],
   ['museum', 'Museum', /museum|gallery|science|planetarium|space cent|historic site|heritage village/i, 'family', 'ps'],
   ['beach', 'Beach & lake', /beach|\blake\b/i, 'family', 'bps'],
@@ -130,8 +132,7 @@ function kidProfile(s) {
 }
 // 카테고리 드롭다운: 장소 종류(kidProfile().kind)를 묶은 그룹 (사용자 요청, 2026-10-14). 지도 핀 색은 예전 CATS(nature/city)를 그대로 써요
 const CAT_GROUPS = {
-  playground: { label: 'Playground & park', color: '#16a34a', icon: '🎠', kinds: ['play', 'water', 'park'] },
-  garden:     { label: 'Garden', color: '#16a34a', icon: '🌷', kinds: ['garden'] },
+  playground: { label: 'Playground & park', color: '#16a34a', icon: '🎠', kinds: ['play', 'water', 'park', 'garden'] },   // 정원도 공원과 같이 (사용자 요청, 2026-10-21)
   outdoors:   { label: 'Trail & beach', color: '#16a34a', icon: '🥾', kinds: ['trail', 'beach'] },
   pool:       { label: 'Pool', color: '#0284c7', icon: '🏊', kinds: ['pool'] },
   museum:     { label: 'Museum', color: '#7c3aed', icon: '🏛️', kinds: ['museum', 'aquarium'] },
@@ -553,6 +554,8 @@ const MAPLIBRE = 'https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-g
 const MAPLIBRE_LEAFLET = 'https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js';
 const VEC_STYLE = { light: 'https://tiles.openfreemap.org/styles/bright', dark: 'https://tiles.openfreemap.org/styles/fiord' };
 const VEC_ATTR = '<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> &copy; <a href="https://openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+// 지도를 다시 그릴 때 아직 불러오는 중이던 지도가 지워지면 MapLibre가 AbortError를 내요. 무해해서 콘솔에 안 남겨요
+window.addEventListener('unhandledrejection', e => { if (e.reason && e.reason.name === 'AbortError') e.preventDefault(); });
 let vecReady;
 function loadVector() {
   if (!vecReady) {
@@ -1816,7 +1819,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             : this.pickMode() ? `<button data-act="qclear" class="mt-6 inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-lg text-sm font-semibold   text-slate-700   dark:text-slate-200">← Back to the picker</button>${this.planBar()}${this.listView(items)}` : this.state.cat === 'events' && view !== 'map' ? this.eventsView() : `
             ${this.guideBanner()}
             ${this.planBar()}
-            ${view !== 'map' ? this.seasonChips() : ''}
+            ${this.seasonChips()}
       
             ${view === 'map' ? this.mapView(items) : this.listView(items)}
           `}

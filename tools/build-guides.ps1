@@ -45,6 +45,7 @@ $KINDS = @(
   @('aquarium', 'Aquarium', 'Aquariums', 'aquarium'),
   @('hologram', 'Hologram show', 'Hologram shows', 'hologram'),
   @('trail', 'Trail', 'Kid-friendly trails', 'biodiversity preserve'),
+  @('park', 'Park', 'Parks', 'garden city'),
   @('farm', 'Farm & animals', 'Farms and animals', '\bfarms?\b|\bzoo\b|petting|animal'),
   @('museum', 'Museum', 'Museums', 'museum|gallery|science|planetarium|space cent|historic site|heritage village'),
   @('beach', 'Beach & lake', 'Beaches and lakes', 'beach|\blake\b'),
