@@ -839,12 +839,12 @@ class App {
       else if (e.key === 'Escape') this.hideSuggest();
       else if (e.key === 'Enter' && this.sugIdx >= 0) {
         const b = document.querySelector(`#q-suggest [data-i="${this.sugIdx}"]`);
-        if (b) { e.preventDefault(); const id = b.dataset.suggest; this.hideSuggest(); this.opener = null; this.openModal(id); }
+        if (b) { e.preventDefault(); const id = b.dataset.suggest; this.hideSuggest(); this.showOnMap(id); }
       }
     });
     this.root.addEventListener('mousedown', e => {
       const b = e.target.closest && e.target.closest('[data-suggest]');
-      if (b) { e.preventDefault(); const id = b.dataset.suggest; this.hideSuggest(); this.opener = null; this.openModal(id); }
+      if (b) { e.preventDefault(); const id = b.dataset.suggest; this.hideSuggest(); this.showOnMap(id); }
     });
     this.root.addEventListener('focusout', e => { if (e.target.name === 'q') setTimeout(() => this.hideSuggest(), 120); });
     this.root.addEventListener('submit', e => {
@@ -1463,8 +1463,8 @@ class App {
         if (p && map) { map.setView(p.mk.getLatLng(), Math.max(map.getZoom(), 13), { animate: true }); p.mk.openPopup(); }
         return;
       }
-      case 'mapevents':return this.set({ mapEvents: !this.state.mapEvents });
-      case 'mapmarkets': return this.set({ mapMarkets: !this.state.mapMarkets });
+      case 'mapevents':return this.set({ mapEvents: this.state.mapEvents === false });
+      case 'mapmarkets': return this.set({ mapMarkets: this.state.mapMarkets === false });
       case 'mode': return this.set({ browse: val === 'browse', q: '', kw: [], unused: [] });
       // "I'm flexible, show me ideas": 남은 질문을 모두 "상관없음"으로 두고 바로 결과
       // "Anything works for us": 5개 질문 모두 "상관없음"으로 바로 결과
@@ -1551,6 +1551,17 @@ class App {
     if (m <= 2) return pick('skiing in North Vancouver', 'skiing in North Vancouver', 'skiing');
     if (m <= 5) return pick('spring flowers this weekend', 'spring flowers this weekend', 'spring flowers');
     return pick('spray park near me this weekend', 'spray park near me', 'spray park near me');
+  }
+  // 검색 제안에서 장소를 고르면 모달 대신 지도에서 그 장소로 확대하고 카드 팝업을 띄워요
+  async showOnMap(id) {
+    const s = byId(id); if (!s) return;
+    await this.runSearch(s.name);
+    setTimeout(() => {
+      const map = this._leaflet, p = this._pins && this._pins[id];
+      if (!map || !p) return;
+      map.setView([s.lat, s.lng], 15, { animate: false });
+      p.mk.openTooltip();
+    }, 50);
   }
   // 검색: 질문을 해석해서 기존 필터(페이지·지금 영업·아이·실내·가격·해피아워·런치·가까운 곳)를 켜고, 키워드로 좁혀요
   // AI 주소가 있으면 AI가 먼저 해석하고, 안 되면 규칙으로 (늦게 온 이전 검색 결과는 버려요)
@@ -1914,12 +1925,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${s.cat === 'events' ? '' : `
           <button data-act="filters" aria-expanded="${!!open}" class="sm:hidden order-first shrink-0 min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">${open ? 'Hide filters' : `Filters${more ? ` · ${more}` : ''}`}</button>`}
           <div class="${s.cat === 'events' ? 'contents' : this._moreCls}">
-          <label class="flex shrink-0 items-center">
+          ${s.view === 'map' ? '' : `<label class="flex shrink-0 items-center">
             <select data-act="cat" aria-label="Category" class="min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[11px] sm:text-[13px] font-semibold">
               <option value="__ph" disabled hidden ${s.cat === 'all' ? 'selected' : ''}>Category</option>${[['all', 'All'], ...catOptions().map(k => [k, k === 'events' ? 'Events' : CAT_GROUPS[k].label])]
                 .map(([k, label]) => `<option value="${k}" ${s.cat === k && k !== 'all' ? 'selected' : ''}>${label}</option>`).join('')}
             </select>
-          </label>
+          </label>`}
           </div>
           ${s.cat === 'events' ? '' : `
           <label class="flex shrink-0 items-center">
@@ -2148,6 +2159,20 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       </div>`;
   }
 
+  // 지도 핀에 마우스를 올리면 뜨는 작은 카드: 작은 사진, 이름, 한두 줄 설명, 부모 리뷰(있으면)
+  miniCard(s) {
+    const st = this.state.reviewsOn && this.reviewStats(s.id), says = SAYS[s.id];
+    const meta = [isKid(s) ? kidProfile(s).agesText : '', s.price && !/^free$/i.test(s.price) ? s.price : '', s.area].filter(Boolean).map(esc).join(' · ');
+    return `<div class="rounded-xl overflow-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-lg">
+      ${this.cover(s, 'h-20')}
+      <div class="p-2.5 text-xs">
+        <p class="font-bold text-sm leading-snug">${esc(s.name)}</p>
+        <p class="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">${meta}</p>
+        <p class="mt-1.5 text-slate-700 dark:text-slate-300 clamp2">${esc(s.summary)}</p>
+        ${st ? `<p class="mt-1.5"><span class="text-amber-500" aria-hidden="true">★</span> <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'parent review')}</span></p>` : ''}
+        ${says ? `<p class="mt-1.5 text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg px-2 py-1 clamp2"><span class="font-semibold">Parents say:</span> ${esc(says)}</p>` : ''}
+      </div></div>`;
+  }
   card(s) {
     const c = CATS[s.cat], saved = this.state.plan.includes(s.id);
     const evHere = this._spotEvents && this._spotEvents[s.id];
@@ -2497,11 +2522,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 행사·파머스 마켓 핀: Events·Markets 탭과 같은 기준(앞으로 6주, 위치 필터). 추천 장소만 보는 지도엔 안 그려요
     const evAll = picks ? [] : this.upcomingEvents(45).map(ev => { const sp = ev.spotId && byId(ev.spotId); return ev.lat != null ? ev : sp ? { ...ev, lat: sp.lat, lng: sp.lng } : null; }).filter(Boolean).filter(ev => !this.state.kw.length || this.state.kw.some(k => k.re.test(`${ev.name} ${ev.summary || ""} ${ev.venue || ""} ${ev.area || ""} ${ev.type === "market" ? "market farmers market" : ev.type}`)));   // 검색 중이면 검색어에 맞는 행사·마켓만
     const evMarkets = evAll.filter(ev => ev.type === 'market'), evOthers = evAll.filter(ev => ev.type !== 'market');
-    const evCat = this.state.cat === 'events', showEv = evCat || this.state.mapEvents === true, showMk = evCat || this.state.mapMarkets === true;   // 카테고리에서 Events를 고르면 행사·마켓을 지도에 바로 켜요
+    const evCat = this.state.cat === 'events', showEv = evCat || this.state.mapEvents !== false, showMk = evCat || this.state.mapMarkets !== false;   // 카테고리에서 Events를 고르면 행사·마켓을 지도에 바로 켜요
     const evPin = ev => ({ id: ev.id, name: ev.name, forParents: !!ev.forParents, lat: ev.lat, lng: ev.lng, market: ev.type === 'market', icon: ev.icon || (ev.type === 'market' ? '🥕' : '🎪'), when: `${dayLabel(ev.next)} · ${eventHours(ev)}`, spotId: ev.spotId && byId(ev.spotId) ? ev.spotId : '', source: ev.source || '' });
     this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: groupColor(s), mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks,
       events: [...(showEv ? evOthers : []), ...(showMk ? evMarkets : [])].map(evPin) };
-    const evToggle = (act, on, label, n) => `<button data-act="${act}" aria-pressed="${on}" class="flex items-center gap-1 px-2 py-0.5 rounded-full  ${on ? 'bg-amber-100  text-amber-900 dark:bg-amber-500/20  dark:text-amber-100' : ' text-slate-500  dark:text-slate-400'}">${label} <span class="font-normal">${n}</span></button>`;
+    const evToggle = (act, on, label, n) => `<button data-act="${act}" aria-pressed="${on}" title="${on ? 'Click to hide on the map' : 'Click to show on the map'}" class="flex items-center gap-1 px-2.5 py-1 rounded-full border-2 ${on ? 'border-amber-500 bg-amber-100 text-amber-900 dark:bg-amber-500/25 dark:text-amber-100' : 'border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 line-through decoration-1'}"><span aria-hidden="true">${on ? '✓' : '+'}</span> ${label} <span class="font-normal">${n}</span></button>`;
     const picksBar = picks ? `
     <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl p-4 bg-violet-50   dark:bg-violet-500/10 ">
       <p class="font-semibold text-violet-900 dark:text-violet-100">Showing your ${items.length} picks from Explore</p>
@@ -2511,14 +2536,18 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     return `${picksBar}
     <div class="mt-3 sm:mt-6 grid grid-cols-1 gap-2 sm:gap-4">
       <div class="min-w-0 rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    overflow-hidden">
-        <div class="px-3 sm:px-5 py-1.5 sm:py-3 flex flex-wrap gap-x-2.5 gap-y-0.5 sm:gap-3 text-[11px] sm:text-xs font-semibold   ">
-          ${[...new Set(items.map(kindGroup))].map(g => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-5 h-5 rounded-full text-[11px] leading-5 text-center" style="background:${CAT_GROUPS[g].color}">${CAT_GROUPS[g].icon}</span>${CAT_GROUPS[g].label}</span>`).join('')}
-          ${picks ? '' : `${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}`}
+        <div class="px-3 sm:px-5 py-1.5 sm:py-3 flex ${picks ? 'flex-wrap' : 'flex-nowrap overflow-x-auto whitespace-nowrap no-scrollbar items-center'} gap-x-2.5 gap-y-0.5 sm:gap-3 text-[11px] sm:text-xs font-semibold   ">
+          ${picks ? [...new Set(items.map(kindGroup))].map(g => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-5 h-5 rounded-full text-[11px] leading-5 text-center" style="background:${CAT_GROUPS[g].color}">${CAT_GROUPS[g].icon}</span>${CAT_GROUPS[g].label}</span>`).join('') : `<span class="text-slate-500 dark:text-slate-400">Also on the map:</span>${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}`}
         </div>
-        <div id="lmap" class="h-[21vh] min-h-[128px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(64vh-7.7rem)] md:min-h-[307px] lg:h-[calc(64vh-6.4rem)] lg:min-h-[358px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
+        <div class="relative">
+          ${picks ? '' : `<div class="absolute left-2 top-2 bottom-2 z-[1000] w-[5.6rem] md:w-28 pointer-events-none"><div role="group" aria-label="Category" class="pointer-events-auto absolute inset-0 p-0.5 flex flex-col overflow-y-auto rounded-xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm shadow text-[10px] font-semibold no-scrollbar">
+            ${[['all', 'All', '🗺️', '#64748b'], ...catOptions().map(k => k === 'events' ? ['events', 'Events', '🎪', '#a21caf'] : [k, CAT_GROUPS[k].label, CAT_GROUPS[k].icon, CAT_GROUPS[k].color])].map(([k, label, icon, color]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1 px-1 py-px rounded-md text-left leading-tight whitespace-normal ${this.state.cat === k ? 'bg-violet-100 text-violet-900 dark:bg-violet-500/20 dark:text-violet-100' : 'text-slate-700 dark:text-slate-200'}"><span class="w-3.5 h-3.5 shrink-0 rounded-full text-[8px] leading-[14px] text-center text-white" style="background:${color}">${icon}</span>${label}</button>`).join('')}
+          </div></div>`}
+          <div id="lmap" class="w-full h-[32vh] min-h-[192px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(64vh-7.7rem)] md:min-h-[307px] lg:h-[calc(64vh-6.4rem)] lg:min-h-[358px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
+        </div>
       </div>
       <div data-keep-scroll="maplist" class="grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
-        ${this._map.events.length ? `<p class="px-1 pt-0.5 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Events & markets · next 6 weeks</p>${this._map.events.map((ev, i) => `
+        ${evCat && this._map.events.length ? `<p class="px-1 pt-0.5 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Events & markets · next 6 weeks</p>${this._map.events.map((ev, i) => `
           <div class="relative"><button data-act="evfocus" data-val="${i}" data-maphl="ev:${i}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]      flex gap-3">
             <span class="w-7 h-7 shrink-0 rounded-full bg-white text-base flex items-center justify-center border-2 ${ev.market ? 'border-emerald-600' : 'border-fuchsia-700'}" aria-hidden="true">${esc(ev.icon)}</span>
             <span class="flex-1 min-w-0 pr-14">
@@ -2551,13 +2580,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (!el.isConnected) return;
     const { items, picks } = this._map, L = window.L;
     const map = L.map(el, { zoomControl: true, attributionControl: true, scrollWheelZoom: true });
+    map.zoomControl.setPosition('topright');
     L.tileLayer(TILES, { attribution: TILE_ATTR, maxZoom: 19 }).addTo(map);
     // 핀: 번호가 작을수록(순위가 높을수록) 위에 오게
     const z = m => typeof m === 'number' ? 1000 - m : 0;
     this._pins = {};
     items.forEach(s => {
       const icon = L.divIcon({ className: '', html: `<div class="spot-pin" style="background:${s.color};font-size:15px">${esc(String(s.mark))}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] });
-      const mk = L.marker([s.lat, s.lng], { icon, title: s.name, keyboard: true, zIndexOffset: z(s.mark) }).addTo(map).on('click', () => { this.opener = null; this.openModal(s.id); });
+      const mk = L.marker([s.lat, s.lng], { icon, keyboard: true, zIndexOffset: z(s.mark), alt: s.name }).addTo(map).on('click', () => { this.opener = null; this.openModal(s.id); });
+      const sp = byId(s.id); if (sp) mk.bindTooltip(() => this.miniCard(sp), { className: 'card-tip', direction: 'auto', offset: [0, 0], opacity: 1, sticky: false });   // 마우스를 올리면 장소 카드
       this._pins[s.id] = { mk, base: z(s.mark) };
     });
     // 행사·마켓 핀: 누르면 다음 날짜·시간과 장소/공식 정보 링크
@@ -2576,10 +2607,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       L.marker([o.lat, o.lng], { icon: L.divIcon({ className: '', html: '<div class="spot-pin origin"></div>', iconSize: [18, 18], iconAnchor: [9, 9] }), title: this.state.nearKey === 'here' ? 'You' : o.label, interactive: false }).addTo(map);
     }
     // 보던 위치 이어가기: 같은 목록이면 저장한 위치로, 아니면 추천 장소에 맞춰 확대(전체 목록은 메트로 밴쿠버 범위)
-    const key = (picks ? 'p:' : 'a:') + items.length + ':' + (items[0] ? items[0].id : '') + ':' + this.state.nearKey + ':' + this.state.radius;
+    const key = (picks ? 'p:' : 'a:') + (this.state.q || '') + ':' + items.length + ':' + (items[0] ? items[0].id : '') + ':' + this.state.nearKey + ':' + this.state.radius;
     if (this._mapSaved && this._mapSaved.key === key) map.setView(this._mapSaved.center, this._mapSaved.zoom, { animate: false });
     else if (o && !picks && this.nearActive() && this.state.radius !== 'any') map.fitBounds(L.latLngBounds([o.lat - this.state.radius / 111, o.lng - this.state.radius / (111 * Math.cos(o.lat * Math.PI / 180))], [o.lat + this.state.radius / 111, o.lng + this.state.radius / (111 * Math.cos(o.lat * Math.PI / 180))]).pad(0.05), { maxZoom: 16, animate: false });   // 반경을 고르면 그 원이 지도에 꽉 차게
-    else if ((picks || this.nearActive()) && items.length) map.fitBounds(L.latLngBounds(items.map(s => [s.lat, s.lng])).pad(0.15), { maxZoom: 14, animate: false });
+    else if ((picks || this.nearActive() || this.state.q) && items.length) map.fitBounds(L.latLngBounds(items.map(s => [s.lat, s.lng])).pad(0.15), { maxZoom: 14, animate: false });
     else map.fitBounds(METRO_BOUNDS, { animate: false });
     const save = () => { this._mapSaved = { key, center: map.getCenter(), zoom: map.getZoom() }; };
     save(); map.on('moveend zoomend', save);
