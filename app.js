@@ -795,7 +795,7 @@ class App {
       user: null, reviewsOn: false, reviewDraft: null, reviewBusy: false, reviewMsg: '',
       feedbackBusy: false, feedbackMsg: '', feedbackSent: false, savedTab: 'saved',
       q: '', kw: [], unused: [], free: false, qBusy: false, aiSay: '',
-      radius: guideCityKey() ? 10 : RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
+      radius: guideCityKey() ? 5 : RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
       // "Good any day" 목록에서 보여줄 개수 (Show more로 12개씩 늘어나요)
       restShown: REST_STEP,
@@ -2278,7 +2278,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const g = this.state.guide;
     if (!g || this.state.guideAll) return false;
     if (g.indoor && !this.state.indoor) return false;
-    if (g.cityKey) return false;   // 도시 안내는 그 도시 기준 10 km 안의 모든 장소 (이웃 도시 포함), 안내 목록으로 좁히지 않아요
+    if (g.cityKey) return false;   // 도시 안내는 그 도시 기준 5 km 안의 모든 장소 (이웃 도시 포함), 안내 목록으로 좁히지 않아요
     return true;
   }
   // 안내 페이지로 들어오면 카테고리 필터를 그 안내의 종류로 맞춰요 (안내 장소의 60% 이상이 한 그룹일 때, 아니면 All). 주소의 ?cat= 가 있으면 그게 우선
