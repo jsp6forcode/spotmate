@@ -2540,8 +2540,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${picks ? [...new Set(items.map(kindGroup))].map(g => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-5 h-5 rounded-full text-[11px] leading-5 text-center" style="background:${CAT_GROUPS[g].color}">${CAT_GROUPS[g].icon}</span>${CAT_GROUPS[g].label}</span>`).join('') : `<span class="text-slate-500 dark:text-slate-400">Also on the map:</span>${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}`}
         </div>
         <div class="relative">
-          ${picks ? '' : `<div class="absolute left-0 top-2 bottom-2 z-10 w-[5.6rem] md:w-32 pointer-events-none"><div role="group" aria-label="Category" class="pointer-events-auto absolute inset-0 p-0.5 flex flex-col gap-0.5 overflow-y-auto rounded-r-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow text-[10px] md:text-[11px] font-semibold no-scrollbar">
-            ${[['all', 'All', '🗺️', '#64748b'], ...catOptions().map(k => k === 'events' ? ['events', 'Events', '🎪', '#a21caf'] : [k, CAT_GROUPS[k].label, CAT_GROUPS[k].icon, CAT_GROUPS[k].color])].map(([k, label, icon, color]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1 px-1 py-0.5 rounded-md text-left leading-tight whitespace-normal ${this.state.cat === k ? 'bg-violet-100 text-violet-900 dark:bg-violet-500/20 dark:text-violet-100' : 'text-slate-700 dark:text-slate-200'}"><span class="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0 rounded-full text-[8px] md:text-[9px] leading-[14px] md:leading-4 text-center text-white" style="background:${color}">${icon}</span>${label}</button>`).join('')}
+          ${picks ? '' : `<div class="md:absolute md:left-0 md:top-2 md:bottom-2 md:z-10 md:w-32 md:pointer-events-none"><div role="group" aria-label="Category" class="md:pointer-events-auto md:absolute md:inset-0 p-1 md:p-0.5 flex flex-row md:flex-col gap-1 md:gap-0.5 overflow-x-auto md:overflow-x-hidden md:overflow-y-auto md:rounded-r-xl md:bg-white/50 md:dark:bg-slate-900/50 md:backdrop-blur-sm md:shadow text-[10px] md:text-[11px] font-semibold no-scrollbar">
+            ${[['all', 'All', '🗺️', '#64748b'], ...catOptions().map(k => k === 'events' ? ['events', 'Events', '🎪', '#a21caf'] : [k, CAT_GROUPS[k].label, CAT_GROUPS[k].icon, CAT_GROUPS[k].color])].map(([k, label, icon, color]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1 px-1.5 md:px-1 py-0.5 rounded-md text-left leading-tight whitespace-nowrap md:whitespace-normal ${this.state.cat === k ? 'bg-violet-100 text-violet-900 dark:bg-violet-500/20 dark:text-violet-100' : 'text-slate-700 dark:text-slate-200'}"><span class="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0 rounded-full text-[8px] md:text-[9px] leading-[14px] md:leading-4 text-center text-white" style="background:${color}">${icon}</span>${label}</button>`).join('')}
           </div></div>`}
           <div id="lmap" class="w-full h-[32vh] min-h-[192px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(64vh-7.7rem)] md:min-h-[307px] lg:h-[calc(64vh-6.4rem)] lg:min-h-[358px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
         </div>
@@ -2588,8 +2588,18 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     this._pins = {};
     items.forEach(s => {
       const icon = L.divIcon({ className: '', html: `<div class="spot-pin" style="background:${s.color};font-size:15px">${esc(String(s.mark))}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] });
-      const mk = L.marker([s.lat, s.lng], { icon, keyboard: true, zIndexOffset: z(s.mark), alt: s.name }).addTo(map).on('click', () => { mk.closeTooltip(); this.opener = null; this.openModal(s.id); });
-      const sp = byId(s.id); if (sp) mk.bindTooltip(() => this.miniCard(sp), { className: 'card-tip', direction: 'auto', offset: [0, 0], opacity: 1, sticky: false });   // 마우스를 올리면 장소 카드
+      // 마우스: 올리면 작은 카드, 누르면 모달. 터치 화면: 핀을 누르면 작은 카드, 그 카드를 누르면 모달 (호버가 없어서)
+      const coarse = matchMedia('(pointer: coarse)').matches, sp = byId(s.id);
+      const mk = L.marker([s.lat, s.lng], { icon, keyboard: true, zIndexOffset: z(s.mark), alt: s.name }).addTo(map).on('click', () => {
+        if (coarse && sp) {
+          if (this._tip) map.closeTooltip(this._tip);
+          const tip = this._tip = L.tooltip({ className: 'card-tip tap', direction: 'auto', opacity: 1, interactive: true }).setLatLng(mk.getLatLng()).setContent(this.miniCard(sp)).addTo(map);
+          const el = tip.getElement(); if (el) el.addEventListener('click', e => { e.stopPropagation(); map.closeTooltip(tip); this.opener = null; this.openModal(s.id); });
+          return;
+        }
+        mk.closeTooltip(); this.opener = null; this.openModal(s.id);
+      });
+      if (sp && !coarse) mk.bindTooltip(() => this.miniCard(sp), { className: 'card-tip', direction: 'auto', offset: [0, 0], opacity: 1, sticky: false });
       this._pins[s.id] = { mk, base: z(s.mark) };
     });
     // 행사·마켓 핀: 누르면 다음 날짜·시간과 장소/공식 정보 링크
@@ -2614,7 +2624,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     else if ((picks || this.nearActive() || this.state.q) && items.length) map.fitBounds(L.latLngBounds(items.map(s => [s.lat, s.lng])).pad(0.15), { maxZoom: 14, animate: false });
     else map.fitBounds(METRO_BOUNDS, { animate: false });
     const save = () => { this._mapSaved = { key, center: map.getCenter(), zoom: map.getZoom() }; };
-    save(); map.on('moveend zoomend', save);
+    save(); map.on('moveend zoomend', save); map.on('click', () => { if (this._tip) { map.closeTooltip(this._tip); this._tip = null; } });
     this._leaflet = map;
   }
   // Saved 탭 안에서 "Saved"(저장한 곳)와 "My reviews"(내가 리뷰를 쓴 곳) 전환
