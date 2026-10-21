@@ -367,7 +367,7 @@
     },
     {
       "id": "lionspark", "cat": "nature", "kids": true, "gem": true, "name": "Lions Park", "area": "Port Coquitlam",
-      "lat": 49.267, "lng": -122.7796, "emoji": "🦁", "placeId": "ChIJjT6uklJ_hlQRGDSNP2-qizI", "photo": {"url":"data/photos/lionspark.jpg","credit":"Photo: Tiny Trips","own":true}, "hours": "sunrise-sunset", "hoursSource": "park",
+      "lat": 49.267, "lng": -122.7796, "emoji": "🦁", "placeId": "ChIJjT6uklJ_hlQRGDSNP2-qizI", "photo": {"url":"/data/photos/lionspark.jpg","credit":"Photo: Tiny Trips","own":true}, "hours": "sunrise-sunset", "hoursSource": "park",
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],
       "summary": "Riverside park in Port Coquitlam with play areas and trails", "signals": [], "why": "", "tips": []
     },
