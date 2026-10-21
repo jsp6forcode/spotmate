@@ -1608,6 +1608,18 @@ class App {
     }
     const ai = !!p;
     if (!p) p = parseQuery(q);
+    // 장소 이름으로 찾는 검색이 먼저: "Rocky Point Playground"처럼 이름에 특징 단어(rocky·point)가 있고 어떤 장소 이름에 거의 그대로 들어 있으면,
+    // "playground" 같은 말을 카테고리로 해석하지 않고 그 이름이 든 장소만 찾아요 (사용자 요청, 2026-10-21)
+    if (!ai) {
+      const nrm = t => ` ${t.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()} `;
+      const nq = nrm(q), qw = nq.trim().split(' ').filter(Boolean);
+      const distinctive = qw.some(w => w.length >= 3 && !SEARCH_KW.some(k => k[2].test(w)) && !/^(the|and|near|with|for|park|in|at|me)$/.test(w));
+      if (qw.length >= 2 && distinctive && SPOTS.some(s => { const n = nrm(s.name); return n.includes(nq) && qw.length / n.trim().split(' ').length >= 0.5; })) {
+        const base = parseQuery('');
+        base.kw = [{ key: 'name', label: q.trim(), re: new RegExp(qw.join('[^a-z0-9]+'), 'i') }];   // 단어는 이미 영문·숫자만이라 따로 이스케이프할 필요 없어요
+        p = base;
+      }
+    }
     // 날짜 계획: "this weekend" · "saturday" · "tomorrow" · "today". 다른 날이면 "now/open"은 그날 영업으로 봐요
     const when = p.when !== undefined ? p.when : p.weekend || (p.sat && p.sun) ? 'weekend' : p.sat ? 'sat' : p.sun ? 'sun' : p.tomorrow ? 'tomorrow' : p.today ? 'today' : '';
     const later = whenDates(when).some(d => d !== vanDate(0));
