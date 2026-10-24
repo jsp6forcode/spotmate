@@ -2829,12 +2829,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         // 스냅을 아주 조금 더 강하게: 멈춘 자리가 카드 줄 정렬 위치(지도 밑 8px)에서 110px 안이면 부드럽게 끌어 붙여요 (손가락이 닿아 있는 동안은 안 해요)
         if (!this._touching && bar.getBoundingClientRect().top <= 1) {
           const gaps = [...document.querySelectorAll('article[data-act="open"]')].map(c => c.getBoundingClientRect().top - (bottom + 8));
-          const d = gaps.reduce((best, g) => Math.abs(g) < Math.abs(best) ? g : best, Infinity);
-          if (Math.abs(d) > 2 && Math.abs(d) < 110) window.scrollBy({ top: d, behavior: 'smooth' });
+          // dir: 1 = 아래로, -1 = 위로 스크롤하는 중. 가던 방향으로만 끌어요 (거꾸로 끌어당기면 답답해요)
+          const ahead = gaps.filter(g => dir > 0 ? g > 2 && g < 110 : g < -2 && g > -110).sort((a, b) => Math.abs(a) - Math.abs(b))[0];
+          if (ahead != null) window.scrollBy({ top: ahead, behavior: 'smooth' });
         }
         if (ids.length) setFeat(ids, true);
       };
-      this._featScroll = () => { clearTimeout(timer); timer = setTimeout(follow, 160); };
+      let lastY = scrollY, dir = 1;
+      this._featScroll = () => { const y = scrollY; if (y > lastY + 1) dir = 1; else if (y < lastY - 1) dir = -1; lastY = y; clearTimeout(timer); timer = setTimeout(follow, 160); };
       if (!this._touchWired) { this._touchWired = true; window.addEventListener('touchstart', () => { this._touching = true; }, { passive: true }); ['touchend', 'touchcancel'].forEach(t => window.addEventListener(t, () => { this._touching = false; }, { passive: true })); }
       window.addEventListener('scroll', this._featScroll, { passive: true });
     }
