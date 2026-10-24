@@ -67,7 +67,7 @@ tailwind.config = {
   @keyframes featIn { from { opacity: 0; transform: translateY(10px) scale(.9); } to { opacity: 1; transform: none; } }
   .leaflet-tooltip.card-tip.feat > div { animation: featIn .35s ease-out; }
   /* 지도 화면: 스크롤하면 목록 카드 줄이 지도 바로 밑에 딱 맞게 멈춰요. 맨 위(헤더)와 맨 아래(푸터)도 멈춤 자리라 끝까지 갈 수 있어요 */
-  html.snap-list { scroll-snap-type: y proximity; }
+  html.snap-list { scroll-snap-type: y proximity; scroll-behavior: smooth; }
   html.snap-list header.hero { scroll-snap-align: start; }
   html.snap-list footer { scroll-snap-align: end; }
   html.snap-list article[data-act="open"] { scroll-snap-align: start; scroll-margin-top: var(--mapbar-h, 0px); }
@@ -111,6 +111,6 @@ tailwind.config = {
 <div class="mt-6"><strong>More guides</strong><ul class="list-disc pl-5 mt-1"><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/bike-and-skate-parks-north-vancouver/">Bike and skate parks in North Vancouver</a></li></ul></div><p class="mt-6 text-xs">Details change, so check the official site before you go.</p></div></details><!--seo-end--></section>
 <button id="to-top" type="button" aria-label="Back to top" class="fixed z-40 right-4 bottom-4 sm:right-6 sm:bottom-6 w-12 h-12 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-2xl font-bold shadow-lg ring-1 ring-black/10 flex items-center justify-center" style="display:none"><span aria-hidden="true">↑</span></button>
 
-<script>window.GUIDE={"title":"Bike and skate parks in Metro Vancouver","ids":["chilliwackpumptrack","gardencitybiketerrainpar","gleneaglesskatepark","griffinbowl","kirkstoneskatepark","mapleridgethomashaneyska","mountainair","northshorebike","northshorebmx","penzerpumptrack","queensparkskatepark","railsideskatepark","railwaypump","youthactionskatepark"],"indoor":false,"city":""}</script><script src="/app.js?v=f57e6b62"></script>
+<script>window.GUIDE={"title":"Bike and skate parks in Metro Vancouver","ids":["chilliwackpumptrack","gardencitybiketerrainpar","gleneaglesskatepark","griffinbowl","kirkstoneskatepark","mapleridgethomashaneyska","mountainair","northshorebike","northshorebmx","penzerpumptrack","queensparkskatepark","railsideskatepark","railwaypump","youthactionskatepark"],"indoor":false,"city":""}</script><script src="/app.js?v=b842e1a8"></script>
 </body>
 </html>

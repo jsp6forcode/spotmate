@@ -2812,7 +2812,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           if (it.tip._pick !== d) { it.tip._pick = d; it.tip.options.direction = b[2]; it.tip.options.offset = L.point(b[3]); it.pin.mk.closeTooltip(); it.pin.mk.openTooltip(); const t2 = it.pin.mk.getTooltip(); if (t2) t2._pick = d; const te = t2 && t2.getElement(); if (te) te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(it.id); }); }
         });
       };
-        if (pts.length) { map.once('moveend', layout); map.fitBounds(L.latLngBounds([...pts.map(s => [s.lat, s.lng]), ...(o && this.nearActive() ? [[o.lat, o.lng]] : [])]), { paddingTopLeft: [cw / 2, up + 34], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: !!animate, duration: 0.7 }); layout(); }
+        if (pts.length) { map.once('moveend', layout); map.fitBounds(L.latLngBounds([...pts.map(s => [s.lat, s.lng]), ...(o && this.nearActive() ? [[o.lat, o.lng]] : [])]), { paddingTopLeft: [cw / 2, up + 34], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: !!animate, duration: 0.5, easeLinearity: 0.35 }); layout(); }
       };
       const restored = !!(this._mapSaved && this._mapSaved.key === key), top = rank.slice(0, N);
       if (restored) { const keep = map.getCenter(), z = map.getZoom(); setFeat(top, false); map.setView(keep, z, { animate: false }); } else setFeat(top, false);
@@ -2825,10 +2825,17 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         if (Date.now() < hold) return;
         const bar = el.closest('.sticky'); if (!bar) return;
         const bottom = bar.getBoundingClientRect().bottom;
-        const ids = [...document.querySelectorAll('article[data-act="open"]')].filter(c => c.getBoundingClientRect().top >= bottom - 24).map(c => c.dataset.val).filter(id => byIt[id] && byIt[id].lat != null).slice(0, N);
+        const ids = [...document.querySelectorAll('article[data-act="open"]')].filter(c => c.getBoundingClientRect().bottom > bottom + 60).map(c => c.dataset.val).filter(id => byIt[id] && byIt[id].lat != null).slice(0, N);
+        // 스냅을 아주 조금 더 강하게: 멈춘 자리가 카드 줄 정렬 위치(지도 밑 8px)에서 140px 안이면 부드럽게 끌어 붙여요 (손가락이 닿아 있는 동안은 안 해요)
+        if (!this._touching && bar.getBoundingClientRect().top <= 1) {
+          const gaps = [...document.querySelectorAll('article[data-act="open"]')].map(c => c.getBoundingClientRect().top - (bottom + 8));
+          const d = gaps.reduce((best, g) => Math.abs(g) < Math.abs(best) ? g : best, Infinity);
+          if (Math.abs(d) > 2 && Math.abs(d) < 140) window.scrollBy({ top: d, behavior: 'smooth' });
+        }
         if (ids.length) setFeat(ids, true);
       };
-      this._featScroll = () => { clearTimeout(timer); timer = setTimeout(follow, 140); };
+      this._featScroll = () => { clearTimeout(timer); timer = setTimeout(follow, 160); };
+      if (!this._touchWired) { this._touchWired = true; window.addEventListener('touchstart', () => { this._touching = true; }, { passive: true }); ['touchend', 'touchcancel'].forEach(t => window.addEventListener(t, () => { this._touching = false; }, { passive: true })); }
       window.addEventListener('scroll', this._featScroll, { passive: true });
     }
     const save = () => { this._mapSaved = { key, center: map.getCenter(), zoom: map.getZoom() }; };
