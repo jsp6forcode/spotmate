@@ -947,6 +947,8 @@ class App {
       // 검색 링크(?q=)로 들어오면 그 검색을 바로 해요
       const sq = new URLSearchParams(location.search).get('q');
       if (sq) this.runSearch(sq.slice(0, 200));
+      // 홈 지도는 한꺼번에 너무 많이 떠서 복잡해요: 위치를 알아내 주변 5 km만 보여줘요 (주소에 ?near=가 있거나 안내 페이지면 건드리지 않아요)
+      if (!window.GUIDE && !window.SPOT_ID && !location.hash && !new URLSearchParams(location.search).has('near') && !sq && !this.state.q) this.autoNear();
       // 공유받은 링크(#spot=id)로 들어오면 그 장소를 바로 열어요
       const m = /^#spot=([^&]+)/.exec(location.hash), shared = m && byId(decodeURIComponent(m[1]));
       if (shared) this.openModal(shared.id);
@@ -1732,6 +1734,22 @@ class App {
     const plan = this.state.plan.includes(id) ? this.state.plan.filter(x => x !== id) : [...this.state.plan, id];
     store('spotmate-plan', JSON.stringify(plan));
     this.set({ plan, copyMsg: '', copyText: '' });
+  }
+  // 처음 열 때 자동으로 주변 5 km: 먼저 다운타운 5 km로 깔끔하게 시작하고, 위치를 알려 주면 내 위치 5 km로 바꿔요 (물어보는 창은 브라우저가 띄워요)
+  // 안내문·스크롤 없이 조용히 해요. 그 사이 사용자가 직접 위치를 골랐으면 그대로 둬요
+  autoNear() {
+    if (this.state.nearKey) return;
+    this.urlDefaults.nearKey = 'downtown'; this.urlDefaults.radius = 5;
+    this.set({ nearKey: 'downtown', radius: 5, radiusExact: false });
+    if (!navigator.geolocation) return;
+    const token = this.geoToken = (this.geoToken || 0) + 1;
+    navigator.geolocation.getCurrentPosition(p => {
+      if (token !== this.geoToken || this.state.nearKey !== 'downtown') return;
+      const here = { lat: p.coords.latitude, lng: p.coords.longitude, label: 'you' };
+      if (Math.min(...SPOTS.map(s => km(here, s))) > OUT_OF_AREA_KM) return;   // 지역 밖이면 다운타운 그대로
+      this.urlDefaults.nearKey = 'here';
+      this.set({ nearKey: 'here', origin: here, radius: 5, radiusExact: false });
+    }, () => {}, { timeout: 8000, maximumAge: 300000 });
   }
   locate() {
     if (!navigator.geolocation) return this.set({ geoMsg: "This browser can't share your location. Pick an area instead." });
@@ -2573,8 +2591,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const evMarkets = evAll.filter(ev => ev.type === 'market'), evOthers = evAll.filter(ev => ev.type !== 'market');
     const evCat = this.state.cat === 'events', showEv = evCat || this.state.mapEvents !== false, showMk = evCat || this.state.mapMarkets !== false;   // 카테고리에서 Events를 고르면 행사·마켓을 지도에 바로 켜요
     const evPin = ev => ({ id: ev.id, name: ev.name, forParents: !!ev.forParents, lat: ev.lat, lng: ev.lng, market: ev.type === 'market', icon: ev.icon || (ev.type === 'market' ? '🥕' : '🎪'), when: `${dayLabel(ev.next)} · ${eventHours(ev)}`, spotId: ev.spotId && byId(ev.spotId) ? ev.spotId : '', source: ev.source || '' });
-    // 핀이 다 같아 보여서(가이드·홈 지도 모두) 가장 추천하는 순서: 클래식 > 실제 사진 > 가까운 순. 이 중 3곳은 지도를 맞춘 뒤 서로 안 겹치는 곳으로 골라 카드로 펼쳐요
-    const rank = picks ? [] : [...items].filter(s => s.lat != null && byId(s.id)).sort((x, y) => (isVanClassic(y) - isVanClassic(x)) || (!!y.photo - !!x.photo) || ((x.dist || 0) - (y.dist || 0))).slice(0, 40).map(s => s.id);
+    // 지도에 카드로 펼칠 3곳 = 아래 목록 카드의 맨 앞 3곳과 같아요 (목록 순서와 똑같이: 지금 갈 이유 있는 곳 > 채움 > 나머지)
+    const rank = (() => {
+      if (picks) return [];
+      const sorted = this.state.q && this.state.kw.length || this.state.sort !== 'fresh' ? items : [...items.filter(s => this.freshRank(s) <= 1), ...items.filter(s => s.filler), ...items.filter(s => this.freshRank(s) > 1 && !s.filler)];
+      return sorted.filter(s => s.lat != null && byId(s.id)).slice(0, 3).map(s => s.id);
+    })();
     this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: groupColor(s), mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks, rank,
       events: [...(showEv ? evOthers : []), ...(showMk ? evMarkets : [])].map(evPin) };
     const evToggle = (act, on, label, n) => `<button data-act="${act}" aria-pressed="${on}" title="${on ? 'Click to hide on the map' : 'Click to show on the map'}" class="flex items-center gap-0.5 px-2 py-0.5 rounded-full border ${on ? 'border-amber-500 bg-amber-100 text-amber-900 dark:bg-amber-500/25 dark:text-amber-100' : 'border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 line-through decoration-1'}"><span aria-hidden="true">${on ? '✓' : '+'}</span>${label} <span class="font-normal">${n}</span></button>`;
@@ -2690,36 +2712,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     else if (o && !picks && this.nearActive() && this.state.radius !== 'any') map.fitBounds(L.latLngBounds([o.lat - this.state.radius / 111, o.lng - this.state.radius / (111 * Math.cos(o.lat * Math.PI / 180))], [o.lat + this.state.radius / 111, o.lng + this.state.radius / (111 * Math.cos(o.lat * Math.PI / 180))]).pad(0.05), { maxZoom: 16, animate: false });   // 반경을 고르면 그 원이 지도에 꽉 차게
     else if ((picks || this.nearActive() || this.state.q) && items.length) map.fitBounds(L.latLngBounds(items.map(s => [s.lat, s.lng])).pad(0.15), { maxZoom: 14, animate: false });
     else map.fitBounds(METRO_BOUNDS, { animate: false });
-    // 추천 순서에서 카드 3장이 서로 안 겹치고 지도 안에 다 보이는 곳을 골라 펼쳐요. 3곳이 안 나오면 추천 상위 곳 쪽으로 조금씩 확대해요 (보던 위치를 이어갈 땐 확대하지 않아요)
+    // 아래 목록 맨 앞 3곳을 카드로 펼치고, 3곳이 다 보이도록 맞춰요 (카드는 핀 위쪽에 떠요). 보던 위치를 이어갈 땐 지도를 움직이지 않아요
     {
       const small = el.clientWidth < 640, cw = (small ? 112 : 150) + 6, ch = small ? 84 : 108, up = ch + 14;
-      const byIt = {}; items.forEach(s => { byIt[s.id] = s; });
-      const choose = () => {
-        const sz = map.getSize(), out = [];
-        for (const id of rank) {
-          const s = byIt[id], p = s && map.latLngToContainerPoint([s.lat, s.lng]);
-          if (!p || p.x < cw / 2 || p.x > sz.x - cw / 2 || p.y < up || p.y > sz.y - 8) continue;
-          if (out.every(o => Math.abs(o.p.x - p.x) >= cw || Math.abs(o.p.y - p.y) >= ch)) out.push({ id, p });
-          if (out.length === 3) break;
-        }
-        return out.map(o => o.id);
-      };
-      let chosen = choose();
-      const want = Math.min(3, rank.length);
-      if (chosen.length < want && !(this._mapSaved && this._mapSaved.key === key)) {
-        const top = rank.slice(0, 3).map(id => byIt[id]).filter(Boolean), c = L.latLng(top.reduce((a, s) => a + s.lat, 0) / top.length, top.reduce((a, s) => a + s.lng, 0) / top.length);
-        const z0 = map.getZoom(); let best = { ids: chosen, z: z0, center: map.getCenter() };
-        for (let z = z0 + 0.5; z <= Math.min(17, z0 + 4) && best.ids.length < want; z += 0.5) {
-          map.setView(c, z, { animate: false });
-          const ids = choose(); if (ids.length > best.ids.length) best = { ids, z, center: c };
-        }
-        map.setView(best.center, best.z, { animate: false }); chosen = best.ids;
-      }
-      chosen.forEach(id => {
-        const pin = this._pins[id], sp = byId(id); if (!pin || !sp) return;
+      const pts = rank.map(id => items.find(s => s.id === id)).filter(Boolean);
+      if (pts.length && !(this._mapSaved && this._mapSaved.key === key)) map.fitBounds(L.latLngBounds(pts.map(s => [s.lat, s.lng])), { paddingTopLeft: [cw / 2, up], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: false });
+      pts.forEach(s => {
+        const pin = this._pins[s.id], sp = byId(s.id); if (!pin || !sp) return;
         pin.mk.unbindTooltip();
         pin.mk.bindTooltip(() => this.featCard(sp), { className: 'card-tip feat', permanent: true, interactive: true, direction: 'top', offset: [0, -16], opacity: 1 });
-        pin.mk.on('tooltipopen', e => { const te = e.tooltip.getElement(); if (te && !te._wired) { te._wired = true; te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(id); }); } });
+        pin.mk.on('tooltipopen', e => { const te = e.tooltip.getElement(); if (te && !te._wired) { te._wired = true; te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(s.id); }); } });
         pin.mk.openTooltip(); pin.mk.setZIndexOffset(500);
       });
     }
