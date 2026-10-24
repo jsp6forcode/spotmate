@@ -2608,7 +2608,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     </div>` : '';
     return `${picksBar}
     <div class="mt-3 sm:mt-6 grid grid-cols-1 gap-2 sm:gap-4">
-      <div class="min-w-0 rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    overflow-hidden">
+      <div class="sticky top-0 z-30 min-w-0 rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    overflow-hidden">
         <div class="px-3 sm:px-5 py-1 sm:py-2 flex ${picks ? 'flex-wrap' : 'flex-nowrap overflow-x-auto whitespace-nowrap no-scrollbar items-center'} gap-x-2.5 gap-y-0.5 sm:gap-3 text-[10px] sm:text-[11px] font-semibold   ">
           ${picks ? [...new Set(items.map(kindGroup))].map(g => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-5 h-5 rounded-full text-[11px] leading-5 text-center" style="background:${CAT_GROUPS[g].color}">${CAT_GROUPS[g].icon}</span>${CAT_GROUPS[g].label}</span>`).join('') : `<span class="text-slate-500 dark:text-slate-400">Also on the map:</span>${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}`}
         </div>
@@ -2712,18 +2712,46 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     else if (o && !picks && this.nearActive() && this.state.radius !== 'any') map.fitBounds(L.latLngBounds([o.lat - this.state.radius / 111, o.lng - this.state.radius / (111 * Math.cos(o.lat * Math.PI / 180))], [o.lat + this.state.radius / 111, o.lng + this.state.radius / (111 * Math.cos(o.lat * Math.PI / 180))]).pad(0.05), { maxZoom: 16, animate: false });   // 반경을 고르면 그 원이 지도에 꽉 차게
     else if ((picks || this.nearActive() || this.state.q) && items.length) map.fitBounds(L.latLngBounds(items.map(s => [s.lat, s.lng])).pad(0.15), { maxZoom: 14, animate: false });
     else map.fitBounds(METRO_BOUNDS, { animate: false });
-    // 아래 목록 맨 앞 3곳을 카드로 펼치고, 3곳이 다 보이도록 맞춰요 (카드는 핀 위쪽에 떠요). 보던 위치를 이어갈 땐 지도를 움직이지 않아요
+    // 아래 목록에서 지금 보이는 맨 앞 3장 = 지도에 펼친 카드 3장이에요. 스크롤하면 새로 나온 3곳으로 바뀌고 지도가 부드럽게 따라가요. 보던 위치를 이어갈 땐 처음 한 번은 지도를 움직이지 않아요
     {
-      const small = el.clientWidth < 640, cw = (small ? 112 : 150) + 6, ch = small ? 84 : 108, up = ch + 14;
-      const pts = rank.map(id => items.find(s => s.id === id)).filter(Boolean);
-      if (pts.length && !(this._mapSaved && this._mapSaved.key === key)) map.fitBounds(L.latLngBounds(pts.map(s => [s.lat, s.lng])), { paddingTopLeft: [cw / 2, up], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: false });
-      pts.forEach(s => {
-        const pin = this._pins[s.id], sp = byId(s.id); if (!pin || !sp) return;
-        pin.mk.unbindTooltip();
-        pin.mk.bindTooltip(() => this.featCard(sp), { className: 'card-tip feat', permanent: true, interactive: true, direction: 'top', offset: [0, -12], opacity: 1 });
-        pin.mk.on('tooltipopen', e => { const te = e.tooltip.getElement(); if (te && !te._wired) { te._wired = true; te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(s.id); }); } });
-        pin.mk.openTooltip(); pin.mk.setZIndexOffset(500);
-      });
+      const small = el.clientWidth < 640, cw = (small ? 112 : 150) + 6, ch = small ? 84 : 108, up = ch + 14, coarse = matchMedia('(pointer: coarse)').matches, N = small ? 2 : 3;   // 폰은 2장만
+      const byIt = {}; items.forEach(s => { byIt[s.id] = s; });
+      let cur = [];
+      const setFeat = (ids, animate) => {
+        if (ids.join() === cur.join()) return;
+        cur.forEach(id => {
+          const pin = this._pins[id], sp = byId(id); if (!pin) return;
+          pin.mk.unbindTooltip(); pin.mk.setZIndexOffset(pin.base);
+          if (sp && !coarse) pin.mk.bindTooltip(() => this.miniCard(sp), { className: 'card-tip', direction: 'auto', offset: [0, 0], opacity: 1, sticky: false });
+        });
+        cur = ids;
+        ids.forEach(id => {
+          const pin = this._pins[id], sp = byId(id); if (!pin || !sp) return;
+          pin.mk.unbindTooltip();
+          pin.mk.bindTooltip(() => this.featCard(sp), { className: 'card-tip feat', permanent: true, interactive: true, direction: 'top', offset: [0, -12], opacity: 1 });
+          pin.mk.openTooltip(); pin.mk.setZIndexOffset(500);
+          const te = pin.mk.getTooltip() && pin.mk.getTooltip().getElement();
+          if (te) te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(id); });
+        });
+        const pts = ids.map(id => byIt[id]).filter(Boolean);
+        if (pts.length) map.fitBounds(L.latLngBounds(pts.map(s => [s.lat, s.lng])), { paddingTopLeft: [cw / 2, up], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: !!animate, duration: 0.7 });
+      };
+      const restored = !!(this._mapSaved && this._mapSaved.key === key), top = rank.slice(0, N);
+      if (restored) { const keep = map.getCenter(), z = map.getZoom(); setFeat(top, false); map.setView(keep, z, { animate: false }); } else setFeat(top, false);
+      // 스크롤: 지도 아래로 완전히 보이기 시작한 목록 카드 앞 3장을 따라가요
+      if (this._featScroll) window.removeEventListener('scroll', this._featScroll);
+      let timer = null, hold = 0;
+      el.addEventListener('pointerdown', () => { hold = Date.now() + 6000; });   // 직접 지도를 만지는 동안엔 따라가지 않아요
+      const follow = () => {
+        if (!el.isConnected) { window.removeEventListener('scroll', this._featScroll); return; }
+        if (Date.now() < hold) return;
+        const bar = el.closest('.sticky'); if (!bar) return;
+        const bottom = bar.getBoundingClientRect().bottom;
+        const ids = [...document.querySelectorAll('article[data-act="open"]')].filter(c => c.getBoundingClientRect().top >= bottom - 24).map(c => c.dataset.val).filter(id => byIt[id] && byIt[id].lat != null).slice(0, N);
+        if (ids.length) setFeat(ids, true);
+      };
+      this._featScroll = () => { clearTimeout(timer); timer = setTimeout(follow, 140); };
+      window.addEventListener('scroll', this._featScroll, { passive: true });
     }
     const save = () => { this._mapSaved = { key, center: map.getCenter(), zoom: map.getZoom() }; };
     save(); map.on('moveend zoomend', save); map.on('click', () => { if (this._tip) { map.closeTooltip(this._tip); this._tip = null; } });
