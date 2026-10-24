@@ -86,7 +86,7 @@ $spots = foreach ($s in $all) {
   if (-not ($s.kids -or $s.family -or $s.play)) { continue }
   $k = KindOf $s
   $ks = @($k[0]); if ($k[0] -ne 'water' -and $s.summary -match '\ba (spray park|splash pad)|\bspray park in summer|\bsplash area') { $ks += 'water' }; if ($k[0] -ne 'play' -and $s.summary -match '\ba(n adventure)? playground') { $ks += 'play' }
-  [pscustomobject]@{ kinds = $ks; id = $s.id; name = $s.name; area = $s.area; city = (CityOf $s); kind = $k[0]; kindOne = $k[1]; kindPlural = $k[2]; summary = $s.summary; price = $s.price; time = $s.time; env = $s.env; gem = [bool]$s.gem }
+  [pscustomobject]@{ kinds = $ks; id = $s.id; name = $s.name; area = $s.area; city = (CityOf $s); kind = $k[0]; kindOne = $k[1]; kindPlural = $k[2]; summary = $s.summary; price = $s.price; time = $s.time; env = $s.env; gem = [bool]$s.gem; lat = $s.lat; lng = $s.lng; hours = $s.hours; weather = @($s.weather); tips = @($s.tips | Where-Object { $_ }) }
 }
 Write-Host "아이 동반 장소 $(@($spots).Count)곳"
 
@@ -246,7 +246,25 @@ foreach ($p in $pages) {
   else { [void]$QA.Add(@("What is good on a rainy day ${where}?", "These spots are mostly outdoors. For wet days, open the Indoor filter in the app or see the indoor play guides.")) }
   if ($p.kind -and $AGES[$p.kind]) { [void]$QA.Add(@("What ages are $what $where good for?", "They suit $(AgeText $AGES[$p.kind]).")) }
   if ($topTime) { [void]$QA.Add(@("How long should we plan for?", "Most visits here take about $($topTime.Name). Each listing shows its own time.")) }
-  $qaHtml = '<h2 class="font-bold text-base mt-6 mb-2 text-slate-900 dark:text-slate-100">Quick answers</h2>' + (($QA | ForEach-Object { "<h3 class=""font-semibold mt-3 text-slate-900 dark:text-slate-100"">$(Esc $_[0])</h3><p class=""mb-1"">$(Esc $_[1])</p>" }) -join '')
+  # 소개글: 데이터로 계산한 문장만 써요 (동네 분포, 가격, 날씨, 나이, 대표 장소). 페이지마다 문장 틀을 조금씩 달리해요
+  $intro = New-Object System.Collections.ArrayList
+  $areaG = @(SortOrd @($list | Where-Object { $_.area } | Group-Object area) { param($g) ('{0:D6}' -f (999999 - $g.Count)) + $g.Name })
+  $topAreas = @($areaG | Select-Object -First 4 | ForEach-Object { $_.Name })
+  $cityWord = if ($p.city) { $p.city } else { 'Metro Vancouver' }
+  if ($p.kind -and $n -ge 2) {
+    $one = $p.kindPlural.ToLower()
+    $s1 = "Looking for $one ${where}? Tiny Trips lists $n that parents can actually use with kids, from $(NameList $list 3) to smaller neighbourhood options."
+    if ($topAreas.Count -ge 2 -and $p.city) { $s1 += " They are spread across $(NameList ($topAreas | ForEach-Object { [pscustomobject]@{ name = $_ } }) 4), so there is usually one close to home." }
+    [void]$intro.Add($s1)
+  } elseif ($isIndoorPage) {
+    [void]$intro.Add("When it rains, is too hot or too cold, these $n indoor places $where keep kids busy: $(NameList $list 4) and more. Each one is checked for kids, with the hours and what parents say inside the app.")
+  } else {
+    [void]$intro.Add("Planning a day out $where with kids? These $n places cover playgrounds, parks, indoor play and more, including $(NameList $list 4).")
+  }
+  if ($p.kind -and $AGES[$p.kind]) { [void]$intro.Add("This kind of place suits $(AgeText $AGES[$p.kind]), so check each listing for the best age and how long a visit usually takes.") }
+  if ($gemL.Count) { [void]$intro.Add("Standouts worth a special trip: $(NameList $gemL 4).") }
+  $introHtml = (($intro | ForEach-Object { "<p class=""mb-3"">$(Esc $_)</p>" }) -join '')
+  $qaHtml = $introHtml + '<h2 class="font-bold text-base mt-6 mb-2 text-slate-900 dark:text-slate-100">Quick answers</h2>' + (($QA | ForEach-Object { "<h3 class=""font-semibold mt-3 text-slate-900 dark:text-slate-100"">$(Esc $_[0])</h3><p class=""mb-1"">$(Esc $_[1])</p>" }) -join '')
   $faq = ([ordered]@{ '@context' = 'https://schema.org'; '@type' = 'FAQPage'; mainEntity = @($QA | ForEach-Object { [ordered]@{ '@type' = 'Question'; name = $_[0]; acceptedAnswer = [ordered]@{ '@type' = 'Answer'; text = $_[1] } } }) } | ConvertTo-Json -Depth 6 -Compress) -replace '</', '<\/'
   $body = "<nav class=""mb-2""><a class=""$L"" href=""/"">Tiny Trips</a> › <a class=""$L"" href=""/guides/"">Guides</a></nav><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">$(Esc $p.h1)</h1><p class=""mb-4"">$(Esc $lead)</p>" + $qaHtml + "<h2 class=""font-bold text-base mt-6 mb-2 text-slate-900 dark:text-slate-100"">All spots</h2>" + $sb.ToString() + $relHtml + "<p class=""mt-6 text-xs"">Details change, so check the official site before you go.</p>"
   $body = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">About this guide: $(Esc $p.h1)</summary><div class=""mt-3"">" + $body + "</div></details>"
@@ -282,11 +300,38 @@ foreach ($s in $spots) {
   $surl = "$site/spots/$($s.id)/"
   $meta = @($s.area, $(if ($s.price) { $s.price }), $(if ($s.time) { $s.time }), $(if ($s.env) { (Get-Culture).TextInfo.ToTitleCase($s.env) })) | Where-Object { $_ }
   $title = "$($s.name) with kids: $($s.area)"
-  $sdesc = (("$($s.name) in $($s.area): $($s.summary). Hours and tips for families on Tiny Trips.") -replace '\s+', ' ')
+  $sfacts = (@($(if ($s.kind -ne 'sight') { $s.kindOne }), $(if ($s.price) { $s.price }), $(if ($s.time) { $s.time })) | Where-Object { $_ }) -join ', '
+  $sdesc = (("$($s.name) in $($s.area): $($s.summary.TrimEnd('.')). $(if ($sfacts) { "$sfacts. " })Hours and tips for families.") -replace '\s+', ' ')
   if ($sdesc.Length -gt 300) { $sdesc = $sdesc.Substring(0, 297) + '...' }
   $more = @($guideOf[$s.id] | Select-Object -First 6)
   $moreHtml = if ($more) { '<div class="mt-4"><strong>Guides with this spot</strong><ul class="list-disc pl-5 mt-1">' + (($more | ForEach-Object { "<li><a class=""$L"" href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a></li>" }) -join '') + '</ul></div>' } else { '' }
-  $sbody = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">About $(Esc $s.name)</summary><div class=""mt-3""><nav class=""mb-2""><a class=""$L"" href=""/"">Tiny Trips</a> › <a class=""$L"" href=""/guides/"">Guides</a></nav><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">$(Esc $s.name)</h1><p class=""text-xs mb-1"">$(Esc ($meta -join ' · '))</p><p class=""mb-2"">$(Esc $s.summary)</p>$moreHtml<p class=""mt-4 text-xs"">Details change, so check the official site before you go.</p></div></details>"
+  # 장소 본문: 데이터에 있는 것만 문장으로 풀어요 (종류, 가격, 시간, 날씨, 나이, 영업시간, 가까운 곳)
+  $kindLow = if ($s.kind -eq 'sight') { 'spot' } else { $s.kindOne.ToLower() }
+  $para = New-Object System.Collections.ArrayList
+  $p1 = "$($s.name) is a $kindLow in $($s.area)$(if ($s.city -and $s.area -ne $s.city -and $s.area -notmatch [regex]::Escape($s.city)) { ", $($s.city)" })"
+  $p1 += $(if ($s.price -match '^free') { ' that is free to visit' } elseif ($s.price) { " with a typical cost of $($s.price)" } else { '' })
+  $p1 += $(if ($s.time) { ", and families usually spend about $($s.time) here." } else { '.' })
+  [void]$para.Add($p1)
+  if ($s.summary) { [void]$para.Add("$($s.summary.TrimEnd('.')).") }
+  $fit = @()
+  if ($s.env -eq 'indoor') { $fit += 'It is indoors, so it works in rain, heat or cold.' }
+  elseif ($s.weather -contains 'rain') { $fit += 'It is mostly outdoors but still workable in light rain.' }
+  elseif ($s.weather -contains 'sunny' -and $s.weather -notcontains 'cloudy') { $fit += 'It is best on a dry, sunny day.' }
+  elseif ($s.env -eq 'outdoor') { $fit += 'It is outdoors, so it is best on a dry day; bring layers.' }
+  if ($s.kind -and $AGES[$s.kind]) { $fit += "It suits $(AgeText $AGES[$s.kind])." }
+  if ($fit) { [void]$para.Add(($fit -join ' ')) }
+  $hrs = [string]$s.hours
+  if ($hrs -eq 'sunrise-sunset') { [void]$para.Add('Hours: open from sunrise to sunset.') }
+  elseif ($hrs -match '^24/7$') { [void]$para.Add('Hours: open 24 hours.') }
+  elseif ($hrs) { [void]$para.Add("Hours: $hrs.") }
+  if (@($s.tips).Count) { [void]$para.Add("Parent tip: $((@($s.tips) | Select-Object -First 2) -join ' ')") }
+  $near = @()
+  if ($null -ne $s.lat -and $null -ne $s.lng) {
+    $near = @(SortOrd @($spots | Where-Object { $_.id -ne $s.id -and $null -ne $_.lat -and $null -ne $_.lng -and ([math]::Abs($_.lat - $s.lat) -lt 0.03) -and ([math]::Abs($_.lng - $s.lng) -lt 0.045) }) { param($o) ('{0:D9}' -f [int]((([double]$o.lat - $s.lat) * 111) * (([double]$o.lat - $s.lat) * 111) * 1000 + (([double]$o.lng - $s.lng) * 73) * (([double]$o.lng - $s.lng) * 73) * 1000)) + $o.id } | Select-Object -First 4)
+  }
+  $nearHtml = if ($near) { '<div class="mt-4"><strong>Nearby with kids</strong><ul class="list-disc pl-5 mt-1">' + (($near | ForEach-Object { "<li><a class=""$L"" href=""/spots/$(Esc $_.id)/"">$(Esc $_.name)</a>$(if ($_.kindOne -and $_.kind -ne 'sight') { " ($(Esc $_.kindOne.ToLower()))" })</li>" }) -join '') + '</ul></div>' } else { '' }
+  $paraHtml = (($para | ForEach-Object { "<p class=""mb-2"">$(Esc $_)</p>" }) -join '')
+  $sbody = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">About $(Esc $s.name)</summary><div class=""mt-3""><nav class=""mb-2""><a class=""$L"" href=""/"">Tiny Trips</a> › <a class=""$L"" href=""/guides/"">Guides</a></nav><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">$(Esc $s.name)</h1><p class=""text-xs mb-1"">$(Esc ($meta -join ' · '))</p>$paraHtml$nearHtml$moreHtml<p class=""mt-4 text-xs"">Details change, so check the official site before you go.</p></div></details>"
   $sld = ([ordered]@{ '@context' = 'https://schema.org'; '@type' = 'TouristAttraction'; name = $s.name; description = $s.summary; url = $surl; address = [ordered]@{ '@type' = 'PostalAddress'; addressLocality = $s.city; addressRegion = 'BC'; addressCountry = 'CA' } } | ConvertTo-Json -Depth 4 -Compress) -replace '</', '<\/'
   $h = $shell
   $h = Sub $h '<title>[^<]*</title>' "<title>$(Esc $title) | Tiny Trips</title>"
