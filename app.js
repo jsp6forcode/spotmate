@@ -2237,7 +2237,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   featCard(s) {
     let hrs = ''; try { hrs = dayHours(s, vanDate(0)) || ''; } catch (e) {}
     const short = s.name.replace(/\s*[:(].*$/, '').trim() || s.name;
-    return `<div class="rounded-xl overflow-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-lg ring-2 ring-teal-500">${this.cover(s, 'h-10 sm:h-16')}
+    return `<div class="rounded-xl overflow-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-lg">${this.cover(s, 'h-10 sm:h-16')}
       <div class="px-2 py-1"><p class="font-bold text-[10px] leading-snug truncate">${esc(short)}</p>${hrs ? `<p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">${esc(hrs)}</p>` : ''}</div></div>`;
   }
   card(s) {
@@ -2629,7 +2629,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               ${cats.map(c => btn(c, 'shrink-0 flex items-center gap-1 px-1 py-0.5 rounded-md text-left leading-tight', 'w-4 h-4 text-[9px] leading-4')).join('')}
             </div></div>`;
           })()}
-          <div id="lmap" class="w-full h-[32vh] min-h-[192px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(64vh-7.7rem)] md:min-h-[307px] lg:h-[calc(64vh-6.4rem)] lg:min-h-[358px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
+          <div id="lmap" class="w-full h-[32vh] min-h-[192px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(46vh-2.5rem)] md:min-h-[260px] lg:h-[calc(46vh-2.5rem)] lg:min-h-[280px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
         </div>
       </div>
       <div data-keep-scroll="maplist" class="grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
@@ -2714,7 +2714,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     else map.fitBounds(METRO_BOUNDS, { animate: false });
     // 아래 목록에서 지금 보이는 맨 앞 3장 = 지도에 펼친 카드 3장이에요. 스크롤하면 새로 나온 3곳으로 바뀌고 지도가 부드럽게 따라가요. 보던 위치를 이어갈 땐 처음 한 번은 지도를 움직이지 않아요
     {
-      const small = el.clientWidth < 640, cw = (small ? 112 : 150) + 6, ch = small ? 84 : 108, up = ch + 14, coarse = matchMedia('(pointer: coarse)').matches, N = small ? 2 : 3;   // 폰은 2장만
+      const small = el.clientWidth < 640, cw = (small ? 112 : 150) + 6, ch = small ? 84 : 108, up = ch + 14, coarse = matchMedia('(pointer: coarse)').matches, N = (coarse || innerWidth < 768 || el.clientWidth < 640) ? 2 : 3;   // 폰은 2장만
       const byIt = {}; items.forEach(s => { byIt[s.id] = s; });
       let cur = [];
       const setFeat = (ids, animate) => {
@@ -2734,7 +2734,23 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           if (te) te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(id); });
         });
         const pts = ids.map(id => byIt[id]).filter(Boolean);
-        if (pts.length) map.fitBounds(L.latLngBounds(pts.map(s => [s.lat, s.lng])), { paddingTopLeft: [cw / 2, up], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: !!animate, duration: 0.7 });
+      // 펼친 카드끼리 안 겹치게: 핀 위·오른쪽·왼쪽·아래 중 이미 놓은 카드와 안 겹치고 지도 안에 들어오는 첫 방향으로 놓아요
+      const layout = () => {
+        const sz = map.getSize(), placed = [], op = o && this.nearActive() ? map.latLngToContainerPoint([o.lat, o.lng]) : null;   // 내 위치(검은 점)는 카드가 가리지 않게
+        cur.forEach(id => {
+          const pin = this._pins[id], tip = pin && pin.mk.getTooltip(); if (!pin || !tip) return;
+          const p = map.latLngToContainerPoint(pin.mk.getLatLng()), g = 12, hw = cw / 2, hh = ch / 2;
+          const opts = { top: [p.x - hw, p.y - g - ch, [0, -g]], right: [p.x + g, p.y - hh, [g, 0]], left: [p.x - g - cw, p.y - hh, [-g, 0]], bottom: [p.x - hw, p.y + g, [0, g]] };
+          const hit = (a, b) => a[0] < b[0] + cw && b[0] < a[0] + cw && a[1] < b[1] + ch && b[1] < a[1] + ch;
+          const onDot = b => op && op.x > b[0] - 8 && op.x < b[0] + cw + 8 && op.y > b[1] - 8 && op.y < b[1] + ch + 8;
+          let pick = null;
+          const dirs = ['top', 'right', 'left', 'bottom'], inMap = b => b[0] >= 0 && b[1] >= 0 && b[0] + cw <= sz.x && b[1] + ch <= sz.y, free = b => !placed.some(q => hit(b, q)) && !onDot(b);
+          pick = dirs.find(d => inMap(opts[d]) && free(opts[d])) || dirs.find(d => free(opts[d])) || dirs.find(d => !onDot(opts[d])) || 'top';   // 지도 밖으로 조금 나가더라도 검은 점은 가리지 않게
+          placed.push(opts[pick]);
+          if (tip.options.direction !== pick) { tip.options.direction = pick; tip.options.offset = L.point(opts[pick][2]); pin.mk.closeTooltip(); pin.mk.openTooltip(); const te = tip.getElement(); if (te) te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(id); }); }
+        });
+      };
+        if (pts.length) { map.once('moveend', layout); map.fitBounds(L.latLngBounds([...pts.map(s => [s.lat, s.lng]), ...(o && this.nearActive() ? [[o.lat, o.lng]] : [])]), { paddingTopLeft: [cw / 2, up], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: !!animate, duration: 0.7 }); layout(); }
       };
       const restored = !!(this._mapSaved && this._mapSaved.key === key), top = rank.slice(0, N);
       if (restored) { const keep = map.getCenter(), z = map.getZoom(); setFeat(top, false); map.setView(keep, z, { animate: false }); } else setFeat(top, false);
