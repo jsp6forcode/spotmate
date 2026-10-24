@@ -2666,10 +2666,26 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const vec = await loadVector();
     if (!el.isConnected) return;
     const { items, picks, rank } = this._map, L = window.L;
-    const map = L.map(el, { zoomControl: true, attributionControl: true, scrollWheelZoom: true, maxZoom: 19 });
+    const map = L.map(el, { zoomControl: true, attributionControl: true, scrollWheelZoom: false, maxZoom: 19 });
     el.classList.toggle('vec', !!vec);
     map.zoomControl.setPosition('topright');
     map.attributionControl.setPrefix(false);   // Leaflet 로고·링크는 빼고 지도 출처(OpenStreetMap)만 작게
+    // 마우스 휠은 페이지 스크롤에 써요: 지도 위에서 그냥 굴리면 페이지가 스크롤되고, Ctrl(Mac은 ⌘)+휠(트랙패드 핀치도)일 때만 지도가 확대·축소돼요
+    {
+      const hint = document.createElement('div');
+      hint.textContent = (/Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl') + ' + scroll to zoom the map';
+      hint.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:1000;background:rgba(15,23,42,.45);color:#fff;font:600 14px system-ui,sans-serif;opacity:0;transition:opacity .2s';
+      el.appendChild(hint);
+      let ht = null;
+      el.addEventListener('wheel', e => {
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          map.setZoomAround(map.mouseEventToContainerPoint(e), Math.max(map.getMinZoom() || 0, Math.min(19, map.getZoom() - e.deltaY * (e.deltaMode ? 0.05 : 0.01))), { animate: false });
+          return;
+        }
+        hint.style.opacity = '1'; clearTimeout(ht); ht = setTimeout(() => { hint.style.opacity = '0'; }, 900);
+      }, { passive: false });
+    }
     if (vec) L.maplibreGL({ style: this.state.dark ? VEC_STYLE.dark : VEC_STYLE.light, attribution: VEC_ATTR }).addTo(map);
     else L.tileLayer(TILES, { attribution: TILE_ATTR, maxZoom: 19 }).addTo(map);
     // 핀: 번호가 작을수록(순위가 높을수록) 위에 오게
