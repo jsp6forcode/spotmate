@@ -1826,6 +1826,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   // ── 렌더 ──
   render() {
     document.documentElement.classList.toggle('dark', this.state.dark);
+    document.documentElement.classList.remove('snap-list');   // 지도 화면이 다시 그릴 때만 켜요 (drawMap)
     // 순위(지금 가 볼 이유)가 스팟 행사를 쓰니 목록보다 먼저 계산해요
     this._spotEvents = this.spotEvents();
     const items = this.list();
@@ -2780,7 +2781,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         const items2 = cur.map(id => { const pin = this._pins[id], tip = pin && pin.mk.getTooltip(); if (!pin || !tip) return null; const p = map.latLngToContainerPoint(pin.mk.getLatLng());
           // 후보 위치 8곳: [카드 왼쪽 x, 위쪽 y, 방향, 오프셋]. 위·오른쪽·왼쪽·아래가 안 되면 대각선(위/아래 + 좌/우로 비껴서)도 써요
           return { id, pin, tip, opts: { top: [p.x - hw, p.y - g - ch, 'top', [0, -g]], tr: [p.x + s2, p.y - g - ch, 'top', [hw + s2, -g]], tl: [p.x - cw - s2, p.y - g - ch, 'top', [-(hw + s2), -g]], right: [p.x + g, p.y - hh, 'right', [g, 0]], left: [p.x - g - cw, p.y - hh, 'left', [-g, 0]], bottom: [p.x - hw, p.y + g, 'bottom', [0, g]], br: [p.x + s2, p.y + g, 'bottom', [hw + s2, g]], bl: [p.x - cw - s2, p.y + g, 'bottom', [-(hw + s2), g]] } }; }).filter(Boolean);
-        const over = b => Math.max(0, -b[0]) + Math.max(0, 38 - b[1]) + Math.max(0, b[0] + cw - sz.x) + Math.max(0, b[1] + ch - sz.y);   // 吏??諛뽰쑝濡??섍컙 ?뺣룄(px)
+        const over = b => Math.max(0, -b[0]) + Math.max(0, 38 - b[1]) + Math.max(0, b[0] + cw - sz.x) + Math.max(0, b[1] + ch - sz.y);   // 지도 밖으로 나간 정도(px)
         const onDot = b => op && op.x > b[0] - 8 && op.x < b[0] + cw + 8 && op.y > b[1] - 8 && op.y < b[1] + ch + 8;
         const inter = (a, b) => Math.max(0, Math.min(a[0] + cw, b[0] + cw) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[1] + ch, b[1] + ch) - Math.max(a[1], b[1]));
         // 카드 2~3장의 모든 방향 조합(최대 512가지) 중 겹침·지도 밖·검은 점 가림이 가장 적은 조합을 골라요
@@ -2832,6 +2833,17 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     }
     const save = () => { this._mapSaved = { key, center: map.getCenter(), zoom: map.getZoom() }; };
     save(); map.on('moveend zoomend', save); map.on('click', () => { if (this._tip) { map.closeTooltip(this._tip); this._tip = null; } });
+    // 스크롤하면 아래 목록 카드 줄이 지도 바로 밑에 딱 맞춰 멈춰요 (CSS scroll-snap). 지도 높이는 --mapbar-h 로 알려 줘요
+    {
+      const root = document.documentElement, bar = el.closest('.sticky');
+      root.classList.add('snap-list');
+      if (bar) {
+        const setH = () => root.style.setProperty('--mapbar-h', (bar.offsetHeight + 8) + 'px');
+        setH();
+        if (this._snapRO) this._snapRO.disconnect();
+        if (window.ResizeObserver) { this._snapRO = new ResizeObserver(setH); this._snapRO.observe(bar); }
+      }
+    }
     this._leaflet = map;
   }
   // Saved 탭 안에서 "Saved"(저장한 곳)와 "My reviews"(내가 리뷰를 쓴 곳) 전환

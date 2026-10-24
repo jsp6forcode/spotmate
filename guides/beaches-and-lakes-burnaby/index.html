@@ -66,6 +66,12 @@ tailwind.config = {
   .leaflet-tooltip.card-tip.feat > div { transition: transform .15s; transform-origin: 50% 100%; }
   @keyframes featIn { from { opacity: 0; transform: translateY(10px) scale(.9); } to { opacity: 1; transform: none; } }
   .leaflet-tooltip.card-tip.feat > div { animation: featIn .35s ease-out; }
+  /* 지도 화면: 스크롤하면 목록 카드 줄이 지도 바로 밑에 딱 맞게 멈춰요. 맨 위(헤더)와 맨 아래(푸터)도 멈춤 자리라 끝까지 갈 수 있어요 */
+  html.snap-list { scroll-snap-type: y proximity; }
+  html.snap-list header.hero { scroll-snap-align: start; }
+  html.snap-list footer { scroll-snap-align: end; }
+  html.snap-list article[data-act="open"] { scroll-snap-align: start; scroll-margin-top: var(--mapbar-h, 0px); }
+  @media (prefers-reduced-motion: reduce) { html.snap-list { scroll-snap-type: none; } }
   .leaflet-tooltip.card-tip.feat:hover { z-index: 1000; }
   .leaflet-tooltip.card-tip.feat:hover > div { transform: scale(1.35); box-shadow: 0 8px 24px rgba(0,0,0,.45); }
   .leaflet-container .leaflet-control-attribution { font-size: 9px; line-height: 1.2; padding: 0 4px; opacity: .55; background: rgba(255,255,255,.35); }
@@ -94,6 +100,6 @@ tailwind.config = {
 <div class="mt-6"><strong>More guides</strong><ul class="list-disc pl-5 mt-1"><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/indoor-places-to-take-kids-burnaby/">Indoor places to take kids in Burnaby</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/kid-friendly-trails-burnaby/">Kid-friendly trails in Burnaby</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/museums-burnaby/">Museums in Burnaby for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/parks-burnaby/">Parks in Burnaby for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/places-to-take-kids-burnaby/">Places to take kids in Burnaby</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/playgrounds-burnaby/">Playgrounds in Burnaby for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/rec-centres-burnaby/">Rec centres in Burnaby for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/shopping-centres-burnaby/">Shopping centres in Burnaby for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/beaches-and-lakes-delta/">Beaches and lakes in Delta for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/beaches-and-lakes-maple-ridge/">Beaches and lakes in Maple Ridge for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/beaches-and-lakes-metro-vancouver/">Beaches and lakes in Metro Vancouver for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/beaches-and-lakes-richmond/">Beaches and lakes in Richmond for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/beaches-and-lakes-surrey/">Beaches and lakes in Surrey for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/beaches-and-lakes-vancouver/">Beaches and lakes in Vancouver for kids</a></li></ul></div><p class="mt-6 text-xs">Details change, so check the official site before you go.</p></div></details><!--seo-end--></section>
 <button id="to-top" type="button" aria-label="Back to top" class="fixed z-40 right-4 bottom-4 sm:right-6 sm:bottom-6 w-12 h-12 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-2xl font-bold shadow-lg ring-1 ring-black/10 flex items-center justify-center" style="display:none"><span aria-hidden="true">↑</span></button>
 
-<script>window.GUIDE={"title":"Beaches and lakes in Burnaby for kids","ids":["deerlakepark","burnabylakenaturehouse","burnabylakeregionalpark"],"indoor":false,"city":"Burnaby"}</script><script src="/app.js?v=89c02fe8"></script>
+<script>window.GUIDE={"title":"Beaches and lakes in Burnaby for kids","ids":["deerlakepark","burnabylakenaturehouse","burnabylakeregionalpark"],"indoor":false,"city":"Burnaby"}</script><script src="/app.js?v=f57e6b62"></script>
 </body>
 </html>
