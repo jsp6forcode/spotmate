@@ -2826,11 +2826,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         const bar = el.closest('.sticky'); if (!bar) return;
         const bottom = bar.getBoundingClientRect().bottom;
         const ids = [...document.querySelectorAll('article[data-act="open"]')].filter(c => c.getBoundingClientRect().bottom > bottom + 60).map(c => c.dataset.val).filter(id => byIt[id] && byIt[id].lat != null).slice(0, N);
-        // 스냅을 아주 조금 더 강하게: 멈춘 자리가 카드 줄 정렬 위치(지도 밑 8px)에서 140px 안이면 부드럽게 끌어 붙여요 (손가락이 닿아 있는 동안은 안 해요)
+        // 스냅을 아주 조금 더 강하게: 멈춘 자리가 카드 줄 정렬 위치(지도 밑 8px)에서 110px 안이면 부드럽게 끌어 붙여요 (손가락이 닿아 있는 동안은 안 해요)
         if (!this._touching && bar.getBoundingClientRect().top <= 1) {
           const gaps = [...document.querySelectorAll('article[data-act="open"]')].map(c => c.getBoundingClientRect().top - (bottom + 8));
           const d = gaps.reduce((best, g) => Math.abs(g) < Math.abs(best) ? g : best, Infinity);
-          if (Math.abs(d) > 2 && Math.abs(d) < 140) window.scrollBy({ top: d, behavior: 'smooth' });
+          if (Math.abs(d) > 2 && Math.abs(d) < 110) window.scrollBy({ top: d, behavior: 'smooth' });
         }
         if (ids.length) setFeat(ids, true);
       };
