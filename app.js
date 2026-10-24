@@ -1741,15 +1741,19 @@ class App {
     if (this.state.nearKey) return;
     this.urlDefaults.nearKey = 'downtown'; this.urlDefaults.radius = 5;
     this.set({ nearKey: 'downtown', radius: 5, radiusExact: false });
-    if (!navigator.geolocation) return;
-    const token = this.geoToken = (this.geoToken || 0) + 1;
-    navigator.geolocation.getCurrentPosition(p => {
-      if (token !== this.geoToken || this.state.nearKey !== 'downtown') return;
-      const here = { lat: p.coords.latitude, lng: p.coords.longitude, label: 'you' };
-      if (Math.min(...SPOTS.map(s => km(here, s))) > OUT_OF_AREA_KM) return;   // 지역 밖이면 다운타운 그대로
-      this.urlDefaults.nearKey = 'here';
-      this.set({ nearKey: 'here', origin: here, radius: 5, radiusExact: false });
-    }, () => {}, { timeout: 8000, maximumAge: 300000 });
+    // 위치 권한 창은 사용자가 "Near me"를 누를 때만 띄워요. 이미 허용한 사람에게만 조용히 내 위치를 써요 (처음 온 사람에게 갑자기 묻지 않게)
+    if (!navigator.geolocation || !navigator.permissions || !navigator.permissions.query) return;
+    navigator.permissions.query({ name: 'geolocation' }).then(st => {
+      if (st.state !== 'granted') return;
+      const token = this.geoToken = (this.geoToken || 0) + 1;
+      navigator.geolocation.getCurrentPosition(p => {
+        if (token !== this.geoToken || this.state.nearKey !== 'downtown') return;
+        const here = { lat: p.coords.latitude, lng: p.coords.longitude, label: 'you' };
+        if (Math.min(...SPOTS.map(s => km(here, s))) > OUT_OF_AREA_KM) return;   // 지역 밖이면 다운타운 그대로
+        this.urlDefaults.nearKey = 'here';
+        this.set({ nearKey: 'here', origin: here, radius: 5, radiusExact: false });
+      }, () => {}, { timeout: 8000, maximumAge: 300000 });
+    }).catch(() => {});
   }
   locate() {
     if (!navigator.geolocation) return this.set({ geoMsg: "This browser can't share your location. Pick an area instead." });
@@ -1850,8 +1854,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : view === 'about' ? this.aboutView() : view === 'events' || view === 'markets' ? this.eventsView(view) : this.pickMode() && !this.state.q ? this.wizardView()
             : this.pickMode() ? `<button data-act="qclear" class="mt-6 inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-lg text-sm font-semibold   text-slate-700   dark:text-slate-200">← Back to the picker</button>${this.planBar()}${this.listView(items)}` : this.state.cat === 'events' && view !== 'map' ? this.eventsView() : `
             ${this.guideBanner()}
-            ${this.planBar()}
-            ${this.seasonChips()}
+            ${this.noteRow()}
       
             ${view === 'map' ? this.mapView(items) : this.listView(items)}
           `}
@@ -2106,13 +2109,30 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     </section>`;
   }
   // 목록 맨 위: 지금 시즌 태그 칩 (누르면 그 태그의 장소만). 순위와 이유는 카드에서 보여줘요
-  seasonChips() {
+  seasonChips(inner = false) {
     const tags = activeTags().filter(t => this._tagCounts && this._tagCounts[t.id]);
     if (!tags.length) return '';
     const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-[11px] sm:text-sm font-semibold px-2 sm:px-3 py-0.5 sm:py-2 rounded-full ${on ? tagStyle(t.id).solid : tagStyle(t.id).soft}">#${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
+    const body = `<span class="shrink-0 text-[11px] sm:text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>${tags.map(chip).join('')}`;
+    if (inner) return body;
     return `
     <div class="mt-2 sm:mt-4 flex flex-wrap items-center gap-x-1 sm:gap-x-2 gap-y-1 [&>*]:whitespace-nowrap">
-      ${tags.length ? `<span class="text-[11px] sm:text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>${tags.map(chip).join('')}` : ''}
+      ${body}
+    </div>`;
+  }
+  // 밤(8pm~6am)엔 "늦어서 대부분 닫혔어요" 안내와 "In season" 칩을 한 줄에 둬요 (넘치면 줄바꿈, 가로 스크롤은 없어요). 날짜 계획이 있으면 예전처럼 따로
+  noteRow() {
+    const s = this.state;
+    if (s.when) return this.planBar() + this.seasonChips();
+    const h = vanWallClock().getHours();
+    const late = (s.view === 'list' || s.view === 'map') && s.cat !== 'events' && (h >= 20 || h < 6);
+    const season = this.seasonChips(true);
+    if (!late) return season ? `<div class="mt-2 sm:mt-4 flex flex-wrap items-center gap-x-1 sm:gap-x-2 gap-y-1 [&>*]:whitespace-nowrap">${season}</div>` : '';
+    const day = h < 6 ? 'today' : 'tomorrow';
+    return `
+    <div class="mt-2 sm:mt-4 flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 [&>*]:whitespace-nowrap">
+      <span class="shrink-0 text-[11px] sm:text-sm text-slate-600 dark:text-slate-300">It's late. <button data-act="whenset" data-val="${day}" class="font-semibold text-violet-700 dark:text-violet-300">See ${day} →</button></span>
+      ${season ? `<span aria-hidden="true" class="shrink-0 text-slate-300 dark:text-slate-600">|</span>${season}` : ''}
     </div>`;
   }
   // Events 탭(마켓 빼고) · Markets 탭(파머스 마켓만). kind 없이 부르면 예전처럼 둘 다 (카테고리 "Events")
@@ -2616,7 +2636,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${(() => {
             if (picks) return '';
             const cc = this._catCounts || {}, total = Object.values(cc).reduce((a, b) => a + b, 0);
-            const cats = [['all', `(${total}) All`, '🗺️', '#64748b'], ...catOptions().map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '🎪', '#a21caf', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, CAT_GROUPS[k].icon, CAT_GROUPS[k].color, CAT_GROUPS[k].label]).sort((a, b) => a[4].localeCompare(b[4]))];
+            const cats = [['all', `(${total}) All`, '🗺️', '#64748b'], ...catOptions().map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '🎪', '#a21caf', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, CAT_GROUPS[k].icon, CAT_GROUPS[k].color, CAT_GROUPS[k].label]).filter(c => c[0] === this.state.cat || c[1].indexOf("(0)") !== 0).sort((a, b) => a[4].localeCompare(b[4]))];
             const cur = cats.find(c => c[0] === this.state.cat) || cats[0];
             const btn = ([k, label, icon, color], cls, ic) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="${cls} ${this.state.cat === k ? 'bg-violet-100 text-violet-900 dark:bg-violet-500/20 dark:text-violet-100' : 'text-slate-700 dark:text-slate-200'}"><span class="${ic} shrink-0 rounded-full text-center text-white" style="background:${color}">${icon}</span>${label}</button>`;
             // 폰: "Category" 버튼 하나 (누르면 목록이 펼쳐져요) / 데스크톱: 지도 왼쪽 위에 반투명 세로 목록
@@ -2756,14 +2776,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         cur.forEach(id => {
           const pin = this._pins[id], tip = pin && pin.mk.getTooltip(); if (!pin || !tip) return;
           const p = map.latLngToContainerPoint(pin.mk.getLatLng()), g = 12, hw = cw / 2, hh = ch / 2;
-          const opts = { top: [p.x - hw, p.y - g - ch, [0, -g]], right: [p.x + g, p.y - hh, [g, 0]], left: [p.x - g - cw, p.y - hh, [-g, 0]], bottom: [p.x - hw, p.y + g, [0, g]] };
+          // 후보 위치 8곳: [카드 왼쪽 x, 위쪽 y, 방향, 오프셋]. 위·오른쪽·왼쪽·아래가 안 되면 대각선(위/아래 + 좌/우로 비껴서)도 써요
+          const s2 = 2, opts = { top: [p.x - hw, p.y - g - ch, 'top', [0, -g]], tr: [p.x + s2, p.y - g - ch, 'top', [hw + s2, -g]], tl: [p.x - cw - s2, p.y - g - ch, 'top', [-(hw + s2), -g]], right: [p.x + g, p.y - hh, 'right', [g, 0]], left: [p.x - g - cw, p.y - hh, 'left', [-g, 0]], bottom: [p.x - hw, p.y + g, 'bottom', [0, g]], br: [p.x + s2, p.y + g, 'bottom', [hw + s2, g]], bl: [p.x - cw - s2, p.y + g, 'bottom', [-(hw + s2), g]] };
           const hit = (a, b) => a[0] < b[0] + cw && b[0] < a[0] + cw && a[1] < b[1] + ch && b[1] < a[1] + ch;
           const onDot = b => op && op.x > b[0] - 8 && op.x < b[0] + cw + 8 && op.y > b[1] - 8 && op.y < b[1] + ch + 8;
-          let pick = null;
-          const dirs = ['top', 'right', 'left', 'bottom'], inMap = b => b[0] >= 0 && b[1] >= 0 && b[0] + cw <= sz.x && b[1] + ch <= sz.y, free = b => !placed.some(q => hit(b, q)) && !onDot(b);
-          pick = dirs.find(d => inMap(opts[d]) && free(opts[d])) || dirs.find(d => free(opts[d])) || dirs.find(d => !onDot(opts[d])) || 'top';   // 지도 밖으로 조금 나가더라도 검은 점은 가리지 않게
+          const dirs = ['top', 'tr', 'tl', 'right', 'left', 'bottom', 'br', 'bl'], inMap = b => b[0] >= 0 && b[1] >= 0 && b[0] + cw <= sz.x && b[1] + ch <= sz.y, free = b => !placed.some(q => hit(b, q)) && !onDot(b);
+          const pick = dirs.find(d => inMap(opts[d]) && free(opts[d])) || dirs.find(d => free(opts[d])) || dirs.find(d => !onDot(opts[d])) || 'top';   // 지도 밖으로 조금 나가더라도 검은 점은 가리지 않게
           placed.push(opts[pick]);
-          if (tip.options.direction !== pick) { tip.options.direction = pick; tip.options.offset = L.point(opts[pick][2]); pin.mk.closeTooltip(); pin.mk.openTooltip(); const te = tip.getElement(); if (te) te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(id); }); }
+          const key2 = pick;
+          if (tip._pick !== key2) { tip._pick = key2; tip.options.direction = opts[pick][2]; tip.options.offset = L.point(opts[pick][3]); pin.mk.closeTooltip(); pin.mk.openTooltip(); const t2 = pin.mk.getTooltip(); if (t2) t2._pick = key2; const te = t2 && t2.getElement(); if (te) te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(id); }); }
         });
       };
         if (pts.length) { map.once('moveend', layout); map.fitBounds(L.latLngBounds([...pts.map(s => [s.lat, s.lng]), ...(o && this.nearActive() ? [[o.lat, o.lng]] : [])]), { paddingTopLeft: [cw / 2, up], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: !!animate, duration: 0.7 }); layout(); }
