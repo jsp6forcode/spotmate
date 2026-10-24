@@ -2619,7 +2619,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     })();
     this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: groupColor(s), mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks, rank,
       events: [...(showEv ? evOthers : []), ...(showMk ? evMarkets : [])].map(evPin) };
-    const evToggle = (act, on, label, n) => `<button data-act="${act}" aria-pressed="${on}" title="${on ? 'Click to hide on the map' : 'Click to show on the map'}" class="flex items-center gap-0.5 px-2 py-0.5 rounded-full border ${on ? 'border-amber-500 bg-amber-100 text-amber-900 dark:bg-amber-500/25 dark:text-amber-100' : 'border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 line-through decoration-1'}"><span aria-hidden="true">${on ? '✓' : '+'}</span>${label} <span class="font-normal">${n}</span></button>`;
+    const evToggle = (act, on, label, n) => `<button data-act="${act}" aria-pressed="${on}" title="${on ? 'Click to hide on the map' : 'Click to show on the map'}" class="flex items-center gap-0.5 px-2 py-0.5 rounded-full border ${on ? 'border-amber-500 bg-amber-100 text-amber-900 dark:bg-amber-500/25 dark:text-amber-100' : 'border-slate-300 dark:border-slate-600 bg-white/85 dark:bg-slate-900/80 backdrop-blur-sm shadow text-slate-500 dark:text-slate-400 line-through decoration-1'}"><span aria-hidden="true">${on ? '✓' : '+'}</span>${label} <span class="font-normal">${n}</span></button>`;
     const picksBar = picks ? `
     <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl p-4 bg-violet-50   dark:bg-violet-500/10 ">
       <p class="font-semibold text-violet-900 dark:text-violet-100">Showing your ${items.length} picks from Explore</p>
@@ -2629,9 +2629,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     return `${picksBar}
     <div class="mt-3 sm:mt-6 grid grid-cols-1 gap-2 sm:gap-4">
       <div class="sticky top-0 z-30 min-w-0 rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    overflow-hidden">
-        <div class="px-3 sm:px-5 py-1 sm:py-2 flex ${picks ? 'flex-wrap' : 'flex-nowrap overflow-x-auto whitespace-nowrap no-scrollbar items-center'} gap-x-2.5 gap-y-0.5 sm:gap-3 text-[10px] sm:text-[11px] font-semibold   ">
-          ${picks ? [...new Set(items.map(kindGroup))].map(g => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-5 h-5 rounded-full text-[11px] leading-5 text-center" style="background:${CAT_GROUPS[g].color}">${CAT_GROUPS[g].icon}</span>${CAT_GROUPS[g].label}</span>`).join('') : `<span class="text-slate-500 dark:text-slate-400">Also on the map:</span>${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}`}
-        </div>
+        ${picks ? `<div class="px-3 sm:px-5 py-1 sm:py-2 flex flex-wrap gap-x-2.5 gap-y-0.5 sm:gap-3 text-[10px] sm:text-[11px] font-semibold   ">
+          ${[...new Set(items.map(kindGroup))].map(g => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-5 h-5 rounded-full text-[11px] leading-5 text-center" style="background:${CAT_GROUPS[g].color}">${CAT_GROUPS[g].icon}</span>${CAT_GROUPS[g].label}</span>`).join('')}
+        </div>` : ''}
         <div class="relative">
           ${(() => {
             if (picks) return '';
@@ -2640,11 +2640,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const cur = cats.find(c => c[0] === this.state.cat) || cats[0];
             const btn = ([k, label, icon, color], cls, ic) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="${cls} ${this.state.cat === k ? 'bg-violet-100 text-violet-900 dark:bg-violet-500/20 dark:text-violet-100' : 'text-slate-700 dark:text-slate-200'}"><span class="${ic} shrink-0 rounded-full text-center text-white" style="background:${color}">${icon}</span>${label}</button>`;
             // 폰: "Category" 버튼 하나 (누르면 목록이 펼쳐져요) / 데스크톱: 지도 왼쪽 위에 반투명 세로 목록
-            return `<details class="md:hidden relative px-2 pb-1.5 text-xs font-semibold">
-              <summary class="list-none cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 [&::-webkit-details-marker]:hidden"><span class="w-4 h-4 rounded-full text-[9px] leading-4 text-center text-white" style="background:${cur[3]}">${cur[2]}</span>${cur[1]} <span aria-hidden="true" class="text-slate-500">▾</span></summary>
-              <div role="group" aria-label="Category" class="absolute left-2 top-full z-20 mt-1 w-[14rem] p-1 grid grid-cols-2 gap-0.5 rounded-lg bg-white/65 dark:bg-slate-900/65 backdrop-blur-md shadow-lg text-[10px]">
+            // 지도 안쪽 위: 폰은 [카테고리 버튼][Events][Markets] 한 줄, 데스크톱은 왼쪽 목록 오른쪽에 Events·Markets 칩
+            return `<div class="absolute left-2 top-2 md:left-[8.5rem] z-20 flex items-center gap-1.5 pointer-events-none">
+            <details class="md:hidden relative text-xs font-semibold pointer-events-auto">
+              <summary class="list-none cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/85 dark:bg-slate-900/80 backdrop-blur-sm shadow text-slate-800 dark:text-slate-100 [&::-webkit-details-marker]:hidden"><span class="w-4 h-4 rounded-full text-[9px] leading-4 text-center text-white" style="background:${cur[3]}">${cur[2]}</span>${cur[1]} <span aria-hidden="true" class="text-slate-500">▾</span></summary>
+              <div role="group" aria-label="Category" class="absolute left-0 top-full z-20 mt-1 w-[14rem] p-1 grid grid-cols-2 gap-0.5 rounded-lg bg-white/85 dark:bg-slate-900/85 backdrop-blur-md shadow-lg text-[10px]">
                 ${cats.map(c => btn(c, 'flex items-center gap-1 px-1.5 py-1 rounded-md text-left leading-tight', 'w-3.5 h-3.5 text-[8px] leading-[14px]')).join('')}
               </div></details>
+            <div class="flex items-center gap-1.5 pointer-events-auto text-[10px] sm:text-[11px] font-semibold">${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}</div></div>
             <div class="hidden md:block md:absolute md:left-0 md:top-2 md:bottom-2 md:z-10 md:w-32 pointer-events-none"><div role="group" aria-label="Category" class="pointer-events-auto absolute inset-0 p-0.5 flex flex-col gap-0.5 overflow-y-auto rounded-r-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow text-[11px] font-semibold no-scrollbar">
               ${cats.map(c => btn(c, 'shrink-0 flex items-center gap-1 px-1 py-0.5 rounded-md text-left leading-tight', 'w-4 h-4 text-[9px] leading-4')).join('')}
             </div></div>`;
@@ -2740,7 +2743,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (o) {
       const r = this.state.radius;
       if (this.nearActive() && r !== 'any') L.circle([o.lat, o.lng], { radius: r * 1000, color: '#0d9488', weight: 2, dashArray: '6 4', fillOpacity: 0.08 }).addTo(map);
-      L.marker([o.lat, o.lng], { icon: L.divIcon({ className: '', html: '<div class="spot-pin origin"></div>', iconSize: [14, 14], iconAnchor: [7, 7] }), title: this.state.nearKey === 'here' ? 'You' : o.label, interactive: false }).addTo(map);
+      L.marker([o.lat, o.lng], { icon: L.divIcon({ className: '', html: '<div class="spot-pin origin"></div>', iconSize: [16, 16], iconAnchor: [8, 8] }), zIndexOffset: 20000, keyboard: false, title: this.state.nearKey === 'here' ? 'You' : o.label, interactive: false }).addTo(map);
     }
     // 보던 위치 이어가기: 같은 목록이면 저장한 위치로, 아니면 추천 장소에 맞춰 확대(전체 목록은 메트로 밴쿠버 범위)
     const key = (picks ? 'p:' : 'a:') + (this.state.q || '') + ':' + items.length + ':' + (items[0] ? items[0].id : '') + ':' + this.state.nearKey + ':' + this.state.radius;
@@ -2771,23 +2774,44 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         });
         const pts = ids.map(id => byIt[id]).filter(Boolean);
       // 펼친 카드끼리 안 겹치게: 핀 위·오른쪽·왼쪽·아래 중 이미 놓은 카드와 안 겹치고 지도 안에 들어오는 첫 방향으로 놓아요
-      const layout = () => {
-        const sz = map.getSize(), placed = [], op = o && this.nearActive() ? map.latLngToContainerPoint([o.lat, o.lng]) : null;   // 내 위치(검은 점)는 카드가 가리지 않게
-        cur.forEach(id => {
-          const pin = this._pins[id], tip = pin && pin.mk.getTooltip(); if (!pin || !tip) return;
-          const p = map.latLngToContainerPoint(pin.mk.getLatLng()), g = 12, hw = cw / 2, hh = ch / 2;
+      const layout = fix => {
+        const sz = map.getSize(), op = o && this.nearActive() ? map.latLngToContainerPoint([o.lat, o.lng]) : null;   // 내 위치(검은 점)는 카드가 가리지 않게
+        const g = 12, hw = cw / 2, hh = ch / 2, s2 = 2, dirs = ['top', 'tr', 'tl', 'right', 'left', 'bottom', 'br', 'bl'];
+        const items2 = cur.map(id => { const pin = this._pins[id], tip = pin && pin.mk.getTooltip(); if (!pin || !tip) return null; const p = map.latLngToContainerPoint(pin.mk.getLatLng());
           // 후보 위치 8곳: [카드 왼쪽 x, 위쪽 y, 방향, 오프셋]. 위·오른쪽·왼쪽·아래가 안 되면 대각선(위/아래 + 좌/우로 비껴서)도 써요
-          const s2 = 2, opts = { top: [p.x - hw, p.y - g - ch, 'top', [0, -g]], tr: [p.x + s2, p.y - g - ch, 'top', [hw + s2, -g]], tl: [p.x - cw - s2, p.y - g - ch, 'top', [-(hw + s2), -g]], right: [p.x + g, p.y - hh, 'right', [g, 0]], left: [p.x - g - cw, p.y - hh, 'left', [-g, 0]], bottom: [p.x - hw, p.y + g, 'bottom', [0, g]], br: [p.x + s2, p.y + g, 'bottom', [hw + s2, g]], bl: [p.x - cw - s2, p.y + g, 'bottom', [-(hw + s2), g]] };
-          const hit = (a, b) => a[0] < b[0] + cw && b[0] < a[0] + cw && a[1] < b[1] + ch && b[1] < a[1] + ch;
-          const onDot = b => op && op.x > b[0] - 8 && op.x < b[0] + cw + 8 && op.y > b[1] - 8 && op.y < b[1] + ch + 8;
-          const dirs = ['top', 'tr', 'tl', 'right', 'left', 'bottom', 'br', 'bl'], inMap = b => b[0] >= 0 && b[1] >= 0 && b[0] + cw <= sz.x && b[1] + ch <= sz.y, free = b => !placed.some(q => hit(b, q)) && !onDot(b);
-          const pick = dirs.find(d => inMap(opts[d]) && free(opts[d])) || dirs.find(d => free(opts[d])) || dirs.find(d => !onDot(opts[d])) || 'top';   // 지도 밖으로 조금 나가더라도 검은 점은 가리지 않게
-          placed.push(opts[pick]);
-          const key2 = pick;
-          if (tip._pick !== key2) { tip._pick = key2; tip.options.direction = opts[pick][2]; tip.options.offset = L.point(opts[pick][3]); pin.mk.closeTooltip(); pin.mk.openTooltip(); const t2 = pin.mk.getTooltip(); if (t2) t2._pick = key2; const te = t2 && t2.getElement(); if (te) te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(id); }); }
+          return { id, pin, tip, opts: { top: [p.x - hw, p.y - g - ch, 'top', [0, -g]], tr: [p.x + s2, p.y - g - ch, 'top', [hw + s2, -g]], tl: [p.x - cw - s2, p.y - g - ch, 'top', [-(hw + s2), -g]], right: [p.x + g, p.y - hh, 'right', [g, 0]], left: [p.x - g - cw, p.y - hh, 'left', [-g, 0]], bottom: [p.x - hw, p.y + g, 'bottom', [0, g]], br: [p.x + s2, p.y + g, 'bottom', [hw + s2, g]], bl: [p.x - cw - s2, p.y + g, 'bottom', [-(hw + s2), g]] } }; }).filter(Boolean);
+        const over = b => Math.max(0, -b[0]) + Math.max(0, 38 - b[1]) + Math.max(0, b[0] + cw - sz.x) + Math.max(0, b[1] + ch - sz.y);   // 吏??諛뽰쑝濡??섍컙 ?뺣룄(px)
+        const onDot = b => op && op.x > b[0] - 8 && op.x < b[0] + cw + 8 && op.y > b[1] - 8 && op.y < b[1] + ch + 8;
+        const inter = (a, b) => Math.max(0, Math.min(a[0] + cw, b[0] + cw) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[1] + ch, b[1] + ch) - Math.max(a[1], b[1]));
+        // 카드 2~3장의 모든 방향 조합(최대 512가지) 중 겹침·지도 밖·검은 점 가림이 가장 적은 조합을 골라요
+        let best = null, bestCost = Infinity;
+        const walk = (i, chosen, cost) => {
+          if (cost >= bestCost) return;
+          if (i === items2.length) { best = chosen.slice(); bestCost = cost; return; }
+          dirs.forEach((d, di) => {
+            const b = items2[i].opts[d];
+            let c = cost + di * 3 + over(b) * 25 + (onDot(b) ? 1e6 : 0);
+            chosen.forEach((q, j) => { c += inter(b, items2[j].opts[q]) * 1; });
+            chosen.push(d); walk(i + 1, chosen, c); chosen.pop();
+          });
+        };
+        walk(0, [], 0);
+        // 카드와 내 위치 점이 모두 지도 안에 들어오도록 한꺼번에 밀어 줘요 (카드가 가장자리에서 잘리지 않게)
+        if (best && best.length) {
+          const bs = best.map((d, i) => items2[i].opts[d]);
+          let x0 = Math.min(...bs.map(b => b[0])), x1 = Math.max(...bs.map(b => b[0] + cw)), y0 = Math.min(...bs.map(b => b[1])), y1 = Math.max(...bs.map(b => b[1] + ch));
+          if (op) { x0 = Math.min(x0, op.x - 12); x1 = Math.max(x1, op.x + 12); y0 = Math.min(y0, op.y - 12); y1 = Math.max(y1, op.y + 12); }
+          let dx = 0, dy = 0;
+          if (x1 - x0 <= sz.x - 8) { if (x0 < 4) dx = 4 - x0; else if (x1 > sz.x - 4) dx = sz.x - 4 - x1; }
+          if (y1 - y0 <= sz.y - 42) { if (y0 < 40) dy = 40 - y0; else if (y1 > sz.y - 4) dy = sz.y - 4 - y1; }
+          if (fix && (dx || dy)) map.panBy([-dx, -dy], { animate: false });   // 지도가 움직이는 중엔 끝난 뒤(moveend)에만
+        }
+        (best || []).forEach((d, i) => {
+          const it = items2[i], b = it.opts[d];
+          if (it.tip._pick !== d) { it.tip._pick = d; it.tip.options.direction = b[2]; it.tip.options.offset = L.point(b[3]); it.pin.mk.closeTooltip(); it.pin.mk.openTooltip(); const t2 = it.pin.mk.getTooltip(); if (t2) t2._pick = d; const te = t2 && t2.getElement(); if (te) te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(it.id); }); }
         });
       };
-        if (pts.length) { map.once('moveend', layout); map.fitBounds(L.latLngBounds([...pts.map(s => [s.lat, s.lng]), ...(o && this.nearActive() ? [[o.lat, o.lng]] : [])]), { paddingTopLeft: [cw / 2, up], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: !!animate, duration: 0.7 }); layout(); }
+        if (pts.length) { map.once('moveend', layout); map.fitBounds(L.latLngBounds([...pts.map(s => [s.lat, s.lng]), ...(o && this.nearActive() ? [[o.lat, o.lng]] : [])]), { paddingTopLeft: [cw / 2, up + 34], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: !!animate, duration: 0.7 }); layout(); }
       };
       const restored = !!(this._mapSaved && this._mapSaved.key === key), top = rank.slice(0, N);
       if (restored) { const keep = map.getCenter(), z = map.getZoom(); setFeat(top, false); map.setView(keep, z, { animate: false }); } else setFeat(top, false);
