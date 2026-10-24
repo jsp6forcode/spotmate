@@ -55,11 +55,11 @@ tailwind.config = {
   .wiz-deco { position: absolute; opacity: .6; pointer-events: none; user-select: none; }
   .hero h1 { text-shadow: 0 2px 16px rgba(0,0,0,.45); }
   .hero p, .hero span { text-shadow: 0 1px 8px rgba(0,0,0,.5); }
-  .spot-pin { width: 30px; height: 30px; border-radius: 9999px; border: 3px solid #fff; color: #fff; font: 800 12px/24px system-ui, sans-serif; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.4); }
-  .spot-pin.origin { width: 18px; height: 18px; background: #111827; }
+  .spot-pin { width: 22px; height: 22px; border-radius: 9999px; border: 0; color: #fff; font: 800 10px/22px system-ui, sans-serif; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,.35); }
+  .spot-pin.origin { width: 14px; height: 14px; background: #111827; box-shadow: 0 0 0 2px rgba(255,255,255,.9); }
   /* 행사(보라 테두리)·파머스 마켓(초록 테두리) 핀: 흰 바탕에 이모지 */
-  .spot-pin.ev { background: #fff; border-color: #a21caf; font: 16px/24px system-ui, sans-serif; }
-  .spot-pin.ev.mk { border-color: #059669; }
+  .spot-pin.ev { background: #fdf4ff; font: 13px/22px system-ui, sans-serif; }
+  .spot-pin.ev.mk { background: #ecfdf5; }
   .leaflet-tooltip.card-tip.tap { pointer-events: auto; cursor: pointer; }
   .leaflet-tooltip.card-tip.feat { width: 112px; pointer-events: auto; cursor: pointer; }
   @media (min-width: 640px) { .leaflet-tooltip.card-tip.feat { width: 150px; } }
@@ -72,7 +72,7 @@ tailwind.config = {
   .leaflet-tooltip.card-tip::before { display: none; }
   /* 오른쪽 목록에 마우스를 올리면 그 장소 핀을 크게 + 보라 테두리 */
   .spot-pin { transition: transform .12s, box-shadow .12s; }
-  .spot-pin.hl { transform: scale(1.45); border-color: #0d9488; box-shadow: 0 0 0 4px rgba(13,148,136,.35), 0 2px 8px rgba(0,0,0,.5); }
+  .spot-pin.hl { transform: scale(1.5); box-shadow: 0 0 0 3px rgba(13,148,136,.45), 0 2px 8px rgba(0,0,0,.5); }
   /* isolation: 지도 레이어(z-index 400~1000)가 지도 상자 안에서만 쌓이게. 안 그러면 장소 창이 지도 뒤로 가려져요 */
   .leaflet-container { font-family: inherit; isolation: isolate; z-index: 0; }
   /* 다크 모드: OSM 지도는 밝은 그림뿐이라 타일만 어둡게 (핀·글자는 그대로) */
@@ -89,6 +89,6 @@ tailwind.config = {
 <section id="seo-static" class="max-w-6xl mx-auto px-4 md:px-6 pb-8 text-sm text-slate-600 dark:text-slate-300"><!--seo-start--><details><summary class="cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400">About SPEEDERS Richmond</summary><div class="mt-3"><nav class="mb-2"><a class="underline text-teal-700 dark:text-teal-300" href="/">Tiny Trips</a> › <a class="underline text-teal-700 dark:text-teal-300" href="/guides/">Guides</a></nav><h1 class="font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100">SPEEDERS Richmond</h1><p class="text-xs mb-1">Richmond &#183; $$ &#183; 1 hr &#183; Indoor</p><p class="mb-2">SPEEDERS Richmond is a games in Richmond with a typical cost of $$, and families usually spend about 1 hr here.</p><p class="mb-2">Go-kart track.</p><p class="mb-2">It is indoors, so it works in rain, heat or cold. It suits school-age kids (5–12).</p><p class="mb-2">Hours: Su 10:00-22:00; Mo-Th 11:00-22:00; Fr-Sa 11:00-00:00.</p><div class="mt-4"><strong>Nearby with kids</strong><ul class="list-disc pl-5 mt-1"><li><a class="underline text-teal-700 dark:text-teal-300" href="/spots/ikearichmond/">IKEA Richmond</a> (shopping)</li><li><a class="underline text-teal-700 dark:text-teal-300" href="/spots/fundays365/">365Fundays family fun centre</a> (indoor play)</li><li><a class="underline text-teal-700 dark:text-teal-300" href="/spots/cambiecommunitycentre/">Cambie Community Centre</a> (rec centre)</li><li><a class="underline text-teal-700 dark:text-teal-300" href="/spots/mcneelypark/">McNeely Park</a> (park)</li></ul></div><div class="mt-4"><strong>Guides with this spot</strong><ul class="list-disc pl-5 mt-1"><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/games-and-activities-metro-vancouver/">Games and activities in Metro Vancouver</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/indoor-places-to-take-kids-metro-vancouver/">Indoor places to take kids in Metro Vancouver</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/indoor-places-to-take-kids-richmond/">Indoor places to take kids in Richmond</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/places-to-take-kids-richmond/">Places to take kids in Richmond</a></li></ul></div><p class="mt-4 text-xs">Details change, so check the official site before you go.</p></div></details><!--seo-end--></section>
 <button id="to-top" type="button" aria-label="Back to top" class="fixed z-40 right-4 bottom-4 sm:right-6 sm:bottom-6 w-12 h-12 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-2xl font-bold shadow-lg ring-1 ring-black/10 flex items-center justify-center" style="display:none"><span aria-hidden="true">↑</span></button>
 
-<script>window.SPOT_ID="speedersrichmond"</script><script src="/app.js?v=6b9b6a06"></script>
+<script>window.SPOT_ID="speedersrichmond"</script><script src="/app.js?v=c94dfe41"></script>
 </body>
 </html>

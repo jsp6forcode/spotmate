@@ -2676,7 +2676,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const z = m => typeof m === 'number' ? 1000 - m : 0;
     this._pins = {};
     items.forEach(s => {
-      const icon = L.divIcon({ className: '', html: `<div class="spot-pin" style="background:${s.color};font-size:15px">${esc(String(s.mark))}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] });
+      const icon = L.divIcon({ className: '', html: `<div class="spot-pin" style="background:${s.color};font-size:12px">${esc(String(s.mark))}</div>`, iconSize: [22, 22], iconAnchor: [11, 11] });
       // 마우스: 올리면 작은 카드, 누르면 모달. 터치 화면: 핀을 누르면 작은 카드, 그 카드를 누르면 모달 (호버가 없어서)
       const coarse = matchMedia('(pointer: coarse)').matches, sp = byId(s.id);
       const mk = L.marker([s.lat, s.lng], { icon, keyboard: true, zIndexOffset: z(s.mark), alt: s.name }).addTo(map).on('click', () => {
@@ -2693,7 +2693,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     });
     // 행사·마켓 핀: 누르면 다음 날짜·시간과 장소/공식 정보 링크
     (this._map.events || []).forEach((ev, ei) => {
-      const icon = L.divIcon({ className: '', html: `<div class="spot-pin ev${ev.market ? ' mk' : ''}">${esc(ev.icon)}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] });
+      const icon = L.divIcon({ className: '', html: `<div class="spot-pin ev${ev.market ? ' mk' : ''}">${esc(ev.icon)}</div>`, iconSize: [22, 22], iconAnchor: [11, 11] });
       const html = `<div style="min-width:180px"><p style="font-weight:700;margin:0">${esc(ev.name)}${ev.forParents ? ' <span style="font-size:11px;font-weight:700;background:#fef3c7;color:#78350f;padding:1px 6px;border-radius:4px;white-space:nowrap">For parents 😉</span>' : ''}</p><p style="margin:4px 0">${esc(ev.when)}</p>
         <p style="margin:0">${ev.spotId ? `<button data-act="open" data-val="${esc(ev.spotId)}" style="font-weight:600;margin-right:10px">Place details</button>` : ''}${/^https:\/\//.test(ev.source) ? `<a href="${esc(ev.source)}" target="_blank" rel="noopener" >Official info ↗</a>` : ''}</p></div>`;
       const emk = L.marker([ev.lat, ev.lng], { icon, title: ev.name, keyboard: true, zIndexOffset: 2000 }).addTo(map).bindPopup(html);
@@ -2704,7 +2704,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (o) {
       const r = this.state.radius;
       if (this.nearActive() && r !== 'any') L.circle([o.lat, o.lng], { radius: r * 1000, color: '#0d9488', weight: 2, dashArray: '6 4', fillOpacity: 0.08 }).addTo(map);
-      L.marker([o.lat, o.lng], { icon: L.divIcon({ className: '', html: '<div class="spot-pin origin"></div>', iconSize: [18, 18], iconAnchor: [9, 9] }), title: this.state.nearKey === 'here' ? 'You' : o.label, interactive: false }).addTo(map);
+      L.marker([o.lat, o.lng], { icon: L.divIcon({ className: '', html: '<div class="spot-pin origin"></div>', iconSize: [14, 14], iconAnchor: [7, 7] }), title: this.state.nearKey === 'here' ? 'You' : o.label, interactive: false }).addTo(map);
     }
     // 보던 위치 이어가기: 같은 목록이면 저장한 위치로, 아니면 추천 장소에 맞춰 확대(전체 목록은 메트로 밴쿠버 범위)
     const key = (picks ? 'p:' : 'a:') + (this.state.q || '') + ':' + items.length + ':' + (items[0] ? items[0].id : '') + ':' + this.state.nearKey + ':' + this.state.radius;
@@ -2720,7 +2720,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       pts.forEach(s => {
         const pin = this._pins[s.id], sp = byId(s.id); if (!pin || !sp) return;
         pin.mk.unbindTooltip();
-        pin.mk.bindTooltip(() => this.featCard(sp), { className: 'card-tip feat', permanent: true, interactive: true, direction: 'top', offset: [0, -16], opacity: 1 });
+        pin.mk.bindTooltip(() => this.featCard(sp), { className: 'card-tip feat', permanent: true, interactive: true, direction: 'top', offset: [0, -12], opacity: 1 });
         pin.mk.on('tooltipopen', e => { const te = e.tooltip.getElement(); if (te && !te._wired) { te._wired = true; te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(s.id); }); } });
         pin.mk.openTooltip(); pin.mk.setZIndexOffset(500);
       });
