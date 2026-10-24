@@ -813,6 +813,8 @@ class App {
       q: '', kw: [], unused: [], free: false, qBusy: false, aiSay: '',
       radius: guideCityKey() ? 5 : RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
+      // 가이드 링크로 들어오면 지도에 행사·마켓 핀은 기본으로 꺼요 (Events/Markets 칩으로 켤 수 있어요)
+      ...(window.GUIDE && window.GUIDE.ids ? { mapEvents: false, mapMarkets: false } : {}),
       // "Good any day" 목록에서 보여줄 개수 (Show more로 12개씩 늘어나요)
       restShown: REST_STEP,
       plan: [], copyMsg: '', copyText: '',
