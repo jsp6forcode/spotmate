@@ -61,6 +61,11 @@ tailwind.config = {
   .spot-pin.ev { background: #fff; border-color: #a21caf; font: 16px/24px system-ui, sans-serif; }
   .spot-pin.ev.mk { border-color: #059669; }
   .leaflet-tooltip.card-tip.tap { pointer-events: auto; cursor: pointer; }
+  .leaflet-tooltip.card-tip.feat { width: 112px; pointer-events: auto; cursor: pointer; }
+  @media (min-width: 640px) { .leaflet-tooltip.card-tip.feat { width: 150px; } }
+  .leaflet-tooltip.card-tip.feat > div { transition: transform .15s; transform-origin: 50% 100%; }
+  .leaflet-tooltip.card-tip.feat:hover { z-index: 1000; }
+  .leaflet-tooltip.card-tip.feat:hover > div { transform: scale(1.35); box-shadow: 0 8px 24px rgba(0,0,0,.45); }
   .leaflet-container .leaflet-control-attribution { font-size: 9px; line-height: 1.2; padding: 0 4px; opacity: .55; background: rgba(255,255,255,.35); }
   /* 지도 핀에 마우스를 올리면 뜨는 장소 카드 */
   .leaflet-tooltip.card-tip { padding: 0; border: 0; background: transparent; box-shadow: none; white-space: normal; width: 220px; border-radius: 12px; pointer-events: none; }
@@ -84,6 +89,6 @@ tailwind.config = {
 <section id="seo-static" class="max-w-6xl mx-auto px-4 md:px-6 pb-8 text-sm text-slate-600 dark:text-slate-300"><!--seo-start--><details><summary class="cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400">About Granville Island</summary><div class="mt-3"><nav class="mb-2"><a class="underline text-teal-700 dark:text-teal-300" href="/">Tiny Trips</a> › <a class="underline text-teal-700 dark:text-teal-300" href="/guides/">Guides</a></nav><h1 class="font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100">Granville Island</h1><p class="text-xs mb-1">False Creek &#183; Free &#183; 2–3 hrs &#183; Both</p><p class="mb-2">Granville Island is a spot in False Creek, Vancouver that is free to visit, and families usually spend about 2–3 hrs here.</p><p class="mb-2">Island home to the Public Market and artisan studios.</p><p class="mb-2">It is mostly outdoors but still workable in light rain.</p><p class="mb-2">Hours: open 24 hours.</p><p class="mb-2">Parent tip: Take the Aquabus or False Creek Ferries and skip the parking hunt</p><div class="mt-4"><strong>Nearby with kids</strong><ul class="list-disc pl-5 mt-1"><li><a class="underline text-teal-700 dark:text-teal-300" href="/spots/adventurezone/">The Adventure Zone</a> (indoor play)</li><li><a class="underline text-teal-700 dark:text-teal-300" href="/spots/kidsmarket/">Kids Market</a> (shopping)</li><li><a class="underline text-teal-700 dark:text-teal-300" href="/spots/giwaterpark/">Granville Island Water Park</a> (spray park)</li><li><a class="underline text-teal-700 dark:text-teal-300" href="/spots/falsecreekcommunitycentr/">False Creek Community Centre</a> (rec centre)</li></ul></div><div class="mt-4"><strong>Guides with this spot</strong><ul class="list-disc pl-5 mt-1"><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/places-to-take-kids-vancouver/">Places to take kids in Vancouver</a></li></ul></div><p class="mt-4 text-xs">Details change, so check the official site before you go.</p></div></details><!--seo-end--></section>
 <button id="to-top" type="button" aria-label="Back to top" class="fixed z-40 right-4 bottom-4 sm:right-6 sm:bottom-6 w-12 h-12 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-2xl font-bold shadow-lg ring-1 ring-black/10 flex items-center justify-center" style="display:none"><span aria-hidden="true">↑</span></button>
 
-<script>window.SPOT_ID="granville"</script><script src="/app.js?v=c1c4e827"></script>
+<script>window.SPOT_ID="granville"</script><script src="/app.js?v=68a526ff"></script>
 </body>
 </html>
