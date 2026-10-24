@@ -2568,13 +2568,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 행사·파머스 마켓은 위쪽 Events / Markets 탭으로 옮겼어요 (2026-10-01)
     const events = '';
     // 나머지(언제 가도 같은 곳)는 12개씩 "Show more"
-    const more = rest => {
-      const shown = rest.slice(0, this.state.restShown);
-      return `${grid(shown)}${rest.length > shown.length ? `
-      <div class="mt-6 text-center">
-        <button data-act="more" class="min-h-[44px] px-5 py-2.5 rounded-xl font-semibold   text-slate-700   dark:text-slate-200">Show more <span class="font-normal text-slate-500 dark:text-slate-400">(${rest.length - shown.length} left)</span></button>
-      </div>` : ''}`;
-    };
+    const more = rest => grid(rest);   // "Show more" 없이 전부 보여줘요
     // 키워드 검색: 관련도 순 결과 하나로 (지금 가 볼 이유 순위는 카드 배지·이유 박스에 그대로 남아요)
     if (this.state.q && this.state.kw.length) return heading('list-top', `Results for “${esc(this.state.q)}”`, `${plural(items.length, 'place')}, best match first.`) + more(items);
     if (this.state.sort !== 'fresh') return heading('list-top', 'Closest first', plural(items.length, 'spot')) + more(items) + events;
@@ -2667,11 +2661,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </button><button data-act="shareev" data-val="${esc(ev.id)}" aria-label="Share ${esc(ev.name)}" class="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">${this.state.shareMsg && this.state.shareMsg.id === ev.id ? esc(this.state.shareMsg.text) : 'Share'}</button></div>`).join('')}<p class="px-1 pt-1 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Places</p>` : ''}
       </div>
       ${items.length ? (() => {
-        const shown = items.slice(0, this.state.restShown);
-        return `<div class="grid grid-cols-2 gap-2.5 sm:gap-5 md:grid-cols-3">${shown.map(s => this.card(s)).join('')}</div>${items.length > shown.length ? `
-        <div class="text-center">
-          <button data-act="more" class="min-h-[44px] px-5 py-2.5 rounded-xl font-semibold   text-slate-700   dark:text-slate-200">Show more <span class="font-normal text-slate-500 dark:text-slate-400">(${items.length - shown.length} left)</span></button>
-        </div>` : ''}`;
+        // "Show more" 없이 전부 보여줘요 (스크롤이 끊기지 않게)
+        return `<div class="grid grid-cols-2 gap-2.5 sm:gap-5 md:grid-cols-3">${items.map(s => this.card(s)).join('')}</div>`;
       })() : evCat ? '' : '<p class="text-sm text-slate-500">No spots match these filters.</p>'}
     </div>`;
   }
@@ -2754,22 +2745,44 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     else map.fitBounds(METRO_BOUNDS, { animate: false });
     // 아래 목록에서 지금 보이는 맨 앞 3장 = 지도에 펼친 카드 3장이에요. 스크롤하면 새로 나온 3곳으로 바뀌고 지도가 부드럽게 따라가요. 보던 위치를 이어갈 땐 처음 한 번은 지도를 움직이지 않아요
     {
-      const small = el.clientWidth < 640, cw = (small ? 112 : 150) + 6, ch = small ? 84 : 108, up = ch + 14, coarse = matchMedia('(pointer: coarse)').matches, N = (coarse || innerWidth < 768 || el.clientWidth < 640) ? 2 : 3;   // 폰은 2장만
+      const small = el.clientWidth < 640, cw = (small ? 112 : 150) + 6, ch = small ? 84 : 108, up = ch + 32, coarse = matchMedia('(pointer: coarse)').matches, N = (coarse || innerWidth < 768 || el.clientWidth < 640) ? 2 : 3;   // 폰은 2장만
       const byIt = {}; items.forEach(s => { byIt[s.id] = s; });
       let cur = [];
+      // 카드와 지도 위치를 선으로 이어요: 핀 위치에서 카드의 가장 가까운 모서리까지 (흰 테두리 + 청록 선). 카드가 펼쳐진 장소의 핀 심볼은 숨기고 선 끝의 점이 정확한 위치를 알려요
+      const svgNS = 'http://www.w3.org/2000/svg', svg = document.createElementNS(svgNS, 'svg');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:595;overflow:visible';
+      el.appendChild(svg);
+      let lineRaf = 0;
+      const ringPin = (pin, on) => { const e = pin.mk.getElement(), d = e && e.querySelector('.spot-pin'); if (d) d.classList.toggle('feat-pin', on); };
+      const drawLines = () => {
+        lineRaf = 0;
+        const mr = el.getBoundingClientRect(); let h = '';
+        cur.forEach(id => {
+          const pin = this._pins[id], tip = pin && pin.mk.getTooltip(), te = tip && tip.getElement(), card = te && te.firstElementChild; if (!card) return;
+          const r = card.getBoundingClientRect(); if (!r.width) return;
+          const p = map.latLngToContainerPoint(pin.mk.getLatLng());
+          const qx = Math.min(Math.max(p.x, r.left - mr.left), r.right - mr.left), qy = Math.min(Math.max(p.y, r.top - mr.top), r.bottom - mr.top);
+          if (Math.hypot(qx - p.x, qy - p.y) < 4) return;
+          h += `<line x1="${p.x}" y1="${p.y}" x2="${qx}" y2="${qy}" stroke="#111827" stroke-width="1.5" stroke-linecap="round"/><circle cx="${qx}" cy="${qy}" r="2" fill="#111827"/><circle cx="${p.x}" cy="${p.y}" r="3" fill="#111827"/>`;
+        });
+        svg.innerHTML = h;
+      };
+      const queueLines = () => { if (!lineRaf) lineRaf = requestAnimationFrame(drawLines); };
+      map.on('move zoom viewreset', queueLines);
       const setFeat = (ids, animate) => {
         if (ids.join() === cur.join()) return;
         cur.forEach(id => {
           const pin = this._pins[id], sp = byId(id); if (!pin) return;
-          pin.mk.unbindTooltip(); pin.mk.setZIndexOffset(pin.base);
+          pin.mk.unbindTooltip(); pin.mk.setZIndexOffset(pin.base); ringPin(pin, false);
           if (sp && !coarse) pin.mk.bindTooltip(() => this.miniCard(sp), { className: 'card-tip', direction: 'auto', offset: [0, 0], opacity: 1, sticky: false });
         });
         cur = ids;
         ids.forEach(id => {
           const pin = this._pins[id], sp = byId(id); if (!pin || !sp) return;
           pin.mk.unbindTooltip();
-          pin.mk.bindTooltip(() => this.featCard(sp), { className: 'card-tip feat', permanent: true, interactive: true, direction: 'top', offset: [0, -12], opacity: 1 });
-          pin.mk.openTooltip(); pin.mk.setZIndexOffset(500);
+          pin.mk.bindTooltip(() => this.featCard(sp), { className: 'card-tip feat', permanent: true, interactive: true, direction: 'top', offset: [0, -28], opacity: 1 });
+          pin.mk.openTooltip(); pin.mk.setZIndexOffset(500); ringPin(pin, true);
           const te = pin.mk.getTooltip() && pin.mk.getTooltip().getElement();
           if (te) te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(id); });
         });
@@ -2777,7 +2790,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       // 펼친 카드끼리 안 겹치게: 핀 위·오른쪽·왼쪽·아래 중 이미 놓은 카드와 안 겹치고 지도 안에 들어오는 첫 방향으로 놓아요
       const layout = fix => {
         const sz = map.getSize(), op = o && this.nearActive() ? map.latLngToContainerPoint([o.lat, o.lng]) : null;   // 내 위치(검은 점)는 카드가 가리지 않게
-        const g = 12, hw = cw / 2, hh = ch / 2, s2 = 2, dirs = ['top', 'tr', 'tl', 'right', 'left', 'bottom', 'br', 'bl'];
+        const g = 28, hw = cw / 2, hh = ch / 2, s2 = 2, dirs = ['top', 'tr', 'tl', 'right', 'left', 'bottom', 'br', 'bl'];
         const items2 = cur.map(id => { const pin = this._pins[id], tip = pin && pin.mk.getTooltip(); if (!pin || !tip) return null; const p = map.latLngToContainerPoint(pin.mk.getLatLng());
           // 후보 위치 8곳: [카드 왼쪽 x, 위쪽 y, 방향, 오프셋]. 위·오른쪽·왼쪽·아래가 안 되면 대각선(위/아래 + 좌/우로 비껴서)도 써요
           return { id, pin, tip, opts: { top: [p.x - hw, p.y - g - ch, 'top', [0, -g]], tr: [p.x + s2, p.y - g - ch, 'top', [hw + s2, -g]], tl: [p.x - cw - s2, p.y - g - ch, 'top', [-(hw + s2), -g]], right: [p.x + g, p.y - hh, 'right', [g, 0]], left: [p.x - g - cw, p.y - hh, 'left', [-g, 0]], bottom: [p.x - hw, p.y + g, 'bottom', [0, g]], br: [p.x + s2, p.y + g, 'bottom', [hw + s2, g]], bl: [p.x - cw - s2, p.y + g, 'bottom', [-(hw + s2), g]] } }; }).filter(Boolean);
@@ -2811,6 +2824,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           const it = items2[i], b = it.opts[d];
           if (it.tip._pick !== d) { it.tip._pick = d; it.tip.options.direction = b[2]; it.tip.options.offset = L.point(b[3]); it.pin.mk.closeTooltip(); it.pin.mk.openTooltip(); const t2 = it.pin.mk.getTooltip(); if (t2) t2._pick = d; const te = t2 && t2.getElement(); if (te) te.addEventListener('click', ev => { ev.stopPropagation(); this.opener = null; this.openModal(it.id); }); }
         });
+        queueLines();
       };
         if (pts.length) { map.once('moveend', layout); map.fitBounds(L.latLngBounds([...pts.map(s => [s.lat, s.lng]), ...(o && this.nearActive() ? [[o.lat, o.lng]] : [])]), { paddingTopLeft: [cw / 2, up + 34], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: !!animate, duration: 0.5, easeLinearity: 0.35 }); layout(); }
       };
@@ -2827,7 +2841,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         const bottom = bar.getBoundingClientRect().bottom;
         const ids = [...document.querySelectorAll('article[data-act="open"]')].filter(c => c.getBoundingClientRect().bottom > bottom + 60).map(c => c.dataset.val).filter(id => byIt[id] && byIt[id].lat != null).slice(0, N);
         // 스냅을 아주 조금 더 강하게: 멈춘 자리가 카드 줄 정렬 위치(지도 밑 8px)에서 110px 안이면 부드럽게 끌어 붙여요 (손가락이 닿아 있는 동안은 안 해요)
-        if (!this._touching && bar.getBoundingClientRect().top <= 1) {
+        if (!this._touching && !matchMedia("(pointer: coarse)").matches && bar.getBoundingClientRect().top <= 1) {
           const gaps = [...document.querySelectorAll('article[data-act="open"]')].map(c => c.getBoundingClientRect().top - (bottom + 8));
           // dir: 1 = 아래로, -1 = 위로 스크롤하는 중. 가던 방향으로만 끌어요 (거꾸로 끌어당기면 답답해요)
           const ahead = gaps.filter(g => dir > 0 ? g > 2 && g < 110 : g < -2 && g > -110).sort((a, b) => Math.abs(a) - Math.abs(b))[0];

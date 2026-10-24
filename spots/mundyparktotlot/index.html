@@ -68,6 +68,12 @@ tailwind.config = {
   .leaflet-tooltip.card-tip.feat > div { animation: featIn .35s ease-out; }
   /* 지도 화면: 브라우저 스냅은 끄고(위로 올릴 때 거꾸로 끌어당겨 답답했어요), 스크롤이 멈추면 가던 방향의 카드 줄만 지도 밑에 부드럽게 맞춰요 (app.js) */
   html.snap-list { scroll-behavior: smooth; }
+  /* 터치 기기(폰·태블릿)는 브라우저 스냅이 자연스러워요: 카드 줄이 지도 바로 밑에 가까이 오면 붙어요 */
+  @media (pointer: coarse) {
+    html.snap-list { scroll-snap-type: y proximity; }
+    html.snap-list article[data-act="open"] { scroll-snap-align: start; scroll-margin-top: var(--mapbar-h, 0px); }
+  }
+  .spot-pin.feat-pin { visibility: hidden; }   /* 카드가 펼쳐진 장소는 핀 심볼을 숨기고, 카드에서 이어진 선 끝의 점이 정확한 위치를 알려요 */
   .leaflet-tooltip.card-tip.feat:hover { z-index: 1000; }
   .leaflet-tooltip.card-tip.feat:hover > div { transform: scale(1.35); box-shadow: 0 8px 24px rgba(0,0,0,.45); }
   .leaflet-container .leaflet-control-attribution { font-size: 9px; line-height: 1.2; padding: 0 4px; opacity: .55; background: rgba(255,255,255,.35); }
@@ -93,6 +99,6 @@ tailwind.config = {
 <section id="seo-static" class="max-w-6xl mx-auto px-4 md:px-6 pb-8 text-sm text-slate-600 dark:text-slate-300"><!--seo-start--><details><summary class="cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400">About Mundy Park Tot Lot</summary><div class="mt-3"><nav class="mb-2"><a class="underline text-teal-700 dark:text-teal-300" href="/">Tiny Trips</a> › <a class="underline text-teal-700 dark:text-teal-300" href="/guides/">Guides</a></nav><h1 class="font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100">Mundy Park Tot Lot</h1><p class="text-xs mb-1">Coquitlam &#183; Free &#183; 1 hr &#183; Outdoor</p><p class="mb-2">Mundy Park Tot Lot is a playground in Coquitlam that is free to visit, and families usually spend about 1 hr here.</p><p class="mb-2">Playground with picnic tables and washrooms.</p><p class="mb-2">It is outdoors, so it is best on a dry day; bring layers. It suits babies and toddlers (0–3), preschoolers (3–5) and school-age kids (5–12).</p><p class="mb-2">Hours: open from sunrise to sunset.</p><div class="mt-4"><strong>Nearby with kids</strong><ul class="list-disc pl-5 mt-1"><li><a class="underline text-teal-700 dark:text-teal-300" href="/spots/poiriersportleisurecompl/">Poirier Sport &amp; Leisure Complex</a> (rec centre)</li><li><a class="underline text-teal-700 dark:text-teal-300" href="/spots/coquitlampubliclibrarypo/">Coquitlam Public Library, Poirier Branch</a> (library)</li><li><a class="underline text-teal-700 dark:text-teal-300" href="/spots/mundy/">Mundy Park</a> (park)</li><li><a class="underline text-teal-700 dark:text-teal-300" href="/spots/laurentianparkplayground/">Laurentian Park Playground</a> (playground)</li></ul></div><div class="mt-4"><strong>Guides with this spot</strong><ul class="list-disc pl-5 mt-1"><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/places-to-take-kids-coquitlam/">Places to take kids in Coquitlam</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/playgrounds-coquitlam/">Playgrounds in Coquitlam for kids</a></li><li><a class="underline text-teal-700 dark:text-teal-300" href="/guides/playgrounds-metro-vancouver/">Playgrounds in Metro Vancouver for kids</a></li></ul></div><p class="mt-4 text-xs">Details change, so check the official site before you go.</p></div></details><!--seo-end--></section>
 <button id="to-top" type="button" aria-label="Back to top" class="fixed z-40 right-4 bottom-4 sm:right-6 sm:bottom-6 w-12 h-12 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-2xl font-bold shadow-lg ring-1 ring-black/10 flex items-center justify-center" style="display:none"><span aria-hidden="true">↑</span></button>
 
-<script>window.SPOT_ID="mundyparktotlot"</script><script src="/app.js?v=2efe131a"></script>
+<script>window.SPOT_ID="mundyparktotlot"</script><script src="/app.js?v=b6dd1b3a"></script>
 </body>
 </html>
