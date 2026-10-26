@@ -2284,21 +2284,21 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${this.cover(s, 'h-28 sm:h-36')}
         <div class="absolute inset-x-0 top-0 px-2.5 sm:px-5 ${spotTags(s).length || evHere ? "pt-8" : "pt-3.5"} sm:pt-4 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="text-sm sm:text-lg font-bold leading-snug text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
         </div>
-        <div class="absolute inset-x-0 bottom-0 px-2.5 sm:px-5 pb-5 sm:pb-6 pt-8 flex items-end justify-between gap-2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"><p class="min-w-0 text-xs sm:text-sm text-white/90 truncate [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p></div>
+        <div class="absolute inset-x-0 bottom-0 px-2.5 sm:px-5 pb-1.5 sm:pb-2 pt-8 flex items-end justify-between gap-2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"><p class="min-w-0 text-xs sm:text-sm text-white/90 truncate [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p></div>
       </div>
-      <div class="p-2.5 sm:p-5 flex flex-col flex-1">
+      <div class="px-2.5 sm:px-4 pt-0.5 sm:pt-1 pb-2.5 sm:pb-3.5 flex flex-col flex-1">
         ${this.planLater() && HOURS_READY ? (() => {
           // 날짜 계획: 그날(들) 영업시간
           const ph = this.planHours(s);
           if (!ph) return '';   // 규칙 (사용자, 2026-10-14): 영업시간을 모르면 카드에 "Hours unknown"을 보여주지 않아요
-          return `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)}</p>`; })()
+          return `<p class="mt-1 sm:mt-1.5 text-xs sm:text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)}</p>`; })()
         : (() => { const oi = openInfo(s); return oi
-          ? `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>`
+          ? `<p class="mt-1 sm:mt-1.5 text-xs sm:text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>`
           : ''; })()}
         ${(() => {
           // 카드엔 한 줄 요약만: 부모 후기의 첫 문장, 없으면 설명 (후기 전체·팁·입장료·행사 박스는 카드를 열면 나와요)
           const line = (SAYS[s.id] ? String(SAYS[s.id]).split(/(?<=[.!?])\s/)[0] : s.summary) || '';
-          return line ? `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden">${esc(line)}</p>` : '';
+          return line ? `<p class="mt-0.5 sm:mt-1 text-xs sm:text-sm text-slate-700 dark:text-slate-300 [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden">${esc(line)}</p>` : '';
         })()}
         <div class="mt-auto pt-2.5 sm:pt-4 flex gap-2">
         <button data-act="share" data-val="${s.id}" class="w-full min-w-0 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">${this.state.shareMsg && this.state.shareMsg.id === s.id ? esc(this.state.shareMsg.text) : '↗ Share'}</button>
