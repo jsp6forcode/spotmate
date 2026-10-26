@@ -2648,7 +2648,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               ${cats.map(c => btn(c, 'shrink-0 flex items-center gap-1 px-1 py-0.5 rounded-md text-left leading-tight', 'w-4 h-4 text-[9px] leading-4')).join('')}
             </div></div>`;
           })()}
-          <div id="lmap" class="w-full h-[32vh] min-h-[192px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(46vh-2.5rem)] md:min-h-[260px] lg:h-[calc(46vh-2.5rem)] lg:min-h-[280px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
+          <div id="lmap" class="w-full h-[44vh] min-h-[280px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(46vh-2.5rem)] md:min-h-[260px] lg:h-[calc(46vh-2.5rem)] lg:min-h-[280px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
         </div>
       </div>
       <div data-keep-scroll="maplist" class="max-sm:px-1 grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
