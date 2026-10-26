@@ -1911,9 +1911,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   header() {
     const { dark, view, plan, live } = this.state;
     // 지금 밴쿠버 날씨: 넓은 화면은 헤더 오른쪽에 크게, 모바일은 버튼 옆에 작게
-    const wx = live ? `<div class="hidden sm:flex items-center gap-3 mt-3 h-12" title="Current weather in Vancouver (Open-Meteo)">
-              <span class="text-5xl leading-none" aria-hidden="true">${live.icon}</span>
-              <div class="text-right"><p class="text-3xl font-extrabold leading-none">${live.temp}°C</p><p class="mt-1 text-sm text-white/85 capitalize">${esc(live.desc)}</p></div>
+    const wx = live ? `<div class="hidden sm:flex items-center gap-2 mt-1 h-8" title="Current weather in Vancouver (Open-Meteo)">
+              <span class="text-3xl leading-none" aria-hidden="true">${live.icon}</span>
+              <div class="text-right"><p class="text-xl font-extrabold leading-none">${live.temp}°C</p><p class="mt-0.5 text-xs text-white/85 capitalize">${esc(live.desc)}</p></div>
             </div>` : '';
     const wxSmall = live ? `<span class="sm:hidden text-sm font-bold" title="Current weather in Vancouver">${live.icon} ${live.temp}°C</span>` : '';
     // 다크 모드 버튼은 날씨와 헷갈리지 않게 해·달 대신 반쪽 원(명암) 아이콘
@@ -1922,11 +1922,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const tab = (v, label) => `<button data-act="view" data-val="${v}" class="shrink-0 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors ${view === v ? 'bg-white text-indigo-700 shadow' : 'text-white/90 hover:bg-white/15'}">${label}</button>`;
     return `
     <header class="hero relative text-white">
-      <div class="max-w-6xl mx-auto px-4 md:px-6 pt-3 pb-3 md:pt-9 md:pb-7">
+      <div class="max-w-6xl mx-auto px-4 md:px-6 pt-3 pb-3 md:pt-4 md:pb-3">
         <div class="flex items-start justify-between gap-4">
           <div>
-            <h1 class="font-brand text-2xl md:text-5xl font-extrabold tracking-tight leading-none">Tiny Trips</h1>
-            <p class="mt-0.5 sm:mt-2 text-white/85 text-xs sm:text-base leading-snug">Big fun for little ones, and the reason to go today</p>
+            <h1 class="font-brand text-2xl md:text-3xl font-extrabold tracking-tight leading-none">Tiny Trips</h1>
+            <p class="mt-0.5 sm:mt-1 text-white/85 text-xs sm:text-sm leading-snug">Big fun for little ones, and the reason to go today</p>
           </div>
           <div class="flex flex-col items-end">
             <div class="flex items-center gap-2">
@@ -1934,10 +1934,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               <span class="hidden sm:inline-block text-sm font-semibold text-white/85">Vancouver</span>
               <button data-act="dark" aria-label="${dark ? 'Switch to light mode' : 'Switch to dark mode'}" title="${dark ? 'Light mode' : 'Dark mode'}" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/15 hover:bg-white/25   flex items-center justify-center">${contrast}</button>
             </div>
-            ${wx || '<div class="hidden sm:block mt-3 h-12" aria-hidden="true"></div>'}
+            ${wx || '<div class="hidden sm:block mt-1 h-8" aria-hidden="true"></div>'}
           </div>
         </div>
-        <nav class="mt-2 sm:mt-4 inline-flex max-w-full overflow-x-auto no-scrollbar gap-0 sm:gap-1 p-1 rounded-full bg-white/10 backdrop-blur">
+        <nav class="mt-2 sm:mt-2 inline-flex max-w-full overflow-x-auto no-scrollbar gap-0 sm:gap-1 p-1 rounded-full bg-white/10 backdrop-blur">
           ${tab('map', 'Explore')}${tab('events', 'Events')}${tab('markets', 'Markets')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}${tab('about', 'About')}
         </nav>
       </div>
@@ -1953,13 +1953,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (lite && !s.q && !s.wiz.done) return '';   // 질문 화면엔 보여줄 게 없어서 빈 줄도 안 그려요
     return `
     <section class="bg-white/80 dark:bg-slate-900/80">
-      <div class="max-w-6xl mx-auto px-4 md:px-6 py-1.5 sm:py-3 space-y-1 sm:space-y-2">
+      <div class="max-w-6xl mx-auto px-4 md:px-6 py-1.5 sm:py-2 space-y-1 sm:space-y-1.5">
         ${lite && !s.q && !s.wiz.done ? '' : `
         <form data-act="search" role="search" class="relative">
           <button type="submit" aria-label="Search" ${s.qBusy ? 'disabled aria-busy="true"' : ''} class="absolute left-0 inset-y-0 w-10 sm:w-12 flex items-center justify-center rounded-lg sm:rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 disabled:opacity-60"><svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
           <input name="q" type="search" value="${esc(this.qDraft ?? s.q)}" autocomplete="off" enterkeyhint="search" aria-label="Search"
             placeholder="${s.qBusy ? 'Thinking…' : `Try “${this.exampleQ()}”`}"
-            class="w-full min-w-0 min-h-[30px] sm:min-h-[44px] pl-8 sm:pl-11 pr-3 sm:pr-4 text-xs sm:text-base rounded-lg sm:rounded-xl bg-slate-100 text-slate-900 placeholder:text-slate-400 dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500">
+            class="w-full min-w-0 min-h-[30px] sm:min-h-[36px] pl-8 sm:pl-10 pr-3 sm:pr-4 text-xs sm:text-sm rounded-lg sm:rounded-xl bg-slate-100 text-slate-900 placeholder:text-slate-400 dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500">
         </form>
         `}
         ${s.q && s.aiSay ? `<p class="text-sm font-semibold text-violet-700 dark:text-violet-300"><span aria-hidden="true">✨</span> ${esc(s.aiSay)}</p>` : ''}
@@ -1987,10 +1987,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           return `
         <div class="flex flex-wrap items-center gap-1.5 sm:gap-x-3 sm:gap-y-2">
           ${s.cat === 'events' || s.view === 'map' ? '' : `
-          <button data-act="filters" aria-expanded="${!!open}" class="sm:hidden order-first shrink-0 min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">${open ? 'Hide filters' : `Filters${more ? ` · ${more}` : ''}`}</button>`}
+          <button data-act="filters" aria-expanded="${!!open}" class="sm:hidden order-first shrink-0 min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">${open ? 'Hide filters' : `Filters${more ? ` · ${more}` : ''}`}</button>`}
           <div class="${s.cat === 'events' ? 'contents' : this._moreCls}">
           ${s.view === 'map' ? '' : `<label class="flex shrink-0 items-center">
-            <select data-act="cat" aria-label="Category" class="min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[11px] sm:text-[13px] font-semibold">
+            <select data-act="cat" aria-label="Category" class="min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[11px] sm:text-[13px] font-semibold">
               <option value="__ph" disabled hidden ${s.cat === 'all' ? 'selected' : ''}>Category</option>${[['all', 'All'], ...catOptions().map(k => [k, k === 'events' ? 'Events' : CAT_GROUPS[k].label])]
                 .map(([k, label]) => `<option value="${k}" ${s.cat === k && k !== 'all' ? 'selected' : ''}>${label}</option>`).join('')}
             </select>
@@ -1998,19 +1998,19 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </div>
           ${s.cat === 'events' ? '' : `
           <label class="flex shrink-0 items-center">
-            <select data-act="when" aria-label="When are you going" class="max-sm:w-[5.5rem] min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg ${s.when ? 'bg-violet-100 text-violet-900 dark:bg-violet-900 dark:text-violet-100' : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100'} text-[11px] sm:text-[13px] font-semibold">
+            <select data-act="when" aria-label="When are you going" class="max-sm:w-[5.5rem] min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg ${s.when ? 'bg-violet-100 text-violet-900 dark:bg-violet-900 dark:text-violet-100' : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100'} text-[11px] sm:text-[13px] font-semibold">
               <option value="__ph" disabled hidden ${!s.when ? 'selected' : ''}>When</option>${['', 'today', 'tomorrow', 'weekend', 'sat', 'sun'].map(w => `<option value="${w}" ${s.when === w && w ? 'selected' : ''}>${esc(w ? whenLabel(w) : 'Any time')}</option>`).join('')}
             </select>
           </label>`}
           ${s.cat === 'events' || !HOURS_READY ? '' : `
-          <button data-act="opennow" aria-pressed="${s.openNow}" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.openNow ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Open now</button>`}
+          <button data-act="opennow" aria-pressed="${s.openNow}" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.openNow ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Open now</button>`}
           ${s.cat === 'events' ? '' : `
-          <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Indoor</button>
-          ${KIDS_ONLY ? '' : `<button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.kidsOnly ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Kids</button>`}`}
+          <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Indoor</button>
+          ${KIDS_ONLY ? '' : `<button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.kidsOnly ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Kids</button>`}`}
           ${s.cat === 'events' || s.view === 'map' ? '' : `
           <div class="${this._moreCls}">
           <label class="sm:ml-auto flex shrink-0 items-center">
-            <select data-act="sort" aria-label="Sort" class="min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[11px] sm:text-[13px] font-semibold">
+            <select data-act="sort" aria-label="Sort" class="min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[11px] sm:text-[13px] font-semibold">
               <option value="__ph" disabled hidden ${s.sort === 'fresh' ? 'selected' : ''}>Sort</option><option value="fresh">Worth going now</option>
               <option value="distance" ${s.sort === 'distance' ? 'selected' : ''}>Distance</option>
             </select>
@@ -2035,15 +2035,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const seg = (val, label, on) => `<button data-act="radius" data-val="${val}" aria-pressed="${on}" class="whitespace-nowrap min-h-[28px] sm:min-h-[36px] px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
     return `
         <div class="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1.5 sm:gap-y-2 text-[11px] sm:text-[13px]">
-          <button data-act="geo" ${s.geoBusy ? 'disabled' : ''} class="min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-semibold ${s.nearKey === 'here' && near ? 'bg-violet-200 text-violet-800 dark:bg-violet-500/30 dark:text-violet-200' : 'bg-violet-50 text-violet-700 hover:bg-violet-100 dark:bg-violet-500/15 dark:text-violet-300 dark:hover:bg-violet-500/25'} disabled:opacity-60">${s.geoBusy ? 'Locating...' : s.nearKey === 'here' && near ? 'Near me ✓' : 'Near me'}</button>
-          <label class="flex items-center gap-2 font-semibold text-slate-600 dark:text-slate-300 flex-1 basis-0 min-w-[6.5rem] sm:flex-none sm:basis-auto"><span class="hidden sm:inline">or</span>
-            <select data-act="near" aria-label="Location" class="w-full min-w-0 sm:w-auto min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+          <button data-act="geo" ${s.geoBusy ? 'disabled' : ''} class="min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-semibold ${s.nearKey === 'here' && near ? 'bg-violet-200 text-violet-800 dark:bg-violet-500/30 dark:text-violet-200' : 'bg-violet-50 text-violet-700 hover:bg-violet-100 dark:bg-violet-500/15 dark:text-violet-300 dark:hover:bg-violet-500/25'} disabled:opacity-60">${s.geoBusy ? 'Locating...' : s.nearKey === 'here' && near ? 'Near me ✓' : 'Near me'}</button>
+          <label class="flex items-center gap-2 font-semibold text-slate-600 dark:text-slate-300 flex-1 basis-0 min-w-[6.5rem] sm:flex-none sm:basis-auto">
+            <select data-act="near" aria-label="Location" class="w-full min-w-0 sm:w-auto min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
               <option value="" ${!near ? 'selected' : ''}>Anywhere</option>
               ${s.nearKey === 'here' && near ? '<option value="here" selected>My location</option>' : '<option value="gps">My location</option>'}
               ${Object.entries(ORIGINS).filter(([k, o]) => !o.extra || s.nearKey === k).map(([k, o]) => `<option value="${k}" ${s.nearKey === k ? 'selected' : ''}>Near ${o.label}</option>`).join('')}
             </select>
           </label>
-          ${withIndoor ? `<button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="min-h-[28px] sm:min-h-[34px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-sky-50 text-sky-800 hover:bg-sky-100 dark:bg-sky-500/15 dark:text-sky-300 dark:hover:bg-sky-500/25'}">${s.indoor ? 'Indoor only ✓' : 'Indoor only'}</button>` : ''}
+          ${withIndoor ? `<button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-sky-50 text-sky-800 hover:bg-sky-100 dark:bg-sky-500/15 dark:text-sky-300 dark:hover:bg-sky-500/25'}">${s.indoor ? 'Indoor only ✓' : 'Indoor only'}</button>` : ''}
           ${near ? `
           <div class="inline-flex max-w-full p-0.5 sm:p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Radius">
             ${RADII.map(r => seg(r, radiusLabel(r), s.radius === r)).join('')}
@@ -2056,7 +2056,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const s = this.state, near = this.nearActive();
     if (s.cat === 'events') return esc(`${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks`);
     const what = plural(items.length, [s.kidsOnly && 'kid-friendly', s.indoor && 'indoor', 'spot'].filter(Boolean).join(' ')) + (s.openNow && HOURS_READY ? ' open now' : '');
-    const where = near ? (s.radius === 'any' ? `, distances from ${this.originLabel()}` : ` ${ORIGINS[s.nearKey] && !s.radiusExact && s.view !== 'map' ? 'in or ' : ''}within ${radiusLabel(s.radius)} of ${this.originLabel()}`)
+    const where = near ? (s.radius === 'any' ? ` · any distance` : ` · ${radiusLabel(s.radius)}`)
       : s.sort === 'distance' ? ', distances from Downtown (pick a location to change that)' : '';
     const trends = TRENDS_ON && RISE_META.recentThrough ? `<span class="hidden sm:inline"> · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}${RISE_META.updatedAt ? `, updated ${esc(ago(RISE_META.updatedAt))}` : ''}</span>` : '';
     return esc(what + where) + trends;
@@ -2117,7 +2117,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const body = `<span class="shrink-0 text-[11px] sm:text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>${tags.map(chip).join('')}`;
     if (inner) return body;
     return `
-    <div class="mt-2 sm:mt-4 flex flex-wrap items-center gap-x-1 sm:gap-x-2 gap-y-1 [&>*]:whitespace-nowrap">
+    <div class="mt-1.5 sm:mt-2 flex flex-wrap items-center gap-x-1 sm:gap-x-2 gap-y-1 [&>*]:whitespace-nowrap">
       ${body}
     </div>`;
   }
@@ -2128,10 +2128,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const h = vanWallClock().getHours();
     const late = (s.view === 'list' || s.view === 'map') && s.cat !== 'events' && (h >= 20 || h < 6);
     const season = this.seasonChips(true);
-    if (!late) return season ? `<div class="mt-2 sm:mt-4 flex flex-wrap items-center gap-x-1 sm:gap-x-2 gap-y-1 [&>*]:whitespace-nowrap">${season}</div>` : '';
+    if (!late) return season ? `<div class="mt-1.5 sm:mt-2 flex flex-wrap items-center gap-x-1 sm:gap-x-2 gap-y-1 [&>*]:whitespace-nowrap">${season}</div>` : '';
     const day = h < 6 ? 'today' : 'tomorrow';
     return `
-    <div class="mt-2 sm:mt-4 flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 [&>*]:whitespace-nowrap">
+    <div class="mt-1.5 sm:mt-2 flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 [&>*]:whitespace-nowrap">
       <span class="shrink-0 text-[11px] sm:text-sm text-slate-600 dark:text-slate-300">It's late. <button data-act="whenset" data-val="${day}" class="font-semibold text-violet-700 dark:text-violet-300">See ${day} →</button></span>
       ${season ? `<span aria-hidden="true" class="shrink-0 text-slate-300 dark:text-slate-600">|</span>${season}` : ''}
     </div>`;
@@ -2283,10 +2283,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <div class="relative rounded-t-2xl sm:rounded-t-[20px] overflow-hidden">
         ${this.cover(s, 'h-28 sm:h-36')}
         <div class="absolute inset-x-0 top-0 px-2.5 sm:px-5 ${spotTags(s).length || evHere ? "pt-8" : "pt-3.5"} sm:pt-4 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="text-sm sm:text-lg font-bold leading-snug text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
-        <div class="mt-0.5 flex flex-wrap gap-x-2 sm:gap-x-3 text-xs sm:text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">
-          ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(kidProfile(s).agesText)}</span><span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}
-          ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
-        </div></div>
+        </div>
         <div class="absolute inset-x-0 bottom-0 px-2.5 sm:px-5 pb-5 sm:pb-6 pt-8 flex items-end justify-between gap-2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"><p class="min-w-0 text-xs sm:text-sm text-white/90 truncate [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p></div>
       </div>
       <div class="p-2.5 sm:p-5 flex flex-col flex-1">
@@ -2298,25 +2295,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         : (() => { const oi = openInfo(s); return oi
           ? `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>`
           : ''; })()}
-        <p class="hidden sm:block mt-2 sm:mt-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300 clamp2">${esc(s.summary)}</p>
-        ${why ? `
-        <div class="mt-2 sm:mt-3 rounded-lg bg-amber-50 dark:bg-amber-500/10 -mx-1.5 px-1.5 sm:-mx-3 sm:px-3 py-1 sm:py-2">
-          <p class="text-xs sm:text-sm leading-snug text-slate-800 dark:text-slate-100 clamp2 max-sm:[-webkit-line-clamp:2]">${esc(why.text)}</p>
-          ${evExtra ? `<p class="mt-1 text-xs sm:text-sm leading-snug text-slate-800 dark:text-slate-100 clamp2">${esc(evExtra)}</p>` : ''}
-        </div>` : ''}
         ${(() => {
-          // 이유 박스(Coming up 등)와 별개로, What parents say → Tiny Trips tip 순서, 각각 3줄까지 (사용자 요청, 2026-10-04)
-          const tip = this.tipItems(s, 'card')[0];
-          // 휴대폰에서는 What parents say → Tiny Trips tip → Good to know(입장료) 중 있는 첫 번째 하나만, 3줄까지 (사용자 요청, 2026-10-04)
-          const mobLabel = SAYS[s.id] ? ['What parents say:', SAYS[s.id]] : tip ? ['Tiny Trips tip:', tip] : null;
-          const mob = mobLabel ? `<div class="sm:hidden mt-2 text-xs text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg -mx-1.5 px-1.5 py-1.5"><p class="${LINES3}"><span class="font-semibold">${mobLabel[0]}</span> ${esc(mobLabel[1])}</p></div>` : this.factsLine(s, true);
-          if (!tip && !SAYS[s.id]) return mob;
-          return mob + `<div class="max-sm:hidden mt-2 sm:mt-3 text-xs sm:text-sm text-sky-900 dark:text-sky-200 bg-sky-50 dark:bg-sky-500/10 rounded-lg -mx-1.5 px-1.5 sm:-mx-3 sm:px-3 py-1 sm:py-1.5">${SAYS[s.id] ? `<p class="[display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden"><span class="font-semibold">What parents say:</span> ${esc(SAYS[s.id])}</p>` : ''}${tip ? `<p class="${SAYS[s.id] ? 'mt-1 ' : ''}[display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden" title="Tiny Trips tip, checked on the official site. Open the card for more."><span class="font-semibold">Tiny Trips tip:</span> ${esc(tip)}</p>` : ''}</div>`;
+          // 카드엔 한 줄 요약만: 부모 후기의 첫 문장, 없으면 설명 (후기 전체·팁·입장료·행사 박스는 카드를 열면 나와요)
+          const line = (SAYS[s.id] ? String(SAYS[s.id]).split(/(?<=[.!?])\s/)[0] : s.summary) || '';
+          return line ? `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden">${esc(line)}</p>` : '';
         })()}
-
-        ${TRENDS_ON && s.rise != null && s.rise >= RISING_MIN && !(why && why.icon === RISE_ICON) ? `<p class="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-300" title="Google searches in BC over the last 3 days, compared with the 4 weeks before">${riseText(s.rise, 'searches')}</p>` : ''}
-        ${this.factsLine(s)}
-        ${this.state.reviewsOn && this.reviewStats(s.id) ? (() => { const st = this.reviewStats(s.id); return `<p class="mt-1.5 sm:mt-2 text-xs sm:text-sm"><span class="text-amber-500" aria-hidden="true">★</span> <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'parent review')}</span></p>`; })() : ''}
         <div class="mt-auto pt-2.5 sm:pt-4 flex gap-2">
         <button data-act="share" data-val="${s.id}" class="w-full min-w-0 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">${this.state.shareMsg && this.state.shareMsg.id === s.id ? esc(this.state.shareMsg.text) : '↗ Share'}</button>
           <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="w-full min-w-0 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm ${saved ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'}">${saved ? '♥ Saved' : '♡ Save'}</button>
@@ -2623,7 +2606,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <button data-act="mapall" class="ml-auto text-sm font-semibold  text-slate-600 dark:text-slate-300">Show all places</button>
     </div>` : '';
     return `${picksBar}
-    <div class="mt-3 sm:mt-6 grid grid-cols-1 gap-2 sm:gap-4 max-sm:-mx-4">
+    <div class="mt-2 sm:mt-3 grid grid-cols-1 gap-2 sm:gap-3 max-sm:-mx-4">
       <div class="sticky top-0 z-30 min-w-0 max-sm:rounded-none rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    overflow-hidden">
         ${picks ? `<div class="px-3 sm:px-5 py-1 sm:py-2 flex flex-wrap gap-x-2.5 gap-y-0.5 sm:gap-3 text-[10px] sm:text-[11px] font-semibold   ">
           ${[...new Set(items.map(kindGroup))].map(g => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-5 h-5 rounded-full text-[11px] leading-5 text-center" style="background:${CAT_GROUPS[g].color}">${CAT_GROUPS[g].icon}</span>${CAT_GROUPS[g].label}</span>`).join('')}
