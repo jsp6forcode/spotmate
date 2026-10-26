@@ -2279,7 +2279,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const evExtra = evText && why && why.text !== evText ? evText : '';
     return `
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group relative cursor-pointer flex flex-col rounded-2xl sm:rounded-[20px] bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition">
-      ${spotTags(s).length || evHere ? `<p class="absolute top-1.5 left-1.5 sm:-top-2 sm:-left-2 z-10 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-teal-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''}
+      ${spotTags(s).length || evHere ? `<p class="absolute top-1.5 left-1.5 sm:-top-2 sm:-left-2 z-20 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-teal-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''}
       <div class="relative rounded-t-2xl sm:rounded-t-[20px] overflow-hidden">
         ${this.cover(s, 'h-28 sm:h-36')}
         <div class="absolute inset-x-0 top-0 px-2.5 sm:px-5 ${spotTags(s).length || evHere ? "pt-8" : "pt-3.5"} sm:pt-4 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="text-sm sm:text-lg font-bold leading-snug text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
@@ -2876,6 +2876,18 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       if (this._featScroll) window.removeEventListener('scroll', this._featScroll);
       let timer = null, hold = 0;
       el.addEventListener('pointerdown', () => { hold = Date.now() + 6000; });   // 직접 지도를 만지는 동안엔 따라가지 않아요
+      // 스냅 보정을 부드럽게: 브라우저 기본 smooth 대신 천천히 시작해서 천천히 멈추는(easeInOut) 애니메이션으로 움직여요. 사용자가 휠·터치·키를 쓰면 바로 멈춰요
+      const easeScroll = d => {
+        if (this._easeRaf) cancelAnimationFrame(this._easeRaf);
+        const y0 = scrollY, dur = Math.min(480, Math.max(240, 200 + Math.abs(d) * 2)), t0 = performance.now();
+        const step = now => {
+          const u = Math.min(1, (now - t0) / dur), e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+          window.scrollTo({ top: y0 + d * e, behavior: 'instant' });
+          this._easeRaf = u < 1 ? requestAnimationFrame(step) : 0;
+        };
+        this._easeRaf = requestAnimationFrame(step);
+      };
+      if (!this._easeWired) { this._easeWired = true; ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(t => window.addEventListener(t, () => { if (this._easeRaf) { cancelAnimationFrame(this._easeRaf); this._easeRaf = 0; } }, { passive: true })); }
       const follow = () => {
         if (!el.isConnected) { window.removeEventListener('scroll', this._featScroll); return; }
         if (Date.now() < hold) return;
@@ -2883,11 +2895,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         const bottom = bar.getBoundingClientRect().bottom;
         const ids = [...document.querySelectorAll('article[data-act="open"]')].filter(c => c.getBoundingClientRect().bottom > bottom + 60).map(c => c.dataset.val).filter(id => byIt[id] && byIt[id].lat != null).slice(0, N);
         // 스냅을 아주 조금 더 강하게: 멈춘 자리가 카드 줄 정렬 위치(지도 밑 8px)에서 110px 안이면 부드럽게 끌어 붙여요 (손가락이 닿아 있는 동안은 안 해요)
-        if (!this._touching && bar.getBoundingClientRect().top <= 1) {
+        if (!this._touching && bar.getBoundingClientRect().top <= 1 && !(dir < 0 && matchMedia("(pointer: coarse)").matches)) {   // 폰·태블릿은 위로 올릴 때 스냅하지 않아요
           const gaps = [...document.querySelectorAll('article[data-act="open"]')].map(c => c.getBoundingClientRect().top - (bottom + 8));
-          // dir: 1 = 아래로, -1 = 위로 스크롤하는 중. 가던 방향으로만 끌어요 (거꾸로 끌어당기면 답답해요)
-          const ahead = gaps.filter(g => dir > 0 ? g > 2 && g < 110 : g < -2 && g > -110).sort((a, b) => Math.abs(a) - Math.abs(b))[0];
-          if (ahead != null) window.scrollBy({ top: ahead, behavior: 'smooth' });
+          // dir: 1 = 아래로, -1 = 위로 스크롤하는 중. 가던 방향 150px 안의 줄만 끌어요 (거꾸로 끌어당기면 답답해요)
+          const ahead = gaps.filter(g => dir > 0 ? g > 2 && g < 150 : g < -2 && g > -150).sort((a, b) => Math.abs(a) - Math.abs(b))[0];
+          if (ahead != null) easeScroll(ahead);
         }
         if (ids.length) setFeat(ids, true);
       };
