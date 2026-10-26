@@ -2278,10 +2278,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const evExtra = evText && why && why.text !== evText ? evText : '';
     return `
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group relative cursor-pointer flex flex-col rounded-2xl sm:rounded-[20px] bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition">
-      ${spotTags(s).length || evHere ? `<p class="absolute -top-1.5 -left-1.5 sm:-top-2 sm:-left-2 z-10 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-teal-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''}
+      ${spotTags(s).length || evHere ? `<p class="absolute top-1.5 left-1.5 sm:-top-2 sm:-left-2 z-10 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-teal-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''}
       <div class="relative rounded-t-2xl sm:rounded-t-[20px] overflow-hidden">
         ${this.cover(s, 'h-36 sm:h-60')}
-        <div class="absolute inset-x-0 top-0 px-2.5 sm:px-5 pt-3.5 sm:pt-4 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="text-sm sm:text-lg font-bold leading-snug text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
+        <div class="absolute inset-x-0 top-0 px-2.5 sm:px-5 ${spotTags(s).length || evHere ? "pt-8" : "pt-3.5"} sm:pt-4 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="text-sm sm:text-lg font-bold leading-snug text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
         <div class="mt-0.5 flex flex-wrap gap-x-2 sm:gap-x-3 text-xs sm:text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">
           ${KIDS_ONLY && isKid(s) ? `<span class="max-sm:hidden">${esc(kidProfile(s).agesText)}</span><span class="max-sm:hidden">${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}` : `${s.price ? `<span class="max-sm:hidden">${esc(s.price)}</span>` : ''}<span class="max-sm:hidden">${esc(s.time)}</span><span>${ENV[s.env]}</span>`}
           ${isKid(s) && badge !== 'Kid-friendly' && !this.state.kidsOnly && !KIDS_ONLY ? '<span class="font-semibold text-teal-700 dark:text-teal-300">Kid-friendly</span>' : ''}
@@ -2622,8 +2622,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <button data-act="mapall" class="ml-auto text-sm font-semibold  text-slate-600 dark:text-slate-300">Show all places</button>
     </div>` : '';
     return `${picksBar}
-    <div class="mt-3 sm:mt-6 grid grid-cols-1 gap-2 sm:gap-4">
-      <div class="sticky top-0 z-30 min-w-0 rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    overflow-hidden">
+    <div class="mt-3 sm:mt-6 grid grid-cols-1 gap-2 sm:gap-4 max-sm:-mx-4">
+      <div class="sticky top-0 z-30 min-w-0 max-sm:rounded-none rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    overflow-hidden">
         ${picks ? `<div class="px-3 sm:px-5 py-1 sm:py-2 flex flex-wrap gap-x-2.5 gap-y-0.5 sm:gap-3 text-[10px] sm:text-[11px] font-semibold   ">
           ${[...new Set(items.map(kindGroup))].map(g => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-5 h-5 rounded-full text-[11px] leading-5 text-center" style="background:${CAT_GROUPS[g].color}">${CAT_GROUPS[g].icon}</span>${CAT_GROUPS[g].label}</span>`).join('')}
         </div>` : ''}
@@ -2650,7 +2650,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <div id="lmap" class="w-full h-[32vh] min-h-[192px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(46vh-2.5rem)] md:min-h-[260px] lg:h-[calc(46vh-2.5rem)] lg:min-h-[280px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
         </div>
       </div>
-      <div data-keep-scroll="maplist" class="grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
+      <div data-keep-scroll="maplist" class="max-sm:px-1 grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
         ${evCat && this._map.events.length ? `<p class="px-1 pt-0.5 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Events & markets · next 6 weeks</p>${this._map.events.map((ev, i) => `
           <div class="relative"><button data-act="evfocus" data-val="${i}" data-maphl="ev:${i}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]      flex gap-3">
             <span class="w-7 h-7 shrink-0 rounded-full bg-white text-base flex items-center justify-center border-2 ${ev.market ? 'border-emerald-600' : 'border-fuchsia-700'}" aria-hidden="true">${esc(ev.icon)}</span>
@@ -2662,7 +2662,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       </div>
       ${items.length ? (() => {
         // "Show more" 없이 전부 보여줘요 (스크롤이 끊기지 않게)
-        return `<div class="grid grid-cols-2 gap-2.5 sm:gap-5 md:grid-cols-3">${items.map(s => this.card(s)).join('')}</div>`;
+        return `<div class="grid grid-cols-2 gap-1.5 sm:gap-5 md:grid-cols-3">${items.map(s => this.card(s)).join('')}</div>`;
       })() : evCat ? '' : '<p class="text-sm text-slate-500">No spots match these filters.</p>'}
     </div>`;
   }
@@ -2841,7 +2841,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         const bottom = bar.getBoundingClientRect().bottom;
         const ids = [...document.querySelectorAll('article[data-act="open"]')].filter(c => c.getBoundingClientRect().bottom > bottom + 60).map(c => c.dataset.val).filter(id => byIt[id] && byIt[id].lat != null).slice(0, N);
         // 스냅을 아주 조금 더 강하게: 멈춘 자리가 카드 줄 정렬 위치(지도 밑 8px)에서 110px 안이면 부드럽게 끌어 붙여요 (손가락이 닿아 있는 동안은 안 해요)
-        if (!this._touching && !matchMedia("(pointer: coarse)").matches && bar.getBoundingClientRect().top <= 1) {
+        if (!this._touching && bar.getBoundingClientRect().top <= 1) {
           const gaps = [...document.querySelectorAll('article[data-act="open"]')].map(c => c.getBoundingClientRect().top - (bottom + 8));
           // dir: 1 = 아래로, -1 = 위로 스크롤하는 중. 가던 방향으로만 끌어요 (거꾸로 끌어당기면 답답해요)
           const ahead = gaps.filter(g => dir > 0 ? g > 2 && g < 110 : g < -2 && g > -110).sort((a, b) => Math.abs(a) - Math.abs(b))[0];
