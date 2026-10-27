@@ -2719,10 +2719,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     });
     // 기준 위치(내 위치·지역)와 반경 원
     const o = this.origin();
-    if (o) {
+    // 위치 필터가 꺼져도(Anywhere) 알고 있는 내 위치는 점으로 계속 보여줘요
+    const me = o || (this.state.origin ? { lat: this.state.origin.lat, lng: this.state.origin.lng, label: 'You' } : null);
+    if (me) {
       const r = this.state.radius;
-      if (this.nearActive() && r !== 'any') L.circle([o.lat, o.lng], { radius: r * 1000, color: '#0d9488', weight: 2, dashArray: '6 4', fillOpacity: 0.08 }).addTo(map);
-      L.marker([o.lat, o.lng], { icon: L.divIcon({ className: '', html: '<div class="spot-pin origin"></div>', iconSize: [11, 11], iconAnchor: [5.5, 5.5] }), zIndexOffset: 20000, keyboard: false, title: this.state.nearKey === 'here' ? 'You' : o.label, interactive: false }).addTo(map);
+      if (o && this.nearActive() && r !== 'any') L.circle([o.lat, o.lng], { radius: r * 1000, color: '#0d9488', weight: 2, dashArray: '6 4', fillOpacity: 0.08 }).addTo(map);
+      L.marker([me.lat, me.lng], { icon: L.divIcon({ className: '', html: '<div class="spot-pin origin"></div>', iconSize: [11, 11], iconAnchor: [5.5, 5.5] }), zIndexOffset: 20000, keyboard: false, title: this.state.nearKey === 'here' || !o ? 'You' : o.label, interactive: false }).addTo(map);
     }
     // 보던 위치 이어가기: 같은 목록이면 저장한 위치로, 아니면 추천 장소에 맞춰 확대(전체 목록은 메트로 밴쿠버 범위)
     const key = (picks ? 'p:' : 'a:') + (this.state.q || '') + ':' + items.length + ':' + (items[0] ? items[0].id : '') + ':' + this.state.nearKey + ':' + this.state.radius;
@@ -2815,7 +2817,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         const pts = ids.map(id => byIt[id]).filter(Boolean);
       // 펼친 카드끼리 안 겹치게: 핀 위·오른쪽·왼쪽·아래 중 이미 놓은 카드와 안 겹치고 지도 안에 들어오는 첫 방향으로 놓아요
       const layout = fix => {
-        const sz = map.getSize(), op = o && this.nearActive() ? map.latLngToContainerPoint([o.lat, o.lng]) : null;   // 내 위치(검은 점)는 카드가 가리지 않게
+        const sz = map.getSize(), op = me ? map.latLngToContainerPoint([me.lat, me.lng]) : null;   // 내 위치(검은 점)는 카드가 가리지 않게
         const g = 28, hw = cw / 2, hh = ch / 2, s2 = 2, dirs = ['top', 'tr', 'tl', 'right', 'left', 'bottom', 'br', 'bl'];
         const items2 = cur.map(id => { const pin = this._pins[id], tip = pin && pin.mk.getTooltip(); if (!pin || !tip) return null; const p = map.latLngToContainerPoint(pin.mk.getLatLng());
           // 후보 위치 8곳: [카드 왼쪽 x, 위쪽 y, 방향, 오프셋]. 위·오른쪽·왼쪽·아래가 안 되면 대각선(위/아래 + 좌/우로 비껴서)도 써요
@@ -2854,7 +2856,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         });
         settleLines();
       };
-        if (pts.length) { map.once('moveend', layout); map.fitBounds(L.latLngBounds([...pts.map(s => [s.lat, s.lng]), ...(o && this.nearActive() ? [[o.lat, o.lng]] : [])]), { paddingTopLeft: [cw / 2 + legendW, up + 34], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: !!animate, duration: 0.5, easeLinearity: 0.35 }); layout(); }
+        if (pts.length) { map.once('moveend', layout); map.fitBounds(L.latLngBounds([...pts.map(s => [s.lat, s.lng]), ...(me ? [[me.lat, me.lng]] : [])]), { paddingTopLeft: [cw / 2 + legendW, up + 34], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: !!animate, duration: 0.5, easeLinearity: 0.35 }); layout(); }
       };
       const restored = !!(this._mapSaved && this._mapSaved.key === key), top = rank.slice(0, N);
       if (restored) { const keep = map.getCenter(), z = map.getZoom(); setFeat(top, false); map.setView(keep, z, { animate: false }); } else setFeat(top, false);
