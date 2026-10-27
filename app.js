@@ -1523,8 +1523,8 @@ class App {
       case 'opennow': return this.set({ openNow: !this.state.openNow, when: !this.state.openNow && this.planLater() ? '' : this.state.when });
       // 해피아워와 런치 필터는 하나만 (둘 다 켜면 겹치는 곳이 거의 없어서)
       case 'qclear': return this.clearSearch();
-      case 'guideclear': return this.set({ guideAll: true, indoor: false, cat: 'all', tag: '', restShown: REST_STEP });
-      case 'guideback': return this.set({ guideAll: false, indoor: !!(this.state.guide && this.state.guide.indoor), ...this.guideCat(), restShown: REST_STEP });
+      case 'guideclear': return this.set({ guideAll: true, indoor: false, cat: 'all', tag: '', ...(this.state.guide && this.state.guide.cityKey ? { nearKey: '', geoMsg: '', geoBusy: false } : {}), restShown: REST_STEP });
+      case 'guideback': return this.set({ guideAll: false, indoor: !!(this.state.guide && this.state.guide.indoor), ...(this.state.guide && this.state.guide.cityKey ? { nearKey: this.state.guide.cityKey, radius: 5, radiusExact: false } : {}), ...this.guideCat(), restShown: REST_STEP });
       case 'qtry': return this.runSearch(val);
       // 알아들은 조건 칩의 ×: 그 조건만 꺼요
       case 'qrm': {
@@ -2345,8 +2345,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // "Show all places"를 눌러 전체를 보는 중: 안내 이름과 되돌아가는 버튼만
     if (this.state.guideAll) return `<div class="${box}"><span class="font-semibold">Showing all places</span><button data-act="guideback" class="${btn}">Back to ${esc(g.title)}</button></div>`;
     // 실내·도시 필터를 끄면 안내 목록 제한이 풀려 개수가 맞지 않으니 띠도 숨겨요
-    if (!this.guideActive()) return '';
-    return `<div class="${box}"><span class="font-semibold">${esc(g.title)}</span><span class="text-teal-700 dark:text-teal-300">${g.set.size} places</span><button data-act="guideclear" class="${btn}">Show all places</button></div>`
+    // 도시 안내는 위치(그 도시 5 km)가 켜져 있는 동안 띠를 보여주고, 버튼으로 위치·카테고리 필터를 풀어요
+    const cityOn = !!g.cityKey && this.state.nearKey === g.cityKey;
+    if (!this.guideActive() && !cityOn) return '';
+    return `<div class="${box}"><span class="font-semibold">${esc(g.title)}</span>${cityOn ? '' : `<span class="text-teal-700 dark:text-teal-300">${g.set.size} places</span>`}<button data-act="guideclear" class="${btn}">Show all places</button></div>`
   }
   // 안내 페이지의 장소 제한이 지금 적용되는지: 실내·도시 필터가 켜져 있는 동안, 또는 "Show all places"를 누르기 전까지
   guideActive() {
