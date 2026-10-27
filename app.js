@@ -415,8 +415,8 @@ const activeTags = () => { const d = vanDate(0); return SEASON.filter(t => t.fro
 const spotTags = s => activeTags().filter(t => t.spots[s.id]);
 // 태그별 색 (카드 사진 모서리 칩 = solid, 목록 위 칩 = soft). 새 태그는 회색 기본값
 const TAG_STYLE = {
-  fallcolours: { solid: 'bg-amber-600 text-white', soft: 'bg-amber-50 text-amber-800 hover:bg-amber-100 dark:bg-amber-500/15 dark:text-amber-300 dark:hover:bg-amber-500/25' },
-  halloween: { solid: 'bg-purple-600 text-white', soft: 'bg-purple-50 text-purple-800 hover:bg-purple-100 dark:bg-purple-500/15 dark:text-purple-300 dark:hover:bg-purple-500/25' },
+  fallcolours: { solid: 'bg-yellow-400 text-yellow-950', soft: 'bg-yellow-50 text-yellow-800 hover:bg-yellow-100 dark:bg-yellow-400/15 dark:text-yellow-300 dark:hover:bg-yellow-400/25' },
+  halloween: { solid: 'bg-orange-500 text-white', soft: 'bg-orange-50 text-orange-800 hover:bg-orange-100 dark:bg-orange-500/15 dark:text-orange-300 dark:hover:bg-orange-500/25' },
   salmonrun: { solid: 'bg-rose-500 text-white', soft: 'bg-rose-50 text-rose-800 hover:bg-rose-100 dark:bg-rose-500/15 dark:text-rose-300 dark:hover:bg-rose-500/25' },
   skiseasonsoon: { solid: 'bg-sky-600 text-white', soft: 'bg-sky-50 text-sky-800 hover:bg-sky-100 dark:bg-sky-500/15 dark:text-sky-300 dark:hover:bg-sky-500/25' }
 };
