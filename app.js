@@ -948,7 +948,7 @@ class App {
       const sq = new URLSearchParams(location.search).get('q');
       if (sq) this.runSearch(sq.slice(0, 200));
       // 홈 지도는 한꺼번에 너무 많이 떠서 복잡해요: 위치를 알아내 주변 5 km만 보여줘요 (주소에 ?near=가 있거나 안내 페이지면 건드리지 않아요)
-      if (!window.GUIDE && !window.SPOT_ID && !location.hash && !new URLSearchParams(location.search).has('near') && !sq && !this.state.q) this.autoNear();
+      if (!window.GUIDE && !window.SPOT_ID && !location.hash && !new URLSearchParams(location.search).has('near')) this.autoNear();
       // 공유받은 링크(#spot=id)로 들어오면 그 장소를 바로 열어요
       const m = /^#spot=([^&]+)/.exec(location.hash), shared = m && byId(decodeURIComponent(m[1]));
       if (shared) this.openModal(shared.id);
@@ -1314,7 +1314,9 @@ class App {
     // 지역(도시)을 골랐으면 반경 밖이어도 그 도시 이름이 지역에 있는 곳은 넣어요 (Burke Mountain, Coquitlam 등 넓은 도시)
     // 안내 페이지에서 실내만 껐고 도시는 남았으면, 그 도시 안(기본 반경)의 모든 장소를 보여줘요
     const radius2 = radius;
-    if (this.nearActive() && radius2 !== 'any') {
+    // 검색창에 단어를 넣어 검색하면 반경 밖이어도 결과를 보여줘요 (지역 이름으로 검색한 경우만 그 지역·반경을 지켜요)
+    const keywordSearch = !!(this.state.q && this.state.kw.length) && !(this.qPlace && this.state.nearKey === this.qPlace);  
+    if (this.nearActive() && radius2 !== 'any' && !keywordSearch) {
       const o = ORIGINS[this.state.nearKey], inArea = o && !this.state.radiusExact && this.state.view !== 'map' ? new RegExp(`(^|[(,] ?)${o.label}\\b`, 'i') : null;
       items = items.filter(s => s.dist <= radius2 || (inArea && inArea.test(s.area || '')));
     }
@@ -2056,7 +2058,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const s = this.state, near = this.nearActive();
     if (s.cat === 'events') return esc(`${plural(this.upcomingEvents(45).length, 'event')} in the next 6 weeks`);
     const what = plural(items.length, [s.kidsOnly && 'kid-friendly', s.indoor && 'indoor', 'spot'].filter(Boolean).join(' ')) + (s.openNow && HOURS_READY ? ' open now' : '');
-    const where = near ? (s.radius === 'any' ? ` · any distance` : ` · ${radiusLabel(s.radius)}`)
+    const kwSearch = !!(s.q && s.kw.length) && !(this.qPlace && s.nearKey === this.qPlace);
+    const where = near && !kwSearch ? (s.radius === 'any' ? ` · any distance` : ` · ${radiusLabel(s.radius)}`)
       : s.sort === 'distance' ? ', distances from Downtown (pick a location to change that)' : '';
     const trends = TRENDS_ON && RISE_META.recentThrough ? `<span class="hidden sm:inline"> · Searches vs usual from Google Trends (BC), ${esc(recentLabel())}${RISE_META.updatedAt ? `, updated ${esc(ago(RISE_META.updatedAt))}` : ''}</span>` : '';
     return esc(what + where) + trends;
