@@ -2931,6 +2931,20 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         setH();
         if (this._snapRO) this._snapRO.disconnect();
         if (window.ResizeObserver) { this._snapRO = new ResizeObserver(setH); this._snapRO.observe(bar); }
+        // 맨 아래까지 내려도 마지막 카드 줄이 지도 밑에 딱 붙을 수 있도록 목록 끝에 여유 공간을 둬요 (페이지 끝이 너무 가까우면 스냅이 안 돼요)
+        const padEnd = () => {
+          const cards = [...document.querySelectorAll('article[data-act="open"]')]; if (!cards.length || !bar.isConnected) return;
+          let sp = document.getElementById('snap-pad');
+          if (!sp) { sp = document.createElement('div'); sp.id = 'snap-pad'; sp.setAttribute('aria-hidden', 'true'); cards[cards.length - 1].parentElement.insertAdjacentElement('afterend', sp); }
+          const cur = sp.offsetHeight, docH = document.documentElement.scrollHeight - cur;
+          const lastTop = Math.min(...cards.filter(c => Math.abs(c.getBoundingClientRect().top - cards[cards.length - 1].getBoundingClientRect().top) < 4).map(c => c.getBoundingClientRect().top)) + scrollY;
+          const need = lastTop - (bar.offsetHeight + 8) + innerHeight - docH;   // 이만큼 더 있어야 마지막 줄이 지도 밑까지 올라와요
+          const h = Math.max(0, Math.ceil(need) + 8);
+          if (Math.abs(h - cur) > 2) sp.style.height = h + 'px';
+        };
+        padEnd(); setTimeout(padEnd, 400); setTimeout(padEnd, 1500);
+        if (!this._padWired) { this._padWired = true; window.addEventListener('resize', () => { clearTimeout(this._padT); this._padT = setTimeout(() => { const f = this._padFn; if (f) f(); }, 150); }); }
+        this._padFn = padEnd;
       }
     }
     this._leaflet = map;
