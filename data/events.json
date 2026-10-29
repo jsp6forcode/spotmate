@@ -413,7 +413,11 @@
     { "id": "mapleridge-alouettecemetery-2026", "type": "seasonal", "icon": "👻", "name": "Alouette Cemetery Halloween Display", "area": "Maple Ridge",
       "venue": "12795 227A St (front-yard display)", "lat": null, "lng": null, "spotId": null,
       "schedule": { "from": "2026-10-01", "to": "2026-10-31", "start": "18:00", "end": "22:00", "hoursText": "Lights and effects usually 6–10pm. Free, donations support Katie's Place Animal Shelter" },
-      "summary": "A free, family-friendly Halloween yard display of a graveyard, pumpkins and a haunted house", "source": "https://vancouversbestplaces.com/events-calendar/october/vancouver-halloween-events/maple-ridge-alouette-cemetery-halloween-attraction/" }
+      "summary": "A free, family-friendly Halloween yard display of a graveyard, pumpkins and a haunted house", "source": "https://vancouversbestplaces.com/events-calendar/october/vancouver-halloween-events/maple-ridge-alouette-cemetery-halloween-attraction/" },
+    { "id": "coquitlamcentre-spookytreats-2026", "type": "festival", "icon": "🎃", "name": "Spooky Treat Stations at Coquitlam Centre", "area": "Coquitlam",
+      "venue": "Coquitlam Centre, Level 1 and 2 (2929 Barnet Hwy)", "lat": 49.2798, "lng": -122.7986, "spotId": "coquitlamcentre",
+      "schedule": { "from": "2026-10-31", "to": "2026-10-31", "start": "12:00", "end": "15:00", "hoursText": "12–3pm. Free, costumed kids 12 and under" },
+      "summary": "Costumed kids 12 and under pick up a Halloween treat at stations around the mall and can enter to win a Haunted Halloween Basket worth over $300", "source": "https://www.instagram.com/coquitlamcentre/" }
 
   ]
 }

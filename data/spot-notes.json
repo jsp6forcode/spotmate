@@ -3355,6 +3355,12 @@
         "The splash park is open daily 10am-8pm from May to September, weather permitting. It can close for events or during water restrictions."
       ],
       "source" : "https://www.cnv.org/parks-recreation/the-shipyards/splash-park"
+    },
+    "citycentreaquaticcomplex" : {
+      "items" : [
+        "Free-form wave pool with a lazy river, slide, water sprays and waves. Childminding for ages 6 months to 5 years is $3.60 per child on Tue and Thu 6:15–8:15pm; pre-register 48 hours ahead."
+      ],
+      "source" : "https://www.coquitlam.ca/390/City-Centre-Aquatic-Complex"
     }
   },
   "updatedAt" : "2026-10-02"
