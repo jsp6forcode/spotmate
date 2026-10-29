@@ -2353,9 +2353,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const g = this.state.guide;
     if (!g) return '';
     // 모바일에서도 한 줄: 제목은 말줄임, 버튼은 줄바꿈 없이
-    const box = 'mt-4 flex items-center gap-2 rounded-xl   bg-teal-50 px-3 py-2 text-sm text-teal-900  dark:bg-teal-950 dark:text-teal-100', btn = 'ml-auto shrink-0 whitespace-nowrap min-h-[36px] px-3 py-1 rounded-lg font-semibold    ';
+    // 밝은 모드에서도 띠와 버튼이 눈에 띄게: 진한 배경 + 테두리, 버튼은 알약 모양
+    const box = 'mt-4 flex items-center gap-2 rounded-xl border border-teal-300 bg-teal-100 px-3 py-2 text-sm text-teal-900 dark:border-teal-900 dark:bg-teal-950 dark:text-teal-100', btn = 'ml-auto shrink-0 whitespace-nowrap min-h-[36px] px-3.5 py-1 rounded-full font-semibold border border-teal-600 bg-white text-teal-800 shadow-sm hover:bg-teal-50 dark:border-teal-700 dark:bg-teal-900 dark:text-teal-100 dark:hover:bg-teal-800';
     // "Show all places"를 눌러 내 주변 5 km의 모든 장소를 보는 중: 되돌아가는 버튼만
-    if (this.state.guideAll) return `<div class="${box}"><span class="min-w-0 truncate font-semibold">All places within 5 km</span><button data-act="guideback" title="Back to ${esc(g.title)}" class="${btn}">Back to guide</button></div>`;
+    if (this.state.guideAll) return `<div class="${box}"><span class="min-w-0 truncate font-semibold">All places within 5 km</span><button data-act="guideback" title="Back to ${esc(g.title)}" class="${btn}">Go back</button></div>`;
     // 실내·도시 필터를 끄면 안내 목록 제한이 풀려 개수가 맞지 않으니 띠도 숨겨요
     // 도시 안내는 위치(그 도시 5 km)가 켜져 있는 동안 띠를 보여주고, 버튼으로 위치·카테고리 필터를 풀어요
     const cityOn = !!g.cityKey && this.state.nearKey === g.cityKey;
@@ -2701,6 +2702,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         }
         hint.style.opacity = '1'; clearTimeout(ht); ht = setTimeout(() => { hint.style.opacity = '0'; }, 900);
       }, { passive: false });
+      // 터치 화면: 손가락 하나로 밀면 페이지가 스크롤되고, 두 손가락일 때만 지도가 움직여요 (이동·확대 모두)
+      if (matchMedia('(pointer: coarse)').matches) {
+        map.dragging.disable();
+        hint.textContent = 'Use two fingers to move the map';
+        el.addEventListener('touchmove', e => {
+          if (e.touches.length !== 1) return;
+          hint.style.opacity = '1'; clearTimeout(ht); ht = setTimeout(() => { hint.style.opacity = '0'; }, 900);
+        }, { passive: true });
+      }
     }
     if (vec) L.maplibreGL({ style: this.state.dark ? VEC_STYLE.dark : VEC_STYLE.light, attribution: VEC_ATTR }).addTo(map);
     else L.tileLayer(TILES, { attribution: TILE_ATTR, maxZoom: 19 }).addTo(map);
