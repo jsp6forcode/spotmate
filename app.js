@@ -1013,6 +1013,7 @@ class App {
         <p>I’m a dad in Vancouver, and our weekends used to start with the same question: <em>where should we take the kids today?</em> I was tired of a dozen open tabs, so I started Tiny Trips: playgrounds, spray parks, farms, libraries, rainy-day hideouts and more around Metro Vancouver and the Fraser Valley, all in one spot.</p>
         <p>Most places here are rated 4.0 or higher on Google, so you’re seeing spots lots of parents have already tried and loved. It’s still a work in progress, so if you spot a mistake or know a great place that’s missing, please send me a note below.</p>
         <p class="font-semibold">Have fun out there! — A Vancouver dad</p>
+        <p><a href="https://www.instagram.com/tinytripsvan/" target="_blank" rel="noopener" class="font-semibold text-violet-700 dark:text-violet-300 underline underline-offset-2">Follow us on Instagram @tinytripsvan</a></p>
       </div>
     </section>
     <section id="feedback" class="mt-6 sm:mt-10 max-w-2xl mx-auto rounded-2xl p-4 sm:p-6 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]   ">
@@ -1523,7 +1524,12 @@ class App {
       case 'opennow': return this.set({ openNow: !this.state.openNow, when: !this.state.openNow && this.planLater() ? '' : this.state.when });
       // 해피아워와 런치 필터는 하나만 (둘 다 켜면 겹치는 곳이 거의 없어서)
       case 'qclear': return this.clearSearch();
-      case 'guideclear': return this.set({ guideAll: true, indoor: false, cat: 'all', tag: '', ...(this.state.guide && this.state.guide.cityKey ? { nearKey: '', geoMsg: '', geoBusy: false } : {}), restShown: REST_STEP });
+      case 'guideclear': {   // 전체가 아니라 내 주변 5 km의 모든 장소 (내 위치를 이미 허용했으면 그 위치, 아니면 다운타운 기준)
+        const here = this.state.nearKey === 'here' && this.state.origin;
+        this.set({ guideAll: true, indoor: false, cat: 'all', tag: '', ...(here ? {} : { nearKey: 'downtown' }), radius: 5, radiusExact: false, geoMsg: '', geoBusy: false, restShown: REST_STEP });
+        if (!here) this.upgradeToHere();
+        return;
+      }
       case 'guideback': return this.set({ guideAll: false, indoor: !!(this.state.guide && this.state.guide.indoor), ...(this.state.guide && this.state.guide.cityKey ? { nearKey: this.state.guide.cityKey, radius: 5, radiusExact: false } : {}), ...this.guideCat(), restShown: REST_STEP });
       case 'qtry': return this.runSearch(val);
       // 알아들은 조건 칩의 ×: 그 조건만 꺼요
@@ -1743,6 +1749,9 @@ class App {
     if (this.state.nearKey) return;
     this.urlDefaults.nearKey = 'downtown'; this.urlDefaults.radius = 5;
     this.set({ nearKey: 'downtown', radius: 5, radiusExact: false });
+    this.upgradeToHere();
+  }
+  upgradeToHere() {
     // 위치 권한 창은 사용자가 "Near me"를 누를 때만 띄워요. 이미 허용한 사람에게만 조용히 내 위치를 써요 (처음 온 사람에게 갑자기 묻지 않게)
     if (!navigator.geolocation || !navigator.permissions || !navigator.permissions.query) return;
     navigator.permissions.query({ name: 'geolocation' }).then(st => {
@@ -1921,6 +1930,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 다크 모드 버튼은 날씨와 헷갈리지 않게 해·달 대신 반쪽 원(명암) 아이콘
     const contrast = `<svg viewBox="0 0 24 24" class="w-5 h-5" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>`;
     // 첫 화면에 추천 카드가 보이도록 헤더를 낮게: 모바일은 부제 없이 로고 + 탭만
+    // 인스타그램 계정으로 바로 가는 둥근 버튼 (다크 모드 버튼 옆)
+    const igIcon = `<svg viewBox="0 0 24 24" class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`;
     const tab = (v, label) => `<button data-act="view" data-val="${v}" class="shrink-0 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors ${view === v ? 'bg-white text-indigo-700 shadow' : 'text-white/90 hover:bg-white/15'}">${label}</button>`;
     return `
     <header class="hero relative text-white">
@@ -1940,7 +1951,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </div>
         </div>
         <nav class="mt-2 sm:mt-2 inline-flex max-w-full overflow-x-auto no-scrollbar gap-0 sm:gap-1 p-1 rounded-full bg-white/10 backdrop-blur">
-          ${tab('map', 'Explore')}${tab('events', 'Events')}${tab('markets', 'Markets')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}${tab('about', 'About')}
+          ${tab('map', 'Explore')}${tab('events', 'Events')}${tab('markets', 'Markets')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}${tab('about', 'About')}<a href="https://www.instagram.com/tinytripsvan/" target="_blank" rel="noopener" aria-label="Tiny Trips on Instagram" title="Instagram @tinytripsvan" class="shrink-0 px-2 sm:px-3 py-1.5 sm:py-2 rounded-full text-white/90 hover:bg-white/15 flex items-center">${igIcon}</a>
         </nav>
       </div>
       <a href="https://www.pexels.com/photo/7669218/" target="_blank" rel="noopener" class="absolute right-3 bottom-1.5 text-[8px] leading-none text-white/60 hover:text-white underline-offset-2 ">Photo: Kampus · Pexels</a>
@@ -2341,14 +2352,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   guideBanner() {
     const g = this.state.guide;
     if (!g) return '';
-    const box = 'mt-4 flex flex-wrap items-center gap-2 rounded-xl   bg-teal-50 px-3 py-2 text-sm text-teal-900  dark:bg-teal-950 dark:text-teal-100', btn = 'ml-auto min-h-[36px] px-3 py-1 rounded-lg font-semibold    ';
-    // "Show all places"를 눌러 전체를 보는 중: 안내 이름과 되돌아가는 버튼만
-    if (this.state.guideAll) return `<div class="${box}"><span class="font-semibold">Showing all places</span><button data-act="guideback" class="${btn}">Back to ${esc(g.title)}</button></div>`;
+    // 모바일에서도 한 줄: 제목은 말줄임, 버튼은 줄바꿈 없이
+    const box = 'mt-4 flex items-center gap-2 rounded-xl   bg-teal-50 px-3 py-2 text-sm text-teal-900  dark:bg-teal-950 dark:text-teal-100', btn = 'ml-auto shrink-0 whitespace-nowrap min-h-[36px] px-3 py-1 rounded-lg font-semibold    ';
+    // "Show all places"를 눌러 내 주변 5 km의 모든 장소를 보는 중: 되돌아가는 버튼만
+    if (this.state.guideAll) return `<div class="${box}"><span class="min-w-0 truncate font-semibold">All places within 5 km</span><button data-act="guideback" title="Back to ${esc(g.title)}" class="${btn}">Back to guide</button></div>`;
     // 실내·도시 필터를 끄면 안내 목록 제한이 풀려 개수가 맞지 않으니 띠도 숨겨요
     // 도시 안내는 위치(그 도시 5 km)가 켜져 있는 동안 띠를 보여주고, 버튼으로 위치·카테고리 필터를 풀어요
     const cityOn = !!g.cityKey && this.state.nearKey === g.cityKey;
     if (!this.guideActive() && !cityOn) return '';
-    return `<div class="${box}"><span class="font-semibold">${esc(g.title)}</span>${cityOn ? '' : `<span class="text-teal-700 dark:text-teal-300">${g.set.size} places</span>`}<button data-act="guideclear" class="${btn}">Show all places</button></div>`
+    return `<div class="${box}"><span class="min-w-0 truncate font-semibold" title="${esc(g.title)}">${esc(g.title)}</span>${cityOn ? '' : `<span class="shrink-0 text-teal-700 dark:text-teal-300">${g.set.size} places</span>`}<button data-act="guideclear" class="${btn}">Show all places</button></div>`
   }
   // 안내 페이지의 장소 제한이 지금 적용되는지: 실내·도시 필터가 켜져 있는 동안, 또는 "Show all places"를 누르기 전까지
   guideActive() {
