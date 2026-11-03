@@ -951,6 +951,13 @@ class App {
       if (!window.GUIDE && !window.SPOT_ID && !location.hash && !new URLSearchParams(location.search).has('near')) this.autoNear();
       // 공유받은 링크(#spot=id)로 들어오면 그 장소를 바로 열어요
       const m = /^#spot=([^&]+)/.exec(location.hash), shared = m && byId(decodeURIComponent(m[1]));
+      // 장소 주소로 들어오면 모달을 닫은 뒤 지도·목록에 그 장소가 보이도록, 그 장소 둘레 5 km를 지도 기준으로 잡아 둬요
+      const entrySpot = shared || (window.SPOT_ID && byId(window.SPOT_ID));
+      if (entrySpot && entrySpot.lat != null && !this.state.nearKey) {
+        ORIGINS.spot = { label: entrySpot.name, lat: entrySpot.lat, lng: entrySpot.lng };
+        this.urlDefaults.nearKey = 'spot'; this.urlDefaults.radius = 5;
+        this.set({ nearKey: 'spot', radius: 5, radiusExact: false });
+      }
       if (shared) this.openModal(shared.id);
       // 장소 전용 주소(/spots/<id>/)로 들어오면 그 장소를 바로 열어요 (build-guides.ps1 이 window.SPOT_ID 를 넣어요)
       else if (window.SPOT_ID && byId(window.SPOT_ID)) this.openModal(window.SPOT_ID);
