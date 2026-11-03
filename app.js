@@ -956,7 +956,7 @@ class App {
       if (entrySpot && entrySpot.lat != null && !this.state.nearKey) {
         ORIGINS.spot = { label: entrySpot.name, lat: entrySpot.lat, lng: entrySpot.lng };
         this.urlDefaults.nearKey = 'spot'; this.urlDefaults.radius = 5;
-        this.set({ nearKey: 'spot', radius: 5, radiusExact: false });
+        this.set({ nearKey: 'spot', radius: 5, radiusExact: false, entryId: entrySpot.id });
       }
       if (shared) this.openModal(shared.id);
       // 장소 전용 주소(/spots/<id>/)로 들어오면 그 장소를 바로 열어요 (build-guides.ps1 이 window.SPOT_ID 를 넣어요)
@@ -1143,6 +1143,8 @@ class App {
   set(patch) {
     // 목록이 바뀌는 필터를 건드리면 "Show more"로 늘린 개수를 처음으로 되돌려요
     if (['cat', 'view', 'tag', 'sort', 'nearKey', 'radius', 'kidsOnly', 'indoor', 'openNow', 'when'].some(k => k in patch && patch[k] !== this.state[k])) patch.restShown = REST_STEP;
+    // 장소 주소로 들어와 맨 앞에 고정해 둔 장소는 사용자가 필터·검색을 바꾸면 풀어요
+    if (this.state.entryId && !('entryId' in patch) && ['cat', 'tag', 'q', 'sort', 'nearKey', 'radius', 'kidsOnly', 'indoor', 'openNow', 'when'].some(k => k in patch && patch[k] !== this.state[k])) patch.entryId = '';
     Object.assign(this.state, patch); this.render(); this.syncUrl();
   }
 
@@ -1401,6 +1403,9 @@ class App {
     }
     // 검색 키워드가 있으면 관련도 높은 곳이 먼저 (같은 관련도 안에서는 위 순서 그대로). 순위 정리가 끝난 뒤에 해요
     if (this.state.kw.length) items.sort((a, b) => b.kwScore - a.kwScore);
+    // 장소 주소(/spots/<id>/)로 들어왔으면 그 장소를 맨 앞에: 모달을 닫은 뒤 목록 첫 카드와 지도 카드에 보여요
+    const pin = this.state.entryId && items.find(s => s.id === this.state.entryId);
+    if (pin) items = [pin, ...items.filter(s => s !== pin)];
     return items;
   }
   // 앞으로 days일 안에 열리는 행사 (위치 필터 적용, 가까운 날짜 → 가까운 거리 순)
@@ -2582,8 +2587,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (this.state.q && this.state.kw.length) return heading('list-top', `Results for “${esc(this.state.q)}”`, `${plural(items.length, 'place')}, best match first.`) + more(items);
     if (this.state.sort !== 'fresh') return heading('list-top', 'Closest first', plural(items.length, 'spot')) + more(items) + events;
     // 순위(번호)는 지금 가 볼 이유가 있는 곳에만. 10곳을 채운 곳은 번호 없이 "Also worth a try"로
-    const ranked = items.filter(s => this.freshRank(s) <= 1), fill = items.filter(s => s.filler);
-    const rest = items.filter(s => this.freshRank(s) > 1 && !s.filler);
+    let ranked = items.filter(s => this.freshRank(s) <= 1), fill = items.filter(s => s.filler);
+    let rest = items.filter(s => this.freshRank(s) > 1 && !s.filler);
+    const pinned = this.state.entryId && items.find(s => s.id === this.state.entryId);
+    if (pinned) { ranked = ranked.filter(s => s !== pinned); fill = fill.filter(s => s !== pinned); rest = rest.filter(s => s !== pinned); if (ranked.length || (!fill.length && !rest.length)) ranked = [pinned, ...ranked]; else if (fill.length) fill = [pinned, ...fill]; else rest = [pinned, ...rest]; }
     const reasons = 'an event here or something in season';
     // 날짜 계획: "Worth going this weekend"처럼 그 날 기준으로
     const w = this.state.when, period = w === 'weekend' ? 'this weekend' : w === 'today' ? 'today' : w === 'tomorrow' ? 'tomorrow' : w ? `on ${WHEN[w]}` : '';
@@ -2619,7 +2626,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const rank = (() => {
       if (picks) return [];
       const sorted = this.state.q && this.state.kw.length || this.state.sort !== 'fresh' ? items : [...items.filter(s => this.freshRank(s) <= 1), ...items.filter(s => s.filler), ...items.filter(s => this.freshRank(s) > 1 && !s.filler)];
-      return sorted.filter(s => s.lat != null && byId(s.id)).slice(0, 3).map(s => s.id);
+      const pin = this.state.entryId && sorted.find(s => s.id === this.state.entryId && s.lat != null);
+      return (pin ? [pin, ...sorted.filter(s => s !== pin)] : sorted).filter(s => s.lat != null && byId(s.id)).slice(0, 3).map(s => s.id);
     })();
     this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: groupColor(s), mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks, rank,
       events: [...(showEv ? evOthers : []), ...(showMk ? evMarkets : [])].map(evPin) };
