@@ -182,7 +182,27 @@
         }
       },
       "to" : "2026-12-20"
+    },
+    {
+      "about" : "Holiday light displays open from early November.",
+      "emoji" : "🎄",
+      "from" : "2026-11-05",
+      "id" : "holidaylights",
+      "label" : "HolidayLights",
+      "spots" : {
+        "bearcreek" : {
+          "source" : "https://www.surrey.ca/bearcreeklights",
+          "start" : "2026-11-06",
+          "why" : "Bear Creek Lights is a free light-display trail, Nov 6 to 20 (5-9pm, free timed tickets, closed Nov 11)."
+        },
+        "capilano" : {
+          "source" : "https://www.capbridge.com/events/canyon-lights/",
+          "start" : "2026-11-20",
+          "why" : "Canyon Lights puts thousands of lights on the suspension bridge, treetops walk and cliffwalk from Nov 20."
+        }
+      },
+      "to" : "2027-01-10"
     }
   ],
-  "updatedAt" : "2026-10-29"
+  "updatedAt" : "2026-11-05"
 }
