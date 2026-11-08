@@ -195,10 +195,25 @@
           "start" : "2026-11-06",
           "why" : "Bear Creek Lights is a free light-display trail, Nov 6 to 20 (5-9pm, free timed tickets, closed Nov 11)."
         },
+        "bvm" : {
+          "source" : "https://www.burnaby.ca/recreation-and-arts/events/festive-village",
+          "start" : "2026-11-25",
+          "why" : "Festive Village puts holiday lights across the 10-acre outdoor museum from Nov 25 (2-9pm, free entry, carousel $2.86). Entry may be limited when it's busy."
+        },
         "capilano" : {
           "source" : "https://www.capbridge.com/events/canyon-lights/",
           "start" : "2026-11-20",
           "why" : "Canyon Lights puts thousands of lights on the suspension bridge, treetops walk and cliffwalk from Nov 20."
+        },
+        "towncentre" : {
+          "source" : "https://www.coquitlam.ca/784/Lights-at-Lafarge",
+          "start" : "2026-11-27",
+          "why" : "Lights at Lafarge is a free winter lights display around Lafarge Lake. It kicks off Nov 27 (5-8pm) with a fire and light show."
+        },
+        "vandusen" : {
+          "source" : "https://vancouver.ca/parks-recreation-culture/festival-of-lights.aspx",
+          "start" : "2026-11-27",
+          "why" : "Festival of Lights has over a million lights across the garden from Nov 27 (4-10pm). Timed tickets are sold online only."
         }
       },
       "to" : "2027-01-10"
