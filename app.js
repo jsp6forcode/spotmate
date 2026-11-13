@@ -2915,14 +2915,18 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         this._easeRaf = requestAnimationFrame(step);
       };
       if (!this._easeWired) { this._easeWired = true; ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(t => window.addEventListener(t, () => { if (this._easeRaf) { cancelAnimationFrame(this._easeRaf); this._easeRaf = 0; } }, { passive: true })); }
+      // 폰·태블릿(터치): 스크롤은 브라우저 기본 관성 스크롤에만 맡겨요. 멈춘 뒤 JS로 페이지를 더 끌어당기면(스냅 보정) 관성이 끝나자마자 화면이 또 움직여서 끊겨 보였어요
+      const touchUI = matchMedia('(pointer: coarse)').matches;
       const follow = () => {
-        if (!el.isConnected) { window.removeEventListener('scroll', this._featScroll); return; }
+        // 지도가 다시 그려져서 이 지도가 없어졌으면 그냥 끝내요. (예전엔 여기서 this._featScroll 을 지워서, 새 지도의 스크롤 연결까지 끊겨 카드가 목록을 안 따라갔어요. 옛 연결은 새 지도가 만들어질 때 지워요)
+        if (!el.isConnected) return;
         if (Date.now() < hold) return;
+        if (touchUI && this._touching) { clearTimeout(timer); timer = setTimeout(follow, 300); return; }   // 손가락이 닿아 있는 동안엔 지도를 바꾸지 않아요 (스크롤과 지도 애니메이션이 겹치지 않게)
         const bar = el.closest('.sticky'); if (!bar) return;
         const bottom = bar.getBoundingClientRect().bottom;
         const ids = [...document.querySelectorAll('article[data-act="open"]')].filter(c => c.getBoundingClientRect().bottom > bottom + 60).map(c => c.dataset.val).filter(id => byIt[id] && byIt[id].lat != null).slice(0, N);
         // 스냅을 아주 조금 더 강하게: 멈춘 자리가 카드 줄 정렬 위치(지도 밑 8px)에서 110px 안이면 부드럽게 끌어 붙여요 (손가락이 닿아 있는 동안은 안 해요)
-        if (!this._touching && bar.getBoundingClientRect().top <= 1 && !(dir < 0 && matchMedia("(pointer: coarse)").matches)) {   // 폰·태블릿은 위로 올릴 때 스냅하지 않아요
+        if (!touchUI && !this._touching && bar.getBoundingClientRect().top <= 1) {   // 마우스·트랙패드에서만 스냅 보정 (터치는 위 설명대로 안 해요)
           const gaps = [...document.querySelectorAll('article[data-act="open"]')].map(c => c.getBoundingClientRect().top - (bottom + 8));
           // dir: 1 = 아래로, -1 = 위로 스크롤하는 중. 가던 방향 150px 안의 줄만 끌어요 (거꾸로 끌어당기면 답답해요)
           const ahead = gaps.filter(g => dir > 0 ? g > 2 && g < 150 : g < -2 && g > -150).sort((a, b) => Math.abs(a) - Math.abs(b))[0];
@@ -2931,7 +2935,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         if (ids.length) setFeat(ids, true);
       };
       let lastY = scrollY, dir = 1;
-      this._featScroll = () => { const y = scrollY; if (y > lastY + 1) dir = 1; else if (y < lastY - 1) dir = -1; lastY = y; clearTimeout(timer); timer = setTimeout(follow, 160); };
+      this._featScroll = () => { const y = scrollY; if (y > lastY + 1) dir = 1; else if (y < lastY - 1) dir = -1; lastY = y; clearTimeout(timer); timer = setTimeout(follow, touchUI ? 300 : 160); };   // 터치: 관성 스크롤이 완전히 멈춘 뒤에 지도 카드를 바꿔요
       if (!this._touchWired) { this._touchWired = true; window.addEventListener('touchstart', () => { this._touching = true; }, { passive: true }); ['touchend', 'touchcancel'].forEach(t => window.addEventListener(t, () => { this._touching = false; }, { passive: true })); }
       window.addEventListener('scroll', this._featScroll, { passive: true });
     }
