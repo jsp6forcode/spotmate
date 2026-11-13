@@ -2,110 +2,6 @@
   "note" : "Seasonal reasons to go now, checked against official or organizer pages. Dates can change, so check the source before you go.",
   "tags" : [
     {
-      "about" : "Maples and ginkgos usually peak mid-to-late October.",
-      "emoji" : "?뛻",
-      "from" : "2026-09-20",
-      "id" : "fallcolours",
-      "label" : "FallColours",
-      "spots" : {
-        "burnabylakeregionalpark" : {
-          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
-          "start" : "2026-10-10",
-          "why" : "Fall colour around the lake, plus ducks and birds to spot from the boardwalks."
-        },
-        "campbellvalley" : {
-          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
-          "start" : "2026-10-10",
-          "why" : "Boardwalk and forest trails that are pretty in fall colour."
-        },
-        "deerlakepark" : {
-          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
-          "start" : "2026-10-10",
-          "why" : "The trees around the lake change colour in October, an easy flat loop with a stroller."
-        },
-        "godwinfarmbiodiversitypr" : {
-          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
-          "start" : "2026-10-10",
-          "why" : "Hundreds of trees, some rare, turn colour through October."
-        },
-        "lynnheadwaters" : {
-          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
-          "start" : "2026-10-10",
-          "why" : "Rushing water and forest trails in fall colour."
-        },
-        "minnekhada" : {
-          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
-          "start" : "2026-10-10",
-          "why" : "A local favourite for fall walks and photos, with marsh and forest trails."
-        },
-        "nitobe" : {
-          "source" : "https://vandusengarden.org/bloom-calendar/fall-bloom/",
-          "start" : "2026-10-10",
-          "why" : "The Japanese maples turn red and orange in October, usually at their best mid-to-late month."
-        },
-        "pacificspiritregionalpar" : {
-          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
-          "start" : "2026-10-10",
-          "why" : "Big trail network where the maples go yellow in October."
-        },
-        "qepark" : {
-          "source" : "https://vandusengarden.org/bloom-calendar/fall-bloom/",
-          "start" : "2026-10-10",
-          "why" : "One of the city's go-to fall colour walks. Maples around the quarry garden usually peak mid-to-late October."
-        },
-        "queenspark" : {
-          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
-          "start" : "2026-10-10",
-          "why" : "Big old trees and a meadow that look their best in fall, next to the petting farm and playground."
-        },
-        "redwood" : {
-          "source" : "https://miss604.com/2024/09/10-parks-for-fall-colours-around-metro-vancouver/",
-          "start" : "2026-10-10",
-          "why" : "Mixed trees around the redwood grove turn colour in fall, with a treehouse and playground."
-        },
-        "stanley" : {
-          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
-          "start" : "2026-10-10",
-          "why" : "The seawall near the rowing club and the Coal Harbour path turn gold and red in October."
-        },
-        "vandusen" : {
-          "source" : "https://vancouver.ca/parks-recreation-culture/harvest-days.aspx",
-          "why" : "Harvest Days runs on weekends Sept 26 to Oct 18 (plus Thanksgiving Monday, Oct 12), included with admission. Sugar maples, ginkgos and Japanese maples usually peak mid-to-late October."
-        },
-        "drsunyatsenclassicalchin" : {
-          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
-          "start" : "2026-10-10",
-          "why" : "Manicured trees give the garden a calm autumn scene. Advance booking is required."
-        },
-        "ubcbotanicalgarden" : {
-          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
-          "start" : "2026-10-10",
-          "why" : "The Carolinian Forest section has eastern North American trees in fall colour."
-        },
-        "parktilfordgardens" : {
-          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
-          "start" : "2026-10-10",
-          "why" : "The Japanese maples in the Asian garden turn gold and crimson."
-        },
-        "burnabymountainpark" : {
-          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
-          "start" : "2026-10-10",
-          "why" : "Walk the Panorama Trail or stop at the Kamui Mintara sculpture viewpoint."
-        },
-        "granville" : {
-          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
-          "start" : "2026-10-10",
-          "why" : "Maple trees glow red, orange and yellow around the island and Ron Basford Park."
-        },
-        "troutlake" : {
-          "source" : "https://destinationvancouver.com/inspirations/city/best-places-to-see-fall-colours-around-vancouver",
-          "start" : "2026-10-10",
-          "why" : "Maples, willow, oak, birch and cherry trees give the lake a mix of fall colours."
-        }
-      },
-      "to" : "2026-11-10"
-    },
-    {
       "about" : "Salmon return to local rivers and hatcheries in fall.",
       "emoji" : "?맅",
       "from" : "2026-09-20",
@@ -219,5 +115,5 @@
       "to" : "2027-01-10"
     }
   ],
-  "updatedAt" : "2026-11-05"
+  "updatedAt" : "2026-11-12"
 }
