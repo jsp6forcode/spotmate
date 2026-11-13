@@ -159,7 +159,7 @@
       "summary": "Over a million lights across the garden, with timed tickets sold online only", "source": "https://vancouver.ca/parks-recreation-culture/festival-of-lights.aspx" },
     { "id": "lafarge-lights-2026", "type": "seasonal", "icon": "✨", "name": "Lights at Lafarge", "area": "Coquitlam",
       "venue": "Town Centre Park (Lafarge Lake, Coquitlam)", "lat": 49.2868, "lng": -122.7887, "spotId": "towncentre",
-      "schedule": { "from": "2026-11-27", "to": "2027-02-28", "start": "16:00", "end": "22:00" },
+      "schedule": { "from": "2026-11-27", "to": "2027-02-28", "start": "16:00", "end": "23:00" },
       "summary": "Free winter lights display around Lafarge Lake. Kick-off event with the fire and light show Nov 27, 5-8pm", "source": "https://www.coquitlam.ca/784/Lights-at-Lafarge" },
     { "id": "mos-winterfest-2026", "type": "seasonal", "icon": "🎄", "name": "WinterFest at Museum of Surrey", "area": "Surrey",
       "venue": "Museum of Surrey (17710 56A Ave, Surrey)", "lat": 49.1046, "lng": -122.7322, "spotId": "museumsurrey",
