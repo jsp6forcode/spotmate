@@ -3233,8 +3233,19 @@ const app = new App();
   b.addEventListener('click', () => {
     if (!touchUI && !calm) return window.scrollTo({ top: 0, behavior: 'smooth' });
     const root = document.documentElement;
+    const finish = () => { cancelAnimationFrame(raf); raf = 0; window.removeEventListener('touchstart', stop); setTimeout(() => { root.style.scrollSnapType = ''; root.style.scrollBehavior = ''; }, 250); };
+    const stop = () => finish();   // 올라가는 도중에 화면을 만지면 거기서 멈춰요
     root.style.scrollSnapType = 'none'; root.style.scrollBehavior = 'auto';
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    requestAnimationFrame(() => { window.scrollTo({ top: 0, behavior: 'instant' }); setTimeout(() => { root.style.scrollSnapType = ''; root.style.scrollBehavior = ''; }, 250); });
+    if (calm) { window.scrollTo({ top: 0, behavior: 'instant' }); return finish(); }
+    // 한 번에 확 점프하면 어디로 갔는지 알기 어려워서, 올라가는 게 보이도록 0.5~0.9초 동안 빠르게 움직여요 (처음엔 빠르게, 끝에서 천천히 멈춰요)
+    const y0 = scrollY, dur = Math.min(900, Math.max(500, 400 + y0 * 0.05)), t0 = performance.now();
+    const step = now => {
+      const u = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - u, 3);
+      window.scrollTo({ top: Math.round(y0 * (1 - e)), behavior: 'instant' });
+      if (u < 1) raf = requestAnimationFrame(step); else finish();
+    };
+    window.addEventListener('touchstart', stop, { passive: true, once: true });
+    raf = requestAnimationFrame(step);
   });
+  let raf = 0;
 })();
