@@ -3228,5 +3228,13 @@ const app = new App();
   const calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const show = () => { b.style.display = window.scrollY < 600 ? 'none' : 'flex'; };
   window.addEventListener('scroll', show, { passive: true }); show();
-  b.addEventListener('click', () => window.scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' }));
+  // 폰·태블릿(터치): 스크롤 스냅이 켜져 있어서, 부드럽게 길게 올라가는 도중에 카드 줄에 걸려 화면이 튀고 꼭대기까지 못 갔어요. 그래서 스냅을 잠깐 끄고 한 번에 맨 위로 옮겨요. 마우스·트랙패드는 예전처럼 부드럽게 올라가요
+  const touchUI = window.matchMedia && matchMedia('(pointer: coarse)').matches;
+  b.addEventListener('click', () => {
+    if (!touchUI && !calm) return window.scrollTo({ top: 0, behavior: 'smooth' });
+    const root = document.documentElement;
+    root.style.scrollSnapType = 'none'; root.style.scrollBehavior = 'auto';
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    requestAnimationFrame(() => { window.scrollTo({ top: 0, behavior: 'instant' }); setTimeout(() => { root.style.scrollSnapType = ''; root.style.scrollBehavior = ''; }, 250); });
+  });
 })();
