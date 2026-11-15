@@ -68,6 +68,14 @@ tailwind.config = {
   .leaflet-tooltip.card-tip.feat > div { animation: featIn .35s ease-out; }
   /* 지도 화면: 브라우저 스냅은 끄고(위로 올릴 때 거꾸로 끌어당겨 답답했어요), 스크롤이 멈추면 가던 방향의 카드 줄만 지도 밑에 부드럽게 맞춰요 (app.js) */
   html.snap-list { scroll-behavior: smooth; }
+  /* 폰·태블릿(터치)만: 브라우저 기본 스냅을 써요. 손가락으로 넘긴 관성 스크롤이 멈출 자리를 브라우저가 미리 카드 줄에 맞춰 주기 때문에, 멈춘 뒤에 화면이 한 번 더 움직이지 않아요 (JS로 끌어당기던 때의 끊김이 없어요). 마우스·트랙패드는 휠 한 칸마다 되돌아가 답답해서 위의 app.js 방식 그대로예요 */
+  @media (pointer: coarse) {
+    html.snap-list { scroll-snap-type: y proximity; }
+    html.snap-list header.hero { scroll-snap-align: start; }
+    html.snap-list footer { scroll-snap-align: end; }
+    html.snap-list article[data-act="open"] { scroll-snap-align: start; scroll-margin-top: var(--mapbar-h, 0px); }
+  }
+  @media (prefers-reduced-motion: reduce) { html.snap-list { scroll-snap-type: none; } }
   .spot-pin.feat-pin { visibility: hidden; }   /* 카드가 펼쳐진 장소는 핀 심볼을 숨기고, 카드에서 이어진 선 끝의 점이 정확한 위치를 알려요 */
   /* 지도 카드와 같은 장소의 목록 카드: 같은 번호 배지 + 청록 테두리. 서로 마우스를 올리면 함께 강조 */
   article.feat-list::after { content: ""; position: absolute; inset: 0; border: 3px solid #14b8a6; border-radius: inherit; pointer-events: none; z-index: 15; }
