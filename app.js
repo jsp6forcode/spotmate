@@ -2921,7 +2921,6 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         // 지도가 다시 그려져서 이 지도가 없어졌으면 그냥 끝내요. (예전엔 여기서 this._featScroll 을 지워서, 새 지도의 스크롤 연결까지 끊겨 카드가 목록을 안 따라갔어요. 옛 연결은 새 지도가 만들어질 때 지워요)
         if (!el.isConnected) return;
         if (Date.now() < hold) return;
-        if (touchUI && this._touching) { clearTimeout(timer); timer = setTimeout(follow, 300); return; }   // 손가락이 닿아 있는 동안엔 지도를 바꾸지 않아요 (스크롤과 지도 애니메이션이 겹치지 않게)
         const bar = el.closest('.sticky'); if (!bar) return;
         const bottom = bar.getBoundingClientRect().bottom;
         const ids = [...document.querySelectorAll('article[data-act="open"]')].filter(c => c.getBoundingClientRect().bottom > bottom + 60).map(c => c.dataset.val).filter(id => byIt[id] && byIt[id].lat != null).slice(0, N);
@@ -2932,10 +2931,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           const ahead = gaps.filter(g => dir > 0 ? g > 2 && g < 150 : g < -2 && g > -150).sort((a, b) => Math.abs(a) - Math.abs(b))[0];
           if (ahead != null) easeScroll(ahead);
         }
-        if (ids.length) setFeat(ids, true);
+        if (ids.length) setFeat(ids, !touchUI);   // 터치: 스크롤 중에 바뀌니까 지도는 애니메이션 없이 바로 옮겨요 (움직이는 도중에 또 바뀌면 Leaflet 오류가 나요)
       };
       let lastY = scrollY, dir = 1;
-      this._featScroll = () => { const y = scrollY; if (y > lastY + 1) dir = 1; else if (y < lastY - 1) dir = -1; lastY = y; clearTimeout(timer); timer = setTimeout(follow, touchUI ? 300 : 160); };   // 터치: 관성 스크롤이 완전히 멈춘 뒤에 지도 카드를 바꿔요
+      this._featScroll = () => { const y = scrollY; if (y > lastY + 1) dir = 1; else if (y < lastY - 1) dir = -1; lastY = y; if (touchUI) { if (!timer) timer = setTimeout(() => { timer = null; follow(); }, 120); } else { clearTimeout(timer); timer = setTimeout(follow, 160); } };   // 터치: 스크롤이 멈추길 기다리지 않고, 움직이는 동안에도 0.12초마다 지도 카드를 바꿔요 (멈춘 뒤에야 바뀌면 답답해요). 마우스: 멈춘 뒤 0.16초
       if (!this._touchWired) { this._touchWired = true; window.addEventListener('touchstart', () => { this._touching = true; }, { passive: true }); ['touchend', 'touchcancel'].forEach(t => window.addEventListener(t, () => { this._touching = false; }, { passive: true })); }
       window.addEventListener('scroll', this._featScroll, { passive: true });
     }
