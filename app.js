@@ -2011,7 +2011,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           this._moreCls = open ? 'contents' : 'hidden sm:contents';
           return `
         <div class="flex flex-wrap items-center gap-1.5 sm:gap-x-3 sm:gap-y-2">
-          ${s.cat === 'events' || s.view === 'map' ? '' : `
+          ${s.cat === 'events' ? '' : `
           <button data-act="filters" aria-expanded="${!!open}" class="sm:hidden order-first shrink-0 min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">${open ? 'Hide filters' : `Filters${more ? ` · ${more}` : ''}`}</button>`}
           <div class="${s.cat === 'events' ? 'contents' : this._moreCls}">
           ${s.view === 'map' ? '' : `<label class="flex shrink-0 items-center">
@@ -2042,7 +2042,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </label>
           </div>`}
         </div>`; })()}
-        <div class="${s.filtersOpen || s.cat === 'events' || s.view === 'map' ? '' : 'hidden sm:block'}">${this.locationBar(items)}</div>
+        <div class="${s.filtersOpen || s.cat === 'events' ? '' : 'hidden sm:block'}">${this.locationBar(items)}</div>
         ${s.geoMsg ? `<p class="text-xs text-slate-600 dark:text-slate-300" role="status">${esc(s.geoMsg)}</p>` : ''}
         <p class="text-xs text-slate-500 dark:text-slate-400">${this.countLine(items)}</p>
         ${s.cat !== 'events' && s.openNow && HOURS_READY && (this._hidden.closed + this._hidden.unknown) ? `
@@ -2308,29 +2308,35 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       ${spotTags(s).length || evHere ? `<p class="absolute top-1.5 left-1.5 sm:-top-2 sm:-left-2 z-20 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-teal-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''}
       <div class="relative rounded-t-2xl sm:rounded-t-[20px] overflow-hidden">
         ${this.cover(s, 'h-28 sm:h-36')}
-        <div class="absolute inset-x-0 top-0 px-2.5 sm:px-5 ${spotTags(s).length || evHere ? "pt-8" : "pt-3.5"} sm:pt-4 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="text-sm sm:text-lg font-bold leading-snug text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
+        <div class="absolute inset-x-0 top-0 px-2.5 sm:px-4 ${spotTags(s).length || evHere ? "pt-8" : "pt-3"} sm:pt-3.5 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="font-brand text-[15px] sm:text-xl font-bold leading-tight tracking-[-0.01em] text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
         </div>
-        <div class="absolute inset-x-0 bottom-0 px-2.5 sm:px-5 pb-1.5 sm:pb-2 pt-8 flex items-end justify-between gap-2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"><p class="min-w-0 text-xs sm:text-sm text-white/90 truncate [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">${esc(s.area)}${s.dist != null ? `, ${fmtDist(s.dist)}` : ''}</p></div>
+        ${/* 디자인 정리 (2026-11-16): Share/Save는 카드 맨 아래 큰 버튼 두 개 대신 사진 왼쪽 아래 아이콘으로 (오른쪽 아래는 사진 출처 자리) */''}
+        <div class="absolute left-1.5 bottom-1.5 sm:left-2.5 sm:bottom-2.5 z-10 flex items-center gap-1.5">
+          ${this.state.shareMsg && this.state.shareMsg.id === s.id ? `<span role="status" class="px-2 py-1 rounded-full bg-black/60 text-white text-[11px] font-semibold">${esc(this.state.shareMsg.text)}</span>` : ''}
+          <button data-act="share" data-val="${s.id}" aria-label="Share ${esc(s.name)}" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/45 hover:bg-black/65 backdrop-blur-sm text-white flex items-center justify-center"><svg aria-hidden="true" viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg></button>
+          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" aria-label="${saved ? 'Saved' : 'Save'} ${esc(s.name)}" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full backdrop-blur-sm flex items-center justify-center ${saved ? 'bg-white text-rose-600' : 'bg-black/45 hover:bg-black/65 text-white'}"><svg aria-hidden="true" viewBox="0 0 24 24" class="w-4 h-4" fill="${saved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg></button>
+        </div>
       </div>
-      <div class="px-2.5 sm:px-4 pt-0.5 sm:pt-1 pb-2.5 sm:pb-3.5 flex flex-col flex-1">
-        ${this.planLater() && HOURS_READY ? (() => {
-          // 날짜 계획: 그날(들) 영업시간
-          const ph = this.planHours(s);
-          if (!ph) return '';   // 규칙 (사용자, 2026-10-14): 영업시간을 모르면 카드에 "Hours unknown"을 보여주지 않아요
-          return `<p class="mt-1 sm:mt-1.5 text-xs sm:text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)}</p>`; })()
-        : (() => { const oi = openInfo(s); return oi
-          ? `<p class="mt-1 sm:mt-1.5 text-xs sm:text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>`
-          : ''; })()}
+      <div class="px-2.5 sm:px-4 pt-2 sm:pt-3 pb-2.5 sm:pb-3.5 flex flex-col flex-1">
         ${(() => {
-          // 카드엔 한 줄 요약만: 부모 후기의 첫 문장, 없으면 설명 (후기 전체·팁·입장료·행사 박스는 카드를 열면 나와요)
+          // 카드의 주인공: 가 볼 이유 한 줄 (부모 후기의 첫 문장, 없으면 설명). 후기 전체·팁·입장료·행사 박스는 카드를 열면 나와요
           const line = (SAYS[s.id] ? String(SAYS[s.id]).split(/(?<=[.!?])\s/)[0] : s.summary) || '';
-          return line ? `<p class="mt-0.5 sm:mt-1 text-xs sm:text-sm text-slate-700 dark:text-slate-300 [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] overflow-hidden">${esc(line)}</p>` : '';
+          // 본문 글꼴(IBM Plex) 보통 굵기: 굵은 글씨는 장소 이름 하나만 (2026-11-16, 사용자: 다 볼드라 읽기 힘들어요)
+          return line ? `<p class="text-[13px] sm:text-[15px] leading-[1.5] text-slate-700 dark:text-slate-200 [display:-webkit-box] [-webkit-line-clamp:4] [-webkit-box-orient:vertical] overflow-hidden">${esc(line)}</p>` : '';
         })()}
-        <div class="mt-auto pt-2.5 sm:pt-4 flex gap-2">
-        <button data-act="share" data-val="${s.id}" class="w-full min-w-0 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">${this.state.shareMsg && this.state.shareMsg.id === s.id ? esc(this.state.shareMsg.text) : '↗ Share'}</button>
-          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="w-full min-w-0 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm ${saved ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'}">${saved ? '♥ Saved' : '♡ Save'}</button>
-
-        </div>
+        ${(() => {
+          // 보조 정보 한 줄: 영업 상태 · 동네, 거리. 닫힘은 빨강 대신 회색 (밤에 카드가 온통 빨개지지 않게)
+          // 두 줄로 (2026-11-16, 가독성): 첫 줄 영업 상태, 둘째 줄 동네 · 거리. 각 줄은 꺾이지 않게 한 줄로 자르고, 회색을 한 단계 진하게 (대비 약 7)
+          // 걷는 시간("~1 min walk")은 폰에선 빼요: 2열 카드가 좁아서 줄 끝이 잘려요 (2026-11-16, 사용자)
+          const dist = s.dist != null ? String(fmtDist(s.dist)) : '', [km, walk] = dist.split(/ · (?=~)/);
+          const where = esc(s.area) + (dist ? ` · ${esc(km)}${walk ? `<span class="hidden sm:inline"> · ${esc(walk)}</span>` : ''}` : '');
+          // "Closed · opens Tue 10am" → "Opens Tue 10am" (다시 여는 때가 있으면 닫혔다는 말은 빼요)
+          const tidy = t => String(t).replace(/^Closed · opens\b/, 'Opens');
+          let st = '';
+          if (this.planLater() && HOURS_READY) { const ph = this.planHours(s); if (ph) st = `<span class="${ph.open ? 'text-emerald-700 dark:text-emerald-300 font-medium' : ''}">${esc(tidy(ph.text))}</span>`; }   // 규칙 (사용자, 2026-10-14): 영업시간을 모르면 "Hours unknown"을 보여주지 않아요
+          else { const oi = openInfo(s); if (oi) st = `<span class="${oi.open ? 'text-emerald-700 dark:text-emerald-300 font-medium' : ''}">${esc(tidy(oi.text))}</span>`; }
+          return `<div class="mt-auto pt-2 sm:pt-3 text-[13px] sm:text-sm leading-[1.35] text-slate-600 dark:text-slate-300">${st ? `<p class="truncate">${st}</p>` : ''}<p class="truncate">${where}</p></div>`;
+        })()}
       </div>
     </article>`;
   }
@@ -2664,7 +2670,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               ${cats.map(c => btn(c, 'shrink-0 flex items-center gap-1 px-1 py-0.5 rounded-md text-left leading-tight', 'w-4 h-4 text-[9px] leading-4')).join('')}
             </div></div>`;
           })()}
-          <div id="lmap" class="w-full h-[44vh] min-h-[280px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(46vh-2.5rem)] md:min-h-[260px] lg:h-[calc(46vh-2.5rem)] lg:min-h-[280px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
+          <div id="lmap" class="w-full h-[240px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(46vh-2.5rem)] md:min-h-[260px] lg:h-[calc(46vh-2.5rem)] lg:min-h-[280px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
         </div>
       </div>
       <div data-keep-scroll="maplist" class="max-sm:px-1 grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
@@ -2762,7 +2768,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const me = o || (this.state.origin ? { lat: this.state.origin.lat, lng: this.state.origin.lng, label: 'You' } : null);
     if (me) {
       const r = this.state.radius;
-      if (o && this.nearActive() && r !== 'any') L.circle([o.lat, o.lng], { radius: r * 1000, color: '#0d9488', weight: 2, dashArray: '6 4', fillOpacity: 0.08 }).addTo(map);
+      if (o && this.nearActive() && r !== 'any') L.circle([o.lat, o.lng], { radius: r * 1000, color: '#2c798f', weight: 2, dashArray: '6 4', fillOpacity: 0.08 }).addTo(map);
       L.marker([me.lat, me.lng], { icon: L.divIcon({ className: '', html: '<div class="spot-pin origin"></div>', iconSize: [11, 11], iconAnchor: [5.5, 5.5] }), zIndexOffset: 20000, keyboard: false, title: this.state.nearKey === 'here' || !o ? 'You' : o.label, interactive: false }).addTo(map);
     }
     // 보던 위치 이어가기: 같은 목록이면 저장한 위치로, 아니면 추천 장소에 맞춰 확대(전체 목록은 메트로 밴쿠버 범위)
@@ -2783,7 +2789,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       svg.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:595;overflow:visible';
       el.appendChild(svg);
       let lineRaf = 0;
-      const ringPin = (pin, on) => { const e = pin.mk.getElement(), d = e && e.querySelector('.spot-pin'); if (d) d.classList.toggle('feat-pin', on); };
+      // 디자인 정리 (2026-11-16): 지도 위에 사진 카드를 펼쳐 두지 않아요 (핀 수십 개 위에 겹쳐 흐릿했어요).
+      // 대신 목록 카드와 같은 번호를 핀에 크게 달고, 사진 카드는 핀을 누르거나(폰) 마우스를 올릴 때(데스크톱)만 떠요. true로 바꾸면 예전 펼친 카드로 돌아가요
+      const FEAT_CALLOUTS = false;
+      const ringPin = (pin, on, n) => {
+        const e = pin.mk.getElement(), d = e && e.querySelector('.spot-pin'); if (!d) return;
+        if (FEAT_CALLOUTS) { d.classList.toggle('feat-pin', on); return; }
+        if (d.dataset.mark == null) d.dataset.mark = d.textContent;
+        d.classList.toggle('feat-num', on); d.textContent = on ? String(n) : d.dataset.mark;
+      };
       // 아래 목록에서 지도에 펼친 카드와 같은 장소에 같은 번호 배지와 청록 테두리를 붙여요 (스크롤하면 새 카드로 옮겨가요)
       const markList = ids => {
         document.querySelectorAll('article.feat-list').forEach(a => { a.classList.remove('feat-list'); a.removeAttribute('data-featno'); const b = a.querySelector('.feat-no'); if (b) b.remove(); });
@@ -2840,13 +2854,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         if (ids.join() === cur.join()) return;
         cur.forEach(id => {
           const pin = this._pins[id], sp = byId(id); if (!pin) return;
-          pin.mk.unbindTooltip(); pin.mk.setZIndexOffset(pin.base); ringPin(pin, false);
+          pin.mk.setZIndexOffset(pin.base); ringPin(pin, false);
+          if (!FEAT_CALLOUTS) return;
+          pin.mk.unbindTooltip();
           if (sp && !coarse) pin.mk.bindTooltip(() => this.miniCard(sp), { className: 'card-tip', direction: 'auto', offset: [0, 0], opacity: 1, sticky: false });
         });
         cur = ids;
         markList(ids);
-        ids.forEach(id => {
+        ids.forEach((id, i) => {
           const pin = this._pins[id], sp = byId(id); if (!pin || !sp) return;
+          if (!FEAT_CALLOUTS) { pin.mk.setZIndexOffset(5000); ringPin(pin, true, i + 1); return; }
           pin.mk.unbindTooltip();
           pin.mk.bindTooltip(() => this.featCard(sp, ids.indexOf(id) + 1), { className: 'card-tip feat', permanent: true, interactive: true, direction: 'top', offset: [0, -28], opacity: 1 });
           pin.mk.openTooltip(); pin.mk.setZIndexOffset(500); ringPin(pin, true);
@@ -2895,6 +2912,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         });
         settleLines();
       };
+        if (pts.length && !FEAT_CALLOUTS) { map.fitBounds(L.latLngBounds([...pts.map(s => [s.lat, s.lng]), ...(me ? [[me.lat, me.lng]] : [])]), { paddingTopLeft: [24 + legendW, 48], paddingBottomRight: [24, 24], maxZoom: 15, animate: !!animate, duration: 0.5, easeLinearity: 0.35 }); return; }
         if (pts.length) { map.once('moveend', layout); map.fitBounds(L.latLngBounds([...pts.map(s => [s.lat, s.lng]), ...(me ? [[me.lat, me.lng]] : [])]), { paddingTopLeft: [cw / 2 + legendW, up + 34], paddingBottomRight: [cw / 2, 14], maxZoom: 15, animate: !!animate, duration: 0.5, easeLinearity: 0.35 }); layout(); }
       };
       const restored = !!(this._mapSaved && this._mapSaved.key === key), top = rank.slice(0, N);
