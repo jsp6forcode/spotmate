@@ -6,6 +6,12 @@
       "runtimeExecutable": "powershell",
       "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "tools/serve.ps1", "-Port", "8765"],
       "port": 8765
+    },
+    {
+      "name": "bisoop",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "D:/claude/bisoop/tools/serve.ps1", "-Port", "8766"],
+      "port": 8766
     }
   ]
 }
