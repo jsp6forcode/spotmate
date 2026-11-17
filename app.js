@@ -132,17 +132,18 @@ function kidProfile(s) {
 }
 // 카테고리 드롭다운: 장소 종류(kidProfile().kind)를 묶은 그룹 (사용자 요청, 2026-10-14). 지도 핀 색은 예전 CATS(nature/city)를 그대로 써요
 const CAT_GROUPS = {
-  playground: { label: 'Playground & park', color: '#16a34a', icon: '🎠', kinds: ['play', 'water', 'park', 'garden'] },   // 정원도 공원과 같이 (사용자 요청, 2026-10-21)
-  outdoors:   { label: 'Trail & beach', color: '#16a34a', icon: '🥾', kinds: ['trail', 'beach'] },
-  pool:       { label: 'Pool', color: '#0284c7', icon: '🏊', kinds: ['pool'] },
-  museum:     { label: 'Museum', color: '#7c3aed', icon: '🏛️', kinds: ['museum', 'aquarium'] },
-  mall:       { label: 'Mall & shops', color: '#db2777', icon: '🛍️', kinds: ['mall', 'shop'] },
-  indoor:     { label: 'Indoor play', color: '#ea580c', icon: '🤸', kinds: ['indoorplay', 'gym', 'trampoline', 'active', 'games', 'arcade', 'minigolf'] },
-  farm:       { label: 'Farm & animals', color: '#16a34a', icon: '🐑', kinds: ['farm', 'pumpkin', 'berry', 'birds', 'salmon'] },
-  sports:     { label: 'Skating & sports', color: '#0284c7', icon: '⛸️', kinds: ['rink', 'wheels', 'golf'] },
-  library:    { label: 'Library & rec centre', color: '#7c3aed', icon: '📚', kinds: ['library', 'rec'] },
-  arts:       { label: 'Arts & crafts', color: '#ea580c', icon: '🎨', kinds: ['arts'] },
-  fun:        { label: 'Rides & attractions', color: '#ea580c', icon: '🎡', kinds: ['rides', 'hologram', 'sight'] }
+  // 핀 색 (2026-11-16 디자인 정리): Tailwind 원색 대신 채도를 낮춘 밴쿠버 색. 공원=이끼, 트레일·해변=유목, 농장=올리브, 수영·스케이트=빙하 물빛, 박물관·도서관=저녁 안개 보라, 쇼핑=베리, 실내 놀이·체험=삼나무 껍질
+  playground: { label: 'Playground & park', color: '#5b8a64', icon: '🎠', kinds: ['play', 'water', 'park', 'garden'] },   // 정원도 공원과 같이 (사용자 요청, 2026-10-21)
+  outdoors:   { label: 'Trail & beach', color: '#9a7b56', icon: '🥾', kinds: ['trail', 'beach'] },
+  pool:       { label: 'Pool', color: '#3f84a6', icon: '🏊', kinds: ['pool'] },
+  museum:     { label: 'Museum', color: '#6d5a8e', icon: '🏛️', kinds: ['museum', 'aquarium'] },
+  mall:       { label: 'Mall & shops', color: '#b05a72', icon: '🛍️', kinds: ['mall', 'shop'] },
+  indoor:     { label: 'Indoor play', color: '#c0692f', icon: '🤸', kinds: ['indoorplay', 'gym', 'trampoline', 'active', 'games', 'arcade', 'minigolf'] },
+  farm:       { label: 'Farm & animals', color: '#7f8a3e', icon: '🐑', kinds: ['farm', 'pumpkin', 'berry', 'birds', 'salmon'] },
+  sports:     { label: 'Skating & sports', color: '#3f84a6', icon: '⛸️', kinds: ['rink', 'wheels', 'golf'] },
+  library:    { label: 'Library & rec centre', color: '#6d5a8e', icon: '📚', kinds: ['library', 'rec'] },
+  arts:       { label: 'Arts & crafts', color: '#c0692f', icon: '🎨', kinds: ['arts'] },
+  fun:        { label: 'Rides & attractions', color: '#c0692f', icon: '🎡', kinds: ['rides', 'hologram', 'sight'] }
 };
 const KIND_GROUP = {}; Object.entries(CAT_GROUPS).forEach(([g, v]) => v.kinds.forEach(k => { KIND_GROUP[k] = g; }));
 const kindGroup = s => KIND_GROUP[kidProfile(s).kind] || 'fun';
@@ -813,8 +814,8 @@ class App {
       q: '', kw: [], unused: [], free: false, qBusy: false, aiSay: '',
       radius: guideCityKey() ? 5 : RADII.map(String).includes(savedRadius) ? (savedRadius === 'any' ? 'any' : +savedRadius) : 10,
       modal: null, trendInfo: false,
-      // 지도에 행사·마켓 핀은 기본으로 꺼요 (홈·가이드 모두). 지도 위 Events·Markets 칩으로 켤 수 있어요
-      mapEvents: false, mapMarkets: false,
+      // 지도에 행사·마켓 핀은 기본으로 켜요 (2026-11-16 사용자 결정, 홈·가이드 모두). 지도 위 Events·Markets 칩으로 끌 수 있어요
+      mapEvents: true, mapMarkets: true,
       // "Good any day" 목록에서 보여줄 개수 (Show more로 12개씩 늘어나요)
       restShown: REST_STEP,
       plan: [], copyMsg: '', copyText: '',
@@ -1944,7 +1945,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 첫 화면에 추천 카드가 보이도록 헤더를 낮게: 모바일은 부제 없이 로고 + 탭만
     // 인스타그램 계정으로 바로 가는 둥근 버튼 (다크 모드 버튼 옆)
     const igIcon = `<svg viewBox="0 0 24 24" class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`;
-    const tab = (v, label) => `<button data-act="view" data-val="${v}" class="shrink-0 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors ${view === v ? 'bg-white text-indigo-700 shadow' : 'text-white/90 hover:bg-white/15'}">${label}</button>`;
+    const tab = (v, label) => `<button data-act="view" data-val="${v}" class="shrink-0 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors ${view === v ? 'bg-white text-violet-700 shadow' : 'text-white/90 hover:bg-white/15'}">${label}</button>`;
     return `
     <header class="hero relative text-white">
       <div class="max-w-6xl mx-auto px-4 md:px-6 pt-3 pb-3 md:pt-4 md:pb-3">
@@ -2031,7 +2032,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <button data-act="opennow" aria-pressed="${s.openNow}" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.openNow ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Open now</button>`}
           ${s.cat === 'events' ? '' : `
           <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Indoor</button>
-          ${KIDS_ONLY ? '' : `<button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.kidsOnly ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Kids</button>`}`}
+          ${KIDS_ONLY ? '' : `<button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.kidsOnly ? 'bg-violet-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Kids</button>`}`}
           ${s.cat === 'events' || s.view === 'map' ? '' : `
           <div class="${this._moreCls}">
           <label class="sm:ml-auto flex shrink-0 items-center">
@@ -2103,7 +2104,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           <p class="text-xs text-slate-500 dark:text-slate-400">${esc(EVENT_TYPES[ev.type] || 'Event')} · ${esc(ev.venue)}${ev.dist != null ? ` · ${fmtDist(ev.dist)}` : ''}</p>
           ${compact ? '' : `<p class="mt-1 text-sm text-slate-700 dark:text-slate-300">${esc(ev.summary)}</p>`}
           <p class="mt-1 flex flex-wrap gap-x-4 text-sm font-semibold">
-            ${ev.lat != null ? `<a href="${eventMapsUrl(ev)}" target="_blank" rel="noopener" class="inline-flex items-center py-2 text-indigo-700 dark:text-indigo-300">Directions</a>` : ''}
+            ${ev.lat != null ? `<a href="${eventMapsUrl(ev)}" target="_blank" rel="noopener" class="inline-flex items-center py-2 text-violet-700 dark:text-violet-300">Directions</a>` : ''}
             <a href="${esc(ev.source)}" target="_blank" rel="noopener" class="inline-flex items-center py-2 text-slate-600 dark:text-slate-300 ">Official info ↗</a>
             ${spot ? `<button data-act="open" data-val="${spot.id}" class="inline-flex items-center py-2 text-violet-700 dark:text-violet-300 text-left">See ${esc(spot.name)} →</button>` : ''}
             <button data-act="shareev" data-val="${esc(ev.id)}" class="inline-flex items-center py-2 text-slate-600 dark:text-slate-300">${this.state.shareMsg && this.state.shareMsg.id === ev.id ? esc(this.state.shareMsg.text) : 'Share'}</button>
@@ -2305,7 +2306,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const evExtra = evText && why && why.text !== evText ? evText : '';
     return `
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group relative cursor-pointer flex flex-col rounded-2xl sm:rounded-[20px] bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition">
-      ${spotTags(s).length || evHere ? `<p class="absolute top-1.5 left-1.5 sm:-top-2 sm:-left-2 z-20 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-teal-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''}
+      ${spotTags(s).length || evHere ? `<p class="absolute top-1.5 left-1.5 sm:-top-2 sm:-left-2 z-20 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-violet-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''}
       <div class="relative rounded-t-2xl sm:rounded-t-[20px] overflow-hidden">
         ${this.cover(s, 'h-28 sm:h-36')}
         <div class="absolute inset-x-0 top-0 px-2.5 sm:px-4 ${spotTags(s).length || evHere ? "pt-8" : "pt-3"} sm:pt-3.5 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="font-brand text-[15px] sm:text-xl font-bold leading-tight tracking-[-0.01em] text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
@@ -2372,14 +2373,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (!g) return '';
     // 모바일에서도 한 줄: 제목은 말줄임, 버튼은 줄바꿈 없이
     // 밝은 모드에서도 띠와 버튼이 눈에 띄게: 진한 배경 + 테두리, 버튼은 알약 모양
-    const box = 'mt-4 flex items-center gap-2 rounded-xl border border-teal-300 bg-teal-100 px-3 py-2 text-sm text-teal-900 dark:border-teal-900 dark:bg-teal-950 dark:text-teal-100', btn = 'ml-auto shrink-0 whitespace-nowrap min-h-[36px] px-3.5 py-1 rounded-full font-semibold border border-teal-600 bg-white text-teal-800 shadow-sm hover:bg-teal-50 dark:border-teal-700 dark:bg-teal-900 dark:text-teal-100 dark:hover:bg-teal-800';
+    const box = 'mt-4 flex items-center gap-2 rounded-xl border border-violet-300 bg-violet-100 px-3 py-2 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100', btn = 'ml-auto shrink-0 whitespace-nowrap min-h-[36px] px-3.5 py-1 rounded-full font-semibold border border-violet-600 bg-white text-violet-800 shadow-sm hover:bg-violet-50 dark:border-violet-700 dark:bg-violet-900 dark:text-violet-100 dark:hover:bg-violet-800';
     // "Show all places"를 눌러 내 주변 5 km의 모든 장소를 보는 중: 되돌아가는 버튼만
     if (this.state.guideAll) return `<div class="${box}"><span class="min-w-0 truncate font-semibold">All places within 5 km</span><button data-act="guideback" title="Back to ${esc(g.title)}" class="${btn}">Go back</button></div>`;
     // 실내·도시 필터를 끄면 안내 목록 제한이 풀려 개수가 맞지 않으니 띠도 숨겨요
     // 도시 안내는 위치(그 도시 5 km)가 켜져 있는 동안 띠를 보여주고, 버튼으로 위치·카테고리 필터를 풀어요
     const cityOn = !!g.cityKey && this.state.nearKey === g.cityKey;
     if (!this.guideActive() && !cityOn) return '';
-    return `<div class="${box}"><span class="min-w-0 truncate font-semibold" title="${esc(g.title)}">${esc(g.title)}</span>${cityOn ? '' : `<span class="shrink-0 text-teal-700 dark:text-teal-300">${g.set.size} places</span>`}<button data-act="guideclear" class="${btn}">Show all places</button></div>`
+    return `<div class="${box}"><span class="min-w-0 truncate font-semibold" title="${esc(g.title)}">${esc(g.title)}</span>${cityOn ? '' : `<span class="shrink-0 text-violet-700 dark:text-violet-300">${g.set.size} places</span>`}<button data-act="guideclear" class="${btn}">Show all places</button></div>`
   }
   // 안내 페이지의 장소 제한이 지금 적용되는지: 실내·도시 필터가 켜져 있는 동안, 또는 "Show all places"를 누르기 전까지
   guideActive() {
@@ -2654,20 +2655,20 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${(() => {
             if (picks) return '';
             const cc = this._catCounts || {}, total = Object.values(cc).reduce((a, b) => a + b, 0);
-            const cats = [['all', `(${total}) All`, '🗺️', '#64748b'], ...catOptions().map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '🎪', '#a21caf', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, CAT_GROUPS[k].icon, CAT_GROUPS[k].color, CAT_GROUPS[k].label]).filter(c => c[0] === this.state.cat || c[1].indexOf("(0)") !== 0).sort((a, b) => a[4].localeCompare(b[4]))];
+            const cats = [['all', `(${total}) All`, '🗺️', '#5c6e6d'], ...catOptions().map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '🎪', '#8e4a80', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, CAT_GROUPS[k].icon, CAT_GROUPS[k].color, CAT_GROUPS[k].label]).filter(c => c[0] === this.state.cat || c[1].indexOf("(0)") !== 0).sort((a, b) => a[4].localeCompare(b[4]))];
             const cur = cats.find(c => c[0] === this.state.cat) || cats[0];
             const btn = ([k, label, icon, color], cls, ic) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="${cls} ${this.state.cat === k ? 'bg-violet-100 text-violet-900 dark:bg-violet-500/20 dark:text-violet-100' : 'text-slate-700 dark:text-slate-200'}"><span class="${ic} shrink-0 rounded-full text-center text-white" style="background:${color}">${icon}</span>${label}</button>`;
             // 폰: "Category" 버튼 하나 (누르면 목록이 펼쳐져요) / 데스크톱: 지도 왼쪽 위에 반투명 세로 목록
             // 지도 안쪽 위: 폰은 [카테고리 버튼][Events][Markets] 한 줄, 데스크톱은 왼쪽 목록 오른쪽에 Events·Markets 칩
-            return `<div class="absolute left-2 top-2 md:left-[8.5rem] z-20 flex items-center gap-1.5 pointer-events-none">
+            return `<div class="absolute left-2 top-2 md:left-[10.5rem] z-20 flex items-center gap-1.5 pointer-events-none">
             <details class="md:hidden relative text-xs font-semibold pointer-events-auto">
               <summary class="list-none cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/85 dark:bg-slate-900/80 backdrop-blur-sm shadow text-slate-800 dark:text-slate-100 [&::-webkit-details-marker]:hidden"><span class="w-4 h-4 rounded-full text-[9px] leading-4 text-center text-white" style="background:${cur[3]}">${cur[2]}</span>${cur[1]} <span aria-hidden="true" class="text-slate-500">▾</span></summary>
-              <div role="group" aria-label="Category" class="absolute left-0 top-full z-20 mt-1 w-[14rem] p-1 grid grid-cols-2 gap-0.5 rounded-lg bg-white/85 dark:bg-slate-900/85 backdrop-blur-md shadow-lg text-[10px]">
-                ${cats.map(c => btn(c, 'flex items-center gap-1 px-1.5 py-1 rounded-md text-left leading-tight', 'w-3.5 h-3.5 text-[8px] leading-[14px]')).join('')}
+              <div role="group" aria-label="Category" class="absolute left-0 top-full z-20 mt-1 w-[16rem] p-1 grid grid-cols-2 gap-0.5 rounded-lg bg-white/85 dark:bg-slate-900/85 backdrop-blur-md shadow-lg text-xs">
+                ${cats.map(c => btn(c, 'flex items-center gap-1 px-1.5 py-1 rounded-md text-left leading-tight', 'w-4 h-4 text-[10px] leading-4')).join('')}
               </div></details>
-            <div class="flex items-center gap-1.5 pointer-events-auto text-[10px] sm:text-[11px] font-semibold">${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}</div></div>
-            <div class="hidden md:block md:absolute md:left-0 md:top-2 md:bottom-2 md:z-10 md:w-32 pointer-events-none"><div role="group" aria-label="Category" class="pointer-events-auto absolute inset-0 p-0.5 flex flex-col gap-0.5 overflow-y-auto rounded-r-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow text-[11px] font-semibold no-scrollbar">
-              ${cats.map(c => btn(c, 'shrink-0 flex items-center gap-1 px-1 py-0.5 rounded-md text-left leading-tight', 'w-4 h-4 text-[9px] leading-4')).join('')}
+            <div class="flex items-center gap-1.5 pointer-events-auto text-xs sm:text-[13px] font-semibold">${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}</div></div>
+            <div class="hidden md:block md:absolute md:left-0 md:top-2 md:bottom-2 md:z-10 md:w-40 pointer-events-none"><div role="group" aria-label="Category" class="pointer-events-auto absolute inset-0 p-0.5 flex flex-col gap-0.5 overflow-y-auto rounded-r-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow text-[13px] font-semibold no-scrollbar">
+              ${cats.map(c => btn(c, 'shrink-0 flex items-center gap-1 px-1 py-0.5 rounded-md text-left leading-tight', 'w-5 h-5 text-[11px] leading-5')).join('')}
             </div></div>`;
           })()}
           <div id="lmap" class="w-full h-[240px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(46vh-2.5rem)] md:min-h-[260px] lg:h-[calc(46vh-2.5rem)] lg:min-h-[280px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
@@ -2739,7 +2740,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const z = m => typeof m === 'number' ? 1000 - m : 0;
     this._pins = {};
     items.forEach(s => {
-      const icon = L.divIcon({ className: '', html: `<div class="spot-pin" style="background:${s.color};font-size:9px">${esc(String(s.mark))}</div>`, iconSize: [16, 16], iconAnchor: [8, 8] });
+      const icon = L.divIcon({ className: '', html: `<div class="spot-pin" style="background:${s.color};font-size:11px">${esc(String(s.mark))}</div>`, iconSize: [20, 20], iconAnchor: [10, 10] });
       // 마우스: 올리면 작은 카드, 누르면 모달. 터치 화면: 핀을 누르면 작은 카드, 그 카드를 누르면 모달 (호버가 없어서)
       const coarse = matchMedia('(pointer: coarse)').matches, sp = byId(s.id);
       const mk = L.marker([s.lat, s.lng], { icon, keyboard: true, zIndexOffset: z(s.mark), alt: s.name }).addTo(map).on('click', () => {
@@ -2756,7 +2757,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     });
     // 행사·마켓 핀: 누르면 다음 날짜·시간과 장소/공식 정보 링크
     (this._map.events || []).forEach((ev, ei) => {
-      const icon = L.divIcon({ className: '', html: `<div class="spot-pin ev${ev.market ? ' mk' : ''}">${esc(ev.icon)}</div>`, iconSize: [16, 16], iconAnchor: [8, 8] });
+      const icon = L.divIcon({ className: '', html: `<div class="spot-pin ev${ev.market ? ' mk' : ''}">${esc(ev.icon)}</div>`, iconSize: [20, 20], iconAnchor: [10, 10] });
       const html = `<div style="min-width:180px"><p style="font-weight:700;margin:0">${esc(ev.name)}${ev.forParents ? ' <span style="font-size:11px;font-weight:700;background:#fef3c7;color:#78350f;padding:1px 6px;border-radius:4px;white-space:nowrap">For parents 😉</span>' : ''}</p><p style="margin:4px 0">${esc(ev.when)}</p>
         <p style="margin:0">${ev.spotId ? `<button data-act="open" data-val="${esc(ev.spotId)}" style="font-weight:600;margin-right:10px">Place details</button>` : ''}${/^https:\/\//.test(ev.source) ? `<a href="${esc(ev.source)}" target="_blank" rel="noopener" >Official info ↗</a>` : ''}</p></div>`;
       const emk = L.marker([ev.lat, ev.lng], { icon, title: ev.name, keyboard: true, zIndexOffset: 2000 }).addTo(map).bindPopup(html);
@@ -2781,7 +2782,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     {
       const small = el.clientWidth < 640, cw = (small ? 112 : 150) + 6, ch = small ? 84 : 108, up = ch + 32, coarse = matchMedia('(pointer: coarse)').matches, N = (coarse || innerWidth < 768 || el.clientWidth < 640) ? 2 : 3;   // 폰은 2장만
       const byIt = {}; items.forEach(s => { byIt[s.id] = s; });
-      const legendW = innerWidth >= 768 && !picks ? 136 : 0;   // 데스크톱은 지도 왼쪽에 카테고리 목록이 떠 있어서 카드가 그 밑에 안 가게
+      const legendW = innerWidth >= 768 && !picks ? 168 : 0;   // 데스크톱은 지도 왼쪽에 카테고리 목록이 떠 있어서 카드가 그 밑에 안 가게
       let cur = [];
       // 카드와 지도 위치를 선으로 이어요: 핀 위치에서 카드의 가장 가까운 모서리까지 (흰 테두리 + 청록 선). 카드가 펼쳐진 장소의 핀 심볼은 숨기고 선 끝의 점이 정확한 위치를 알려요
       const svgNS = 'http://www.w3.org/2000/svg', svg = document.createElementNS(svgNS, 'svg');
@@ -2935,7 +2936,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       if (!this._easeWired) { this._easeWired = true; ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(t => window.addEventListener(t, () => { if (this._easeRaf) { cancelAnimationFrame(this._easeRaf); this._easeRaf = 0; } }, { passive: true })); }
       // 폰·태블릿(터치): 스크롤은 브라우저 기본 관성 스크롤에만 맡겨요. 멈춘 뒤 JS로 페이지를 더 끌어당기면(스냅 보정) 관성이 끝나자마자 화면이 또 움직여서 끊겨 보였어요
       const touchUI = matchMedia('(pointer: coarse)').matches;
-      const follow = () => {
+      // live: 스크롤하는 도중의 갱신 (스냅 보정 없이 카드·지도만 바로 바꿔요, 지도는 애니메이션 없이)
+      const follow = (live) => {
         // 지도가 다시 그려져서 이 지도가 없어졌으면 그냥 끝내요. (예전엔 여기서 this._featScroll 을 지워서, 새 지도의 스크롤 연결까지 끊겨 카드가 목록을 안 따라갔어요. 옛 연결은 새 지도가 만들어질 때 지워요)
         if (!el.isConnected) return;
         if (Date.now() < hold) return;
@@ -2943,16 +2945,56 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         const bottom = bar.getBoundingClientRect().bottom;
         const ids = [...document.querySelectorAll('article[data-act="open"]')].filter(c => c.getBoundingClientRect().bottom > bottom + 60).map(c => c.dataset.val).filter(id => byIt[id] && byIt[id].lat != null).slice(0, N);
         // 스냅을 아주 조금 더 강하게: 멈춘 자리가 카드 줄 정렬 위치(지도 밑 8px)에서 110px 안이면 부드럽게 끌어 붙여요 (손가락이 닿아 있는 동안은 안 해요)
-        if (!touchUI && !this._touching && bar.getBoundingClientRect().top <= 1) {   // 마우스·트랙패드에서만 스냅 보정 (터치는 위 설명대로 안 해요)
+        const WHEEL_SNAP = true;   // 2026-11-16: 데스크톱은 아래 휠 스냅(_wheelSnapFn)이 카드 줄을 맞춰서, 멈춘 뒤 끌어당기는 예전 보정은 꺼요. false로 바꾸면 예전 방식
+        if (!WHEEL_SNAP && !live && !touchUI && !this._touching && bar.getBoundingClientRect().top <= 1) {   // 마우스·트랙패드에서만 스냅 보정 (터치는 위 설명대로 안 해요)
           const gaps = [...document.querySelectorAll('article[data-act="open"]')].map(c => c.getBoundingClientRect().top - (bottom + 8));
           // dir: 1 = 아래로, -1 = 위로 스크롤하는 중. 가던 방향 150px 안의 줄만 끌어요 (거꾸로 끌어당기면 답답해요)
           const ahead = gaps.filter(g => dir > 0 ? g > 2 && g < 150 : g < -2 && g > -150).sort((a, b) => Math.abs(a) - Math.abs(b))[0];
           if (ahead != null) easeScroll(ahead);
         }
-        if (ids.length) setFeat(ids, !touchUI);   // 터치: 스크롤 중에 바뀌니까 지도는 애니메이션 없이 바로 옮겨요 (움직이는 도중에 또 바뀌면 Leaflet 오류가 나요)
+        if (ids.length) setFeat(ids, !touchUI && !live);   // 스크롤 도중(live)과 터치: 스크롤 중에 바뀌니까 지도는 애니메이션 없이 바로 옮겨요 (움직이는 도중에 또 바뀌면 Leaflet 오류가 나요)
       };
-      let lastY = scrollY, dir = 1;
-      this._featScroll = () => { const y = scrollY; if (y > lastY + 1) dir = 1; else if (y < lastY - 1) dir = -1; lastY = y; if (touchUI) { if (!timer) timer = setTimeout(() => { timer = null; follow(); }, 120); } else { clearTimeout(timer); timer = setTimeout(follow, 160); } };   // 터치: 스크롤이 멈추길 기다리지 않고, 움직이는 동안에도 0.12초마다 지도 카드를 바꿔요 (멈춘 뒤에야 바뀌면 답답해요). 마우스: 멈춘 뒤 0.16초
+      // 데스크톱 휠 스냅 (2026-11-16, 사용자: 폰처럼 부드럽게): 휠 한 번에 다음(이전) 카드 줄이 지도 밑으로 미끄러지듯 와요.
+      // 그 방향에 카드 줄이 없거나 너무 멀면(null) 브라우저 기본 스크롤 그대로 (맨 위 헤더, 맨 아래 등)
+      this._wheelSnapFn = d => {
+        if (!el.isConnected) return null;
+        const bar = el.closest('.sticky'); if (!bar) return null;
+        const line = bar.offsetHeight + 8;   // 카드 줄이 멈출 자리 (지도 바로 밑)
+        const gaps = [...new Set([...document.querySelectorAll('article[data-act="open"]')].map(c => Math.round(c.getBoundingClientRect().top - line)))].sort((a, b) => a - b);
+        const g = d > 0 ? gaps.find(x => x > 4) : gaps.slice().reverse().find(x => x < -4);
+        return g == null || Math.abs(g) > innerHeight * 0.9 ? null : g;
+      };
+      if (!this._wheelSnapWired) {
+        this._wheelSnapWired = true;
+        let raf = 0, t0 = 0, locked = false, quiet = 0;
+        const unlockLater = () => { clearTimeout(quiet); quiet = setTimeout(() => { locked = false; }, 180); };
+        window.addEventListener('wheel', e => {
+          if (matchMedia('(pointer: coarse)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          if (e.ctrlKey || e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || !e.deltaY) return;
+          const t = e.target; if (t && t.closest && t.closest('[role="dialog"], select, textarea, [aria-label="Category"]')) return;
+          if (!document.documentElement.classList.contains('snap-list') || !this._wheelSnapFn) return;
+          const small = e.deltaMode === 0 && Math.abs(e.deltaY) < 40;   // 트랙패드(작은 값이 연달아 와요)
+          if (raf || locked) {
+            // 움직이는 중: 트랙패드 관성은 무시하고, 마우스 휠을 계속 굴리면 0.2초 뒤부터 다음 줄로 이어 가요
+            e.preventDefault(); if (small || locked) { unlockLater(); return; }
+            if (performance.now() - t0 < 200) return;
+          }
+          const dist = this._wheelSnapFn(e.deltaY > 0 ? 1 : -1);
+          if (dist == null) return;
+          e.preventDefault();
+          if (raf) cancelAnimationFrame(raf);
+          if (small) { locked = true; unlockLater(); }
+          const y0 = scrollY, dur = 420; t0 = performance.now();
+          const step = now => {
+            const u = Math.min(1, (now - t0) / dur), k = 1 - Math.pow(1 - u, 3);   // 빠르게 출발해서 천천히 멈춰요 (손가락으로 넘길 때처럼)
+            window.scrollTo({ top: y0 + dist * k, behavior: 'instant' });
+            raf = u < 1 ? requestAnimationFrame(step) : 0;
+          };
+          raf = requestAnimationFrame(step);
+        }, { passive: false });
+      }
+      let lastY = scrollY, dir = 1, liveT = null;
+      this._featScroll = () => { const y = scrollY; if (y > lastY + 1) dir = 1; else if (y < lastY - 1) dir = -1; lastY = y; if (touchUI) { if (!timer) timer = setTimeout(() => { timer = null; follow(); }, 120); } else { if (!liveT) liveT = setTimeout(() => { liveT = null; follow(true); }, 100); clearTimeout(timer); timer = setTimeout(() => follow(false), 160); } };   // 터치: 스크롤이 멈추길 기다리지 않고, 움직이는 동안에도 0.12초마다 지도 카드를 바꿔요 (멈춘 뒤에야 바뀌면 답답해요). 마우스 (2026-11-16, 사용자: 멈춰야 바뀌어 답답해요): 스크롤하는 동안에도 0.1초마다 카드·지도를 바꾸고, 멈춘 뒤 0.16초에 카드 줄 맞춤(스냅)만 따로 해요
       if (!this._touchWired) { this._touchWired = true; window.addEventListener('touchstart', () => { this._touching = true; }, { passive: true }); ['touchend', 'touchcancel'].forEach(t => window.addEventListener(t, () => { this._touching = false; }, { passive: true })); }
       window.addEventListener('scroll', this._featScroll, { passive: true });
     }
@@ -3129,7 +3171,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="relative">
           ${this.cover(s, 'h-56')}
           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-          ${(() => { const evHere = this._spotEvents && this._spotEvents[s.id], tg = spotTags(s); return tg.length || evHere ? `<p class="absolute top-3 left-5 z-10 flex flex-wrap gap-1 pr-16">${tg.slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-teal-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''; })()}
+          ${(() => { const evHere = this._spotEvents && this._spotEvents[s.id], tg = spotTags(s); return tg.length || evHere ? `<p class="absolute top-3 left-5 z-10 flex flex-wrap gap-1 pr-16">${tg.slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-violet-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''; })()}
           <div class="absolute inset-x-0 top-0 pl-5 pr-16 pt-11 pb-12 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none"><h2 class="text-2xl sm:text-3xl font-bold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h2>
           <p class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${KIDS_ONLY && isKid(s) ? `<span>${esc(kidProfile(s).agesText)}</span><span>${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span>${esc(s.price)}</span>` : ''}` : `${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>`}</p></div>
           <div class="absolute inset-x-0 bottom-0 px-5 pb-6 pt-10 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"><p class="text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">${esc(s.area)}${cur && cur.dist != null ? `, ${fmtDist(cur.dist)}` : ''}</p></div>
@@ -3162,7 +3204,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const line = h => `<p class="mt-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${h}</p>`;
             const evShown = evs;   // 카드에 "Event" 칩이 뜬 행사는 모달에도 항상 보여요 (태그 설명과 겹쳐도 숨기지 않아요. 사용자, 2026-10-14)
             // 행사는 칩 하나에 (여러 개면 한 줄씩). 색은 카드의 Event 칩과 같은 계열 (마켓만 있으면 연두, 아니면 청록)
-            const evCls = evShown.every(ev => ev.type === 'market') ? 'bg-lime-50 text-lime-800 dark:bg-lime-500/15 dark:text-lime-300' : 'bg-teal-50 text-teal-800 dark:bg-teal-500/15 dark:text-teal-300';
+            const evCls = evShown.every(ev => ev.type === 'market') ? 'bg-lime-50 text-lime-800 dark:bg-lime-500/15 dark:text-lime-300' : 'bg-violet-50 text-violet-800 dark:bg-violet-500/15 dark:text-violet-300';
             const evLabel = (evShown.every(ev => ev.type === 'market') ? 'Market' : 'Event') + (evShown.length > 1 ? 's' : '');
             const chips = evShown.length ? `<span class="inline-flex flex-col gap-0.5 max-w-full text-xs sm:text-sm font-semibold px-4 py-2 rounded-2xl ${evCls}"><span class="font-bold">${evLabel}</span>${evShown.map(ev => `<span class="font-normal">${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}</span>`).join('')}</span>` : '';
             // 시즌 태그: 주황 칩 바로 뒤에 같은 줄로 이유가 이어져요 (#태그를 다시 쓰지 않아요). 이유가 없으면 칩만
@@ -3230,7 +3272,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         </div>
         </div>
         <div class="shrink-0 grid grid-cols-[1fr_1fr_auto] gap-2 px-4 py-3    bg-white dark:bg-slate-900">
-          <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="min-h-[44px] flex items-center justify-center rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700">Directions</a>
+          <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="min-h-[44px] flex items-center justify-center rounded-xl font-semibold text-white bg-violet-600 hover:bg-violet-700">Directions</a>
           <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="min-h-[44px] rounded-xl font-semibold  ${saved ? 'bg-rose-100  text-rose-700 dark:bg-rose-500/15  dark:text-rose-300' : 'bg-slate-100 dark:bg-slate-800'}">${saved ? '♥ Saved' : '♡ Save'}</button>
           <button data-act="share" data-val="${s.id}" class="min-h-[44px] px-4 rounded-xl font-semibold bg-slate-100 dark:bg-slate-800">${st.shareMsg && st.shareMsg.id === s.id ? esc(st.shareMsg.text) : 'Share'}</button>
         </div>

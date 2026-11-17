@@ -223,7 +223,7 @@ foreach ($p in $pages) {
   $items = for ($i = 0; $i -lt $n; $i++) { [ordered]@{ '@type' = 'ListItem'; position = $i + 1; name = $list[$i].name; url = "$site/spots/$($list[$i].id)/" } }
   $ld = ([ordered]@{ '@context' = 'https://schema.org'; '@type' = 'ItemList'; name = $p.h1; url = $url; numberOfItems = $n; itemListElement = @($items) } | ConvertTo-Json -Depth 5 -Compress) -replace '</', '<\/'
   # 방문자에게는 진짜 앱(index.html 껍데기)이 뜨고, 이 안내 글은 앱 아래쪽(#seo-static)에 남아요. 구글은 같은 글을 그대로 읽어요
-  $L = 'underline text-teal-700 dark:text-teal-300'
+  $L = 'underline text-violet-700 dark:text-violet-300'
   $sb = New-Object System.Text.StringBuilder
   foreach ($s in $list) {
     $meta = @($s.area, $(if ($s.price) { $s.price }), $(if ($s.time) { $s.time }), $(if ($s.env) { (Get-Culture).TextInfo.ToTitleCase($s.env) })) | Where-Object { $_ }
@@ -296,7 +296,7 @@ New-Item -ItemType Directory $spotDir | Out-Null
 $guideOf = @{}   # 장소 id -> 그 장소가 실린 안내 페이지들
 foreach ($p in $pages) { if ($p.slug -like 'places-to-take-kids-metro*') { continue }; foreach ($s in $p.spots) { if (-not $guideOf[$s.id]) { $guideOf[$s.id] = New-Object System.Collections.ArrayList }; [void]$guideOf[$s.id].Add($p) } }
 foreach ($s in $spots) {
-  $L = 'underline text-teal-700 dark:text-teal-300'
+  $L = 'underline text-violet-700 dark:text-violet-300'
   $surl = "$site/spots/$($s.id)/"
   $meta = @($s.area, $(if ($s.price) { $s.price }), $(if ($s.time) { $s.time }), $(if ($s.env) { (Get-Culture).TextInfo.ToTitleCase($s.env) })) | Where-Object { $_ }
   $title = "$($s.name) with kids: $($s.area)"
@@ -384,7 +384,7 @@ foreach ($c in (SortOrd $CITIES { param($c) $c })) {
 $mp = @($pages | Where-Object { -not $_.city })
 [void]$idx.AppendLine('<h2>Metro Vancouver</h2><ul>' + (($mp | ForEach-Object { "<li><a href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a> ($($_.spots.Count))</li>" }) -join '') + '</ul>')
 # 안내 목록도 진짜 앱을 보여주고, 도시·종류별 목록은 아래에 접어 둬요 (다른 안내 페이지와 같은 방식)
-$L = 'underline text-teal-700 dark:text-teal-300'
+$L = 'underline text-violet-700 dark:text-violet-300'
 $idxBody = ($idx.ToString()).Replace('<h2>', '<h2 class="font-bold mt-5 mb-1">').Replace('<ul>', '<ul class="list-disc pl-5 space-y-0.5">').Replace('<a href', "<a class=""$L"" href")
 $idxBody = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">Places to take kids in Metro Vancouver: guides by city and kind</summary><div class=""mt-3""><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">Places to take kids in Metro Vancouver</h1><p class=""mb-2"">Pick a city or a kind of place. Each guide lists the spots with a short description, and links to the Tiny Trips app for hours and what parents say.</p>" + $idxBody + "</div></details>"
 $idxDesc = 'Guides to playgrounds, spray parks, farms, museums and indoor play for kids in Metro Vancouver, Abbotsford and Chilliwack, by city and by kind.'
