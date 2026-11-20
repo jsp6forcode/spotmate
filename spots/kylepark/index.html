@@ -31,7 +31,10 @@ tailwind.config = {
     // 디자인 정리 (2026-11-16): 밴쿠버 색으로 다시. 포인트(violet 자리) = 버라드 만의 깊은 바다색, 무채색(slate 자리) = 비 오는 날 하늘·젖은 숲의 푸른 회색
     violet: { 50: "#eef6f8", 100: "#d4e9ee", 200: "#a9d2dd", 300: "#76b3c4", 400: "#4793a8", 500: "#2c798f", 600: "#226277", 700: "#1d5062", 800: "#1a4352", 900: "#183845", 950: "#0d222b" },
     slate: { 50: "#f4f6f5", 100: "#e5eae9", 200: "#ced7d6", 300: "#a9b7b6", 400: "#7c8e8d", 500: "#5c6e6d", 600: "#475756", 700: "#374645", 800: "#24302f", 900: "#172120", 950: "#0d1514" }
-  }, fontFamily: {
+  },
+    // 모서리 (2026-11-19, 사용자: 다 둥글어서 AI가 만든 것 같아요): 둥글기를 확 줄여요. 원(rounded-full: 핀·아이콘 점·하트)은 그대로
+    borderRadius: { DEFAULT: '2px', sm: '2px', md: '3px', lg: '4px', xl: '4px', '2xl': '6px', '3xl': '6px' },
+    fontFamily: {
     sans: ['"IBM Plex Sans"', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
     brand: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif']
   } } }
@@ -49,11 +52,11 @@ tailwind.config = {
   .hero { background: linear-gradient(180deg, rgba(15,23,42,.52) 0%, rgba(15,23,42,.2) 50%, rgba(15,23,42,.58) 100%), url("https://images.pexels.com/photos/7669218/pexels-photo-7669218.jpeg?auto=compress&cs=tinysrgb&w=1600") center 35% / cover, #24302f; }
   .dark .hero { background: linear-gradient(180deg, rgba(2,6,23,.72) 0%, rgba(2,6,23,.46) 50%, rgba(2,6,23,.78) 100%), url("https://images.pexels.com/photos/7669218/pexels-photo-7669218.jpeg?auto=compress&cs=tinysrgb&w=1600") center 35% / cover, #0d1514; }
   /* 퀴즈 화면: 은은한 색 번짐 배경 + 헤더에 살짝 걸친 둥근 카드, 모서리에 작은 아이콘 (2026-10-02, 사용자 결정 A+C) */
-  .wiz-wrap { background: radial-gradient(circle at 12% 18%, #d3f5ee 0, transparent 38%), radial-gradient(circle at 88% 55%, #fff0d2 0, transparent 42%), radial-gradient(circle at 35% 100%, #ffe1e8 0, transparent 40%); border-radius: 28px; padding: 0 0 28px; }
+  .wiz-wrap { background: radial-gradient(circle at 12% 18%, #d3f5ee 0, transparent 38%), radial-gradient(circle at 88% 55%, #fff0d2 0, transparent 42%), radial-gradient(circle at 35% 100%, #ffe1e8 0, transparent 40%); border-radius: 6px; padding: 0 0 28px; }
   .dark .wiz-wrap { background: radial-gradient(circle at 12% 18%, rgba(34,98,119,.22) 0, transparent 38%), radial-gradient(circle at 88% 55%, rgba(245,158,11,.12) 0, transparent 42%), radial-gradient(circle at 35% 100%, rgba(244,114,182,.12) 0, transparent 40%); }
-  .wiz-card { position: relative; background: rgba(255,255,255,.93); border-radius: 22px; padding: 18px 16px; box-shadow: 0 2px 4px rgba(15,23,42,.04), 0 18px 48px rgba(34,98,119,.14); }
+  .wiz-card { position: relative; background: rgba(255,255,255,.93); border-radius: 6px; padding: 18px 16px; box-shadow: 0 2px 4px rgba(15,23,42,.04), 0 18px 48px rgba(34,98,119,.14); }
   .dark .wiz-card { background: rgba(15,23,42,.88); box-shadow: 0 18px 48px rgba(0,0,0,.4); }
-   (min-width: 640px) { .wiz-card { border-radius: 28px; padding: 28px 30px; margin-top: -24px; } }
+   (min-width: 640px) { .wiz-card { border-radius: 6px; padding: 28px 30px; margin-top: -24px; } }
   .wiz-deco { position: absolute; opacity: .6; pointer-events: none; user-select: none; }
   .hero h1 { text-shadow: 0 2px 16px rgba(0,0,0,.45); }
   .hero p, .hero span { text-shadow: 0 1px 8px rgba(0,0,0,.5); }
@@ -93,7 +96,7 @@ tailwind.config = {
   .leaflet-tooltip.card-tip.feat:hover > div { transform: scale(1.35); box-shadow: 0 8px 24px rgba(0,0,0,.45); }
   .leaflet-container .leaflet-control-attribution { font-size: 9px; line-height: 1.2; padding: 0 4px; opacity: .55; background: rgba(255,255,255,.35); }
   /* 지도 핀에 마우스를 올리면 뜨는 장소 카드 */
-  .leaflet-tooltip.card-tip { padding: 0; border: 0; background: transparent; box-shadow: none; white-space: normal; width: 220px; border-radius: 12px; pointer-events: none; }
+  .leaflet-tooltip.card-tip { padding: 0; border: 0; background: transparent; box-shadow: none; white-space: normal; width: 220px; border-radius: 4px; pointer-events: none; }
   .leaflet-tooltip.card-tip::before { display: none; }
   /* 오른쪽 목록에 마우스를 올리면 그 장소 핀을 크게 + 보라 테두리 */
   .spot-pin { transition: transform .12s, box-shadow .12s; }
@@ -114,6 +117,6 @@ tailwind.config = {
 <section id="seo-static" class="max-w-6xl mx-auto px-4 md:px-6 pb-8 text-sm text-slate-600 dark:text-slate-300"><!--seo-start--><details><summary class="cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400">About Kyle Park</summary><div class="mt-3"><nav class="mb-2"><a class="underline text-violet-700 dark:text-violet-300" href="/">Tiny Trips</a> › <a class="underline text-violet-700 dark:text-violet-300" href="/guides/">Guides</a></nav><h1 class="font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100">Kyle Park</h1><p class="text-xs mb-1">Port Moody &#183; Free &#183; 1 hr &#183; Outdoor</p><p class="mb-2">Kyle Park is a park in Port Moody that is free to visit, and families usually spend about 1 hr here.</p><p class="mb-2">Park with a playground, sports fields and picnic tables.</p><p class="mb-2">It is outdoors, so it is best on a dry day; bring layers. It suits babies and toddlers (0–3), preschoolers (3–5) and school-age kids (5–12).</p><p class="mb-2">Hours: open from sunrise to sunset.</p><div class="mt-4"><strong>Nearby with kids</strong><ul class="list-disc pl-5 mt-1"><li><a class="underline text-violet-700 dark:text-violet-300" href="/spots/kylecentre/">Kyle Centre</a> (rec centre)</li><li><a class="underline text-violet-700 dark:text-violet-300" href="/spots/pomoarts/">PoMoArts</a> (arts &amp; crafts)</li><li><a class="underline text-violet-700 dark:text-violet-300" href="/spots/littlebeans/">Little Beans Play Cafe</a> (indoor play)</li><li><a class="underline text-violet-700 dark:text-violet-300" href="/spots/pomomuseum/">POMO Museum</a> (museum)</li></ul></div><div class="mt-4"><strong>Guides with this spot</strong><ul class="list-disc pl-5 mt-1"><li><a class="underline text-violet-700 dark:text-violet-300" href="/guides/parks-metro-vancouver/">Parks in Metro Vancouver for kids</a></li><li><a class="underline text-violet-700 dark:text-violet-300" href="/guides/parks-port-moody/">Parks in Port Moody for kids</a></li><li><a class="underline text-violet-700 dark:text-violet-300" href="/guides/places-to-take-kids-port-moody/">Places to take kids in Port Moody</a></li><li><a class="underline text-violet-700 dark:text-violet-300" href="/guides/playgrounds-metro-vancouver/">Playgrounds in Metro Vancouver for kids</a></li><li><a class="underline text-violet-700 dark:text-violet-300" href="/guides/playgrounds-port-moody/">Playgrounds in Port Moody for kids</a></li></ul></div><p class="mt-4 text-xs">Details change, so check the official site before you go.</p></div></details><!--seo-end--></section>
 <button id="to-top" type="button" aria-label="Back to top" class="fixed z-40 right-4 bottom-4 sm:right-6 sm:bottom-6 w-12 h-12 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-2xl font-bold shadow-lg ring-1 ring-black/10 flex items-center justify-center" style="display:none"><span aria-hidden="true">↑</span></button>
 
-<script>window.SPOT_ID="kylepark"</script><script src="/app.js?v=244d676a"></script>
+<script>window.SPOT_ID="kylepark"</script><script src="/app.js?v=1b1ba0a8"></script>
 </body>
 </html>

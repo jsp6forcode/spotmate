@@ -1947,7 +1947,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 첫 화면에 추천 카드가 보이도록 헤더를 낮게: 모바일은 부제 없이 로고 + 탭만
     // 인스타그램 계정으로 바로 가는 둥근 버튼 (다크 모드 버튼 옆)
     const igIcon = `<svg viewBox="0 0 24 24" class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`;
-    const tab = (v, label) => `<button data-act="view" data-val="${v}" class="shrink-0 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors ${view === v ? 'bg-white text-violet-700 shadow' : 'text-white/90 hover:bg-white/15'}">${label}</button>`;
+    const tab = (v, label) => `<button data-act="view" data-val="${v}" class="shrink-0 px-2 sm:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-semibold transition-colors ${view === v ? 'bg-white text-violet-700 shadow' : 'text-white/90 hover:bg-white/15'}">${label}</button>`;
     return `
     <header class="hero relative text-white">
       <div class="max-w-6xl mx-auto px-4 md:px-6 pt-3 pb-3 md:pt-4 md:pb-3">
@@ -1965,8 +1965,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             ${wx || '<div class="hidden sm:block mt-1 h-8" aria-hidden="true"></div>'}
           </div>
         </div>
-        <nav class="mt-2 sm:mt-2 inline-flex max-w-full overflow-x-auto no-scrollbar gap-0 sm:gap-1 p-1 rounded-full bg-white/10 backdrop-blur">
-          ${tab('map', 'Explore')}${tab('events', 'Events')}${tab('markets', 'Markets')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}${tab('about', 'About')}<a href="https://www.instagram.com/tinytripsvan/" target="_blank" rel="noopener" aria-label="Tiny Trips on Instagram" title="Instagram @tinytripsvan" class="shrink-0 px-2 sm:px-3 py-1.5 sm:py-2 rounded-full text-white/90 hover:bg-white/15 flex items-center">${igIcon}</a>
+        <nav class="mt-2 sm:mt-2 inline-flex max-w-full overflow-x-auto no-scrollbar gap-0 sm:gap-1 p-1 rounded-md bg-white/10 backdrop-blur">
+          ${tab('map', 'Explore')}${tab('events', 'Events')}${tab('markets', 'Markets')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}${tab('about', 'About')}<a href="https://www.instagram.com/tinytripsvan/" target="_blank" rel="noopener" aria-label="Tiny Trips on Instagram" title="Instagram @tinytripsvan" class="shrink-0 px-2 sm:px-3 py-1.5 sm:py-2 rounded-md text-white/90 hover:bg-white/15 flex items-center">${igIcon}</a>
         </nav>
       </div>
       <a href="https://www.pexels.com/photo/7669218/" target="_blank" rel="noopener" class="absolute right-3 bottom-1.5 text-[8px] leading-none text-white/60 hover:text-white underline-offset-2 ">Photo: Kampus · Pexels</a>
@@ -1996,13 +1996,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           // 위치는 모바일에선 필터 안에 접혀 있어서 모바일에서만 칩으로 보여줘요
           const chips = [...s.kw.map(k => [`kw:${k.key}`, k.label]), ...(s.free ? [['free', 'Free']] : [])];
           const near = this.nearActive() ? (s.radius === 'any' ? `Near ${this.originLabel()}` : `Within ${radiusLabel(s.radius)} of ${this.originLabel()}`) : '';
-          const chip = (k, label, extra = '') => `<button data-act="qrm" data-val="${esc(k)}" aria-label="Remove ${esc(label)}" class="${extra} inline-flex items-center gap-1 min-h-[32px] px-2.5 py-1 rounded-full font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 dark:bg-violet-500/20 dark:text-violet-200">${esc(label)} <span aria-hidden="true">×</span></button>`;
+          const chip = (k, label, extra = '') => `<button data-act="qrm" data-val="${esc(k)}" aria-label="Remove ${esc(label)}" class="${extra} inline-flex items-center gap-1 min-h-[32px] px-2.5 py-1 rounded-md font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 dark:bg-violet-500/20 dark:text-violet-200">${esc(label)} <span aria-hidden="true">×</span></button>`;
           return `
         <div class="flex flex-wrap items-center gap-1.5 text-sm">
           <span class="text-slate-500 dark:text-slate-400">${chips.length || near ? 'Looking for:' : `Search: “${esc(s.q)}”`}</span>
           ${chips.map(([k, label]) => chip(k, label)).join('')}
           ${near ? chip('near', near, 'sm:hidden') : ''}
-          ${s.unused && s.unused.length ? `<span class="px-2.5 py-1 rounded-full text-slate-500   dark:text-slate-400 " title="These words didn't match any filter or place">Not used: ${esc(s.unused.join(', '))}</span>` : ''}
+          ${s.unused && s.unused.length ? `<span class="px-2.5 py-1 rounded-md text-slate-500   dark:text-slate-400 " title="These words didn't match any filter or place">Not used: ${esc(s.unused.join(', '))}</span>` : ''}
           <button data-act="qclear" class="ml-1 min-h-[32px] font-semibold  text-slate-600 dark:text-slate-300">Clear search</button>
         </div>`; })() : ''}
         ${lite ? (s.q ? `<div>${this.locationBar(items)}</div><p class="text-xs text-slate-500 dark:text-slate-400">${this.countLine(items)}</p>` : '') : `
@@ -2146,7 +2146,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   seasonChips(inner = false) {
     const tags = activeTags().filter(t => this._tagCounts && this._tagCounts[t.id]);
     if (!tags.length) return '';
-    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-[11px] sm:text-sm font-semibold px-2 sm:px-3 py-0.5 sm:py-2 rounded-full ${on ? tagStyle(t.id).solid : tagStyle(t.id).soft}">#${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
+    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-[11px] sm:text-sm font-semibold px-2 sm:px-3 py-0.5 sm:py-2 rounded-md ${on ? tagStyle(t.id).solid : tagStyle(t.id).soft}">#${esc(t.label)} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
     const body = `<span class="shrink-0 text-[11px] sm:text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>${tags.map(chip).join('')}`;
     if (inner) return body;
     return `
@@ -2309,15 +2309,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const why = baseWhy || (evText ? { pick: true, label: this.eventTitle(evHere.ev, s), text: evText } : null);
     const evExtra = evText && why && why.text !== evText ? evText : '';
     return `
-    <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group relative cursor-pointer flex flex-col rounded-2xl sm:rounded-[20px] bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition">
-      ${spotTags(s).length || evHere ? `<p class="absolute top-1.5 left-1.5 sm:-top-2 sm:-left-2 z-20 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-violet-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''}
-      <div class="relative rounded-t-2xl sm:rounded-t-[20px] overflow-hidden">
+    <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group relative cursor-pointer flex flex-col rounded-2xl sm:rounded-[6px] bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition">
+      ${spotTags(s).length || evHere ? `<p class="absolute top-1.5 left-1.5 sm:-top-2 sm:-left-2 z-20 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-violet-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''}
+      <div class="relative rounded-t-2xl sm:rounded-t-[6px] overflow-hidden">
         ${this.cover(s, 'h-28 sm:h-36')}
         <div class="absolute inset-x-0 top-0 px-2.5 sm:px-4 ${spotTags(s).length || evHere ? "pt-8" : "pt-3"} sm:pt-3.5 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="font-brand text-[15px] sm:text-xl font-bold leading-tight tracking-[-0.01em] text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
         </div>
         ${/* 디자인 정리 (2026-11-16): Share/Save는 카드 맨 아래 큰 버튼 두 개 대신 사진 왼쪽 아래 아이콘으로 (오른쪽 아래는 사진 출처 자리) */''}
         <div class="absolute left-1.5 bottom-1.5 sm:left-2.5 sm:bottom-2.5 z-10 flex items-center gap-1.5">
-          ${this.state.shareMsg && this.state.shareMsg.id === s.id ? `<span role="status" class="px-2 py-1 rounded-full bg-black/60 text-white text-[11px] font-semibold">${esc(this.state.shareMsg.text)}</span>` : ''}
+          ${this.state.shareMsg && this.state.shareMsg.id === s.id ? `<span role="status" class="px-2 py-1 rounded-md bg-black/60 text-white text-[11px] font-semibold">${esc(this.state.shareMsg.text)}</span>` : ''}
           <button data-act="share" data-val="${s.id}" aria-label="Share ${esc(s.name)}" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/45 hover:bg-black/65 backdrop-blur-sm text-white flex items-center justify-center"><svg aria-hidden="true" viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg></button>
           <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" aria-label="${saved ? 'Saved' : 'Save'} ${esc(s.name)}" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full backdrop-blur-sm flex items-center justify-center ${saved ? 'bg-white text-rose-600' : 'bg-black/45 hover:bg-black/65 text-white'}"><svg aria-hidden="true" viewBox="0 0 24 24" class="w-4 h-4" fill="${saved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg></button>
         </div>
@@ -2484,8 +2484,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             ${w.step || Object.keys(a).length ? '<button data-act="wizreset" class="">Start over</button>' : ''}
           </span>
         </div>
-        <div class="mt-2 h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden" role="progressbar" aria-valuemin="1" aria-valuemax="${WIZ.length}" aria-valuenow="${w.step + 1}" aria-label="Progress">
-          <div class="h-full rounded-full bg-violet-600 transition-all" style="width:${((w.step + 1) / WIZ.length) * 100}%"></div>
+        <div class="mt-2 h-2 rounded-sm bg-slate-200 dark:bg-slate-800 overflow-hidden" role="progressbar" aria-valuemin="1" aria-valuemax="${WIZ.length}" aria-valuenow="${w.step + 1}" aria-label="Progress">
+          <div class="h-full rounded-sm bg-violet-600 transition-all" style="width:${((w.step + 1) / WIZ.length) * 100}%"></div>
         </div>
         <h2 class="mt-4 sm:mt-6 text-xl sm:text-3xl font-extrabold tracking-tight">${esc(st.q)}</h2>
         <div class="mt-3 sm:mt-5 grid grid-cols-2 gap-2 sm:gap-3" role="radiogroup" aria-label="${esc(st.q)}">
@@ -2501,7 +2501,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         </div>
         ${/* 답 옵션과 헷갈리지 않게 Back/Next 아래 별도 동작으로: 5개 질문을 모두 "상관없음"으로 두고 바로 결과 (Browse all 대신, 2026-10-01) */ w.editing ? '' : `
         <div class="mt-4 text-center">
-          <button data-act="wizany" class="min-h-[44px] px-5 rounded-full text-sm font-semibold bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">Skip all ${WIZ.length} questions and show results <span aria-hidden="true">⏭</span></button>
+          <button data-act="wizany" class="min-h-[44px] px-5 rounded-md text-sm font-semibold bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">Skip all ${WIZ.length} questions and show results <span aria-hidden="true">⏭</span></button>
           <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">We’ll pick from every age, time, length and kind of outing.</p>
         </div>`}
       </section>
@@ -2513,8 +2513,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     return `
       <section class="mt-6" aria-label="Your choices">
         <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-          ${WIZ.map((st, i) => `<button data-act="wizedit" data-val="${i}" title="Change: ${esc(st.q)}" class="min-h-[28px] sm:min-h-[36px] px-2.5 sm:px-3 py-0.5 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 dark:bg-violet-500/20 dark:text-violet-200">${esc(optLabel(st.key, a[st.key]))}</button>`).join('')}
-          ${/* 고른 조건이 하나라도 있으면: 한 번에 모두 "상관없음"으로 바꾸고 목록 새로 */ WIZ.some(st => a[st.key] && a[st.key] !== 'any') ? `<button data-act="wizany" class="ml-1 min-h-[28px] sm:min-h-[36px] px-2.5 sm:px-3 py-0.5 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">Set all to Any <span aria-hidden="true">⏭</span></button>` : ''}
+          ${WIZ.map((st, i) => `<button data-act="wizedit" data-val="${i}" title="Change: ${esc(st.q)}" class="min-h-[28px] sm:min-h-[36px] px-2.5 sm:px-3 py-0.5 sm:py-1.5 rounded-md text-xs sm:text-sm font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 dark:bg-violet-500/20 dark:text-violet-200">${esc(optLabel(st.key, a[st.key]))}</button>`).join('')}
+          ${/* 고른 조건이 하나라도 있으면: 한 번에 모두 "상관없음"으로 바꾸고 목록 새로 */ WIZ.some(st => a[st.key] && a[st.key] !== 'any') ? `<button data-act="wizany" class="ml-1 min-h-[28px] sm:min-h-[36px] px-2.5 sm:px-3 py-0.5 sm:py-1.5 rounded-md text-xs sm:text-sm font-semibold bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">Set all to Any <span aria-hidden="true">⏭</span></button>` : ''}
           <button data-act="wizreset" class="ml-1 min-h-[28px] sm:min-h-[36px] text-xs sm:text-sm font-semibold  text-slate-600 dark:text-slate-300">Start over</button>
         </div>
         ${this.seasonChips()}
@@ -2563,7 +2563,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <p class="text-lg font-bold">Nothing matched “${esc(this.state.q)}”</p>
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Remove one of the chips above, or try another search.</p>
         <div class="mt-4 flex flex-wrap justify-center gap-2">
-          ${(['free things to do this weekend', 'spray park near me', 'playground in burnaby', 'rainy day indoor', 'farm this saturday', 'museum tomorrow']).map(x => `<button data-act="qtry" data-val="${esc(x)}" class="px-3 py-1.5 rounded-full text-sm font-semibold   text-slate-700   dark:text-slate-200">${esc(x)}</button>`).join('')}
+          ${(['free things to do this weekend', 'spray park near me', 'playground in burnaby', 'rainy day indoor', 'farm this saturday', 'museum tomorrow']).map(x => `<button data-act="qtry" data-val="${esc(x)}" class="px-3 py-1.5 rounded-md text-sm font-semibold   text-slate-700   dark:text-slate-200">${esc(x)}</button>`).join('')}
         </div>
         <button data-act="qclear" class="mt-4 px-4 py-2 rounded-lg font-semibold bg-violet-600 text-white">Clear search</button>
       </div>`;
@@ -2642,7 +2642,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     })();
     this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: groupColor(s), mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks, rank,
       events: [...(showEv ? evOthers : []), ...(showMk ? evMarkets : [])].map(evPin) };
-    const evToggle = (act, on, label, n) => `<button data-act="${act}" aria-pressed="${on}" title="${on ? 'Click to hide on the map' : 'Click to show on the map'}" class="flex items-center gap-0.5 px-2 py-0.5 rounded-full border ${on ? 'border-amber-500 bg-amber-100 text-amber-900 dark:bg-amber-500/25 dark:text-amber-100' : 'border-slate-300 dark:border-slate-600 bg-white/85 dark:bg-slate-900/80 backdrop-blur-sm shadow text-slate-500 dark:text-slate-400 line-through decoration-1'}"><span aria-hidden="true">${on ? '✓' : '+'}</span>${label} <span class="font-normal">${n}</span></button>`;
+    const evToggle = (act, on, label, n) => `<button data-act="${act}" aria-pressed="${on}" title="${on ? 'Click to hide on the map' : 'Click to show on the map'}" class="flex items-center gap-0.5 px-2 py-0.5 rounded-md border ${on ? 'border-amber-500 bg-amber-100 text-amber-900 dark:bg-amber-500/25 dark:text-amber-100' : 'border-slate-300 dark:border-slate-600 bg-white/85 dark:bg-slate-900/80 backdrop-blur-sm shadow text-slate-500 dark:text-slate-400 line-through decoration-1'}"><span aria-hidden="true">${on ? '✓' : '+'}</span>${label} <span class="font-normal">${n}</span></button>`;
     const picksBar = picks ? `
     <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl p-4 bg-violet-50   dark:bg-violet-500/10 ">
       <p class="font-semibold text-violet-900 dark:text-violet-100">Showing your ${items.length} picks from Explore</p>
@@ -2662,7 +2662,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const cats = [['all', `(${total}) All`, '🗺️', '#5c6e6d'], ...catOptions().map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '🎪', '#8e4a80', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, CAT_GROUPS[k].icon, CAT_GROUPS[k].color, CAT_GROUPS[k].label]).filter(c => c[0] === this.state.cat || c[1].indexOf("(0)") !== 0).sort((a, b) => a[4].localeCompare(b[4]))];
             // 2026-11-19: 지도 맨 위에 장소 종류 칩을 가로 스크롤 한 줄로 (끝에 Events·Markets 토글). 데스크톱도 폰과 같아요 (예전 왼쪽 세로 목록은 없앴어요)
             const count = k => k === 'all' ? total : k === 'events' ? evAll.length : (cc[k] || 0);
-            const chip = ([k, , icon, color, name]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1 sm:gap-1.5 pl-0.5 sm:pl-1 pr-2 sm:pr-3 py-0.5 sm:py-1 rounded-full shadow-md border ${this.state.cat === k ? 'bg-violet-600 border-violet-600 text-white' : 'bg-white/95 dark:bg-slate-900/90 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100'}"><span class="w-5 h-5 sm:w-6 sm:h-6 shrink-0 rounded-full text-[10px] sm:text-[12px] leading-5 sm:leading-6 text-center" style="background:${color}">${icon}</span>${esc(name || 'All')}<span class="font-normal opacity-70">${count(k)}</span></button>`;
+            const chip = ([k, , icon, color, name]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1 sm:gap-1.5 pl-0.5 sm:pl-1 pr-2 sm:pr-3 py-0.5 sm:py-1 rounded-md shadow-md border ${this.state.cat === k ? 'bg-violet-600 border-violet-600 text-white' : 'bg-white/95 dark:bg-slate-900/90 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100'}"><span class="w-5 h-5 sm:w-6 sm:h-6 shrink-0 rounded-full text-[10px] sm:text-[12px] leading-5 sm:leading-6 text-center" style="background:${color}">${icon}</span>${esc(name || 'All')}<span class="font-normal opacity-70">${count(k)}</span></button>`;
             const tog = (a, on, l, n) => evToggle(a, on, l, n).replace('class="flex', 'class="shrink-0 py-0.5 sm:py-1.5 shadow-md flex');
             return `<div data-keep-scroll="mapchips" role="group" aria-label="Category" class="absolute inset-x-0 top-2 z-20 flex items-center gap-1.5 px-2 sm:px-3 pb-1 overflow-x-auto no-scrollbar text-xs sm:text-[13px] font-semibold">
               ${cats.map(chip).join('')}
@@ -2699,7 +2699,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <button data-act="open" data-val="${esc(s.id)}" class="absolute inset-0 z-[1] rounded-2xl" aria-label="Open ${esc(s.name)}"></button>
       <div class="w-24 h-24 shrink-0 rounded-xl overflow-hidden">${this.cover(s, 'h-full')}</div>
       <div class="min-w-0 flex-1 pr-8 py-0.5">
-        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] font-semibold text-white" style="background:${g.color}"><span aria-hidden="true">${g.icon}</span>${esc(g.label)}</span>
+        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[11px] font-semibold text-white" style="background:${g.color}"><span aria-hidden="true">${g.icon}</span>${esc(g.label)}</span>
         <p class="mt-1 font-bold text-[15px] leading-snug clamp2">${esc(s.name)}</p>
         <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400 truncate">${where}</p>
         ${meta || hrs ? `<p class="mt-0.5 text-xs text-slate-600 dark:text-slate-300 truncate">${[meta, hrs ? 'Today ' + esc(hrs) : ''].filter(Boolean).join(' · ')}</p>` : ''}
@@ -2741,7 +2741,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       box.querySelectorAll('article[data-sheet]').forEach(a => a.classList.toggle('outline-violet-500', a.dataset.sheet === id));
       const p = this._pins[id]; if (!pan || !p) return;
       // 위 칩 줄과 아래 카드에 가리지 않는 빈 칸 안에 핀이 있게: 벗어나면 그 빈 칸 가운데로 옮겨요
-      const sz = map.getSize(), q = map.latLngToContainerPoint(p.mk.getLatLng()), top = 96, bot = sz.y - Math.min(box.offsetHeight || 140, 160) - 24;   // 처음 누를 땐 Tailwind가 카드 스타일을 아직 안 만들어서 카드 줄이 아주 높게 재져요. 그래서 높이를 160px까지만 믿어요
+      // 화면 위로 밀려 올라간 지도 윗부분도 '가려진 곳'으로 쳐요 (카드가 보이게 페이지를 내리는 중이면 내릴 만큼 미리 빼고)
+      const mr = el.getBoundingClientRect(), pend = Math.max(0, mr.bottom - innerHeight);
+      const sz = map.getSize(), q = map.latLngToContainerPoint(p.mk.getLatLng()), top = Math.max(96, pend - mr.top + 24), bot = sz.y - Math.min(box.offsetHeight || 140, 160) - 24;   // 처음 누를 땐 Tailwind가 카드 스타일을 아직 안 만들어서 카드 줄이 아주 높게 재져요. 그래서 높이를 160px까지만 믿어요
       if (q.x < 24 || q.x > sz.x - 24 || q.y < top || q.y > bot) map.panBy([q.x - sz.x / 2, q.y - (top + bot) / 2], { animate: true, duration: 0.35 });
     };
     const hide = () => { if (activeId) mark(activeId, false); activeId = null; this._sheet = null; box.hidden = true; box.innerHTML = ''; };
@@ -2753,6 +2755,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       this._sheet = { id, active: want };
       box.innerHTML = `<div class="flex gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory px-6 py-1 scroll-px-6">${[a, ...near].map(s => this.sheetCard(byId(s.id))).join('')}</div>`;
       box.hidden = false;
+      // 지도가 화면보다 길면 카드(지도 맨 아래)가 화면 밖이에요: 지도 아래 끝이 화면 아래에 오도록 페이지를 살짝 내려요
+      if (!keep) { const d = el.getBoundingClientRect().bottom - innerHeight; if (d > 1) window.scrollBy({ top: d, behavior: 'smooth' }); }
       const row = box.firstElementChild, cards = [...row.children], i = Math.max(0, cards.findIndex(c => c.dataset.sheet === want));
       row.scrollLeft = i ? cards[i].offsetLeft - (row.clientWidth - cards[i].offsetWidth) / 2 : 0;
       setActive(cards[i].dataset.sheet, !keep);
@@ -3171,7 +3175,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   // 결과 위 체크 필터 칩 (숫자 = 지금 조건에 맞는 곳 중 그 필터에 해당하는 곳)
   fxChips() {
     const on = this.state.fxOn, n = this._fxCounts || {};
-    const chip = (k, label) => `<button data-act="fxtoggle" data-val="${k}" aria-pressed="${on[k]}" class="min-h-[36px] px-3 rounded-full text-xs sm:text-sm font-semibold  ${on[k] ? 'bg-violet-600  text-white' : ' bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100'}">${label}${n[k] != null ? ` <span class="font-normal opacity-80">${n[k]}</span>` : ''}</button>`;
+    const chip = (k, label) => `<button data-act="fxtoggle" data-val="${k}" aria-pressed="${on[k]}" class="min-h-[36px] px-3 rounded-md text-xs sm:text-sm font-semibold  ${on[k] ? 'bg-violet-600  text-white' : ' bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100'}">${label}${n[k] != null ? ` <span class="font-normal opacity-80">${n[k]}</span>` : ''}</button>`;
     return `<div class="mt-3 flex flex-wrap items-center gap-1.5 sm:gap-2" role="group" aria-label="Narrow the results"><span class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">Narrow down:</span>${chip('free', 'Free only')}${chip('stroller', 'Stroller OK')}${chip('rain', 'Rain OK')}${chip('short', '2 hrs or less')}</div>`;
   }
   planView() {
@@ -3277,7 +3281,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <div class="relative">
           ${this.cover(s, 'h-56')}
           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-          ${(() => { const evHere = this._spotEvents && this._spotEvents[s.id], tg = spotTags(s); return tg.length || evHere ? `<p class="absolute top-3 left-5 z-10 flex flex-wrap gap-1 pr-16">${tg.slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-violet-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''; })()}
+          ${(() => { const evHere = this._spotEvents && this._spotEvents[s.id], tg = spotTags(s); return tg.length || evHere ? `<p class="absolute top-3 left-5 z-10 flex flex-wrap gap-1 pr-16">${tg.slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-violet-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''; })()}
           <div class="absolute inset-x-0 top-0 pl-5 pr-16 pt-11 pb-12 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none"><h2 class="text-2xl sm:text-3xl font-bold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h2>
           <p class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${KIDS_ONLY && isKid(s) ? `<span>${esc(kidProfile(s).agesText)}</span><span>${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span>${esc(s.price)}</span>` : ''}` : `${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>`}</p></div>
           <div class="absolute inset-x-0 bottom-0 px-5 pb-6 pt-10 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"><p class="text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">${esc(s.area)}${cur && cur.dist != null ? `, ${fmtDist(cur.dist)}` : ''}</p></div>
@@ -3306,7 +3310,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const says = SAYS[s.id] && dd.fresh(SAYS[s.id]) ? SAYS[s.id] : '';
             if (!evs.length && !tags.length && !notes.length && !says) return factsHtml;
             // 정리 (사용자 결정, 2026-10-02): 파란 창에는 공식 정보인 Tiny Trips tip만. "지금"(행사·시즌)은 칩 한 줄로, 부모 후기는 파란 창 밖으로. 앞에 나온 말과 겹치는 문장은 숨겨요
-            const chip = (h, cls = 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100') => `<span class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-full ${cls}">${h}</span>`;
+            const chip = (h, cls = 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100') => `<span class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-md ${cls}">${h}</span>`;
             const line = h => `<p class="mt-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${h}</p>`;
             const evShown = evs;   // 카드에 "Event" 칩이 뜬 행사는 모달에도 항상 보여요 (태그 설명과 겹쳐도 숨기지 않아요. 사용자, 2026-10-14)
             // 행사는 칩 하나에 (여러 개면 한 줄씩). 색은 카드의 Event 칩과 같은 계열 (마켓만 있으면 연두, 아니면 청록)
@@ -3347,7 +3351,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             ${n.why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(n.why)}${/^https:\/\//i.test(n.source || '') ? ` <a href="${esc(n.source)}" target="_blank" rel="noopener" class=" text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>` : ''}
             ${n.rising && n.rising.length ? `
             <p class="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">Searches that rose alongside it in the past 7 days (Google Trends, BC)</p>
-            <div class="mt-1.5 flex flex-wrap gap-1.5">${n.rising.map(x => `<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/80 dark:bg-slate-800 text-rose-700 dark:text-rose-300">${esc(x)}</span>`).join('')}</div>` : ''}
+            <div class="mt-1.5 flex flex-wrap gap-1.5">${n.rising.map(x => `<span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-white/80 dark:bg-slate-800 text-rose-700 dark:text-rose-300">${esc(x)}</span>`).join('')}</div>` : ''}
             ${aiBlock}
           </section>`; })() : ''}
 
