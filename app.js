@@ -3281,29 +3281,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   }
   // 모달 "Good to know": 입장료·예약, 유모차·기저귀·수유, 먹거리, 확인한 날짜와 출처 (다른 두 상자와 같은 모양)
   factsBox(s, dd) {
-    const f = fx(s.id), a = (f && f.admission) || {}, m = (f && f.amenities) || {}, fd = (f && f.food) || {};
-    const chips = [
-      m.stroller === 'yes' ? 'Stroller-friendly' : m.stroller === 'partial' ? 'Partly stroller-friendly' : m.stroller === 'no' ? 'Not stroller-friendly' : strollerInfo(s) === 'big' ? 'Stroller-friendly (large facility)' : '',
-      m.stairs === 'none' ? 'No stairs' : m.stairs === 'some' ? 'Some stairs' : m.stairs === 'many' ? 'Many stairs' : '',
-      m.changing === true ? 'Changing table' : '', m.nursing === true ? 'Nursing space' : '', m.washrooms === true ? 'Washrooms' : ''
-    ].filter(Boolean);
-    const food = [
-      fd.onsite === 'cafe' ? 'Café on site' : fd.onsite === 'snacks' ? 'Snacks on site' : fd.onsite === 'none' ? 'No food on site' : '',
-      fd.outside === 'allowed' ? 'Bring your own food' : fd.outside === 'not-allowed' ? 'Outside food not allowed' : ''
-    ].filter(Boolean);
-    const label = x => `<span class="font-semibold">${x}:</span> `;
-    const booking = a.booking === 'required' ? ` <span class="font-semibold text-amber-700 dark:text-amber-300">Booking required${a.bookingNote ? `: ${esc(a.bookingNote)}` : ''}.</span>`
-      : a.booking === 'recommended' ? ` <span class="font-semibold text-amber-700 dark:text-amber-300">Booking recommended${a.bookingNote ? `: ${esc(a.bookingNote)}` : ''}.</span>` : a.booking === 'none' ? ' No booking needed.' : '';
-    const items = [];
-    if (a.text || booking) items.push(label('Admission') + (a.text ? esc(a.text) + (booking ? '.' : '') : '') + booking);
-    if (chips.length || m.note) items.push(label('With little ones') + esc(chips.join(' · ')) + (chips.length && m.note ? '. ' : '') + (m.note ? esc(m.note) : ''));
-    if (food.length || fd.nearby) items.push(label('Food') + esc(food.join(' · ')) + (food.length && fd.nearby ? '. ' : '') + (fd.nearby ? `Nearby: ${esc(fd.nearby)}` : ''));
-    if (!items.length) return '';
-    // 확인된 사실은 가장 먼저 장소 창의 "이미 나온 말"에 올려서, 뒤에 나오는 tip·후기·할 거리가 같은 말을 반복하지 않게 해요
-    if (dd) items.forEach(x => dd.add(x.replace(/<[^>]+>/g, ' ')));
-    const src = /^https:\/\//.test(a.source || '') ? ` · <a href="${esc(a.source)}" target="_blank" rel="noopener" class="">source</a>` : '';
-    const checked = f && f.checked ? `Info checked ${esc(shortDate(f.checked))}${src}` : '';
-    return infoBox('slate', 'Good to know', items, checked, 'Good to know');
+    const { rows, checked } = this.factsRows(s, dd);
+    return rows.length ? infoBox('slate', 'Good to know', rows.map(r => `<span class="font-semibold">${r.label}:</span> ${r.html}`), checked, 'Good to know') : '';
   }
   // 결과 위 체크 필터 칩 (숫자 = 지금 조건에 맞는 곳 중 그 필터에 해당하는 곳)
   fxChips() {
@@ -3381,24 +3360,62 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     </div>`;
   }
 
+  // 확인된 방문 정보(data/spot-facts.json)를 "라벨 + 내용" 줄로: 장소 창의 Before you go 카드에 들어가요 (factsBox도 이걸 써요)
+  factsRows(s, dd) {
+    const f = fx(s.id), a = (f && f.admission) || {}, m = (f && f.amenities) || {}, fd = (f && f.food) || {};
+    const chips = [
+      m.stroller === 'yes' ? 'Stroller-friendly' : m.stroller === 'partial' ? 'Partly stroller-friendly' : m.stroller === 'no' ? 'Not stroller-friendly' : strollerInfo(s) === 'big' ? 'Stroller-friendly (large facility)' : '',
+      m.stairs === 'none' ? 'No stairs' : m.stairs === 'some' ? 'Some stairs' : m.stairs === 'many' ? 'Many stairs' : '',
+      m.changing === true ? 'Changing table' : '', m.nursing === true ? 'Nursing space' : '', m.washrooms === true ? 'Washrooms' : ''
+    ].filter(Boolean);
+    const food = [
+      fd.onsite === 'cafe' ? 'Café on site' : fd.onsite === 'snacks' ? 'Snacks on site' : fd.onsite === 'none' ? 'No food on site' : '',
+      fd.outside === 'allowed' ? 'Bring your own food' : fd.outside === 'not-allowed' ? 'Outside food not allowed' : ''
+    ].filter(Boolean);
+    const booking = a.booking === 'required' ? ` <span class="font-semibold text-amber-700 dark:text-amber-300">Booking required${a.bookingNote ? `: ${esc(a.bookingNote)}` : ''}.</span>`
+      : a.booking === 'recommended' ? ` <span class="font-semibold text-amber-700 dark:text-amber-300">Booking recommended${a.bookingNote ? `: ${esc(a.bookingNote)}` : ''}.</span>` : a.booking === 'none' ? ' No booking needed.' : '';
+    const rows = [];
+    if (a.text || booking) rows.push({ label: 'Admission', html: (a.text ? esc(a.text) + (booking ? '.' : '') : '') + booking });
+    if (chips.length || m.note) rows.push({ label: 'With little ones', html: esc(chips.join(' · ')) + (chips.length && m.note ? '. ' : '') + (m.note ? esc(m.note) : '') });
+    if (food.length || fd.nearby) rows.push({ label: 'Food', html: esc(food.join(' · ')) + (food.length && fd.nearby ? '. ' : '') + (fd.nearby ? `Nearby: ${esc(fd.nearby)}` : '') });
+    // 확인된 사실은 가장 먼저 장소 창의 "이미 나온 말"에 올려서, 뒤에 나오는 tip·후기·할 거리가 같은 말을 반복하지 않게 해요
+    if (dd) rows.forEach(r => dd.add(`${r.label}: ${r.html.replace(/<[^>]+>/g, ' ')}`));
+    const src = /^https:\/\//.test(a.source || '') ? ` · <a href="${esc(a.source)}" target="_blank" rel="noopener" class="underline">source</a>` : '';
+    return { rows, checked: f && f.checked && rows.length ? `Info checked ${esc(shortDate(f.checked))}${src}` : '' };
+  }
+  // 요일별 영업시간 줄 (같은 시간인 요일은 묶어서), 오늘이 든 줄에 Today 표시. 모르면 빈 배열 (Hours unknown은 안 보여요)
+  weekRows(s) {
+    if (isDaylight(s)) return [{ days: 'Every day', text: 'Sunrise to sunset', today: true }];
+    if (!s._oh || s.hoursSource === 'public') return [];
+    try {
+      const base = vanWallClock(); base.setHours(0, 0, 0, 0);
+      const byDow = {};
+      for (let i = 0; i < 7; i++) { const a = new Date(base); a.setDate(a.getDate() + i); byDow[a.getDay()] = fmtDayHours(s, a); }
+      const order = [1, 2, 3, 4, 5, 6, 0], groups = [], today = order.indexOf(base.getDay());
+      order.forEach((d, i) => { const g = groups[groups.length - 1]; if (g && g.text === byDow[d]) g.to = i; else groups.push({ from: i, to: i, text: byDow[d] }); });
+      if (groups.length === 1) return [{ days: 'Every day', text: groups[0].text, today: true }];
+      return groups.map(g => ({ days: g.from === g.to ? DOW[order[g.from]] : `${DOW[order[g.from]]}–${DOW[order[g.to]]}`, text: g.text, today: today >= g.from && today <= g.to }));
+    } catch (e) { return []; }
+  }
+  // 장소 창 (2026-11-19 새 모양, 사용자 예시): 사진(닫기·공유·저장, 오늘 영업 상태) → 이름·지역·한 줄 소개 → 큰 버튼 2개(구글 리뷰·길 안내)
+  // → Tiny Trips tip → 행사·시즌 → Before you go(시간·가격·나이·소요 시간·실내외·확인된 정보) → 할 거리 → What parents say → 부모 리뷰 → 위치 → 근처 장소
   modal(s, items) {
     const c = CATS[s.cat], st = this.state, tf = TF[st.tf];
     const cur = items.find(x => x.id === s.id);
-    const rank = cur ? this.rankOf(cur) : null;
     const saved = st.plan.includes(s.id);
-    // 같은 말이 장소 창에 두 번 나오지 않게 (규칙, 2026-10-09): 영업시간 → Good to know(확인된 사실) → Tiny Trips tip → What parents say → 시즌·행사 → Things to do 순으로 적어 두고,
+    // 같은 말이 장소 창에 두 번 나오지 않게 (규칙, 2026-10-09): 한 줄 소개 → 영업시간 → Good to know(확인된 사실) → Tiny Trips tip → What parents say → 시즌·행사 → Things to do 순으로 적어 두고,
     // 뒤에 나오는 줄이 앞의 내용과 핵심 단어의 절반 이상 겹치면 그 줄을 숨겨요. 새 내용 칸을 만들 때도 dd.fresh(text)로 걸러요
     const dd = (() => { const seen = new Set(); const add = t => keyWords(t).forEach(w => seen.add(w)); add(weekHours(s) || s.hours || ''); return { add, fresh: t => { if (overlapsSeen(t, seen)) return false; add(t); return true; } }; })();
     const key = `${s.id}|${st.tf}|${st.weather}`, ai = this.ai[key];
     let aiBlock = '';
     if (this.sample) {
       if (ai && ai.status === 'loading') aiBlock = `
-        <div class="mt-3 rounded-lg p-3 bg-white dark:bg-slate-800   ">
+        <div class="mt-3 rounded-lg p-3 bg-white dark:bg-slate-800">
           <p id="ai-out" class="text-sm text-slate-800 dark:text-slate-200 whitespace-pre-line">${esc(ai.text || 'Analyzing...')}</p>
           <button data-act="aistop" class="mt-2 text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">Stop</button>
         </div>`;
       else if (ai && (ai.status === 'done' || ai.status === 'error')) aiBlock = `
-        <div class="mt-3 rounded-lg p-3 bg-white dark:bg-slate-800   ">
+        <div class="mt-3 rounded-lg p-3 bg-white dark:bg-slate-800">
           ${ai.text ? `<p class="text-xs font-bold text-violet-700 dark:text-violet-300">AI analysis (${tf.label.toLowerCase()}, ${WEATHER[st.weather].label.toLowerCase()})</p><p class="mt-1 text-sm text-slate-800 dark:text-slate-200 whitespace-pre-line">${esc(ai.text)}</p>` : ''}
           ${ai.msg ? `<p class="mt-1 text-sm text-rose-600 dark:text-rose-400">${esc(ai.msg)}</p>` : ''}
           <button data-act="ai" data-val="${s.id}" class="mt-2 text-xs font-semibold text-violet-700 dark:text-violet-300">Analyze again</button>
@@ -3406,100 +3423,123 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       else aiBlock = `<button data-act="ai" data-val="${s.id}" class="mt-3 px-3 py-2 rounded-lg text-sm font-semibold bg-violet-600 hover:bg-violet-700 text-white">Get an AI take for right now</button>`;
     }
 
+    // ── 내용 먼저 계산 (같은 말 거르기 순서대로) ──
+    const summary = s.summary && dd.fresh(s.summary) ? s.summary : '';
+    const facts = this.factsRows(s, dd);
+    const notes = (NOTES[s.id] ? this.tipItems(s, 'modal') : []).filter(dd.fresh), src = (NOTES[s.id] || {}).source || '', host = (/^https:\/\/(?:www\.)?([^/]+)/.exec(src) || [])[1] || '';
+    const says = SAYS[s.id] && dd.fresh(SAYS[s.id]) ? SAYS[s.id] : '';
+    const evs = EVENTS.filter(ev => ev.spotId === s.id).map(ev => ({ ...ev, next: upcomingDates(ev, 60)[0] })).filter(ev => ev.next).sort((a, b) => a.next.localeCompare(b.next));
+    const tagLines = spotTags(s).map(t => { const x = t.spots[s.id]; return { t, x, show: dd.fresh(x.why) }; });
+    const g = GUIDES[s.id] || {};
+    const doList = (g.do || []).filter(dd.fresh), eatList = (g.eat || []).filter(dd.fresh);
+
+    // ── 사진 위: 오늘 영업 상태 칩 (날짜를 골랐으면 그날 시간), 시즌·행사 칩 ──
+    const oi = this.planLater() && HOURS_READY && this.planHours(s) ? (ph => ({ open: ph.open, text: `${ph.text} (${WHEN_PHRASE[st.when]})` }))(this.planHours(s)) : openInfo(s);
+    const evHere = this._spotEvents && this._spotEvents[s.id], tg = spotTags(s);
+    const heroChips = [
+      oi ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-white/95 text-slate-800 shadow"><span class="w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'}"></span>${esc(oi.text)}</span>` : '',
+      ...tg.slice(0, 2).map(t => `<span class="text-xs font-semibold px-2.5 py-1 rounded-md ${tagStyle(t.id).solid} shadow">#${esc(t.label)}</span>`),
+      evHere ? `<span class="text-xs font-semibold px-2.5 py-1 rounded-md ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-violet-600'} text-white shadow">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''
+    ].filter(Boolean).join('');
+    const iconBtn = 'w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center shadow-lg backdrop-blur-sm';
+    const shareMsg = st.shareMsg && st.shareMsg.id === s.id ? st.shareMsg.text : '';
+
+    // ── 이름 밑 한 줄: 지역 · 거리만 (나이·소요 시간·가격은 아래 Before you go 카드에 있어서 반복하지 않아요) ──
+    const meta = [s.area, cur && cur.dist != null ? fmtDist(cur.dist).split(' · ')[0] : ''].filter(Boolean).map(esc);
+
+    // ── Before you go 카드: 라벨 | 내용 ──
+    const wk = this.weekRows(s);
+    const row = (label, html) => `<div class="grid grid-cols-[5.5rem_1fr] sm:grid-cols-[7rem_1fr] gap-3 py-3 first:pt-0 last:pb-0"><dt class="text-sm text-slate-500 dark:text-slate-400">${label}</dt><dd class="text-sm text-slate-800 dark:text-slate-200 min-w-0">${html}</dd></div>`;
+    const hoursHtml = wk.length ? wk.map(w => `<div class="${w.today ? 'font-semibold' : ''}">${esc(w.days)} ${esc(w.text)}${w.today && wk.length > 1 ? ' <span class="align-middle whitespace-nowrap text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-200">Today</span>' : ''}</div>`).join('')
+      : (s.hours && !/unknown/i.test(s.hours) ? esc(s.hours) : '');
+    const beforeRows = [
+      hoursHtml ? row('Hours', hoursHtml) : '',
+      row('Price', `${esc(s.price || 'See website')}${/^free$/i.test(s.price || '') ? '' : ` <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="ml-1 text-xs font-semibold text-violet-700 dark:text-violet-300">Check prices ↗</a>`}`),
+      KIDS_ONLY && isKid(s) ? row('Ages', esc(kidProfile(s).agesText.replace(/^Ages\s+/i, ''))) : '',
+      s.time ? row('Visit length', esc(s.time)) : '',
+      ENV[s.env] ? row('Setting', esc(ENV[s.env])) : '',
+      ...facts.rows.map(r => row(esc(r.label), r.html))
+    ].filter(Boolean).join('');
+
+    // ── 근처 장소: 가까운 아이 장소 10곳 (사진 카드, 옆으로 넘기기). 누르면 그 장소 창 ──
+    const nearby = s.lat == null ? [] : SPOTS.filter(x => x.id !== s.id && x.lat != null && (!KIDS_ONLY || isKid(x))).map(x => [km(s, x), x]).sort((a, b) => a[0] - b[0]).slice(0, 10);
+
+    const H3 = 'text-lg font-extrabold tracking-tight';
     return `
     <div data-act="close" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center" style="position:fixed; inset:0; z-index:50; padding-top:max(12px, env(safe-area-inset-top, 0px)); padding-bottom:max(12px, env(safe-area-inset-bottom, 0px));">
       <div data-act="noop" role="dialog" aria-modal="true" tabindex="-1" aria-label="${esc(s.name)}" class="outline-none relative w-full max-w-2xl rounded-3xl bg-white dark:bg-slate-900 shadow-2xl overflow-hidden flex flex-col" style="max-height:100%">
-        <button data-act="close" aria-label="Close" class="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white text-lg flex items-center justify-center shadow-lg">✕</button>
+        <button data-act="close" aria-label="Close" class="absolute top-3 left-3 z-10 ${iconBtn}"><svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <div class="absolute top-3 right-3 z-10 flex items-center gap-2">
+          ${shareMsg ? `<span class="px-2 py-1 rounded-md text-xs font-semibold bg-white text-slate-800 shadow" role="status">${esc(shareMsg)}</span>` : ''}
+          <button data-act="share" data-val="${s.id}" aria-label="Share ${esc(s.name)}" class="${iconBtn}"><svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg></button>
+          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" aria-label="${saved ? 'Saved' : 'Save'} ${esc(s.name)}" class="${iconBtn} ${saved ? '!bg-white !text-rose-600' : ''}"><svg viewBox="0 0 24 24" class="w-5 h-5" fill="${saved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg></button>
+        </div>
         <div data-keep-scroll="modal" class="overflow-y-auto">
         <div class="relative">
-          ${this.cover(s, 'h-56')}
-          <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-          ${(() => { const evHere = this._spotEvents && this._spotEvents[s.id], tg = spotTags(s); return tg.length || evHere ? `<p class="absolute top-3 left-5 z-10 flex flex-wrap gap-1 pr-16">${tg.slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md ${tagStyle(t.id).solid} shadow-md">#${esc(t.label)}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md ${evHere.ev.type === 'market' ? 'bg-lime-700' : 'bg-violet-600'} text-white shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''; })()}
-          <div class="absolute inset-x-0 top-0 pl-5 pr-16 pt-11 pb-12 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none"><h2 class="text-2xl sm:text-3xl font-bold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h2>
-          <p class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${KIDS_ONLY && isKid(s) ? `<span>${esc(kidProfile(s).agesText)}</span><span>${esc(s.time)}</span>${s.price && !/^free$/i.test(s.price) ? `<span>${esc(s.price)}</span>` : ''}` : `${s.price ? `<span>${esc(s.price)}</span>` : ''}<span>${esc(s.time)}</span><span>${ENV[s.env]}</span>`}</p></div>
-          <div class="absolute inset-x-0 bottom-0 px-5 pb-6 pt-10 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"><p class="text-sm text-white/90 [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">${esc(s.area)}${cur && cur.dist != null ? `, ${fmtDist(cur.dist)}` : ''}</p></div>
-        </div>
-        <div class="px-5 pt-5">
-          <div class="flex justify-end"><button data-act="report" data-val="${esc(s.id)}" class="shrink-0 text-xs  font-semibold text-violet-700 dark:text-violet-300">Something wrong? Tell us</button></div>
-          ${this.planLater() && HOURS_READY && this.planHours(s) ? (() => { const ph = this.planHours(s); return `
-          <p class="mt-1 text-sm font-semibold ${ph.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}"><span class="inline-block w-2 h-2 rounded-full ${ph.open ? 'bg-emerald-500' : 'bg-slate-400'} mr-1.5 align-middle"></span> ${esc(ph.text)} <span class="font-normal text-slate-500 dark:text-slate-400">(${WHEN_PHRASE[this.state.when]})</span></p>`; })()
-          : (() => { const oi = openInfo(s); return oi ? `
-          <p class="mt-1 text-sm font-semibold ${oi.open ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}"><span class="inline-block w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'} mr-1.5 align-middle"></span> ${esc(oi.text)}</p>${(s.hoursSource === 'osm' || s.hoursSource === 'web') && !isDaylight(s) ? `
-          <p class="text-xs text-slate-500 dark:text-slate-400">Hours: ${esc(weekHours(s) || s.hours)}</p>` : ''}`
-            : ''; })()}
-          ${TRENDS_ON && s.rise != null ? `
-          <p class="mt-2 text-sm ${s.rise >= RISING_MIN ? 'font-semibold text-rose-600 dark:text-rose-300' : 'text-slate-600 dark:text-slate-300'}">${riseText(s.rise, 'search level')}
-            <span class="block text-xs font-normal text-slate-500 dark:text-slate-400">Google searches in BC over ${esc(recentLabel())}, compared with the 4 weeks before.</span></p>` : ''}
+          ${this.cover(s, 'h-60 sm:h-72')}
+          <div class="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/45 to-transparent pointer-events-none"></div>
+          ${heroChips ? `<div class="absolute left-4 bottom-3 right-16 z-10 flex flex-wrap gap-1.5">${heroChips}</div>` : ''}
         </div>
 
-        <div class="px-5 py-6 space-y-6">
-          ${(() => {
-            // 지금 가 볼 이유: 이 장소의 행사(60일 안) + 시즌 태그를 한 곳에, 영업시간 바로 밑에
-            const evs = EVENTS.filter(ev => ev.spotId === s.id).map(ev => ({ ...ev, next: upcomingDates(ev, 60)[0] })).filter(ev => ev.next).sort((a, b) => a.next.localeCompare(b.next));
-            const tags = spotTags(s);
-            // "Why go now"(행사·시즌)와 Tiny Trips tip(공식 정보)을 한 상자로 합쳤어요 (2026-10-01)
-            const factsHtml = this.factsBox(s, dd);
-            const notes = (NOTES[s.id] ? this.tipItems(s, 'modal') : []).filter(dd.fresh), src = (NOTES[s.id] || {}).source || '', host = (/^https:\/\/(?:www\.)?([^/]+)/.exec(src) || [])[1] || '';
-            const says = SAYS[s.id] && dd.fresh(SAYS[s.id]) ? SAYS[s.id] : '';
-            if (!evs.length && !tags.length && !notes.length && !says) return factsHtml;
-            // 정리 (사용자 결정, 2026-10-02): 파란 창에는 공식 정보인 Tiny Trips tip만. "지금"(행사·시즌)은 칩 한 줄로, 부모 후기는 파란 창 밖으로. 앞에 나온 말과 겹치는 문장은 숨겨요
-            const chip = (h, cls = 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100') => `<span class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-md ${cls}">${h}</span>`;
-            const line = h => `<p class="mt-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${h}</p>`;
-            const evShown = evs;   // 카드에 "Event" 칩이 뜬 행사는 모달에도 항상 보여요 (태그 설명과 겹쳐도 숨기지 않아요. 사용자, 2026-10-14)
-            // 행사는 칩 하나에 (여러 개면 한 줄씩). 색은 카드의 Event 칩과 같은 계열 (마켓만 있으면 연두, 아니면 청록)
-            const evCls = evShown.every(ev => ev.type === 'market') ? 'bg-lime-50 text-lime-800 dark:bg-lime-500/15 dark:text-lime-300' : 'bg-violet-50 text-violet-800 dark:bg-violet-500/15 dark:text-violet-300';
-            const evLabel = (evShown.every(ev => ev.type === 'market') ? 'Market' : 'Event') + (evShown.length > 1 ? 's' : '');
-            const chips = evShown.length ? `<span class="inline-flex flex-col gap-0.5 max-w-full text-xs sm:text-sm font-semibold px-4 py-2 rounded-2xl ${evCls}"><span class="font-bold">${evLabel}</span>${evShown.map(ev => `<span class="font-normal">${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}</span>`).join('')}</span>` : '';
-            // 시즌 태그: 주황 칩 바로 뒤에 같은 줄로 이유가 이어져요 (#태그를 다시 쓰지 않아요). 이유가 없으면 칩만
-            const extra = tags.map(t => { const x = t.spots[s.id]; return !dd.fresh(x.why)
-              ? `<div class="mt-2 flex">${chip(`#${esc(t.label)}`, tagStyle(t.id).soft)}</div>`
-              : `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${chip(`#${esc(t.label)}`, tagStyle(t.id).soft)} ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class=" text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`; }).join('');
-            const chipsBlock = `${chips || extra ? `
+        <div class="px-5 pt-4 pb-6 space-y-6">
           <div>
-            ${chips ? `<div class="flex flex-wrap gap-2">${chips}</div>` : ''}${extra}
-          </div>` : ''}`;
-            const tipBlock = notes.length ? infoBox('sky', 'Tiny Trips tip', notes.slice(0, 2).map(esc), `Checked ${esc(shortDate(NOTES_META.updatedAt))} · ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="">${esc(host)} ↗</a>` : 'official site'}. Hours can change.`) : '';
-            const saysBlock = says ? infoBox('pink', 'What parents say', [esc(says)]) : '';
-            // 순서 (사용자 결정, 2026-10-04): What parents say → Tiny Trips tip → Good to know → 행사·시즌 칩
-            return saysBlock + tipBlock + factsHtml + chipsBlock; })()}
-
-
-
-          ${s.lat != null ? (() => {
-            // 위치 (2026-11-19): 작은 지도에 이 장소 핀 + 거리 주소 + 복사·지도 열기. 지도는 다 그린 뒤 drawMini()가 #mmap에 그려요. 누르면 구글 지도가 열려요
-            const addr = ADDR[s.id] || s.area;
-            const btn = 'h-8 shrink-0 inline-flex items-center gap-1.5 px-3 rounded-lg text-[13px] font-semibold';
-            return `
-          <section>
-            <h3 class="font-bold">Location</h3>
-            <div class="mt-2 relative h-40 sm:h-48 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800">
-              <div id="mmap" class="absolute inset-0" aria-hidden="true"></div>
-              <a href="${mapsUrl(s)}" target="_blank" rel="noopener" aria-label="Open ${esc(s.name)} in Google Maps" class="absolute inset-0 z-[500]"></a>
+            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight">${esc(s.name)}</h2>
+            <p class="mt-1.5 text-sm text-slate-600 dark:text-slate-300">${meta.join(' · ')}</p>
+            ${summary ? `<p class="mt-1.5 text-sm text-slate-500 dark:text-slate-400">${esc(summary)}</p>` : ''}
+            <div class="mt-4 grid grid-cols-2 gap-2">
+              <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="h-12 rounded-xl flex items-center justify-center gap-2 font-semibold bg-slate-100 text-slate-800 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"><svg viewBox="0 0 24 24" class="w-5 h-5 text-amber-500" fill="currentColor" aria-hidden="true"><path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/></svg>Google Reviews</a>
+              <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="h-12 rounded-xl flex items-center justify-center gap-2 font-semibold text-white bg-violet-600 hover:bg-violet-700"><svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"/></svg>Directions</a>
             </div>
-            <p class="mt-1 text-[10px] text-slate-400 dark:text-slate-500">Map: <a href="https://openfreemap.org" target="_blank" rel="noopener" class="underline">OpenFreeMap</a> · © <a href="https://openmaptiles.org/" target="_blank" rel="noopener" class="underline">OpenMapTiles</a> · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" class="underline">OpenStreetMap</a></p>
-            <div class="mt-2 flex flex-wrap items-center gap-2">
-              <p class="basis-full sm:basis-0 sm:flex-1 min-w-0 text-sm text-slate-600 dark:text-slate-300 sm:truncate" title="${esc(addr)}">${esc(addr)}</p>
-              <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="${btn} bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"/></svg>Open map</a>
-            </div>
-          </section>`; })() : ''}
-
-          <div class="grid grid-cols-2 gap-3">
-            <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-amber-50 dark:bg-amber-500/10    ">
-              <p class="font-bold">Google Reviews ↗</p><p class="text-xs text-slate-500 dark:text-slate-400">Ratings from other parents</p>
-            </a>
-            <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-emerald-50 dark:bg-emerald-500/10    ">
-              <p class="font-bold">${s.price ? esc(s.price) : 'Prices'} ↗</p><p class="text-xs text-slate-500 dark:text-slate-400">Search prices online</p>
-            </a>
           </div>
 
+          ${notes.length ? `
+          <section class="rounded-2xl p-4 bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 shadow-sm" aria-label="Tiny Trips tip">
+            <div class="flex items-start gap-2.5">
+              <span class="shrink-0 mt-0.5 text-[11px] font-bold px-2 py-0.5 rounded-md border border-amber-300 bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:border-amber-400/40 dark:text-amber-200">Tiny Trips tip</span>
+              <div class="min-w-0 space-y-1 text-sm text-slate-800 dark:text-slate-200">${notes.slice(0, 2).map(n => `<p>${esc(n)}</p>`).join('')}</div>
+            </div>
+            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Checked ${esc(shortDate(NOTES_META.updatedAt))} · ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'official site'}. Hours can change.</p>
+          </section>` : ''}
+
+          ${evs.length || tagLines.length ? (() => {
+            // 행사: 카드에 Event 칩이 뜬 행사는 여기서도 항상 보여요 (사용자, 2026-10-14). 시즌 태그: 칩 뒤에 같은 줄로 이유 (이유가 앞과 겹치면 칩만)
+            const evCls = evs.every(ev => ev.type === 'market') ? 'bg-lime-50 text-lime-800 dark:bg-lime-500/15 dark:text-lime-300' : 'bg-violet-50 text-violet-800 dark:bg-violet-500/15 dark:text-violet-300';
+            const evLabel = (evs.every(ev => ev.type === 'market') ? 'Market' : 'Event') + (evs.length > 1 ? 's' : '');
+            const chip = (h, cls) => `<span class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold px-2.5 py-1 rounded-md ${cls}">${h}</span>`;
+            return `<div class="space-y-2">
+            ${evs.length ? `<div class="rounded-xl px-4 py-3 text-sm ${evCls}"><p class="font-bold">${evLabel}</p>${evs.map(ev => `<p>${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}</p>`).join('')}</div>` : ''}
+            ${tagLines.map(({ t, x, show }) => show
+              ? `<p class="text-sm leading-relaxed text-slate-800 dark:text-slate-200">${chip(`#${esc(t.label)}`, tagStyle(t.id).soft)} ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`
+              : `<div class="flex">${chip(`#${esc(t.label)}`, tagStyle(t.id).soft)}</div>`).join('')}
+            </div>`; })() : ''}
+
+          <section>
+            <h3 class="${H3}">Before you go</h3>
+            <dl class="mt-3 rounded-2xl p-4 bg-slate-50 dark:bg-slate-800/50 divide-y divide-slate-200 dark:divide-slate-700">${beforeRows}</dl>
+            ${facts.checked ? `<p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">${facts.checked}</p>` : ''}
+            ${doList.length || eatList.length ? `
+            <div class="mt-3 rounded-2xl p-4 bg-slate-50 dark:bg-slate-800/50 space-y-3 text-sm">
+              ${doList.length ? `<div><p class="font-semibold">Things to do</p><ul class="mt-1 space-y-1 list-disc pl-5 text-slate-700 dark:text-slate-300">${doList.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>` : ''}
+              ${eatList.length ? `<div><p class="font-semibold">What to eat</p><ul class="mt-1 space-y-1 list-disc pl-5 text-slate-700 dark:text-slate-300">${eatList.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>` : ''}
+            </div>` : ''}
+          </section>
+
+          ${says ? `
+          <section>
+            <h3 class="${H3}">What parents say</h3>
+            <div class="mt-3 rounded-2xl p-4 bg-amber-50 dark:bg-amber-500/10">
+              <p class="text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(says)}</p>
+              <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">A short summary of what parents mention in public reviews. Check the reviews too.</p>
+            </div>
+          </section>` : ''}
+
           ${isRising(s) ? (() => {
-            // 평소보다 5% 이상(RISING_MIN) 많이 검색될 때만: 이유(notes.why)와 최근 7일 급상승 연관 검색어
             const n = RISE_NOTES[s.id] || {};
             return `
-          <section class="rounded-2xl px-4 py-5 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-500/10 dark:to-fuchsia-500/10   ">
+          <section class="rounded-2xl px-4 py-5 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-500/10 dark:to-fuchsia-500/10">
             <h3 class="font-bold text-rose-800 dark:text-rose-300">Why more people are searching</h3>
             <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">Searched ${fmtRise(s.rise)} its usual amount over ${esc(recentLabel())}.</p>
-            ${n.why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(n.why)}${/^https:\/\//i.test(n.source || '') ? ` <a href="${esc(n.source)}" target="_blank" rel="noopener" class=" text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>` : ''}
+            ${n.why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(n.why)}${/^https:\/\//i.test(n.source || '') ? ` <a href="${esc(n.source)}" target="_blank" rel="noopener" class="text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>` : ''}
             ${n.rising && n.rising.length ? `
             <p class="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">Searches that rose alongside it in the past 7 days (Google Trends, BC)</p>
             <div class="mt-1.5 flex flex-wrap gap-1.5">${n.rising.map(x => `<span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-white/80 dark:bg-slate-800 text-rose-700 dark:text-rose-300">${esc(x)}</span>`).join('')}</div>` : ''}
@@ -3508,34 +3548,37 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
           ${this.reviewSection(s)}
 
-          ${(() => {
-            // 할 거리 · 먹을 것 · 준비물 (안내 파일 + 자동 준비물, 겹치면 한 번만)
-            const g = GUIDES[s.id] || {};
-            const bring = [...(g.bring || []), ...autoBring(s)].filter((x, i, a) => a.indexOf(x) === i);
-            const list = (title, items, mark) => items && items.length ? `
-            <div>
-              <h3 class="font-bold">${title}</h3>
-              <ul class="mt-2 space-y-1.5">${items.map(t => `<li class="text-sm text-slate-700 dark:text-slate-300">${esc(t)}</li>`).join('')}</ul>
-            </div>` : '';
-            // 앞 칸(Good to know·tip·후기·시즌)에서 이미 한 말은 빼요
-            const body = list('Things to do', (g.do || []).filter(dd.fresh), '•') + list('What to eat', (g.eat || []).filter(dd.fresh), '•');
-            return body ? `
-          <section class="space-y-5">
-            ${body}
-          </section>` : '';
-          })()}
+          ${s.lat != null ? (() => {
+            // 위치: 작은 지도에 이 장소 핀 + 거리 주소 + 지도 열기. 지도는 다 그린 뒤 drawMini()가 #mmap에 그려요. 누르면 구글 지도가 열려요
+            const addr = ADDR[s.id] || s.area;
+            return `
+          <section>
+            <h3 class="${H3}">Location</h3>
+            <div class="mt-3 relative h-40 sm:h-48 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800">
+              <div id="mmap" class="absolute inset-0" aria-hidden="true"></div>
+              <a href="${mapsUrl(s)}" target="_blank" rel="noopener" aria-label="Open ${esc(s.name)} in Google Maps" class="absolute inset-0 z-[500]"></a>
+            </div>
+            <p class="mt-1 text-[10px] text-slate-400 dark:text-slate-500">Map: <a href="https://openfreemap.org" target="_blank" rel="noopener" class="underline">OpenFreeMap</a> · © <a href="https://openmaptiles.org/" target="_blank" rel="noopener" class="underline">OpenMapTiles</a> · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" class="underline">OpenStreetMap</a></p>
+            <div class="mt-2 flex items-center gap-3">
+              <p class="flex-1 min-w-0 text-sm text-slate-700 dark:text-slate-200">${esc(addr)}</p>
+              <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="h-9 shrink-0 inline-flex items-center gap-1.5 px-3 rounded-lg text-[13px] font-semibold bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"/></svg>Directions</a>
+            </div>
+          </section>`; })() : ''}
 
+          ${nearby.length ? `
+          <section>
+            <h3 class="${H3}">Nearby places</h3>
+            <div data-keep-scroll="nearby" class="mt-3 -mx-5 px-5 flex gap-3 overflow-x-auto no-scrollbar snap-x">
+              ${nearby.map(([d, x]) => `<button data-act="open" data-val="${esc(x.id)}" class="snap-start shrink-0 w-36 text-left">
+                <div class="h-24 rounded-xl overflow-hidden pointer-events-none">${this.cover(x, 'h-full')}</div>
+                <p class="mt-1.5 text-sm font-semibold leading-snug clamp2">${esc(x.name)}</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 truncate">${esc(fmtDist(d).split(' · ')[0])} · ${esc(CAT_GROUPS[kindGroup(x)].label)}</p>
+              </button>`).join('')}
+            </div>
+          </section>` : ''}
 
-          <!-- "How busy is it?" 칸도 뺐어요: 혼잡도는 위의 지도 링크에서 봐요 -->
-          <!-- "Tips" 칸은 뺐어요: 위의 Tiny Trips tip과 겹쳐서. 꼭 필요한 안내는 data/spot-notes.json으로 옮겨요 -->
-
-
+          <p class="text-center"><button data-act="report" data-val="${esc(s.id)}" class="text-xs font-semibold text-slate-500 hover:text-violet-700 dark:text-slate-400 dark:hover:text-violet-300">Something wrong? Tell us</button></p>
         </div>
-        </div>
-        <div class="shrink-0 grid grid-cols-[1fr_1fr_auto] gap-2 px-4 py-3    bg-white dark:bg-slate-900">
-          <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="min-h-[44px] flex items-center justify-center rounded-xl font-semibold text-white bg-violet-600 hover:bg-violet-700">Directions</a>
-          <button data-act="save" data-val="${s.id}" aria-pressed="${saved}" class="min-h-[44px] rounded-xl font-semibold  ${saved ? 'bg-rose-100  text-rose-700 dark:bg-rose-500/15  dark:text-rose-300' : 'bg-slate-100 dark:bg-slate-800'}">${saved ? '♥ Saved' : '♡ Save'}</button>
-          <button data-act="share" data-val="${s.id}" class="min-h-[44px] px-4 rounded-xl font-semibold bg-slate-100 dark:bg-slate-800">${st.shareMsg && st.shareMsg.id === s.id ? esc(st.shareMsg.text) : 'Share'}</button>
         </div>
       </div>
     </div>`;
