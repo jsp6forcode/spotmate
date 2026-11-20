@@ -145,6 +145,24 @@ const CAT_GROUPS = {
   arts:       { label: 'Arts & crafts', color: '#c0692f', icon: '🎨', kinds: ['arts'] },
   fun:        { label: 'Rides & attractions', color: '#c0692f', icon: '🎡', kinds: ['rides', 'hologram', 'sight'] }
 };
+// 장소 종류 선 아이콘 (2026-11-19, 사용자: 이모지를 흰색으로 바꾸니 무슨 장소인지 안 보여요): 지도 핀·칩·카드 종류 표시에 같은 흰 선 아이콘을 써요
+const TYPE_ICONS = {
+  playground: '<path d="M12 22v-6"/><path d="M12 16c-4 0-6.5-2.5-6.5-5.5S8 5 12 2c4 3 6.5 5.5 6.5 8.5S16 16 12 16z"/>',
+  outdoors: '<path d="M2 18l7-12 4 6 3-4 6 10z"/>',
+  pool: '<circle cx="12" cy="6" r="2"/><path d="M2 14c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/><path d="M2 20c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/>',
+  museum: '<path d="M2 9l10-6 10 6z"/><path d="M5 9v10M9.5 9v10M14.5 9v10M19 9v10"/><path d="M3 21h18"/>',
+  mall: '<path d="M5 8h14l-1.2 13H6.2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+  indoor: '<rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/><rect x="8" y="3" width="8" height="8" rx="1"/>',
+  farm: '<path d="M3 21V10l9-6 9 6v11z"/><path d="M9 21v-6h6v6"/><path d="M9 15l6 6M15 15l-6 6"/>',
+  sports: '<path d="M6 3h4v7l6 2.2c2 .7 3 1.8 3 3.3V17H6z"/><path d="M3 21h18"/><path d="M9 17v4M16 17v4"/>',
+  library: '<path d="M2 5c3-1.2 7-1.2 10 1 3-2.2 7-2.2 10-1v14c-3-1.2-7-1.2-10 1-3-2.2-7-2.2-10-1z"/><path d="M12 6v14"/>',
+  arts: '<path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-1.9 0-1.2-1-1.6-1-2.6 0-1 .9-1.5 2-1.5h2a4 4 0 0 0 4-4C21 6.4 17 3 12 3z"/><circle cx="7.5" cy="11.5" r="1.2" fill="currentColor"/><circle cx="10" cy="7.2" r="1.2" fill="currentColor"/><circle cx="15" cy="7.5" r="1.2" fill="currentColor"/>',
+  fun: '<circle cx="12" cy="10" r="7"/><path d="M12 3v14M5 10h14M7 5l10 10M17 5L7 15"/><path d="M8 21l4-4 4 4"/>',
+  events: '<path d="M12 3.6l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.6l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
+  market: '<path d="M3 10h18l-2 10H5z"/><path d="M8 10l4-6 4 6"/><path d="M9 14v3M12 14v3M15 14v3"/>',
+  all: '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>'
+};
+const typeIcon = (key, size = 14) => `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none">${TYPE_ICONS[key] || TYPE_ICONS.fun}</svg>`;
 const KIND_GROUP = {}; Object.entries(CAT_GROUPS).forEach(([g, v]) => v.kinds.forEach(k => { KIND_GROUP[k] = g; }));
 const kindGroup = s => KIND_GROUP[kidProfile(s).kind] || 'fun';
 const groupColor = s => CAT_GROUPS[kindGroup(s)].color;
@@ -429,6 +447,8 @@ let PARKING = { spots: {}, radius: 400 };
 let SAYS = {};
 // 전용 주소(/spots/<id>/)가 있는 장소 id (build-guides.ps1 이 data/spot-pages.json 으로 만들어요)
 let SPOT_PAGES = new Set();
+// 거리 주소 (data/addresses.json, tools/fetch-addresses.ps1 이 OpenStreetMap에서 받아요). 장소 창 Location 칸에 써요
+let ADDR = {};
 const PARK_KIND = { surface: 'Surface lot', 'multi-storey': 'Parkade', underground: 'Underground', rooftop: 'Rooftop', street_side: 'Street parking', lane: 'Street parking', layby: 'Pull-out' };
 const parkingOf = s => PARKING.spots[s.id];
 // 카드용 한 줄: 가장 가까운 주차장 거리와 유료 여부
@@ -564,6 +584,17 @@ function loadVector() {
     vecReady = loadScript(MAPLIBRE + '.js').then(() => loadScript(MAPLIBRE_LEAFLET)).then(() => !!(window.L && L.maplibreGL), () => false);
   }
   return vecReady;
+}
+// 핀 묶기 (2026-11-19, 사용자: 줌아웃하면 복잡해요): 가까운 핀은 "+N" 동그라미 하나로. 못 불러오면 묶지 않고 그대로 그려요
+const CLUSTER = 'https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/';
+let clusterReady = null;
+function loadCluster() {
+  if (window.L && L.markerClusterGroup) return Promise.resolve(true);
+  if (!clusterReady) {
+    const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = CLUSTER + 'MarkerCluster.css'; document.head.appendChild(css);
+    clusterReady = loadScript(CLUSTER + 'leaflet.markercluster.js').then(() => !!(window.L && L.markerClusterGroup), () => false);
+  }
+  return clusterReady;
 }
 function loadLeaflet() {
   if (window.L) return Promise.resolve();
@@ -904,12 +935,14 @@ class App {
       // 꺼 둔 기능(트렌드)의 파일은 아예 받지 않아요. spots.json 말고는 없어도 괜찮아요
       const get = (path, on = true) => on ? fetch(path, { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null) : Promise.resolve(null);
       const ohLib = window.opening_hours ? Promise.resolve() : loadScript(OH_LIB).catch(() => null);
-      const [data, ed, status, td, gd, nd, md, pd, sd, pk, fd, sp] = await Promise.all([
+      const [data, ed, status, td, gd, nd, md, pd, sd, pk, fd, sp, ad] = await Promise.all([
         fetch('/data/spots.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
         get('/data/events.json'), get('/data/review-status.json'), get('/data/trends-weekly.json', TRENDS_ON),
         get('/data/spot-guides.json'), get('/data/spot-notes.json'), get('/data/parking-meters.json'), get('/data/parking.json'),
         get('/data/season.json'), get('/data/parent-says.json'), get('/data/spot-facts.json'), get('/data/spot-pages.json'),
+        get('/data/addresses.json'),
       ]);
+      if (ad) ADDR = ad.addresses || {};
       SPOTS = data.spots;
       // 행사 정보
       if (ed) { EVENTS = ed.events || []; EVENTS_META = { updatedAt: ed.updatedAt || '', note: ed.note || '' }; }
@@ -1568,6 +1601,14 @@ class App {
       }
       case 'nearoff': this.geoToken = (this.geoToken || 0) + 1; this.set({ nearKey: '', geoMsg: '', geoBusy: false, wizMore: 10 }); return this.wizLocScroll();
       case 'copyplan': return this.copyPlan();
+      // 장소 창 Location 칸: 주소 복사 (다시 그리지 않고 버튼 글자만 잠깐 바꿔요)
+      case 'copyaddr': {
+        const s = byId(val); if (!s) return;
+        const text = ADDR[s.id] ? `${s.name}, ${ADDR[s.id]}, BC` : `${s.name}, ${s.area}, BC`;
+        const done = ok => { const t = el.querySelector('[data-label]'); if (!t) return; t.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(() => { t.textContent = 'Copy'; }, 1500); };
+        try { navigator.clipboard.writeText(text).then(() => done(true), () => done(false)); } catch (e) { done(false); }
+        return;
+      }
       case 'more': return this.set({ restShown: this.state.restShown + REST_STEP });
       case 'share': return this.share(val);
       case 'shareev': return this.shareEvent(val);
@@ -1872,6 +1913,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
     // 지난 지도(Leaflet)는 화면을 다시 그리기 전에 정리해요
     if (this._leaflet) { try { this._leaflet.remove(); } catch (e) {} this._leaflet = null; }
+    if (this._mini) { try { this._mini.remove(); } catch (e) {} this._mini = null; }
     this._map = null;
     this.root.innerHTML = `
       <div ${modal ? 'inert' : ''}>
@@ -1895,6 +1937,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     `;
 
     if (this._map) this.drawMap();
+    if (modal) this.drawMini(byId(modal));
     this.root.querySelectorAll('[data-keep-scroll]').forEach(el => {
       const s = scrolls[el.dataset.keepScroll];
       if (s) { el.scrollLeft = s[0]; el.scrollTop = s[1]; }
@@ -2640,7 +2683,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       const pin = this.state.entryId && sorted.find(s => s.id === this.state.entryId && s.lat != null);
       return (pin ? [pin, ...sorted.filter(s => s !== pin)] : sorted).filter(s => s.lat != null && byId(s.id)).slice(0, 3).map(s => s.id);
     })();
-    this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: groupColor(s), mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks, rank,
+    this._map = { items: items.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, color: groupColor(s), grp: kindGroup(s), mark: mark(s), num: typeof mark(s) === 'number' })), picks: !!picks, rank,
       events: [...(showEv ? evOthers : []), ...(showMk ? evMarkets : [])].map(evPin) };
     const evToggle = (act, on, label, n) => `<button data-act="${act}" aria-pressed="${on}" title="${on ? 'Click to hide on the map' : 'Click to show on the map'}" class="flex items-center gap-0.5 px-2 py-0.5 rounded-md border ${on ? 'border-amber-500 bg-amber-100 text-amber-900 dark:bg-amber-500/25 dark:text-amber-100' : 'border-slate-300 dark:border-slate-600 bg-white/85 dark:bg-slate-900/80 backdrop-blur-sm shadow text-slate-500 dark:text-slate-400 line-through decoration-1'}"><span aria-hidden="true">${on ? '✓' : '+'}</span>${label} <span class="font-normal">${n}</span></button>`;
     const picksBar = picks ? `
@@ -2662,15 +2705,20 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const cats = [['all', `(${total}) All`, '🗺️', '#5c6e6d'], ...catOptions().map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '🎪', '#8e4a80', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, CAT_GROUPS[k].icon, CAT_GROUPS[k].color, CAT_GROUPS[k].label]).filter(c => c[0] === this.state.cat || c[1].indexOf("(0)") !== 0).sort((a, b) => a[4].localeCompare(b[4]))];
             // 2026-11-19: 지도 맨 위에 장소 종류 칩을 가로 스크롤 한 줄로 (끝에 Events·Markets 토글). 데스크톱도 폰과 같아요 (예전 왼쪽 세로 목록은 없앴어요)
             const count = k => k === 'all' ? total : k === 'events' ? evAll.length : (cc[k] || 0);
-            const chip = ([k, , icon, color, name]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1 sm:gap-1.5 pl-0.5 sm:pl-1 pr-2 sm:pr-3 py-0.5 sm:py-1 rounded-md shadow-md border ${this.state.cat === k ? 'bg-violet-600 border-violet-600 text-white' : 'bg-white/95 dark:bg-slate-900/90 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100'}"><span class="w-5 h-5 sm:w-6 sm:h-6 shrink-0 rounded-full text-[10px] sm:text-[12px] leading-5 sm:leading-6 text-center" style="background:${color}">${icon}</span>${esc(name || 'All')}<span class="font-normal opacity-70">${count(k)}</span></button>`;
+            const chip = ([k, , icon, color, name]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1 sm:gap-1.5 pl-0.5 sm:pl-1 pr-2 sm:pr-3 py-0.5 sm:py-1 rounded-md shadow-md border ${this.state.cat === k ? 'bg-violet-600 border-violet-600 text-white' : 'bg-white/95 dark:bg-slate-900/90 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100'}"><span class="w-5 h-5 sm:w-6 sm:h-6 shrink-0 rounded-full flex items-center justify-center text-white" style="background:${color}">${typeIcon(k, innerWidth < 640 ? 12 : 14)}</span>${esc(name || 'All')}<span class="font-normal opacity-70">${count(k)}</span></button>`;
             const tog = (a, on, l, n) => evToggle(a, on, l, n).replace('class="flex', 'class="shrink-0 py-0.5 sm:py-1.5 shadow-md flex');
             return `<div data-keep-scroll="mapchips" role="group" aria-label="Category" class="absolute inset-x-0 top-2 z-20 flex items-center gap-1.5 px-2 sm:px-3 pb-1 overflow-x-auto no-scrollbar text-xs sm:text-[13px] font-semibold">
               ${cats.map(chip).join('')}
             </div>
-            <div class="absolute left-2 sm:left-3 top-10 sm:top-12 z-20 flex items-center gap-1.5 text-[11px] sm:text-[13px] font-semibold">${tog('mapevents', showEv, '🎪 Events', evOthers.length)}${tog('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}</div>`;
+            <div class="absolute left-2 sm:left-3 top-10 sm:top-12 z-20 flex items-center gap-1.5 text-[11px] sm:text-[13px] font-semibold">${tog('mapevents', showEv, `<span class="w-4 h-4 rounded-full flex items-center justify-center text-white mr-0.5" style="background:#8e4a80">${typeIcon('events', 10)}</span>Events`, evOthers.length)}${tog('mapmarkets', showMk, `<span class="w-4 h-4 rounded-full flex items-center justify-center text-white mr-0.5" style="background:#5f7d2c">${typeIcon('market', 10)}</span>Markets`, evMarkets.length)}</div>`;
           })()}
           <div id="lmap" class="w-full h-[calc(100svh-230px)] min-h-[360px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
           <div id="mapsheet" hidden class="absolute inset-x-0 bottom-3 z-20" role="region" aria-label="Places near the pin you tapped"></div>
+          ${(() => {
+            // 폰: 지도 오른쪽 아래 "내 위치" 버튼 (2026-11-19). 위의 Near me와 같은 일: 내 위치를 기준으로 가까운 곳을 보여줘요. 카드 줄이 뜨면 그 위로 올라가요
+            const s = this.state, on = s.nearKey === 'here' && this.nearActive();
+            return `<button data-act="geo" ${s.geoBusy ? 'disabled aria-busy="true"' : ''} aria-label="${on ? 'Showing places near you' : 'Show places near me'}" title="Near me" class="sm:hidden absolute right-3 bottom-5 [#mapsheet:not([hidden])~&]:bottom-[156px] z-20 w-11 h-11 rounded-full flex items-center justify-center shadow-md border transition-[bottom] ${on ? 'bg-violet-600 border-violet-600 text-white' : 'bg-white border-slate-200 text-violet-700 dark:bg-slate-800 dark:border-slate-700 dark:text-violet-300'} disabled:opacity-60"><svg viewBox="0 0 24 24" class="w-5 h-5 ${s.geoBusy ? 'animate-spin' : ''}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button>`;
+          })()}
         </div>
       </div>
       <div data-keep-scroll="maplist" class="hidden grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
@@ -2689,6 +2737,23 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       })() : evCat ? '' : '<p class="max-sm:px-4 text-sm text-slate-500">No spots match these filters.</p>'}
     </div>`;
   }
+  // 장소 창 Location 칸의 작은 지도: 움직이지 않는 지도에 물방울 모양 핀 하나 (색·아이콘은 큰 지도 핀과 같아요). 누르면 위에 덮인 링크로 구글 지도가 열려요
+  async drawMini(s) {
+    const el = document.getElementById('mmap'); if (!el || !s || s.lat == null) return;
+    try { await loadLeaflet(); } catch (e) { return; }
+    const vec = await loadVector();
+    if (!el.isConnected || this._mini) return;
+    const L = window.L;
+    const map = this._mini = L.map(el, { zoomControl: false, attributionControl: true, dragging: false, touchZoom: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false, tap: false, maxZoom: 19 });
+    map.attributionControl.setPrefix(false);
+    if (vec) L.maplibreGL({ style: this.state.dark ? VEC_STYLE.dark : VEC_STYLE.light, attribution: VEC_ATTR, interactive: false }).addTo(map);
+    else L.tileLayer(TILES, { attribution: TILE_ATTR, maxZoom: 19 }).addTo(map);
+    // 큰 지도 핀과 같게: 장소 종류 색 물방울 + 흰색 아이콘
+    const html = `<div style="position:relative;width:36px;height:46px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))"><svg viewBox="0 0 36 46" width="36" height="46" style="position:absolute;inset:0"><path d="M18 1C8.6 1 1 8.4 1 17.6 1 29.5 18 45 18 45s17-15.5 17-27.4C35 8.4 27.4 1 18 1z" fill="${groupColor(s)}" stroke="#fff" stroke-width="2"/></svg><span style="position:absolute;left:0;right:0;top:8px;display:flex;justify-content:center;color:#fff">${typeIcon(kindGroup(s), 17)}</span></div>`;
+    L.marker([s.lat, s.lng], { icon: L.divIcon({ className: '', html, iconSize: [36, 46], iconAnchor: [18, 45] }), interactive: false, keyboard: false }).addTo(map);
+    map.setView([s.lat, s.lng], 15, { animate: false });
+    map.panBy([0, -14], { animate: false });   // 핀 끝이 정확한 위치라서, 핀 몸통이 가운데 오게 살짝 내려요
+  }
   // 폰 지도 아래 카드: 사진 왼쪽, 종류·이름·지역·나이·오늘 시간 오른쪽, 저장(하트). 누르면 장소 창이 열려요
   sheetCard(s) {
     const g = CAT_GROUPS[kindGroup(s)], saved = this.state.plan.includes(s.id), o = this.origin();
@@ -2699,7 +2764,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <button data-act="open" data-val="${esc(s.id)}" class="absolute inset-0 z-[1] rounded-2xl" aria-label="Open ${esc(s.name)}"></button>
       <div class="w-24 h-24 shrink-0 rounded-xl overflow-hidden">${this.cover(s, 'h-full')}</div>
       <div class="min-w-0 flex-1 pr-8 py-0.5">
-        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[11px] font-semibold text-white" style="background:${g.color}"><span aria-hidden="true">${g.icon}</span>${esc(g.label)}</span>
+        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[11px] font-semibold text-white" style="background:${g.color}">${typeIcon(kindGroup(s), 12)}${esc(g.label)}</span>
         <p class="mt-1 font-bold text-[15px] leading-snug clamp2">${esc(s.name)}</p>
         <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400 truncate">${where}</p>
         ${meta || hrs ? `<p class="mt-0.5 text-xs text-slate-600 dark:text-slate-300 truncate">${[meta, hrs ? 'Today ' + esc(hrs) : ''].filter(Boolean).join(' · ')}</p>` : ''}
@@ -2740,6 +2805,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       if (this._sheet) this._sheet.active = id;
       box.querySelectorAll('article[data-sheet]').forEach(a => a.classList.toggle('outline-violet-500', a.dataset.sheet === id));
       const p = this._pins[id]; if (!pan || !p) return;
+      // 그 장소가 "+N" 묶음 안에 숨어 있으면 풀리는 데까지 확대해서 보여줘요
+      if (this._clusters && this._clusters !== map && !p.mk.getElement()) { this._clusters.zoomToShowLayer(p.mk, () => mark(id, true)); return; }
       // 위 칩 줄과 아래 카드에 가리지 않는 빈 칸 안에 핀이 있게: 벗어나면 그 빈 칸 가운데로 옮겨요
       // 화면 위로 밀려 올라간 지도 윗부분도 '가려진 곳'으로 쳐요 (카드가 보이게 페이지를 내리는 중이면 내릴 만큼 미리 빼고)
       const mr = el.getBoundingClientRect(), pend = Math.max(0, mr.bottom - innerHeight);
@@ -2781,6 +2848,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       }, { passive: true });
     };
     this._sheetShow = id => show(id, false);
+    // 확대·축소로 묶음이 다시 그려지면 핀이 새로 만들어져서 강조가 사라져요: 다시 붙여요
+    map.on('zoomend moveend', () => { if (activeId) mark(activeId, true); });
+    if (this._clusters && this._clusters !== map) this._clusters.on('animationend', () => { if (activeId) mark(activeId, true); });
     map.on('click', hide);
     map.on('popupopen', hide);
     if (this._sheet && byIt[this._sheet.id]) show(this._sheet.id, true); else this._sheet = null;
@@ -2846,11 +2916,17 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 핀: 번호가 작을수록(순위가 높을수록) 위에 오게
     const z = m => typeof m === 'number' ? 1000 - m : 0;
     this._pins = {};
+    // 가까운 핀 묶기: 줌아웃해서 핀이 몰리면 "+N" 동그라미 하나로 (누르면 그 범위로 확대). 많이 확대하면(15+) 다 풀어요
+    const clus = await loadCluster();
+    if (!el.isConnected) return;
+    const layer = this._clusters = clus ? L.markerClusterGroup({ maxClusterRadius: 26, disableClusteringAtZoom: 15, showCoverageOnHover: false, spiderfyOnMaxZoom: false, removeOutsideVisibleBounds: true,
+      iconCreateFunction: c => L.divIcon({ className: '', html: `<div class="pin-cluster">+${c.getChildCount()}</div>`, iconSize: [32, 32], iconAnchor: [16, 16] }) }) : map;
     items.forEach(s => {
-      const icon = L.divIcon({ className: '', html: `<div class="spot-pin" style="background:${s.color};font-size:11px">${esc(String(s.mark))}</div>`, iconSize: [20, 20], iconAnchor: [10, 10] });
+      // 핀 = 장소 종류 색 동그라미 + 흰색 아이콘 (이모지를 흰 실루엣으로: .glyph)
+      const icon = L.divIcon({ className: '', html: `<div class="spot-pin cat" style="background:${s.color}">${typeIcon(s.grp, 14)}</div>`, iconSize: [24, 24], iconAnchor: [12, 12] });
       // 마우스: 올리면 작은 카드, 누르면 모달. 터치 화면: 핀을 누르면 작은 카드, 그 카드를 누르면 모달 (호버가 없어서)
       const coarse = matchMedia('(pointer: coarse)').matches, sp = byId(s.id);
-      const mk = L.marker([s.lat, s.lng], { icon, keyboard: true, zIndexOffset: z(s.mark), alt: s.name, title: phone ? s.name : '' }).addTo(map).on('click', () => {
+      const mk = L.marker([s.lat, s.lng], { icon, keyboard: true, zIndexOffset: z(s.mark), alt: s.name, title: phone ? s.name : '' }).addTo(layer).on('click', () => {
         if (phone && sp) return this._sheetShow && this._sheetShow(s.id);
         if (coarse && sp) {
           if (this._tip) map.closeTooltip(this._tip);
@@ -2865,10 +2941,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     });
     // 행사·마켓 핀: 누르면 다음 날짜·시간과 장소/공식 정보 링크
     (this._map.events || []).forEach((ev, ei) => {
-      const icon = L.divIcon({ className: '', html: `<div class="spot-pin ev${ev.market ? ' mk' : ''}">${esc(ev.icon)}</div>`, iconSize: [20, 20], iconAnchor: [10, 10] });
+      const icon = L.divIcon({ className: '', html: `<div class="spot-pin cat" style="background:${ev.market ? '#5f7d2c' : '#8e4a80'}">${typeIcon(ev.market ? 'market' : 'events', 14)}</div>`, iconSize: [24, 24], iconAnchor: [12, 12] });
       const html = `<div style="min-width:180px"><p style="font-weight:700;margin:0">${esc(ev.name)}${ev.forParents ? ' <span style="font-size:11px;font-weight:700;background:#fef3c7;color:#78350f;padding:1px 6px;border-radius:4px;white-space:nowrap">For parents 😉</span>' : ''}</p><p style="margin:4px 0">${esc(ev.when)}</p>
         <p style="margin:0">${ev.spotId ? `<button data-act="open" data-val="${esc(ev.spotId)}" style="font-weight:600;margin-right:10px">Place details</button>` : ''}${/^https:\/\//.test(ev.source) ? `<a href="${esc(ev.source)}" target="_blank" rel="noopener" >Official info ↗</a>` : ''}</p></div>`;
-      const emk = L.marker([ev.lat, ev.lng], { icon, title: ev.name, keyboard: true, zIndexOffset: 2000 }).addTo(map).bindPopup(html);
+      const emk = L.marker([ev.lat, ev.lng], { icon, title: ev.name, keyboard: true, zIndexOffset: 2000 }).addTo(layer).bindPopup(html);
       this._pins['ev:' + ei] = { mk: emk, base: 2000 };
     });
     // 기준 위치(내 위치·지역)와 반경 원
@@ -2886,6 +2962,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     else if (o && !picks && this.nearActive() && this.state.radius !== 'any') map.fitBounds(L.latLngBounds([o.lat - this.state.radius / 111, o.lng - this.state.radius / (111 * Math.cos(o.lat * Math.PI / 180))], [o.lat + this.state.radius / 111, o.lng + this.state.radius / (111 * Math.cos(o.lat * Math.PI / 180))]).pad(0.05), { maxZoom: 16, animate: false });   // 반경을 고르면 그 원이 지도에 꽉 차게
     else if ((picks || this.nearActive() || this.state.q) && items.length) map.fitBounds(L.latLngBounds(items.map(s => [s.lat, s.lng])).pad(0.15), { maxZoom: 14, animate: false });
     else map.fitBounds(METRO_BOUNDS, { animate: false });
+    if (layer !== map) layer.addTo(map);   // 묶음 레이어는 지도 위치·확대가 정해진 뒤에 올려요
     // 아래 목록에서 지금 보이는 맨 앞 3장 = 지도에 펼친 카드 3장이에요. 스크롤하면 새로 나온 3곳으로 바뀌고 지도가 부드럽게 따라가요. 보던 위치를 이어갈 땐 처음 한 번은 지도를 움직이지 않아요
     if (phone) this.wireChips();
     if (phone) { this.phoneSheet(map, el, items, fitPhone); if (this._featScroll) { window.removeEventListener('scroll', this._featScroll); this._featScroll = null; } }
@@ -3331,6 +3408,24 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             return saysBlock + tipBlock + factsHtml + chipsBlock; })()}
 
 
+
+          ${s.lat != null ? (() => {
+            // 위치 (2026-11-19): 작은 지도에 이 장소 핀 + 거리 주소 + 복사·지도 열기. 지도는 다 그린 뒤 drawMini()가 #mmap에 그려요. 누르면 구글 지도가 열려요
+            const addr = ADDR[s.id] || s.area;
+            const btn = 'h-8 shrink-0 inline-flex items-center gap-1.5 px-3 rounded-lg text-[13px] font-semibold';
+            return `
+          <section>
+            <h3 class="font-bold">Location</h3>
+            <div class="mt-2 relative h-40 sm:h-48 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800">
+              <div id="mmap" class="absolute inset-0" aria-hidden="true"></div>
+              <a href="${mapsUrl(s)}" target="_blank" rel="noopener" aria-label="Open ${esc(s.name)} in Google Maps" class="absolute inset-0 z-[500]"></a>
+            </div>
+            <div class="mt-2 flex items-center gap-2">
+              <p class="flex-1 min-w-0 text-sm text-slate-600 dark:text-slate-300 truncate" title="${esc(addr)}">${esc(addr)}</p>
+              <button data-act="copyaddr" data-val="${esc(s.id)}" class="${btn} bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></svg><span data-label>Copy</span></button>
+              <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="${btn} bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"/></svg>Open map</a>
+            </div>
+          </section>`; })() : ''}
 
           <div class="grid grid-cols-2 gap-3">
             <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="rounded-xl p-3 text-center bg-amber-50 dark:bg-amber-500/10    ">
