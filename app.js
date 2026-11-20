@@ -162,10 +162,21 @@ const TYPE_ICONS = {
   fun: '<circle cx="12" cy="10" r="7"/><path d="M12 3v14M5 10h14M7 5l10 10M17 5L7 15"/><path d="M8 21l4-4 4 4"/>',
   events: '<path d="M12 3.6l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.6l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
   market: '<path d="M3 10h18l-2 10H5z"/><path d="M8 10l4-6 4 6"/><path d="M9 14v3M12 14v3M15 14v3"/>',
-  all: '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>'
+  all: '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  hot: '<path d="M12 22c4 0 7-2.8 7-6.8 0-3.6-2.4-5.9-4.2-8.1-.3 1.8-1.3 3-2.6 3.6C12.7 7.5 11.5 4.3 9 2c.2 3.3-1.6 5.4-3 7.3C4.8 11 5 13.3 5 15.2 5 19.2 8 22 12 22z"/><path d="M12 22c-1.7 0-3-1.3-3-3 0-1.9 1.6-2.9 2.3-4.4.9 1 3.7 2.4 3.7 4.4 0 1.7-1.3 3-3 3z"/>'
 };
 const typeIcon = (key, size = 14) => `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none">${TYPE_ICONS[key] || TYPE_ICONS.fun}</svg>`;
-// 장소 창 섹션 제목: 모든 섹션이 같은 글꼴·크기·색 (사용자, 2026-11-19)
+// 긴급 연락처 (지도 밑 Safety & emergency info). 2026-11-19에 공식 출처에서 확인했어요. 바뀌면 여기만 고쳐요
+const SAFETY = {
+  checked: '2026-11-19',
+  poison: { local: '604-682-5050', free: '1-800-567-8911' },
+  policeFinder: 'https://ecomm911.ca/non-emergency-services/',
+  bcch: { address: '4500 Oak St, Vancouver', maps: "BC Children's Hospital Emergency Department, Vancouver" },
+  sources: {
+    numbers: [['HealthLink BC', 'https://www.healthlinkbc.ca/healthlink-bc-8-1-1-services'], ['BC Drug & Poison Information Centre', 'https://www.dpic.org/contact'], ['E-Comm 911', 'https://ecomm911.ca/non-emergency-services/'], ['BC Children’s Hospital', 'https://bcchildrens.ca/clinics-services/emergency-department']],
+    missing: [['RCMP BC', 'https://rcmp.ca/en/bc/contact/report-missing-persons'], ['BC Government', 'https://www2.gov.bc.ca/gov/content/safety/public-safety/missing-persons']]
+  }
+};// 장소 창 섹션 제목: 모든 섹션이 같은 글꼴·크기·색 (사용자, 2026-11-19)
 const MODAL_H3 = 'text-lg font-extrabold tracking-tight text-slate-900 dark:text-slate-100';
 const KIND_GROUP = {}; Object.entries(CAT_GROUPS).forEach(([g, v]) => v.kinds.forEach(k => { KIND_GROUP[k] = g; }));
 const kindGroup = s => KIND_GROUP[kidProfile(s).kind] || 'fun';
@@ -456,6 +467,8 @@ let SAYS = {};
 let SPOT_PAGES = new Set();
 // 거리 주소 (data/addresses.json, tools/fetch-addresses.ps1 이 OpenStreetMap에서 받아요). 장소 창 Location 칸에 써요
 let ADDR = {};
+// 이번 달 알아둘 소식 (data/news.json): 무료·할인, 건강, 아이 용품 리콜. 공식 출처만, until이 지나면 안 보여요
+let NEWS = [];
 const PARK_KIND = { surface: 'Surface lot', 'multi-storey': 'Parkade', underground: 'Underground', rooftop: 'Rooftop', street_side: 'Street parking', lane: 'Street parking', layby: 'Pull-out' };
 const parkingOf = s => PARKING.spots[s.id];
 // 카드용 한 줄: 가장 가까운 주차장 거리와 유료 여부
@@ -942,14 +955,15 @@ class App {
       // 꺼 둔 기능(트렌드)의 파일은 아예 받지 않아요. spots.json 말고는 없어도 괜찮아요
       const get = (path, on = true) => on ? fetch(path, { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null) : Promise.resolve(null);
       const ohLib = window.opening_hours ? Promise.resolve() : loadScript(OH_LIB).catch(() => null);
-      const [data, ed, status, td, gd, nd, md, pd, sd, pk, fd, sp, ad] = await Promise.all([
+      const [data, ed, status, td, gd, nd, md, pd, sd, pk, fd, sp, ad, nw] = await Promise.all([
         fetch('/data/spots.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
         get('/data/events.json'), get('/data/review-status.json'), get('/data/trends-weekly.json', TRENDS_ON),
         get('/data/spot-guides.json'), get('/data/spot-notes.json'), get('/data/parking-meters.json'), get('/data/parking.json'),
         get('/data/season.json'), get('/data/parent-says.json'), get('/data/spot-facts.json'), get('/data/spot-pages.json'),
-        get('/data/addresses.json'),
+        get('/data/addresses.json'), get('/data/news.json'),
       ]);
       if (ad) ADDR = ad.addresses || {};
+      if (nw) NEWS = Array.isArray(nw.items) ? nw.items : [];
       SPOTS = data.spots;
       // 행사 정보
       if (ed) { EVENTS = ed.events || []; EVENTS_META = { updatedAt: ed.updatedAt || '', note: ed.note || '' }; }
@@ -1215,7 +1229,7 @@ class App {
   applyUrl() {
     const p = new URLSearchParams(location.search), s = this.state, patch = {};
     const v = p.get('view'); if (['list', 'map', 'events', 'markets', 'plan', 'about'].includes(v)) patch.view = v;
-    const cat = p.get('cat'); if (cat && (cat === 'all' || catOptions().includes(cat))) patch.cat = cat;
+    const cat = p.get('cat'); if (cat && (cat === 'all' || cat === 'hot' || catOptions().includes(cat))) patch.cat = cat;
     // 예전 링크의 ?cat=events: 지도 칩 줄에서 Events를 뺐으니 All + Events·Markets 핀 켜기로 (2026-11-19)
     if (patch.cat === 'events' && (patch.view || this.state.view) === 'map') Object.assign(patch, { cat: 'all', mapEvents: true, mapMarkets: true });
     const tag = p.get('tag'); if (tag && /^[\w-]{1,40}$/.test(tag)) patch.tag = tag;
@@ -1382,13 +1396,16 @@ class App {
     if (this.state.free) items = items.filter(s => /^free/i.test(s.price || ''));
     // 지도 카테고리 목록에 보여줄 개수: 카테고리만 빼고 나머지 필터(태그·Open now·날짜)를 모두 적용한 목록 기준
     const tag0 = activeTags().find(t => t.id === this.state.tag), ds0 = this.state.when && HOURS_READY ? whenDates(this.state.when) : null;
-    this._catCounts = {}; items.forEach(s => {
+    // 이번 주 핫플 (2026-11-19, 사용자): 앞으로 7일 안에 행사·마켓이 있거나, 지금 시즌 태그(#HolidayLights 등)가 붙은 곳
+    const hot = s => !!(this._spotEvents && this._spotEvents[s.id]) || spotTags(s).length > 0;
+    this._catCounts = { hot: 0 }; items.forEach(s => {
       if (tag0 && !tag0.spots[s.id]) return;
       if (this.state.openNow && HOURS_READY) { const o = openInfo(s); if (!o || !o.open) return; }
       if (ds0 && ds0.every(d => closedOn(s, d))) return;
       const g = kindGroup(s); this._catCounts[g] = (this._catCounts[g] || 0) + 1;
+      if (hot(s)) this._catCounts.hot++;
     });
-    items = evCat ? [] : cat === 'all' ? items : items.filter(s => kindGroup(s) === cat);
+    items = evCat ? [] : cat === 'all' ? items : cat === 'hot' ? items.filter(hot) : items.filter(s => kindGroup(s) === cat);
     // 시즌 태그 필터: 칩에 보여줄 개수는 태그를 고르기 전 목록 기준
     this._tagCounts = Object.fromEntries(activeTags().map(t => [t.id, items.filter(s => t.spots[s.id]).length]));
     const tag = activeTags().find(t => t.id === this.state.tag);
@@ -2722,14 +2739,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             if (picks) return '';
             const cc = this._catCounts || {}, total = Object.values(cc).reduce((a, b) => a + b, 0);
             // Events는 칩 줄에서 빼요: 바로 아래 Events·Markets 토글과 겹쳐서 (2026-11-19, 사용자)
-            const cats = [['all', `(${total}) All`, '🗺️', '#5c6e6d'], ...catOptions().filter(k => k !== 'events').map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '🎪', '#8e4a80', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, CAT_GROUPS[k].icon, CAT_GROUPS[k].color, CAT_GROUPS[k].label]).filter(c => c[0] === this.state.cat || c[1].indexOf("(0)") !== 0).sort((a, b) => a[4].localeCompare(b[4]))];
+            const cats = [['all', `(${total}) All`, '🗺️', '#5c6e6d'], ['hot', `(${cc.hot || 0}) Hot this week`, '', '#C8342B', 'Hot this week'], ...catOptions().filter(k => k !== 'events').map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '🎪', '#8e4a80', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, CAT_GROUPS[k].icon, CAT_GROUPS[k].color, CAT_GROUPS[k].label]).filter(c => c[0] === this.state.cat || c[1].indexOf("(0)") !== 0).sort((a, b) => a[4].localeCompare(b[4]))];
             // 2026-11-19: 지도 맨 위에 장소 종류 칩을 가로 스크롤 한 줄로 (끝에 Events·Markets 토글). 데스크톱도 폰과 같아요 (예전 왼쪽 세로 목록은 없앴어요)
             const count = k => k === 'all' ? total : k === 'events' ? evAll.length : (cc[k] || 0);
             const chip = ([k, , icon, color, name]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1 sm:gap-1.5 pl-0.5 sm:pl-1 pr-2 sm:pr-3 py-0.5 sm:py-1 rounded-md shadow-md border ${this.state.cat === k ? 'bg-violet-600 border-violet-600 text-white' : 'bg-white/95 dark:bg-slate-900/90 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100'}"><span class="w-5 h-5 sm:w-6 sm:h-6 shrink-0 rounded-full flex items-center justify-center" style="background:${k === 'events' ? EV_PIN.events.color : color};color:${k === 'events' ? EV_PIN.events.ink : ((CAT_GROUPS[k] || {}).ink || '#fff')}">${typeIcon(k, innerWidth < 640 ? 12 : 14)}</span>${esc(name || 'All')}<span class="font-normal opacity-70">${count(k)}</span></button>`;
             const tog = (a, on, l, n) => evToggle(a, on, l, n).replace('class="flex', 'class="shrink-0 py-0.5 sm:py-1.5 shadow-md flex');
             return `<div data-keep-scroll="mapchips" role="group" aria-label="Category" class="absolute inset-x-0 top-2 z-20 flex items-center gap-1.5 px-2 sm:px-3 pb-1 overflow-x-auto no-scrollbar text-xs sm:text-[13px] font-semibold">
               <!-- All 칩은 안 보여요: 아무 칩도 안 고르면 전체예요 (켜진 칩을 다시 누르면 꺼져요. 사용자, 2026-11-19) -->
-              ${cats.filter(c => c[0] !== 'all').map(chip).join('')}
+              ${cats.filter(c => c[0] !== 'all' && !(c[0] === 'hot' && !cc.hot && this.state.cat !== 'hot')).map(chip).join('')}
             </div>
             <div class="absolute left-2 sm:left-3 top-10 sm:top-12 z-20 flex items-center gap-1.5 text-[11px] sm:text-[13px] font-semibold">${tog('mapevents', showEv, `<span class="w-4 h-4 rounded-full flex items-center justify-center text-white mr-0.5" style="background:${EV_PIN.events.color};color:${EV_PIN.events.ink}">${typeIcon('events', 10)}</span>Events`, evOthers.length)}${tog('mapmarkets', showMk, `<span class="w-4 h-4 rounded-full flex items-center justify-center text-white mr-0.5" style="background:${EV_PIN.market.color};color:${EV_PIN.market.ink}">${typeIcon('market', 10)}</span>Markets`, evMarkets.length)}</div>`;
           })()}
@@ -2743,6 +2760,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         </div>
       </div>
       ${picks ? '' : this.mapEventsList()}
+      ${picks ? '' : this.newsSection()}
+      ${picks ? '' : this.safetySection()}
       <div data-keep-scroll="maplist" class="hidden grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
         ${evCat && this._map.events.length ? `<p class="px-1 pt-0.5 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Events & markets · next 6 weeks</p>${this._map.events.map((ev, i) => `
           <div class="relative"><button data-act="evfocus" data-val="${i}" data-maphl="ev:${i}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]      flex gap-3">
@@ -2758,6 +2777,62 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         return `<div class="hidden grid grid-cols-2 gap-1.5 sm:gap-5 md:grid-cols-3">${items.map(s => this.card(s)).join('')}</div>`;
       })() : evCat ? '' : '<p class="max-sm:px-4 text-sm text-slate-500">No spots match these filters.</p>'}
     </div>`;
+  }
+  // 지도 밑 "Good to know this month" (2026-11-19, 사용자: 뉴스 섹션 3·4번): 무료·할인(Free), 건강(Health), 아이 용품 리콜(Recall).
+  // data/news.json에서 오늘이 until 이전인 것만, 리콜 → 건강 → 무료 순. 요약은 우리 말로, 출처 링크를 꼭 달아요. spotId가 있으면 그 장소 창을 여는 링크도
+  newsSection() {
+    const today = vanDate(0), order = { recall: 0, health: 1, free: 2 };
+    const list = NEWS.filter(n => n && n.title && (!n.until || n.until >= today)).sort((a, b) => (order[a.type] ?? 9) - (order[b.type] ?? 9) || (b.date || '').localeCompare(a.date || '')).slice(0, 6);
+    if (!list.length) return '';
+    const badge = { recall: ['Recall', 'border-rose-300 text-rose-700 dark:border-rose-400/50 dark:text-rose-300'], health: ['Health', 'border-sky-300 text-sky-700 dark:border-sky-400/50 dark:text-sky-300'], free: ['Free', 'border-emerald-300 text-emerald-700 dark:border-emerald-400/50 dark:text-emerald-300'] };
+    const item = n => { const [label, cls] = badge[n.type] || ['News', 'border-slate-300 text-slate-600']; const sp = n.spotId && byId(n.spotId); return `
+        <li class="py-3 border-b border-slate-200 dark:border-slate-700 sm:border-0">
+          <div class="flex items-center gap-2"><span class="inline-block px-2 py-0.5 rounded-md border text-[11px] sm:text-xs font-semibold ${cls}">${label}</span>${n.date ? `<span class="text-xs text-slate-400 dark:text-slate-500">${esc(shortDate(n.date))}</span>` : ''}</div>
+          <p class="mt-1.5 font-bold text-[15px] sm:text-base leading-snug">${esc(n.title)}</p>
+          <p class="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">${esc(n.summary || '')}</p>
+          <p class="mt-1.5 text-xs flex flex-wrap gap-x-3 gap-y-1">${n.source && /^https:\/\//.test(n.source.url || '') ? `<a href="${esc(n.source.url)}" target="_blank" rel="noopener" class="font-semibold text-violet-700 dark:text-violet-300">${esc(n.source.name || 'Source')} ↗</a>` : ''}${sp ? `<button data-act="open" data-val="${esc(sp.id)}" class="font-semibold text-violet-700 dark:text-violet-300">See ${esc(sp.name)} ›</button>` : ''}</p>
+        </li>`; };
+    return `
+      <section class="max-sm:px-4 pt-2 pb-6" aria-label="Good to know this month">
+        <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Good to know this month</h2>
+        <ul class="mt-1 sm:grid sm:grid-cols-2 sm:gap-x-8">${list.map(item).join('')}</ul>
+      </section>`;
+  }
+  // 지도 밑 행사 목록 아래: 긴급 연락처 + 아이를 잃어버렸을 때 (2026-11-19, 사용자). 전화번호는 모두 공식 출처에서 확인한 것만 넣어요 (확인 날짜·출처를 카드 아래에 적어요).
+  // 다른 도시 경찰 비긴급 번호는 공식 목록이 없어서 E-Comm 911(공식)의 찾기 페이지로 연결해요. 번호를 바꿀 땐 SAFETY 한 곳만 고치면 돼요
+  safetySection() {
+    const S = SAFETY, call = (tel, label, cls) => `<a href="tel:${tel}" class="shrink-0 h-9 inline-flex items-center gap-1.5 px-3 rounded-lg text-[13px] font-semibold ${cls}"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>${label}</a>`;
+    const soft = 'bg-slate-100 text-slate-800 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700';
+    const row = (title, sub, actions) => `<li class="flex items-center gap-3 py-3 first:pt-0 last:pb-0"><div class="min-w-0 flex-1"><p class="font-semibold text-sm text-slate-900 dark:text-slate-100">${title}</p><p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">${sub}</p></div><div class="flex flex-col items-end gap-1.5">${actions}</div></li>`;
+    const src = list => list.map(([name, url]) => `<a href="${url}" target="_blank" rel="noopener" class="underline">${name}</a>`).join(' · ');
+    const card = (title, body, foot) => `<div class="rounded-2xl p-4 sm:p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700"><h3 class="${MODAL_H3}">${title}</h3>${body}<p class="mt-3 text-[11px] text-slate-400 dark:text-slate-500">${foot}</p></div>`;
+    const numbers = card('Emergency numbers', `<ul class="mt-3 divide-y divide-slate-200 dark:divide-slate-700">
+      ${row('911 · Emergency', 'Someone is hurt or in danger, a fire, or your child is missing', call('911', 'Call 911', 'bg-rose-600 text-white hover:bg-rose-700'))}
+      ${row('8-1-1 · HealthLink BC', 'Not sure it’s an emergency? Talk to a nurse, 24/7', call('811', 'Call 8-1-1', soft))}
+      ${row('Poison Control', `If your child swallowed something. 24/7 · ${S.poison.local} or ${S.poison.free}`, call(S.poison.local.replace(/\D/g, ''), 'Call', soft))}
+      ${row('Police, non-emergency', 'Not urgent, like a theft you found later. Each city has its own number.', `<a href="${S.policeFinder}" target="_blank" rel="noopener" class="shrink-0 h-9 inline-flex items-center gap-1.5 px-3 rounded-lg text-[13px] font-semibold ${soft}">Find your city’s ↗</a>`)}
+      ${row('BC Children’s Hospital Emergency', `${S.bcch.address} · open 24/7, kids 16 and under`, `<a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(S.bcch.maps)}" target="_blank" rel="noopener" class="shrink-0 h-9 inline-flex items-center gap-1.5 px-3 rounded-lg text-[13px] font-semibold bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"/></svg>Directions</a>`)}
+    </ul>`, `Checked ${esc(shortDate(S.checked))}: ${src(S.sources.numbers)}`);
+    const step = (n, html) => `<li class="flex gap-3"><span class="shrink-0 w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center">${n}</span><p class="text-sm leading-relaxed text-slate-800 dark:text-slate-200">${html}</p></li>`;
+    const tip = html => `<li class="flex gap-2 text-sm leading-relaxed text-slate-700 dark:text-slate-300"><span aria-hidden="true" class="text-slate-400">•</span><span>${html}</span></li>`;
+    const missing = card('If your child goes missing', `
+      <ol class="mt-3 space-y-2.5">
+        ${step(1, 'Look quickly around the spot you last saw them and anywhere they love to go, like the play structure or the water.')}
+        ${step(2, 'Tell staff or security right away. Malls, museums and attractions can watch the exits and make announcements.')}
+        ${step(3, '<span class="font-semibold">Call 911 if you can’t find them.</span> There is no waiting period to report a missing child in BC.')}
+        ${step(4, 'Tell police what they’re wearing, their height and where you last saw them. Show a recent photo.')}
+      </ol>
+      <p class="mt-4 text-sm font-semibold text-slate-900 dark:text-slate-100">Before you head out</p>
+      <ul class="mt-1.5 space-y-1">
+        ${tip('Take a photo of your child that morning, so you have their exact clothes.')}
+        ${tip('Write your phone number on their wrist or a tag, and teach them to ask a staff member or a parent with kids for help.')}
+        ${tip('Pick a meeting spot when you arrive, like “if we get separated, go to the ticket desk.”')}
+      </ul>`, `Sources: ${src(S.sources.missing)}`);
+    return `
+      <section class="max-sm:px-4 pt-2 pb-8" aria-label="Safety and emergency info">
+        <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Safety &amp; emergency info</h2>
+        <div class="mt-3 grid gap-3 sm:grid-cols-2 items-start">${numbers}${missing}</div>
+      </section>`;
   }
   // 지도 밑 "Events, markets & festivals" (2026-11-19, 사용자 예시): 다가오는 행사 5개. 사진(행사가 열리는 장소 사진) · 종류 배지 · 이름 · 날짜.
   // 누르면 그 장소 창이 열려요 (장소 창에 행사 날짜·시간이 있어요). 위치 필터(반경)를 따라요. 전체는 Events 탭

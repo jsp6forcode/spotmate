@@ -1,0 +1,52 @@
+{
+  "updatedAt": "2026-11-19",
+  "note": "Good to know this month (under the map). Official sources only; summaries are our own words. 'until' = last day to show (blank = ongoing). Types: free, health, recall.",
+  "items": [
+    {
+      "id": "vag-free-friday-dec",
+      "type": "free",
+      "title": "Free night at the Vancouver Art Gallery, Fri Dec 4",
+      "summary": "Free for everyone 4–8 pm on the first Friday of the month. Kids and youth 18 and under are free any day. Reserve a spot ahead; walk-ins depend on space.",
+      "date": "2026-11-19",
+      "until": "2026-12-04",
+      "spotId": "vag",
+      "source": { "name": "Vancouver Art Gallery", "url": "https://www.vanartgallery.bc.ca/free/" }
+    },
+    {
+      "id": "translink-kids-free",
+      "type": "free",
+      "title": "Kids 12 and under ride transit free",
+      "summary": "Free on buses with no pass needed. On SkyTrain, SeaBus and West Coast Express, kids ride free with a paying adult, up to four kids per adult.",
+      "date": "2026-11-19",
+      "until": "",
+      "source": { "name": "TransLink", "url": "https://buzzer.translink.ca/2021/08/kids-aged-12-and-under-ride-translink-services-for-free-starting-sept-1/" }
+    },
+    {
+      "id": "flu-shot-kids-2026",
+      "type": "health",
+      "title": "Free flu shots for kids 6 months and up",
+      "summary": "Book at getvaccinated.gov.bc.ca or call 1-833-838-2323. Kids getting a flu shot for the first time may need two doses, four weeks apart.",
+      "date": "2026-11-19",
+      "until": "2027-02-28",
+      "source": { "name": "BC Centre for Disease Control", "url": "https://www.bccdc.ca/health-info/diseases-conditions/seasonal-respiratory/getting-vaccinated" }
+    },
+    {
+      "id": "recall-baby-brezza-sterilizer",
+      "type": "recall",
+      "title": "Baby Brezza SuperFast Sterilizer Dryer",
+      "summary": "Model BRZ0083 can overheat and melt, a fire and burn risk. Stop using it and contact the company for a free replacement.",
+      "date": "2026-11-05",
+      "until": "2026-12-31",
+      "source": { "name": "Health Canada", "url": "https://recalls-rappels.canada.ca/en/alert-recall/baby-brezza-superfast-sterilizer-dryer-recalled-due-fire-and-burn-hazards" }
+    },
+    {
+      "id": "recall-costway-high-chair",
+      "type": "recall",
+      "title": "Costway 3-in-1 Convertible High Chair",
+      "summary": "SKU BB4640 has no crotch restraint, so a child can slip, fall or get trapped. Stop using it and ask Costway for a refund.",
+      "date": "2026-11-06",
+      "until": "2026-12-31",
+      "source": { "name": "Health Canada", "url": "https://recalls-rappels.canada.ca/en/alert-recall/costway-convertible-high-chairs-recalled-due-fall-and-entrapment-hazards" }
+    }
+  ]
+}
