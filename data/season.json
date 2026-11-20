@@ -3,18 +3,18 @@
   "tags" : [
     {
       "about" : "Salmon return to local rivers and hatcheries in fall.",
-      "emoji" : "?맅",
+      "emoji" : "🐟",
       "from" : "2026-09-20",
       "id" : "salmonrun",
       "label" : "SalmonRun",
       "spots" : {
         "capilanoriver" : {
           "source" : "https://www.pac.dfo-mpo.gc.ca/sep-pmvs/hatcheries-ecloseries/capilano-eng.html",
-          "why" : "Coho are returning now and Chinook come back in October and November. The Capilano River Hatchery has free underwater viewing windows (open 8am to 6pm in October)."
+          "why" : "Late-run coho are still returning in November. The Capilano River Hatchery has free underwater viewing windows."
         },
         "capilanoriverhatchery" : {
           "source" : "https://www.pac.dfo-mpo.gc.ca/sep-pmvs/hatcheries-ecloseries/capilano-eng.html",
-          "why" : "Coho are returning now and Chinook come back in October and November. The hatchery has viewing windows."
+          "why" : "Late-run coho are still returning in November. The hatchery has free viewing windows."
         },
         "hydecreekhatchery" : {
           "source" : "https://psf.ca/blog/salmon-spotting-tricities/",
@@ -29,7 +29,7 @@
         "kanaka" : {
           "source" : "https://metrovancouver.org/services/regional-parks/park/kanaka-creek-regional-park",
           "start" : "2026-10-10",
-          "why" : "Chum and coho return to the creek in fall. The Return of the Salmon event at the Bell-Irving Hatchery is on Oct 18."
+          "why" : "Chum and coho return to the creek in fall. Look for them near the Bell-Irving Hatchery."
         },
         "tynehead" : {
           "source" : "https://psf.ca/blog/salmon-spotting-metro-vancouver/",
@@ -39,7 +39,7 @@
         "hoycreekhatchery" : {
           "source" : "https://www.coquitlam.ca/991/Salmon-Come-Home",
           "start" : "2026-10-01",
-          "why" : "Chum return from early October to mid-November and coho from late October to mid-December. Salmon Come Home is on Oct 25."
+          "why" : "Chum return from early October to mid-November and coho from late October to mid-December."
         },
         "hockadaypark" : {
           "source" : "https://psf.ca/blog/salmon-spotting-tricities/",
@@ -56,15 +56,15 @@
     },
     {
       "about" : "Local ski hills open when the snow arrives.",
-      "emoji" : "?뤄툘",
+      "emoji" : "⛷️",
       "from" : "2026-09-20",
       "id" : "skiseasonsoon",
       "label" : "SkiSeasonSoon",
       "spots" : {
         "cypress" : {
           "source" : "https://www.onthesnow.com/vancouver/projected-openings",
-          "start" : "2026-11-28",
-          "why" : "Summer hiking is winding down and ski season is next. Projected opening is Nov 28, depending on snow. 2026/27 season passes are on sale."
+          "start" : "2026-12-18",
+          "why" : "Ski season is next. Projected opening is Dec 18, depending on snow, and 2026/27 season passes are on sale."
         },
         "grouse" : {
           "source" : "https://www.onthesnow.com/vancouver/projected-openings",
@@ -86,11 +86,6 @@
       "id" : "holidaylights",
       "label" : "HolidayLights",
       "spots" : {
-        "bearcreek" : {
-          "source" : "https://www.surrey.ca/bearcreeklights",
-          "start" : "2026-11-06",
-          "why" : "Bear Creek Lights is a free light-display trail, Nov 6 to 20 (5-9pm, free timed tickets, closed Nov 11)."
-        },
         "bvm" : {
           "source" : "https://www.burnaby.ca/recreation-and-arts/events/festive-village",
           "start" : "2026-11-25",
@@ -115,5 +110,5 @@
       "to" : "2027-01-10"
     }
   ],
-  "updatedAt" : "2026-11-12"
+  "updatedAt" : "2026-11-19"
 }
