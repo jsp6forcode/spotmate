@@ -1875,7 +1875,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <div ${modal ? 'inert' : ''}>
         ${this.header()}
         ${this.controls(items)}
-        <main class="max-w-6xl mx-auto px-4 md:px-6 pb-16">
+        <main class="max-w-6xl mx-auto px-4 md:px-6 ${view === 'map' ? 'max-sm:pb-0' : ''} pb-16">
           ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : view === 'about' ? this.aboutView() : view === 'events' || view === 'markets' ? this.eventsView(view) : this.pickMode() && !this.state.q ? this.wizardView()
             : this.pickMode() ? `<button data-act="qclear" class="mt-6 inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-lg text-sm font-semibold   text-slate-700   dark:text-slate-200">← Back to the picker</button>${this.planBar()}${this.listView(items)}` : this.state.cat === 'events' && view !== 'map' ? this.eventsView() : `
             ${this.guideBanner()}
@@ -1884,7 +1884,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             ${view === 'map' ? this.mapView(items) : this.listView(items)}
           `}
         </main>
-        <footer class="max-w-6xl mx-auto px-4 md:px-6 pb-6 text-[11px] text-slate-400 dark:text-slate-500">
+        <footer class="${view === 'map' ? 'max-sm:hidden' : ''} max-w-6xl mx-auto px-4 md:px-6 pb-6 text-[11px] text-slate-400 dark:text-slate-500">
           <a class="" href="/guides/">Guides by city and kind</a> · Data: <a class="" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a> · <a class="" href="https://opendata.vancouver.ca/pages/licence/" target="_blank" rel="noopener">City of Vancouver Open Data</a> · Open-Meteo · Photos: Wikimedia Commons, Pexels
         </footer>
 
@@ -2658,23 +2658,23 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const cats = [['all', `(${total}) All`, '🗺️', '#5c6e6d'], ...catOptions().map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '🎪', '#8e4a80', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, CAT_GROUPS[k].icon, CAT_GROUPS[k].color, CAT_GROUPS[k].label]).filter(c => c[0] === this.state.cat || c[1].indexOf("(0)") !== 0).sort((a, b) => a[4].localeCompare(b[4]))];
             const cur = cats.find(c => c[0] === this.state.cat) || cats[0];
             const btn = ([k, label, icon, color], cls, ic) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="${cls} ${this.state.cat === k ? 'bg-violet-100 text-violet-900 dark:bg-violet-500/20 dark:text-violet-100' : 'text-slate-700 dark:text-slate-200'}"><span class="${ic} shrink-0 rounded-full text-center text-white" style="background:${color}">${icon}</span>${label}</button>`;
-            // 폰: "Category" 버튼 하나 (누르면 목록이 펼쳐져요) / 데스크톱: 지도 왼쪽 위에 반투명 세로 목록
-            // 지도 안쪽 위: 폰은 [카테고리 버튼][Events][Markets] 한 줄, 데스크톱은 왼쪽 목록 오른쪽에 Events·Markets 칩
-            return `<div class="absolute left-2 top-2 md:left-[10.5rem] z-20 flex items-center gap-1.5 pointer-events-none">
-            <details class="md:hidden relative text-xs font-semibold pointer-events-auto">
-              <summary class="list-none cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/85 dark:bg-slate-900/80 backdrop-blur-sm shadow text-slate-800 dark:text-slate-100 [&::-webkit-details-marker]:hidden"><span class="w-4 h-4 rounded-full text-[9px] leading-4 text-center text-white" style="background:${cur[3]}">${cur[2]}</span>${cur[1]} <span aria-hidden="true" class="text-slate-500">▾</span></summary>
-              <div role="group" aria-label="Category" class="absolute left-0 top-full z-20 mt-1 w-[16rem] p-1 grid grid-cols-2 gap-0.5 rounded-lg bg-white/85 dark:bg-slate-900/85 backdrop-blur-md shadow-lg text-xs">
-                ${cats.map(c => btn(c, 'flex items-center gap-1 px-1.5 py-1 rounded-md text-left leading-tight', 'w-4 h-4 text-[10px] leading-4')).join('')}
-              </div></details>
-            <div class="flex items-center gap-1.5 pointer-events-auto text-xs sm:text-[13px] font-semibold">${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}</div></div>
+            // 폰·태블릿(2026-11-19): 지도 맨 위에 장소 종류 칩을 가로 스크롤 한 줄로 (끝에 Events·Markets 토글). 데스크톱: 왼쪽 반투명 세로 목록 + 그 오른쪽에 Events·Markets 칩
+            const count = k => k === 'all' ? total : k === 'events' ? evAll.length : (cc[k] || 0);
+            const chip = ([k, , icon, color, name]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1.5 pl-1 pr-3 py-1 rounded-full shadow-md border ${this.state.cat === k ? 'bg-violet-600 border-violet-600 text-white' : 'bg-white/95 dark:bg-slate-900/90 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100'}"><span class="w-6 h-6 shrink-0 rounded-full text-[12px] leading-6 text-center" style="background:${color}">${icon}</span>${esc(name || 'All')}<span class="font-normal opacity-70">${count(k)}</span></button>`;
+            const tog = (a, on, l, n) => evToggle(a, on, l, n).replace('class="flex', 'class="shrink-0 py-1.5 shadow-md flex');
+            return `<div data-keep-scroll="mapchips" role="group" aria-label="Category" class="md:hidden absolute inset-x-0 top-2 z-20 flex items-center gap-1.5 px-2 pb-1 overflow-x-auto no-scrollbar text-[13px] font-semibold">
+              ${cats.map(chip).join('')}<span class="shrink-0 w-px h-6 bg-slate-400/60" aria-hidden="true"></span>${tog('mapevents', showEv, '🎪 Events', evOthers.length)}${tog('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}
+            </div>
+            <div class="hidden md:flex absolute left-[10.5rem] top-2 z-20 items-center gap-1.5 text-[13px] font-semibold">${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}</div>
             <div class="hidden md:block md:absolute md:left-0 md:top-2 md:bottom-2 md:z-10 md:w-40 pointer-events-none"><div role="group" aria-label="Category" class="pointer-events-auto absolute inset-0 p-0.5 flex flex-col gap-0.5 overflow-y-auto rounded-r-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow text-[13px] font-semibold no-scrollbar">
               ${cats.map(c => btn(c, 'shrink-0 flex items-center gap-1 px-1 py-0.5 rounded-md text-left leading-tight', 'w-5 h-5 text-[11px] leading-5')).join('')}
             </div></div>`;
           })()}
-          <div id="lmap" class="w-full h-[240px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(46vh-2.5rem)] md:min-h-[260px] lg:h-[calc(46vh-2.5rem)] lg:min-h-[280px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
+          <div id="lmap" class="w-full h-[calc(100svh-230px)] min-h-[360px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(46vh-2.5rem)] md:min-h-[260px] lg:h-[calc(46vh-2.5rem)] lg:min-h-[280px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
+          <div id="mapsheet" hidden class="sm:hidden absolute inset-x-0 bottom-3 z-20" role="region" aria-label="Places near the pin you tapped"></div>
         </div>
       </div>
-      <div data-keep-scroll="maplist" class="max-sm:px-1 grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
+      <div data-keep-scroll="maplist" class="max-sm:hidden grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
         ${evCat && this._map.events.length ? `<p class="px-1 pt-0.5 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Events & markets · next 6 weeks</p>${this._map.events.map((ev, i) => `
           <div class="relative"><button data-act="evfocus" data-val="${i}" data-maphl="ev:${i}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]      flex gap-3">
             <span class="w-7 h-7 shrink-0 rounded-full bg-white text-base flex items-center justify-center border-2 ${ev.market ? 'border-emerald-600' : 'border-fuchsia-700'}" aria-hidden="true">${esc(ev.icon)}</span>
@@ -2686,9 +2686,75 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       </div>
       ${items.length ? (() => {
         // "Show more" 없이 전부 보여줘요 (스크롤이 끊기지 않게)
-        return `<div class="grid grid-cols-2 gap-1.5 sm:gap-5 md:grid-cols-3">${items.map(s => this.card(s)).join('')}</div>`;
-      })() : evCat ? '' : '<p class="text-sm text-slate-500">No spots match these filters.</p>'}
+        return `<div class="max-sm:hidden grid grid-cols-2 gap-1.5 sm:gap-5 md:grid-cols-3">${items.map(s => this.card(s)).join('')}</div>`;
+      })() : evCat ? '' : '<p class="max-sm:px-4 text-sm text-slate-500">No spots match these filters.</p>'}
     </div>`;
+  }
+  // 폰 지도 아래 카드: 사진 왼쪽, 종류·이름·지역·나이·오늘 시간 오른쪽, 저장(하트). 누르면 장소 창이 열려요
+  sheetCard(s) {
+    const g = CAT_GROUPS[kindGroup(s)], saved = this.state.plan.includes(s.id), o = this.origin();
+    let hrs = ''; try { hrs = dayHours(s, vanDate(0)) || ''; } catch (e) {}
+    const where = [s.area, o ? fmtDist(km(o, s)).split(' · ')[0] : ''].filter(Boolean).map(esc).join(' · ');
+    const meta = [isKid(s) ? kidProfile(s).agesText : '', s.price && !/^free$/i.test(s.price) ? s.price : ''].filter(Boolean).map(esc).join(' · ');
+    return `<article data-sheet="${esc(s.id)}" class="relative snap-center shrink-0 w-[calc(100vw-3rem)] max-w-[22rem] flex gap-3 p-2.5 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-[0_2px_6px_rgba(15,23,42,.12),0_8px_24px_rgba(15,23,42,.18)] outline outline-2 -outline-offset-2 outline-transparent">
+      <button data-act="open" data-val="${esc(s.id)}" class="absolute inset-0 z-[1] rounded-2xl" aria-label="Open ${esc(s.name)}"></button>
+      <div class="w-24 h-24 shrink-0 rounded-xl overflow-hidden">${this.cover(s, 'h-full')}</div>
+      <div class="min-w-0 flex-1 pr-8 py-0.5">
+        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] font-semibold text-white" style="background:${g.color}"><span aria-hidden="true">${g.icon}</span>${esc(g.label)}</span>
+        <p class="mt-1 font-bold text-[15px] leading-snug clamp2">${esc(s.name)}</p>
+        <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400 truncate">${where}</p>
+        ${meta || hrs ? `<p class="mt-0.5 text-xs text-slate-600 dark:text-slate-300 truncate">${[meta, hrs ? 'Today ' + esc(hrs) : ''].filter(Boolean).join(' · ')}</p>` : ''}
+      </div>
+      <button data-act="save" data-val="${esc(s.id)}" aria-pressed="${saved}" aria-label="${saved ? 'Saved' : 'Save'} ${esc(s.name)}" class="absolute right-2 top-2 z-[2] w-8 h-8 rounded-full flex items-center justify-center ${saved ? 'bg-rose-50 text-rose-600 dark:bg-rose-500/15' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300'}"><svg aria-hidden="true" viewBox="0 0 24 24" class="w-4 h-4" fill="${saved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg></button>
+    </article>`;
+  }
+  // 폰 지도: 핀을 누르면 그 장소 카드 + 가까운 장소 카드들이 지도 아래에 가로로 떠요. 넘기면 가운데 카드의 핀이 커지고, 가려지거나 화면 밖이면 지도가 따라가요.
+  // 다시 그려도(저장·필터·장소 창) 보던 카드가 그대로 남도록 this._sheet 에 기억해요. 지도 빈 곳을 누르면 닫혀요
+  phoneSheet(map, el, items, fitPhone) {
+    const box = document.getElementById('mapsheet'); if (!box) return;
+    const pts = items.filter(s => s.lat != null && byId(s.id)), byIt = {}; pts.forEach(s => { byIt[s.id] = s; });
+    let activeId = null;
+    const mark = (id, on) => { const p = this._pins[id]; if (!p) return; const d = p.mk.getElement() && p.mk.getElement().querySelector('.spot-pin'); if (d) d.classList.toggle('hl', on); p.mk.setZIndexOffset(on ? 9000 : p.base); };
+    const setActive = (id, pan) => {
+      if (activeId && activeId !== id) mark(activeId, false);
+      activeId = id; mark(id, true);
+      if (this._sheet) this._sheet.active = id;
+      box.querySelectorAll('article[data-sheet]').forEach(a => a.classList.toggle('outline-violet-500', a.dataset.sheet === id));
+      const p = this._pins[id]; if (!pan || !p) return;
+      // 위 칩 줄과 아래 카드에 가리지 않는 빈 칸 안에 핀이 있게: 벗어나면 그 빈 칸 가운데로 옮겨요
+      const sz = map.getSize(), q = map.latLngToContainerPoint(p.mk.getLatLng()), top = 56, bot = sz.y - box.offsetHeight - 24;
+      if (q.x < 24 || q.x > sz.x - 24 || q.y < top || q.y > bot) map.panBy([q.x - sz.x / 2, q.y - (top + bot) / 2], { animate: true, duration: 0.35 });
+    };
+    const hide = () => { if (activeId) mark(activeId, false); activeId = null; this._sheet = null; box.hidden = true; box.innerHTML = ''; };
+    const show = (id, keep) => {
+      const a = byIt[id]; if (!a) return hide();
+      const near = pts.filter(s => s.id !== id).map(s => [km(a, s), s]).sort((x, y) => x[0] - y[0]).slice(0, 19).map(x => x[1]);
+      const want = keep && this._sheet && this._sheet.id === id ? this._sheet.active : id;
+      if (activeId) mark(activeId, false); activeId = null;
+      this._sheet = { id, active: want };
+      box.innerHTML = `<div class="flex gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory px-6 py-1 scroll-px-6">${[a, ...near].map(s => this.sheetCard(byId(s.id))).join('')}</div>`;
+      box.hidden = false;
+      const row = box.firstElementChild, cards = [...row.children], i = Math.max(0, cards.findIndex(c => c.dataset.sheet === want));
+      row.scrollLeft = i ? cards[i].offsetLeft - (row.clientWidth - cards[i].offsetWidth) / 2 : 0;
+      setActive(cards[i].dataset.sheet, !keep);
+      let t = null;
+      row.addEventListener('scroll', () => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          const mid = row.getBoundingClientRect().left + row.clientWidth / 2;
+          const c = cards.reduce((b, x) => { const r = x.getBoundingClientRect(), d = Math.abs(r.left + r.width / 2 - mid); return !b || d < b[0] ? [d, x] : b; }, null);
+          if (c && c[1].dataset.sheet !== activeId) setActive(c[1].dataset.sheet, true);
+        }, 80);
+      }, { passive: true });
+    };
+    this._sheetShow = id => show(id, false);
+    map.on('click', hide);
+    map.on('popupopen', hide);
+    if (this._sheet && byIt[this._sheet.id]) show(this._sheet.id, true); else this._sheet = null;
+    // 주소창이 접히거나 화면을 돌리면 지도 높이를 다시 맞춰요
+    if (this._phoneResize) removeEventListener('resize', this._phoneResize);
+    this._phoneResize = () => { if (!el.isConnected || innerWidth >= 640) return; fitPhone(); map.invalidateSize(); };
+    addEventListener('resize', this._phoneResize);
   }
   // 목록에서 가리킨 장소의 핀 강조 (맨 위로 올리고, 지도 밖이면 살짝 옮겨 보이게)
   highlightPin(id, on) {
@@ -2705,12 +2771,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const vec = await loadVector();
     if (!el.isConnected) return;
     const { items, picks, rank } = this._map, L = window.L;
-    const map = L.map(el, { zoomControl: true, attributionControl: true, scrollWheelZoom: false, maxZoom: 19 });
+    // 폰(640px 미만, 2026-11-19): 지도가 헤더·검색 아래 화면을 꽉 채우고 한 손가락으로 움직여요. 핀을 누르면 지도 아래쪽에 카드가 뜨고, 옆으로 넘기면 그 핀 근처 장소가 가까운 순서로 나와요 (phoneSheet)
+    const phone = innerWidth < 640;
+    const fitPhone = () => { if (!el.isConnected) return; const top = el.getBoundingClientRect().top + scrollY; el.style.height = Math.max(360, innerHeight - top) + 'px'; };
+    if (phone) fitPhone(); else el.style.height = '';
+    const map = L.map(el, { zoomControl: !phone, attributionControl: true, scrollWheelZoom: false, maxZoom: 19 });
     el.classList.toggle('vec', !!vec);
-    map.zoomControl.setPosition('topright');
+    if (!phone) map.zoomControl.setPosition('topright');
     map.attributionControl.setPrefix(false);   // Leaflet 로고·링크는 빼고 지도 출처(OpenStreetMap)만 작게
     // 마우스 휠은 페이지 스크롤에 써요: 지도 위에서 그냥 굴리면 페이지가 스크롤되고, Ctrl(Mac은 ⌘)+휠(트랙패드 핀치도)일 때만 지도가 확대·축소돼요
-    {
+    if (!phone) {
       const hint = document.createElement('div');
       hint.textContent = (/Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl') + ' + scroll to zoom the map';
       hint.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:1000;background:rgba(15,23,42,.45);color:#fff;font:600 14px system-ui,sans-serif;opacity:0;transition:opacity .2s';
@@ -2744,6 +2814,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       // 마우스: 올리면 작은 카드, 누르면 모달. 터치 화면: 핀을 누르면 작은 카드, 그 카드를 누르면 모달 (호버가 없어서)
       const coarse = matchMedia('(pointer: coarse)').matches, sp = byId(s.id);
       const mk = L.marker([s.lat, s.lng], { icon, keyboard: true, zIndexOffset: z(s.mark), alt: s.name }).addTo(map).on('click', () => {
+        if (phone && sp) return this._sheetShow && this._sheetShow(s.id);
         if (coarse && sp) {
           if (this._tip) map.closeTooltip(this._tip);
           const tip = this._tip = L.tooltip({ className: 'card-tip tap', direction: 'auto', opacity: 1, interactive: true }).setLatLng(mk.getLatLng()).setContent(this.miniCard(sp)).addTo(map);
@@ -2752,7 +2823,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         }
         mk.closeTooltip(); this.opener = null; this.openModal(s.id);
       });
-      if (sp && !coarse) mk.bindTooltip(() => this.miniCard(sp), { className: 'card-tip', direction: 'auto', offset: [0, 0], opacity: 1, sticky: false });
+      if (sp && !coarse && !phone) mk.bindTooltip(() => this.miniCard(sp), { className: 'card-tip', direction: 'auto', offset: [0, 0], opacity: 1, sticky: false });
       this._pins[s.id] = { mk, base: z(s.mark) };
     });
     // 행사·마켓 핀: 누르면 다음 날짜·시간과 장소/공식 정보 링크
@@ -2779,7 +2850,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     else if ((picks || this.nearActive() || this.state.q) && items.length) map.fitBounds(L.latLngBounds(items.map(s => [s.lat, s.lng])).pad(0.15), { maxZoom: 14, animate: false });
     else map.fitBounds(METRO_BOUNDS, { animate: false });
     // 아래 목록에서 지금 보이는 맨 앞 3장 = 지도에 펼친 카드 3장이에요. 스크롤하면 새로 나온 3곳으로 바뀌고 지도가 부드럽게 따라가요. 보던 위치를 이어갈 땐 처음 한 번은 지도를 움직이지 않아요
-    {
+    if (phone) { this.phoneSheet(map, el, items, fitPhone); if (this._featScroll) { window.removeEventListener('scroll', this._featScroll); this._featScroll = null; } }
+    else {
       const small = el.clientWidth < 640, cw = (small ? 112 : 150) + 6, ch = small ? 84 : 108, up = ch + 32, coarse = matchMedia('(pointer: coarse)').matches, N = (coarse || innerWidth < 768 || el.clientWidth < 640) ? 2 : 3;   // 폰은 2장만
       const byIt = {}; items.forEach(s => { byIt[s.id] = s; });
       const legendW = innerWidth >= 768 && !picks ? 168 : 0;   // 데스크톱은 지도 왼쪽에 카테고리 목록이 떠 있어서 카드가 그 밑에 안 가게
@@ -3001,7 +3073,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const save = () => { this._mapSaved = { key, center: map.getCenter(), zoom: map.getZoom() }; };
     save(); map.on('moveend zoomend', save); map.on('click', () => { if (this._tip) { map.closeTooltip(this._tip); this._tip = null; } });
     // 스크롤하면 아래 목록 카드 줄이 지도 바로 밑에 딱 맞춰 멈춰요 (CSS scroll-snap). 지도 높이는 --mapbar-h 로 알려 줘요
-    {
+    if (!phone) {
       const root = document.documentElement, bar = el.closest('.sticky');
       root.classList.add('snap-list');
       if (bar) {
