@@ -1606,7 +1606,8 @@ class App {
       // 장소 창 Location 칸: 주소 복사 (다시 그리지 않고 버튼 글자만 잠깐 바꿔요)
       case 'copyaddr': {
         const s = byId(val); if (!s) return;
-        const text = ADDR[s.id] ? `${s.name}, ${ADDR[s.id]}, BC` : `${s.name}, ${s.area}, BC`;
+        // 공원 등은 "Near 도로, 도시" 주소라서, 복사할 땐 "Near "를 빼요 (지도 앱에 붙여 넣기 좋게)
+        const text = ADDR[s.id] ? `${s.name}, ${ADDR[s.id].replace(/^Near /, '')}, BC` : `${s.name}, ${s.area}, BC`;
         const done = ok => { const t = el.querySelector('[data-label]'); if (!t) return; t.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(() => { t.textContent = 'Copy'; }, 1500); };
         try { navigator.clipboard.writeText(text).then(() => done(true), () => done(false)); } catch (e) { done(false); }
         return;
