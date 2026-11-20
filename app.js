@@ -2908,8 +2908,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 2026-11-19 (폰 먼저, 같은 날 데스크톱도): 지도가 헤더·검색 아래 화면을 꽉 채우고 바로 움직여요(한 손가락·마우스 끌기·휠 확대). 핀을 누르면 지도 아래쪽에 카드가 뜨고, 옆으로 넘기면 그 핀 근처 장소가 가까운 순서로 나와요 (phoneSheet).
     // 아래 목록 카드 + 지도 번호 핀이 따라가던 예전 방식은 phone = innerWidth < 640 으로 바꾸면 데스크톱에서 돌아와요
     const phone = true;
-    const fitPhone = () => { if (!el.isConnected) return; const top = el.getBoundingClientRect().top + scrollY; el.style.height = (innerWidth < 640 ? Math.max(360, innerHeight - top) : Math.max(360, Math.round(innerHeight * 0.78), innerHeight - top - 16)) + 'px'; };
-    // 폰: 지도가 화면 아래 끝에 딱 맞아요. 화면보다 길면 페이지를 내려야 하는데, 손가락이 지도에 닿으면 페이지 대신 지도가 움직여서 내릴 수가 없었어요 (사용자, 2026-11-19).
+    const fitPhone = () => { if (!el.isConnected) return; const top = el.getBoundingClientRect().top + scrollY; el.style.height = (innerWidth < 640 ? Math.max(360, Math.round((innerHeight - top) * 1.15)) : Math.max(360, Math.round(innerHeight * 0.78), innerHeight - top - 16)) + 'px'; };
+    // 폰: 검색·필터 아래 남은 화면 높이보다 15% 더 크게 (사용자, 2026-11-19). 지도가 화면보다 길고 밑에 행사 목록도 있어서,
+    // 손가락 하나는 페이지 스크롤, 두 손가락은 지도 이동·확대예요 (아래 터치 처리). 핀·카드 누르기는 손가락 하나 그대로.
     // 데스크톱: 화면 높이의 78% 이상 (휠은 페이지를 내리니까 조금 스크롤해서 지도 전체를 봐요)
     if (phone) fitPhone(); else el.style.height = '';
     // 마우스(데스크톱)는 휠로 확대하지 않으니 오른쪽 위(칩 줄 아래)에 +/− 버튼을 둬요. 터치 화면은 두 손가락으로 확대해서 버튼 없이
@@ -2935,7 +2936,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         hint.style.opacity = '1'; clearTimeout(ht); ht = setTimeout(() => { hint.style.opacity = '0'; }, 900);
       }, { passive: false });
       // 터치 화면: 손가락 하나로 밀면 페이지가 스크롤되고, 두 손가락일 때만 지도가 움직여요 (이동·확대 모두)
-      if (!phone && matchMedia('(pointer: coarse)').matches) {   // 전체 화면 지도(phone)는 한 손가락으로 바로 움직여요
+      if (matchMedia('(pointer: coarse)').matches) {   // 터치 화면: 손가락 하나로 밀면 페이지가 내려가야 해요 (지도 밑에 행사 목록이 있어서. 사용자, 2026-11-19)
         map.dragging.disable();
         hint.textContent = 'Use two fingers to move the map';
         el.addEventListener('touchmove', e => {
@@ -2952,7 +2953,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 가까운 핀 묶기: 줌아웃해서 핀이 몰리면 "+N" 동그라미 하나로 (누르면 그 범위로 확대). 많이 확대하면(15+) 다 풀어요
     const clus = await loadCluster();
     if (!el.isConnected) return;
-    const layer = this._clusters = clus ? L.markerClusterGroup({ maxClusterRadius: 26, disableClusteringAtZoom: 15, showCoverageOnHover: false, spiderfyOnMaxZoom: false, removeOutsideVisibleBounds: true,
+    const layer = this._clusters = clus ? L.markerClusterGroup({
+      // 너무 일찍 묶였어요 (사용자, 2026-11-19): 멀리서 볼 때만 겹치는 핀을 묶고, 가까이 갈수록 거의 안 묶고, 줌 14부터는 다 풀어요
+      maxClusterRadius: z => z >= 13 ? 8 : z >= 12 ? 12 : z >= 11 ? 16 : 20, disableClusteringAtZoom: 14, showCoverageOnHover: false, spiderfyOnMaxZoom: false, removeOutsideVisibleBounds: true,
       iconCreateFunction: c => L.divIcon({ className: '', html: `<div class="pin-cluster">+${c.getChildCount()}</div>`, iconSize: [32, 32], iconAnchor: [16, 16] }) }) : map;
     items.forEach(s => {
       // 핀 = 장소 종류 색 동그라미 + 흰색 아이콘 (이모지를 흰 실루엣으로: .glyph)
