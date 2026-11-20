@@ -2724,6 +2724,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           })()}
         </div>
       </div>
+      ${picks ? '' : this.mapEventsList()}
       <div data-keep-scroll="maplist" class="hidden grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
         ${evCat && this._map.events.length ? `<p class="px-1 pt-0.5 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Events & markets · next 6 weeks</p>${this._map.events.map((ev, i) => `
           <div class="relative"><button data-act="evfocus" data-val="${i}" data-maphl="ev:${i}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]      flex gap-3">
@@ -2739,6 +2740,32 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         return `<div class="hidden grid grid-cols-2 gap-1.5 sm:gap-5 md:grid-cols-3">${items.map(s => this.card(s)).join('')}</div>`;
       })() : evCat ? '' : '<p class="max-sm:px-4 text-sm text-slate-500">No spots match these filters.</p>'}
     </div>`;
+  }
+  // 지도 밑 "Events, markets & festivals" (2026-11-19, 사용자 예시): 다가오는 행사 5개. 사진(행사가 열리는 장소 사진) · 종류 배지 · 이름 · 날짜.
+  // 누르면 그 장소 창이 열려요 (장소 창에 행사 날짜·시간이 있어요). 위치 필터(반경)를 따라요. 전체는 Events 탭
+  mapEventsList() {
+    // 어른 위주 행사(forParents)는 여기선 빼요 (아이 나들이 목록이라서). Events 탭(See all)에는 그대로 있어요. 6개 = 데스크톱 2열이 딱 맞게
+    const list = this.upcomingEvents(45).filter(ev => ev.spotId && byId(ev.spotId) && !ev.forParents).slice(0, 6);
+    if (!list.length) return '';
+    const badge = { festival: 'border-rose-300 text-rose-700 dark:border-rose-400/50 dark:text-rose-300', seasonal: 'border-amber-300 text-amber-700 dark:border-amber-400/50 dark:text-amber-300',
+      market: 'border-lime-400 text-lime-800 dark:border-lime-400/50 dark:text-lime-300', sale: 'border-sky-300 text-sky-700 dark:border-sky-400/50 dark:text-sky-300', popup: 'border-violet-300 text-violet-700 dark:border-violet-400/50 dark:text-violet-300' };
+    const row = ev => { const sp = byId(ev.spotId); return `
+        <li><button data-act="open" data-val="${esc(ev.spotId)}" class="w-full flex items-center gap-3 sm:gap-4 py-2.5 text-left">
+          <div class="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-md overflow-hidden pointer-events-none">${this.cover(sp, 'h-full')}</div>
+          <div class="min-w-0 flex-1">
+            <span class="inline-block px-2 py-0.5 rounded-md border text-[11px] sm:text-xs font-semibold ${badge[ev.type] || badge.popup}">${esc(EVENT_TYPES[ev.type] || 'Event')}</span>${ev.forParents ? PARENTS_BADGE : ''}
+            <p class="mt-1 font-bold text-[15px] sm:text-base leading-snug clamp2">${esc(ev.name)}</p>
+            <p class="mt-0.5 text-xs sm:text-sm text-slate-500 dark:text-slate-400 truncate">${esc(eventWhen(ev))}${ev.area ? ` · ${esc(ev.area)}` : ''}</p>
+          </div>
+        </button></li>`; };
+    return `
+      <section class="max-sm:px-4 pt-3 sm:pt-5 pb-6">
+        <div class="flex items-baseline justify-between gap-3">
+          <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Events, markets &amp; festivals</h2>
+          <button data-act="view" data-val="events" class="shrink-0 text-sm font-semibold text-violet-700 dark:text-violet-300">See all ›</button>
+        </div>
+        <ul class="mt-2 sm:grid sm:grid-cols-2 sm:gap-x-8">${list.map(row).join('')}</ul>
+      </section>`;
   }
   // 장소 창 Location 칸의 작은 지도: 움직이지 않는 지도에 물방울 모양 핀 하나 (색·아이콘은 큰 지도 핀과 같아요). 누르면 위에 덮인 링크로 구글 지도가 열려요
   async drawMini(s) {
