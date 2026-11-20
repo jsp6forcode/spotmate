@@ -1488,7 +1488,12 @@ class App {
     const { act, val } = el.dataset;
     switch (act) {
       case 'noop': return;
-      case 'cat': if (el.tagName === 'SELECT') return; return this.set({ cat: val });
+      case 'cat': {
+        if (el.tagName === 'SELECT') return;
+        // 지도 위 장소 종류 칩: 누르면 그 종류만, 이미 켜진 칩을 다시 누르면 꺼져서 전체(All)로 (사용자, 2026-11-19)
+        const off = val !== 'all' && this.state.cat === val && el.closest('[data-keep-scroll="mapchips"]');
+        return this.set({ cat: off ? 'all' : val });
+      }
       case 'retry': return this.loadData();
       case 'view': {
         // 행사·파머스 마켓 탭: 장소 필터와 상관없는 별도 목록
@@ -2836,13 +2841,17 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       if (this._sheet) this._sheet.active = id;
       box.querySelectorAll('article[data-sheet]').forEach(a => a.classList.toggle('outline-violet-500', a.dataset.sheet === id));
       const p = this._pins[id]; if (!pan || !p) return;
-      // 그 장소가 "+N" 묶음 안에 숨어 있으면 풀리는 데까지 확대해서 보여줘요
-      if (this._clusters && this._clusters !== map && !p.mk.getElement()) { this._clusters.zoomToShowLayer(p.mk, () => mark(id, true)); return; }
-      // 위 칩 줄과 아래 카드에 가리지 않는 빈 칸 안에 핀이 있게: 벗어나면 그 빈 칸 가운데로 옮겨요
-      // 화면 위로 밀려 올라간 지도 윗부분도 '가려진 곳'으로 쳐요 (카드가 보이게 페이지를 내리는 중이면 내릴 만큼 미리 빼고)
+      // 장소가 바뀔 때마다 내 위치(검은 점)와 그 장소가 둘 다 꽉 차게 보이도록 지도를 옮기고 줌도 다시 맞춰요 (확대·축소 모두. 사용자, 2026-11-19).
+      // 위 칩 줄과 아래 카드에 가리지 않는 빈 칸 안에 맞춰요. 화면 위로 밀려 올라간 지도 윗부분도 가려진 곳으로 쳐요 (카드가 보이게 페이지를 내리는 중이면 내릴 만큼 미리 빼고)
+      // 처음 누를 땐 Tailwind가 카드 스타일을 아직 안 만들어서 카드 줄이 아주 높게 재져요. 그래서 높이를 160px까지만 믿어요. 카드 위로는 넉넉히 (커진 핀이 카드에 걸치지 않게)
       const mr = el.getBoundingClientRect(), pend = Math.max(0, mr.bottom - innerHeight);
-      const sz = map.getSize(), q = map.latLngToContainerPoint(p.mk.getLatLng()), top = Math.max(96, pend - mr.top + 24), bot = sz.y - Math.min(box.offsetHeight || 140, 160) - 24;   // 처음 누를 땐 Tailwind가 카드 스타일을 아직 안 만들어서 카드 줄이 아주 높게 재져요. 그래서 높이를 160px까지만 믿어요
-      if (q.x < 24 || q.x > sz.x - 24 || q.y < top || q.y > bot) map.panBy([q.x - sz.x / 2, q.y - (top + bot) / 2], { animate: true, duration: 0.35 });
+      const sz = map.getSize(), top = Math.max(96, pend - mr.top + 24), bot = sz.y - Math.min(box.offsetHeight || 140, 160) - 48;
+      const me = this.origin() || (this.state.origin ? { lat: this.state.origin.lat, lng: this.state.origin.lng } : null);
+      const pts = [p.mk.getLatLng(), ...(me ? [window.L.latLng(me.lat, me.lng)] : [])];
+      // 바로 옆이면 너무 확대되지 않게 16(거리 수준)까지만, 내 위치를 모르면 그 장소만 15로
+      map.flyToBounds(window.L.latLngBounds(pts), { paddingTopLeft: [40, top + 12], paddingBottomRight: [40, sz.y - bot + 12], maxZoom: me ? 16 : 15, duration: 0.6 });
+      // 묶음("+N") 안에 숨은 채로 끝나면 강조를 다시 붙여요 (줌을 바꾸면 묶음이 풀려요)
+      map.once('moveend', () => { if (activeId === id) mark(id, true); });
     };
     const hide = () => { if (activeId) mark(activeId, false); activeId = null; this._sheet = null; box.hidden = true; box.innerHTML = ''; };
     const show = (id, keep) => {
@@ -2955,7 +2964,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (!el.isConnected) return;
     const layer = this._clusters = clus ? L.markerClusterGroup({
       // 너무 일찍 묶였어요 (사용자, 2026-11-19): 멀리서 볼 때만 겹치는 핀을 묶고, 가까이 갈수록 거의 안 묶고, 줌 14부터는 다 풀어요
-      maxClusterRadius: z => z >= 13 ? 8 : z >= 12 ? 12 : z >= 11 ? 16 : 20, disableClusteringAtZoom: 14, showCoverageOnHover: false, spiderfyOnMaxZoom: false, removeOutsideVisibleBounds: true,
+      // (같은 날 두 번째: 아직도 빨라요) 핀이 거의 완전히 겹칠 때만 묶고, 줌 13부터는 다 풀어요
+      maxClusterRadius: z => z >= 12 ? 6 : z >= 11 ? 10 : 14, disableClusteringAtZoom: 13, showCoverageOnHover: false, spiderfyOnMaxZoom: false, removeOutsideVisibleBounds: true,
       iconCreateFunction: c => L.divIcon({ className: '', html: `<div class="pin-cluster">+${c.getChildCount()}</div>`, iconSize: [32, 32], iconAnchor: [16, 16] }) }) : map;
     items.forEach(s => {
       // 핀 = 장소 종류 색 동그라미 + 흰색 아이콘 (이모지를 흰 실루엣으로: .glyph)

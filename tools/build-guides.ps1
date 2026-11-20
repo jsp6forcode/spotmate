@@ -246,6 +246,17 @@ foreach ($p in $pages) {
   else { [void]$QA.Add(@("What is good on a rainy day ${where}?", "These spots are mostly outdoors. For wet days, open the Indoor filter in the app or see the indoor play guides.")) }
   if ($p.kind -and $AGES[$p.kind]) { [void]$QA.Add(@("What ages are $what $where good for?", "They suit $(AgeText $AGES[$p.kind]).")) }
   if ($topTime) { [void]$QA.Add(@("How long should we plan for?", "Most visits here take about $($topTime.Name). Each listing shows its own time.")) }
+  # "places to take kids near me" 같은 검색 (2026-11-19, 사용자): 도시 전체·실내 페이지에 사람들이 실제로 치는 말로 묻고 답해요. 앱이 정말 하는 일만 적어요 (Near me = 거리순, 오늘 시간·날씨·행사)
+  if (-not $p.kind) {
+    $placeWord = if ($p.city) { $p.city } else { 'Metro Vancouver' }
+    $picks = if ($gemL.Count) { $gemL } else { $list }
+    if ($isIndoorPage) {
+      [void]$QA.Add(@("Where can kids play indoors near me in ${placeWord}?", "Indoor picks in $placeWord include $(NameList $picks 4). Open Tiny Trips, turn on Indoor and tap Near me to sort them by distance from where you are."))
+    } else {
+      [void]$QA.Add(@("What are good places to take kids near me in ${placeWord}?", "Popular picks in $placeWord include $(NameList $picks 4). Open Tiny Trips and tap Near me to sort all $n places by distance from where you are."))
+      [void]$QA.Add(@("What can we do with kids in $placeWord this weekend?", "Tiny Trips shows each place's hours for the day you pick, the weather and family events and markets that weekend, so you can see what is open before you go."))
+    }
+  }
   # 소개글: 데이터로 계산한 문장만 써요 (동네 분포, 가격, 날씨, 나이, 대표 장소). 페이지마다 문장 틀을 조금씩 달리해요
   $intro = New-Object System.Collections.ArrayList
   $areaG = @(SortOrd @($list | Where-Object { $_.area } | Group-Object area) { param($g) ('{0:D6}' -f (999999 - $g.Count)) + $g.Name })
@@ -257,9 +268,9 @@ foreach ($p in $pages) {
     if ($topAreas.Count -ge 2 -and $p.city) { $s1 += " They are spread across $(NameList ($topAreas | ForEach-Object { [pscustomobject]@{ name = $_ } }) 4), so there is usually one close to home." }
     [void]$intro.Add($s1)
   } elseif ($isIndoorPage) {
-    [void]$intro.Add("When it rains, is too hot or too cold, these $n indoor places $where keep kids busy: $(NameList $list 4) and more. Each one is checked for kids, with the hours and what parents say inside the app.")
+    [void]$intro.Add("Looking for indoor places to take kids near you ${where}? When it rains, is too hot or too cold, these $n indoor places keep kids busy: $(NameList $list 4) and more. Each one is checked for kids, with the hours and what parents say inside the app.")
   } else {
-    [void]$intro.Add("Planning a day out $where with kids? These $n places cover playgrounds, parks, indoor play and more, including $(NameList $list 4).")
+    [void]$intro.Add("Looking for places to take kids near you $where, or things to do with kids this weekend? These $n kid-friendly places cover playgrounds, parks, indoor play and more, including $(NameList $list 4).")
   }
   if ($p.kind -and $AGES[$p.kind]) { [void]$intro.Add("This kind of place suits $(AgeText $AGES[$p.kind]), so check each listing for the best age and how long a visit usually takes.") }
   if ($gemL.Count) { [void]$intro.Add("Standouts worth a special trip: $(NameList $gemL 4).") }
