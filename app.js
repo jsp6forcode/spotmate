@@ -1948,7 +1948,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     `;
 
     if (this._map) this.drawMap();
-    if (modal) this.drawMini(byId(modal));
+    if (modal) { this.drawMini(byId(modal)); this.wireHScroll(this.root.querySelector('[data-keep-scroll="nearby"]'), 'top-[34px]', ['Previous nearby places', 'More nearby places']); }
     this.rotateExamples();
     this.root.querySelectorAll('[data-keep-scroll]').forEach(el => {
       const s = scrolls[el.dataset.keepScroll];
@@ -2818,15 +2818,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <button data-act="save" data-val="${esc(s.id)}" aria-pressed="${saved}" aria-label="${saved ? 'Saved' : 'Save'} ${esc(s.name)}" class="absolute right-2 top-2 z-[2] w-8 h-8 rounded-full flex items-center justify-center ${saved ? 'bg-rose-50 text-rose-600 dark:bg-rose-500/15' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300'}"><svg aria-hidden="true" viewBox="0 0 24 24" class="w-4 h-4" fill="${saved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg></button>
     </article>`;
   }
-  // 지도 위 장소 종류 칩 줄을 마우스로도 넘기게: 휠을 굴리면 옆으로, 양 끝에 더 있으면 ‹ › 화살표 (데스크톱만, 폰은 손가락으로 밀어요)
-  wireChips() {
-    const row = document.querySelector('[data-keep-scroll="mapchips"]'); if (!row) return;
+  // 옆으로 넘기는 줄을 마우스로도 넘기게: 휠을 굴리면 옆으로, 양 끝에 더 있으면 ‹ › 화살표 (데스크톱만, 폰은 손가락으로 밀어요)
+  // 지도 위 장소 종류 칩 줄, 장소 창의 Nearby places 줄에 써요. top: 화살표 세로 위치 (칩 줄은 위에 붙어 있어서 'top-2', 카드 줄은 사진 가운데)
+  wireHScroll(row, top = 'top-2', labels = ['Show previous', 'Show more']) {
+    if (!row || row._hs) return; row._hs = true;
     const wrap = row.parentElement, arrows = {};
     const make = d => {
-      const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', d < 0 ? 'Show previous place types' : 'Show more place types');
-      b.className = `max-sm:hidden absolute top-2 ${d < 0 ? 'left-0 pl-1 pr-4 bg-gradient-to-r' : 'right-0 pr-1 pl-4 bg-gradient-to-l'} z-[21] h-9 flex items-center from-white via-white/90 to-transparent dark:from-slate-900 dark:via-slate-900/90`;
+      const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', d < 0 ? labels[0] : labels[1]);
+      b.className = `max-sm:hidden absolute ${top} ${d < 0 ? 'left-0 pl-1 pr-4 bg-gradient-to-r' : 'right-0 pr-1 pl-4 bg-gradient-to-l'} z-[21] h-9 flex items-center from-white via-white/90 to-transparent dark:from-slate-900 dark:via-slate-900/90`;
       b.innerHTML = `<span class="w-8 h-8 rounded-full flex items-center justify-center bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 shadow-md border border-slate-200 dark:border-slate-700"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d < 0 ? 'M15 6l-6 6 6 6' : 'M9 6l6 6-6 6'}"/></svg></span>`;
-      b.addEventListener('click', () => row.scrollBy({ left: d * row.clientWidth * 0.7, behavior: 'smooth' }));
+      b.addEventListener('click', e => { e.stopPropagation(); row.scrollBy({ left: d * row.clientWidth * 0.7, behavior: 'smooth' }); });
       wrap.appendChild(b); arrows[d] = b;
     };
     make(-1); make(1);
@@ -2834,10 +2835,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     row.addEventListener('scroll', update, { passive: true });
     row.addEventListener('wheel', e => {
       if (row.scrollWidth <= row.clientWidth || Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return;   // 트랙패드 옆 밀기는 브라우저 기본 그대로
+      const max = row.scrollWidth - row.clientWidth;
+      if ((e.deltaY < 0 && row.scrollLeft <= 0) || (e.deltaY > 0 && row.scrollLeft >= max - 1)) return;   // 끝에 닿으면 휠은 다시 창(세로)을 내려요
       e.preventDefault(); row.scrollBy({ left: e.deltaY * (e.deltaMode ? 40 : 1) });
     }, { passive: false });
-    update(); requestAnimationFrame(update); setTimeout(update, 400);   // Tailwind가 칩 스타일을 늦게 만들면 폭이 바뀌어서 한 번 더
+    update(); requestAnimationFrame(update); setTimeout(update, 400);   // Tailwind가 스타일을 늦게 만들면 폭이 바뀌어서 한 번 더
   }
+  wireChips() { this.wireHScroll(document.querySelector('[data-keep-scroll="mapchips"]'), 'top-2', ['Show previous place types', 'Show more place types']); }
   // 폰 지도: 핀을 누르면 그 장소 카드 + 가까운 장소 카드들이 지도 아래에 가로로 떠요. 넘기면 가운데 카드의 핀이 커지고, 가려지거나 화면 밖이면 지도가 따라가요.
   // 다시 그려도(저장·필터·장소 창) 보던 카드가 그대로 남도록 this._sheet 에 기억해요. 지도 빈 곳을 누르면 닫혀요
   phoneSheet(map, el, items, fitPhone) {
@@ -3448,17 +3452,18 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const meta = [s.area, cur && cur.dist != null ? fmtDist(cur.dist).split(' · ')[0] : ''].filter(Boolean).map(esc);
 
     // ── Before you go 카드: 라벨 | 내용 ──
-    const wk = this.weekRows(s);
+    const wk = this.weekRows(s), adm = facts.rows.find(r => r.label === 'Admission');
     const row = (label, html) => `<div class="grid grid-cols-[5.5rem_1fr] sm:grid-cols-[7rem_1fr] gap-3 py-3 first:pt-0 last:pb-0"><dt class="text-sm text-slate-500 dark:text-slate-400">${label}</dt><dd class="text-sm text-slate-800 dark:text-slate-200 min-w-0">${html}</dd></div>`;
     const hoursHtml = wk.length ? wk.map(w => `<div class="${w.today ? 'font-semibold' : ''}">${esc(w.days)} ${esc(w.text)}${w.today && wk.length > 1 ? ' <span class="align-middle whitespace-nowrap text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-200">Today</span>' : ''}</div>`).join('')
       : (s.hours && !/unknown/i.test(s.hours) ? esc(s.hours) : '');
     const beforeRows = [
       hoursHtml ? row('Hours', hoursHtml) : '',
-      row('Price', `${esc(s.price || 'See website')}${/^free$/i.test(s.price || '') ? '' : ` <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="ml-1 text-xs font-semibold text-violet-700 dark:text-violet-300">Check prices ↗</a>`}`),
+      // 가격: 확인된 입장료(Admission)가 있으면 그걸 Price 줄로 (따로 두면 같은 말이 두 번이었어요. 사용자, 2026-11-19). 없으면 가격대($$)
+      adm ? row('Price', adm.html) : row('Price', `${esc(s.price || 'See website')}${/^free$/i.test(s.price || '') ? '' : ` <a href="${infoUrl(s)}" target="_blank" rel="noopener" class="ml-1 text-xs font-semibold text-violet-700 dark:text-violet-300">Check prices ↗</a>`}`),
       KIDS_ONLY && isKid(s) ? row('Ages', esc(kidProfile(s).agesText.replace(/^Ages\s+/i, ''))) : '',
       s.time ? row('Visit length', esc(s.time)) : '',
       ENV[s.env] ? row('Setting', esc(ENV[s.env])) : '',
-      ...facts.rows.map(r => row(esc(r.label), r.html))
+      ...facts.rows.filter(r => r !== adm).map(r => row(esc(r.label), r.html))
     ].filter(Boolean).join('');
 
     // ── 근처 장소: 가까운 아이 장소 10곳 (사진 카드, 옆으로 넘기기). 누르면 그 장소 창 ──
@@ -3568,13 +3573,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${nearby.length ? `
           <section>
             <h3 class="${H3}">Nearby places</h3>
-            <div data-keep-scroll="nearby" class="mt-3 -mx-5 px-5 flex gap-3 overflow-x-auto no-scrollbar snap-x">
+            <div class="relative mt-3"><div data-keep-scroll="nearby" data-hscroll class="-mx-5 px-5 scroll-px-5 flex gap-3 overflow-x-auto no-scrollbar snap-x">
               ${nearby.map(([d, x]) => `<button data-act="open" data-val="${esc(x.id)}" class="snap-start shrink-0 w-36 text-left">
                 <div class="h-24 rounded-xl overflow-hidden pointer-events-none">${this.cover(x, 'h-full')}</div>
                 <p class="mt-1.5 text-sm font-semibold leading-snug clamp2">${esc(x.name)}</p>
                 <p class="text-xs text-slate-500 dark:text-slate-400 truncate">${esc(fmtDist(d).split(' · ')[0])} · ${esc(CAT_GROUPS[kindGroup(x)].label)}</p>
               </button>`).join('')}
-            </div>
+            </div></div>
           </section>` : ''}
 
           <p class="text-center"><button data-act="report" data-val="${esc(s.id)}" class="text-xs font-semibold text-slate-500 hover:text-violet-700 dark:text-slate-400 dark:hover:text-violet-300">Something wrong? Tell us</button></p>
