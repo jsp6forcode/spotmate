@@ -1209,6 +1209,8 @@ class App {
     const p = new URLSearchParams(location.search), s = this.state, patch = {};
     const v = p.get('view'); if (['list', 'map', 'events', 'markets', 'plan', 'about'].includes(v)) patch.view = v;
     const cat = p.get('cat'); if (cat && (cat === 'all' || catOptions().includes(cat))) patch.cat = cat;
+    // 예전 링크의 ?cat=events: 지도 칩 줄에서 Events를 뺐으니 All + Events·Markets 핀 켜기로 (2026-11-19)
+    if (patch.cat === 'events' && (patch.view || this.state.view) === 'map') Object.assign(patch, { cat: 'all', mapEvents: true, mapMarkets: true });
     const tag = p.get('tag'); if (tag && /^[\w-]{1,40}$/.test(tag)) patch.tag = tag;
     const when = p.get('when'); if (['today', 'tomorrow', 'weekend', 'sat', 'sun'].includes(when)) patch.when = when;
     const near = p.get('near'); if (near === 'none') patch.nearKey = ''; else if (near && ORIGINS[near]) patch.nearKey = near;
@@ -2702,7 +2704,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${(() => {
             if (picks) return '';
             const cc = this._catCounts || {}, total = Object.values(cc).reduce((a, b) => a + b, 0);
-            const cats = [['all', `(${total}) All`, '🗺️', '#5c6e6d'], ...catOptions().map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '🎪', '#8e4a80', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, CAT_GROUPS[k].icon, CAT_GROUPS[k].color, CAT_GROUPS[k].label]).filter(c => c[0] === this.state.cat || c[1].indexOf("(0)") !== 0).sort((a, b) => a[4].localeCompare(b[4]))];
+            // Events는 칩 줄에서 빼요: 바로 아래 Events·Markets 토글과 겹쳐서 (2026-11-19, 사용자)
+            const cats = [['all', `(${total}) All`, '🗺️', '#5c6e6d'], ...catOptions().filter(k => k !== 'events').map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '🎪', '#8e4a80', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, CAT_GROUPS[k].icon, CAT_GROUPS[k].color, CAT_GROUPS[k].label]).filter(c => c[0] === this.state.cat || c[1].indexOf("(0)") !== 0).sort((a, b) => a[4].localeCompare(b[4]))];
             // 2026-11-19: 지도 맨 위에 장소 종류 칩을 가로 스크롤 한 줄로 (끝에 Events·Markets 토글). 데스크톱도 폰과 같아요 (예전 왼쪽 세로 목록은 없앴어요)
             const count = k => k === 'all' ? total : k === 'events' ? evAll.length : (cc[k] || 0);
             const chip = ([k, , icon, color, name]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1 sm:gap-1.5 pl-0.5 sm:pl-1 pr-2 sm:pr-3 py-0.5 sm:py-1 rounded-md shadow-md border ${this.state.cat === k ? 'bg-violet-600 border-violet-600 text-white' : 'bg-white/95 dark:bg-slate-900/90 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100'}"><span class="w-5 h-5 sm:w-6 sm:h-6 shrink-0 rounded-full flex items-center justify-center text-white" style="background:${color}">${typeIcon(k, innerWidth < 640 ? 12 : 14)}</span>${esc(name || 'All')}<span class="font-normal opacity-70">${count(k)}</span></button>`;
