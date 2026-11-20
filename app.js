@@ -1582,6 +1582,8 @@ class App {
     if (el.dataset.act === 'cat') this.set({ cat: el.value });
     // 날짜 계획: 다른 날을 고르면 Open now(지금 기준)는 꺼요
     if (el.dataset.act === 'when') this.set({ when: el.value, openNow: whenDates(el.value).some(d => d !== vanDate(0)) ? false : this.state.openNow });
+    // 폰 위치 줄의 반경 드롭다운 (데스크톱은 버튼 묶음)
+    if (el.dataset.act === 'radiussel') { const radius = el.value === 'any' ? 'any' : +el.value; store('spotmate-radius', String(radius)); this.set({ radius, radiusExact: true, wizMore: 10 }); return this.wizLocScroll(); }
     if (el.dataset.act === 'near') {
       // 진행 중인 위치 요청이 나중에 도착해도 사용자가 고른 지역을 덮어쓰지 않도록 토큰을 올려요
       this.geoToken = (this.geoToken || 0) + 1;
@@ -2008,11 +2010,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           // 모바일: 자주 쓰는 필터만 한 줄(옆으로 넘기기) + "Filters" 버튼. 카테고리·정렬·위치는 Filters 안에
           // 데스크톱: 전부 한 줄에 (접는 칸은 display: contents로 같은 줄에 섞여요)
           const open = s.filtersOpen;
-          const more = [s.cat !== 'all', s.sort !== 'fresh', this.nearActive()].filter(Boolean).length;
+          // 위치는 2026-11-19부터 폰에서도 늘 보여서 Filters 안에는 카테고리·정렬만 (지도 화면엔 둘 다 없어서 Filters 버튼도 없어요)
+          const more = [s.cat !== 'all', s.sort !== 'fresh'].filter(Boolean).length;
           this._moreCls = open ? 'contents' : 'hidden sm:contents';
           return `
         <div class="flex flex-wrap items-center gap-1.5 sm:gap-x-3 sm:gap-y-2">
-          ${s.cat === 'events' ? '' : `
+          ${s.cat === 'events' || s.view === 'map' ? '' : `
           <button data-act="filters" aria-expanded="${!!open}" class="sm:hidden order-first shrink-0 min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">${open ? 'Hide filters' : `Filters${more ? ` · ${more}` : ''}`}</button>`}
           <div class="${s.cat === 'events' ? 'contents' : this._moreCls}">
           ${s.view === 'map' ? '' : `<label class="flex shrink-0 items-center">
@@ -2043,7 +2046,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </label>
           </div>`}
         </div>`; })()}
-        <div class="${s.filtersOpen || s.cat === 'events' ? '' : 'hidden sm:block'}">${this.locationBar(items)}</div>
+        <div>${this.locationBar(items)}</div>
         ${s.geoMsg ? `<p class="text-xs text-slate-600 dark:text-slate-300" role="status">${esc(s.geoMsg)}</p>` : ''}
         <p class="text-xs text-slate-500 dark:text-slate-400">${this.countLine(items)}</p>
         ${s.cat !== 'events' && s.openNow && HOURS_READY && (this._hidden.closed + this._hidden.unknown) ? `
@@ -2071,10 +2074,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </label>
           ${withIndoor ? `<button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-sky-50 text-sky-800 hover:bg-sky-100 dark:bg-sky-500/15 dark:text-sky-300 dark:hover:bg-sky-500/25'}">${s.indoor ? 'Indoor only ✓' : 'Indoor only'}</button>` : ''}
           ${near ? `
-          <div class="inline-flex max-w-full p-0.5 sm:p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Radius">
+          <div class="max-sm:hidden inline-flex max-w-full p-0.5 sm:p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Radius">
             ${RADII.map(r => seg(r, radiusLabel(r), s.radius === r)).join('')}
           </div>
-          <button data-act="nearoff" class="min-h-[28px] sm:min-h-[36px] text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 ">Clear location</button>` : ''}
+          <label class="sm:hidden flex shrink-0 items-center"><select data-act="radiussel" aria-label="Radius" class="min-h-[28px] px-2 py-0.5 rounded-lg font-semibold bg-violet-100 text-violet-900 dark:bg-violet-900 dark:text-violet-100">
+            ${RADII.map(r => `<option value="${r}" ${s.radius === r ? 'selected' : ''}>${r === 'any' ? 'Any distance' : 'Within ' + radiusLabel(r)}</option>`).join('')}
+          </select></label>
+          <button data-act="nearoff" class="max-sm:hidden min-h-[28px] sm:min-h-[36px] text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 ">Clear location</button>` : ''}
         </div>`;
   }
   // 필터 아래 한 줄: 개수 + 위치(반경) + 검색량 데이터 기준 (모바일은 검색량 설명 없이 짧게)
