@@ -1877,7 +1877,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <div ${modal ? 'inert' : ''}>
         ${this.header()}
         ${this.controls(items)}
-        <main class="max-w-6xl mx-auto px-4 md:px-6 ${view === 'map' ? 'max-sm:pb-0' : ''} pb-16">
+        <main class="max-w-6xl mx-auto px-4 md:px-6 ${view === 'map' ? 'max-sm:pb-0 pb-4' : 'pb-16'}">
           ${this.state.loading || this.state.loadError ? this.statusView() : view === 'plan' ? this.planView() : view === 'about' ? this.aboutView() : view === 'events' || view === 'markets' ? this.eventsView(view) : this.pickMode() && !this.state.q ? this.wizardView()
             : this.pickMode() ? `<button data-act="qclear" class="mt-6 inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-lg text-sm font-semibold   text-slate-700   dark:text-slate-200">← Back to the picker</button>${this.planBar()}${this.listView(items)}` : this.state.cat === 'events' && view !== 'map' ? this.eventsView() : `
             ${this.guideBanner()}
@@ -2014,12 +2014,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           const more = [s.cat !== 'all', s.sort !== 'fresh'].filter(Boolean).length;
           this._moreCls = open ? 'contents' : 'hidden sm:contents';
           return `
-        <div class="flex flex-wrap items-center gap-1.5 sm:gap-x-3 sm:gap-y-2">
+        <div class="flex flex-wrap items-center gap-2">
           ${s.cat === 'events' || s.view === 'map' ? '' : `
-          <button data-act="filters" aria-expanded="${!!open}" class="sm:hidden order-first shrink-0 min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">${open ? 'Hide filters' : `Filters${more ? ` · ${more}` : ''}`}</button>`}
+          <button data-act="filters" aria-expanded="${!!open}" class="sm:hidden order-first shrink-0 h-8 px-3 rounded-lg text-[13px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">${open ? 'Hide filters' : `Filters${more ? ` · ${more}` : ''}`}</button>`}
           <div class="${s.cat === 'events' ? 'contents' : this._moreCls}">
           ${s.view === 'map' ? '' : `<label class="flex shrink-0 items-center">
-            <select data-act="cat" aria-label="Category" class="min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[11px] sm:text-[13px] font-semibold">
+            <select data-act="cat" aria-label="Category" class="h-8 px-3 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[13px] font-semibold">
               <option value="__ph" disabled hidden ${s.cat === 'all' ? 'selected' : ''}>Category</option>${[['all', 'All'], ...catOptions().map(k => [k, k === 'events' ? 'Events' : CAT_GROUPS[k].label])]
                 .map(([k, label]) => `<option value="${k}" ${s.cat === k && k !== 'all' ? 'selected' : ''}>${label}</option>`).join('')}
             </select>
@@ -2027,19 +2027,19 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </div>
           ${s.cat === 'events' ? '' : `
           <label class="flex shrink-0 items-center">
-            <select data-act="when" aria-label="When are you going" class="max-sm:w-[5.5rem] min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg ${s.when ? 'bg-violet-100 text-violet-900 dark:bg-violet-900 dark:text-violet-100' : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100'} text-[11px] sm:text-[13px] font-semibold">
+            <select data-act="when" aria-label="When are you going" class="max-sm:w-[5.5rem] h-8 px-3 rounded-lg ${s.when ? 'bg-violet-100 text-violet-900 dark:bg-violet-900 dark:text-violet-100' : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100'} text-[13px] font-semibold">
               <option value="__ph" disabled hidden ${!s.when ? 'selected' : ''}>When</option>${['', 'today', 'tomorrow', 'weekend', 'sat', 'sun'].map(w => `<option value="${w}" ${s.when === w && w ? 'selected' : ''}>${esc(w ? whenLabel(w) : 'Any time')}</option>`).join('')}
             </select>
           </label>`}
           ${s.cat === 'events' || !HOURS_READY ? '' : `
-          <button data-act="opennow" aria-pressed="${s.openNow}" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.openNow ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Open now</button>`}
+          <button data-act="opennow" aria-pressed="${s.openNow}" class="shrink-0 whitespace-nowrap h-8 px-3 rounded-lg text-[13px] font-semibold transition-colors ${s.openNow ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Open now</button>`}
           ${s.cat === 'events' ? '' : `
-          <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Indoor</button>
-          ${KIDS_ONLY ? '' : `<button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="shrink-0 whitespace-nowrap min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[11px] sm:text-[13px] font-semibold transition-colors ${s.kidsOnly ? 'bg-violet-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Kids</button>`}`}
+          <button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="shrink-0 whitespace-nowrap h-8 px-3 rounded-lg text-[13px] font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Indoor</button>
+          ${KIDS_ONLY ? '' : `<button data-act="kids" aria-pressed="${s.kidsOnly}" title="Places that are good for kids and families" class="shrink-0 whitespace-nowrap h-8 px-3 rounded-lg text-[13px] font-semibold transition-colors ${s.kidsOnly ? 'bg-violet-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'}">Kids</button>`}`}
           ${s.cat === 'events' || s.view === 'map' ? '' : `
           <div class="${this._moreCls}">
           <label class="sm:ml-auto flex shrink-0 items-center">
-            <select data-act="sort" aria-label="Sort" class="min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[11px] sm:text-[13px] font-semibold">
+            <select data-act="sort" aria-label="Sort" class="h-8 px-3 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[13px] font-semibold">
               <option value="__ph" disabled hidden ${s.sort === 'fresh' ? 'selected' : ''}>Sort</option><option value="fresh">Worth going now</option>
               <option value="distance" ${s.sort === 'distance' ? 'selected' : ''}>Distance</option>
             </select>
@@ -2061,26 +2061,26 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   // withIndoor: 추천 결과 화면에선 위치 옆에 "Indoor only" 버튼도 (비 오는 날 실내만 보기)
   locationBar(items, withIndoor) {
     const s = this.state, near = this.nearActive();
-    const seg = (val, label, on) => `<button data-act="radius" data-val="${val}" aria-pressed="${on}" class="whitespace-nowrap min-h-[28px] sm:min-h-[36px] px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
+    const seg = (val, label, on) => `<button data-act="radius" data-val="${val}" aria-pressed="${on}" class="whitespace-nowrap h-7 px-2.5 rounded-md text-[13px] font-semibold transition-colors ${on ? 'bg-white text-violet-700 shadow-sm dark:bg-slate-700 dark:text-violet-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}">${label}</button>`;
     return `
-        <div class="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1.5 sm:gap-y-2 text-[11px] sm:text-[13px]">
-          <button data-act="geo" ${s.geoBusy ? 'disabled' : ''} class="min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-semibold ${s.nearKey === 'here' && near ? 'bg-violet-200 text-violet-800 dark:bg-violet-500/30 dark:text-violet-200' : 'bg-violet-50 text-violet-700 hover:bg-violet-100 dark:bg-violet-500/15 dark:text-violet-300 dark:hover:bg-violet-500/25'} disabled:opacity-60">${s.geoBusy ? 'Locating...' : s.nearKey === 'here' && near ? 'Near me ✓' : 'Near me'}</button>
+        <div class="flex flex-wrap items-center gap-2 text-[13px]">
+          <button data-act="geo" ${s.geoBusy ? 'disabled' : ''} class="h-8 px-3 rounded-lg font-semibold ${s.nearKey === 'here' && near ? 'bg-violet-200 text-violet-800 dark:bg-violet-500/30 dark:text-violet-200' : 'bg-violet-50 text-violet-700 hover:bg-violet-100 dark:bg-violet-500/15 dark:text-violet-300 dark:hover:bg-violet-500/25'} disabled:opacity-60">${s.geoBusy ? 'Locating...' : s.nearKey === 'here' && near ? 'Near me ✓' : 'Near me'}</button>
           <label class="flex items-center gap-2 font-semibold text-slate-600 dark:text-slate-300 flex-1 basis-0 min-w-[6.5rem] sm:flex-none sm:basis-auto">
-            <select data-act="near" aria-label="Location" class="w-full min-w-0 sm:w-auto min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+            <select data-act="near" aria-label="Location" class="w-full min-w-0 sm:w-auto h-8 px-3 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
               <option value="" ${!near ? 'selected' : ''}>Anywhere</option>
               ${s.nearKey === 'here' && near ? '<option value="here" selected>My location</option>' : '<option value="gps">My location</option>'}
               ${Object.entries(ORIGINS).filter(([k, o]) => !o.extra || s.nearKey === k).map(([k, o]) => `<option value="${k}" ${s.nearKey === k ? 'selected' : ''}>Near ${o.label}</option>`).join('')}
             </select>
           </label>
-          ${withIndoor ? `<button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="min-h-[28px] sm:min-h-[28px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-sky-50 text-sky-800 hover:bg-sky-100 dark:bg-sky-500/15 dark:text-sky-300 dark:hover:bg-sky-500/25'}">${s.indoor ? 'Indoor only ✓' : 'Indoor only'}</button>` : ''}
+          ${withIndoor ? `<button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="h-8 px-3 rounded-lg font-semibold transition-colors ${s.indoor ? 'bg-sky-600 text-white' : 'bg-sky-50 text-sky-800 hover:bg-sky-100 dark:bg-sky-500/15 dark:text-sky-300 dark:hover:bg-sky-500/25'}">${s.indoor ? 'Indoor only ✓' : 'Indoor only'}</button>` : ''}
           ${near ? `
-          <div class="max-sm:hidden inline-flex max-w-full p-0.5 sm:p-1 rounded-xl bg-slate-100 dark:bg-slate-800" role="group" aria-label="Radius">
+          <div class="max-sm:hidden inline-flex items-center max-w-full p-0.5 rounded-lg bg-slate-100 dark:bg-slate-800" role="group" aria-label="Radius">
             ${RADII.map(r => seg(r, radiusLabel(r), s.radius === r)).join('')}
           </div>
-          <label class="sm:hidden flex shrink-0 items-center"><select data-act="radiussel" aria-label="Radius" class="min-h-[28px] px-2 py-0.5 rounded-lg font-semibold bg-violet-100 text-violet-900 dark:bg-violet-900 dark:text-violet-100">
-            ${RADII.map(r => `<option value="${r}" ${s.radius === r ? 'selected' : ''}>${r === 'any' ? 'Any distance' : 'Within ' + radiusLabel(r)}</option>`).join('')}
+          <label class="sm:hidden flex shrink-0 items-center"><select data-act="radiussel" aria-label="Radius" class="h-8 px-3 rounded-lg text-[13px] font-semibold bg-violet-100 text-violet-900 dark:bg-violet-900 dark:text-violet-100">
+            ${RADII.map(r => `<option value="${r}" ${s.radius === r ? 'selected' : ''}>${r === 'any' ? 'Any' : radiusLabel(r)}</option>`).join('')}
           </select></label>
-          <button data-act="nearoff" class="max-sm:hidden min-h-[28px] sm:min-h-[36px] text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 ">Clear location</button>` : ''}
+          <button data-act="nearoff" class="max-sm:hidden h-8 text-[13px] font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 ">Clear location</button>` : ''}
         </div>`;
   }
   // 필터 아래 한 줄: 개수 + 위치(반경) + 검색량 데이터 기준 (모바일은 검색량 설명 없이 짧게)
@@ -2164,10 +2164,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (!late) return season ? `<div class="mt-1.5 sm:mt-2 flex flex-wrap items-center gap-x-1 sm:gap-x-2 gap-y-1 [&>*]:whitespace-nowrap">${season}</div>` : '';
     const day = h < 6 ? 'today' : 'tomorrow';
     return `
-    <div class="mt-1.5 sm:mt-2 flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 [&>*]:whitespace-nowrap">
-      <span class="shrink-0 text-[11px] sm:text-sm text-slate-600 dark:text-slate-300">It's late. <button data-act="whenset" data-val="${day}" class="font-semibold text-violet-700 dark:text-violet-300">See ${day} →</button></span>
-      ${season ? `<span aria-hidden="true" class="shrink-0 text-slate-300 dark:text-slate-600">|</span>${season}` : ''}
-    </div>`;
+    <p class="mt-1.5 sm:mt-2 text-[11px] sm:text-sm text-slate-600 dark:text-slate-300">It's late. <button data-act="whenset" data-val="${day}" class="font-semibold text-violet-700 dark:text-violet-300">See ${day} →</button></p>
+    ${season ? `<div class="mt-1 flex flex-wrap items-center gap-x-1 sm:gap-x-2 gap-y-1 [&>*]:whitespace-nowrap">${season}</div>` : ''}`;
   }
   // Events 탭(마켓 빼고) · Markets 탭(파머스 마켓만). kind 없이 부르면 예전처럼 둘 다 (카테고리 "Events")
   eventsView(kind) {
@@ -2653,7 +2651,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     </div>` : '';
     return `${picksBar}
     <div class="mt-2 sm:mt-3 grid grid-cols-1 gap-2 sm:gap-3 max-sm:-mx-4">
-      <div class="sticky top-0 z-30 min-w-0 max-sm:rounded-none rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    overflow-hidden">
+      <div class="min-w-0 max-sm:rounded-none rounded-2xl bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]    overflow-hidden">
         ${picks ? `<div class="px-3 sm:px-5 py-1 sm:py-2 flex flex-wrap gap-x-2.5 gap-y-0.5 sm:gap-3 text-[10px] sm:text-[11px] font-semibold   ">
           ${[...new Set(items.map(kindGroup))].map(g => `<span class="flex items-center gap-1 sm:gap-1.5"><span class="w-5 h-5 rounded-full text-[11px] leading-5 text-center" style="background:${CAT_GROUPS[g].color}">${CAT_GROUPS[g].icon}</span>${CAT_GROUPS[g].label}</span>`).join('')}
         </div>` : ''}
@@ -2662,25 +2660,20 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             if (picks) return '';
             const cc = this._catCounts || {}, total = Object.values(cc).reduce((a, b) => a + b, 0);
             const cats = [['all', `(${total}) All`, '🗺️', '#5c6e6d'], ...catOptions().map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '🎪', '#8e4a80', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, CAT_GROUPS[k].icon, CAT_GROUPS[k].color, CAT_GROUPS[k].label]).filter(c => c[0] === this.state.cat || c[1].indexOf("(0)") !== 0).sort((a, b) => a[4].localeCompare(b[4]))];
-            const cur = cats.find(c => c[0] === this.state.cat) || cats[0];
-            const btn = ([k, label, icon, color], cls, ic) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="${cls} ${this.state.cat === k ? 'bg-violet-100 text-violet-900 dark:bg-violet-500/20 dark:text-violet-100' : 'text-slate-700 dark:text-slate-200'}"><span class="${ic} shrink-0 rounded-full text-center text-white" style="background:${color}">${icon}</span>${label}</button>`;
-            // 폰·태블릿(2026-11-19): 지도 맨 위에 장소 종류 칩을 가로 스크롤 한 줄로 (끝에 Events·Markets 토글). 데스크톱: 왼쪽 반투명 세로 목록 + 그 오른쪽에 Events·Markets 칩
+            // 2026-11-19: 지도 맨 위에 장소 종류 칩을 가로 스크롤 한 줄로 (끝에 Events·Markets 토글). 데스크톱도 폰과 같아요 (예전 왼쪽 세로 목록은 없앴어요)
             const count = k => k === 'all' ? total : k === 'events' ? evAll.length : (cc[k] || 0);
             const chip = ([k, , icon, color, name]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1.5 pl-1 pr-3 py-1 rounded-full shadow-md border ${this.state.cat === k ? 'bg-violet-600 border-violet-600 text-white' : 'bg-white/95 dark:bg-slate-900/90 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100'}"><span class="w-6 h-6 shrink-0 rounded-full text-[12px] leading-6 text-center" style="background:${color}">${icon}</span>${esc(name || 'All')}<span class="font-normal opacity-70">${count(k)}</span></button>`;
             const tog = (a, on, l, n) => evToggle(a, on, l, n).replace('class="flex', 'class="shrink-0 py-1.5 shadow-md flex');
-            return `<div data-keep-scroll="mapchips" role="group" aria-label="Category" class="md:hidden absolute inset-x-0 top-2 z-20 flex items-center gap-1.5 px-2 pb-1 overflow-x-auto no-scrollbar text-[13px] font-semibold">
-              ${cats.map(chip).join('')}<span class="shrink-0 w-px h-6 bg-slate-400/60" aria-hidden="true"></span>${tog('mapevents', showEv, '🎪 Events', evOthers.length)}${tog('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}
+            return `<div data-keep-scroll="mapchips" role="group" aria-label="Category" class="absolute inset-x-0 top-2 z-20 flex items-center gap-1.5 px-2 sm:px-3 pb-1 overflow-x-auto no-scrollbar text-[13px] font-semibold">
+              ${cats.map(chip).join('')}
             </div>
-            <div class="hidden md:flex absolute left-[10.5rem] top-2 z-20 items-center gap-1.5 text-[13px] font-semibold">${evToggle('mapevents', showEv, '🎪 Events', evOthers.length)}${evToggle('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}</div>
-            <div class="hidden md:block md:absolute md:left-0 md:top-2 md:bottom-2 md:z-10 md:w-40 pointer-events-none"><div role="group" aria-label="Category" class="pointer-events-auto absolute inset-0 p-0.5 flex flex-col gap-0.5 overflow-y-auto rounded-r-xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow text-[13px] font-semibold no-scrollbar">
-              ${cats.map(c => btn(c, 'shrink-0 flex items-center gap-1 px-1 py-0.5 rounded-md text-left leading-tight', 'w-5 h-5 text-[11px] leading-5')).join('')}
-            </div></div>`;
+            <div class="absolute left-2 sm:left-3 top-12 z-20 flex items-center gap-1.5 text-[13px] font-semibold">${tog('mapevents', showEv, '🎪 Events', evOthers.length)}${tog('mapmarkets', showMk, '🥕 Markets', evMarkets.length)}</div>`;
           })()}
-          <div id="lmap" class="w-full h-[calc(100svh-230px)] min-h-[360px] sm:h-[35vh] sm:min-h-[205px] md:h-[calc(46vh-2.5rem)] md:min-h-[260px] lg:h-[calc(46vh-2.5rem)] lg:min-h-[280px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
-          <div id="mapsheet" hidden class="sm:hidden absolute inset-x-0 bottom-3 z-20" role="region" aria-label="Places near the pin you tapped"></div>
+          <div id="lmap" class="w-full h-[calc(100svh-230px)] min-h-[360px] bg-slate-100 dark:bg-slate-800" role="region" aria-label="Map of places"></div>
+          <div id="mapsheet" hidden class="absolute inset-x-0 bottom-3 z-20" role="region" aria-label="Places near the pin you tapped"></div>
         </div>
       </div>
-      <div data-keep-scroll="maplist" class="max-sm:hidden grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
+      <div data-keep-scroll="maplist" class="hidden grid grid-cols-1 gap-1.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3 [&>p]:col-span-full">
         ${evCat && this._map.events.length ? `<p class="px-1 pt-0.5 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">Events & markets · next 6 weeks</p>${this._map.events.map((ev, i) => `
           <div class="relative"><button data-act="evfocus" data-val="${i}" data-maphl="ev:${i}" class="w-full text-left rounded-xl p-2 sm:p-4 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]      flex gap-3">
             <span class="w-7 h-7 shrink-0 rounded-full bg-white text-base flex items-center justify-center border-2 ${ev.market ? 'border-emerald-600' : 'border-fuchsia-700'}" aria-hidden="true">${esc(ev.icon)}</span>
@@ -2692,7 +2685,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       </div>
       ${items.length ? (() => {
         // "Show more" 없이 전부 보여줘요 (스크롤이 끊기지 않게)
-        return `<div class="max-sm:hidden grid grid-cols-2 gap-1.5 sm:gap-5 md:grid-cols-3">${items.map(s => this.card(s)).join('')}</div>`;
+        return `<div class="hidden grid grid-cols-2 gap-1.5 sm:gap-5 md:grid-cols-3">${items.map(s => this.card(s)).join('')}</div>`;
       })() : evCat ? '' : '<p class="max-sm:px-4 text-sm text-slate-500">No spots match these filters.</p>'}
     </div>`;
   }
@@ -2714,6 +2707,26 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       <button data-act="save" data-val="${esc(s.id)}" aria-pressed="${saved}" aria-label="${saved ? 'Saved' : 'Save'} ${esc(s.name)}" class="absolute right-2 top-2 z-[2] w-8 h-8 rounded-full flex items-center justify-center ${saved ? 'bg-rose-50 text-rose-600 dark:bg-rose-500/15' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300'}"><svg aria-hidden="true" viewBox="0 0 24 24" class="w-4 h-4" fill="${saved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg></button>
     </article>`;
   }
+  // 지도 위 장소 종류 칩 줄을 마우스로도 넘기게: 휠을 굴리면 옆으로, 양 끝에 더 있으면 ‹ › 화살표 (데스크톱만, 폰은 손가락으로 밀어요)
+  wireChips() {
+    const row = document.querySelector('[data-keep-scroll="mapchips"]'); if (!row) return;
+    const wrap = row.parentElement, arrows = {};
+    const make = d => {
+      const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', d < 0 ? 'Show previous place types' : 'Show more place types');
+      b.className = `max-sm:hidden absolute top-2 ${d < 0 ? 'left-0 pl-1 pr-4 bg-gradient-to-r' : 'right-0 pr-1 pl-4 bg-gradient-to-l'} z-[21] h-9 flex items-center from-white via-white/90 to-transparent dark:from-slate-900 dark:via-slate-900/90`;
+      b.innerHTML = `<span class="w-8 h-8 rounded-full flex items-center justify-center bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 shadow-md border border-slate-200 dark:border-slate-700"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d < 0 ? 'M15 6l-6 6 6 6' : 'M9 6l6 6-6 6'}"/></svg></span>`;
+      b.addEventListener('click', () => row.scrollBy({ left: d * row.clientWidth * 0.7, behavior: 'smooth' }));
+      wrap.appendChild(b); arrows[d] = b;
+    };
+    make(-1); make(1);
+    const update = () => { const max = row.scrollWidth - row.clientWidth; arrows[-1].style.display = row.scrollLeft <= 2 ? 'none' : ''; arrows[1].style.display = row.scrollLeft >= max - 2 ? 'none' : ''; };   // hidden 속성은 Tailwind flex에 져서 style로
+    row.addEventListener('scroll', update, { passive: true });
+    row.addEventListener('wheel', e => {
+      if (row.scrollWidth <= row.clientWidth || Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return;   // 트랙패드 옆 밀기는 브라우저 기본 그대로
+      e.preventDefault(); row.scrollBy({ left: e.deltaY * (e.deltaMode ? 40 : 1) });
+    }, { passive: false });
+    update(); requestAnimationFrame(update); setTimeout(update, 400);   // Tailwind가 칩 스타일을 늦게 만들면 폭이 바뀌어서 한 번 더
+  }
   // 폰 지도: 핀을 누르면 그 장소 카드 + 가까운 장소 카드들이 지도 아래에 가로로 떠요. 넘기면 가운데 카드의 핀이 커지고, 가려지거나 화면 밖이면 지도가 따라가요.
   // 다시 그려도(저장·필터·장소 창) 보던 카드가 그대로 남도록 this._sheet 에 기억해요. 지도 빈 곳을 누르면 닫혀요
   phoneSheet(map, el, items, fitPhone) {
@@ -2728,7 +2741,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       box.querySelectorAll('article[data-sheet]').forEach(a => a.classList.toggle('outline-violet-500', a.dataset.sheet === id));
       const p = this._pins[id]; if (!pan || !p) return;
       // 위 칩 줄과 아래 카드에 가리지 않는 빈 칸 안에 핀이 있게: 벗어나면 그 빈 칸 가운데로 옮겨요
-      const sz = map.getSize(), q = map.latLngToContainerPoint(p.mk.getLatLng()), top = 56, bot = sz.y - box.offsetHeight - 24;
+      const sz = map.getSize(), q = map.latLngToContainerPoint(p.mk.getLatLng()), top = 96, bot = sz.y - Math.min(box.offsetHeight || 140, 160) - 24;   // 처음 누를 땐 Tailwind가 카드 스타일을 아직 안 만들어서 카드 줄이 아주 높게 재져요. 그래서 높이를 160px까지만 믿어요
       if (q.x < 24 || q.x > sz.x - 24 || q.y < top || q.y > bot) map.panBy([q.x - sz.x / 2, q.y - (top + bot) / 2], { animate: true, duration: 0.35 });
     };
     const hide = () => { if (activeId) mark(activeId, false); activeId = null; this._sheet = null; box.hidden = true; box.innerHTML = ''; };
@@ -2743,6 +2756,16 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       const row = box.firstElementChild, cards = [...row.children], i = Math.max(0, cards.findIndex(c => c.dataset.sheet === want));
       row.scrollLeft = i ? cards[i].offsetLeft - (row.clientWidth - cards[i].offsetWidth) / 2 : 0;
       setActive(cards[i].dataset.sheet, !keep);
+      // 데스크톱(마우스): 카드 줄 양옆 화살표, 카드 위에서 휠을 굴리면 한 장씩 옆으로
+      const step = d => { const c = cards.find(x => x.dataset.sheet === activeId), j = Math.min(cards.length - 1, Math.max(0, cards.indexOf(c) + d)); row.scrollTo({ left: cards[j].offsetLeft - (row.clientWidth - cards[j].offsetWidth) / 2, behavior: 'smooth' }); };
+      const arrow = (d, label, path) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', label); b.className = `max-sm:hidden absolute ${d < 0 ? 'left-1' : 'right-1'} top-1/2 -translate-y-1/2 z-[3] w-9 h-9 rounded-full flex items-center justify-center bg-white/95 dark:bg-slate-800/95 text-slate-700 dark:text-slate-200 shadow-md hover:bg-white dark:hover:bg-slate-700`; b.innerHTML = `<svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${path}"/></svg>`; b.addEventListener('click', e => { e.stopPropagation(); step(d); }); box.appendChild(b); };
+      arrow(-1, 'Previous place', 'M15 6l-6 6 6 6'); arrow(1, 'Next place', 'M9 6l6 6-6 6');
+      let wheelAt = 0;
+      row.addEventListener('wheel', e => {
+        if (Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return;   // 트랙패드 옆 밀기는 브라우저 기본 그대로
+        const d = e.deltaY; e.preventDefault();
+        if (performance.now() - wheelAt < 350) return; wheelAt = performance.now(); step(d > 0 ? 1 : -1);
+      }, { passive: false });
       let t = null;
       row.addEventListener('scroll', () => {
         clearTimeout(t);
@@ -2759,7 +2782,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (this._sheet && byIt[this._sheet.id]) show(this._sheet.id, true); else this._sheet = null;
     // 주소창이 접히거나 화면을 돌리면 지도 높이를 다시 맞춰요
     if (this._phoneResize) removeEventListener('resize', this._phoneResize);
-    this._phoneResize = () => { if (!el.isConnected || innerWidth >= 640) return; fitPhone(); map.invalidateSize(); };
+    this._phoneResize = () => { if (!el.isConnected) return; fitPhone(); map.invalidateSize(); };
     addEventListener('resize', this._phoneResize);
   }
   // 목록에서 가리킨 장소의 핀 강조 (맨 위로 올리고, 지도 밖이면 살짝 옮겨 보이게)
@@ -2777,16 +2800,20 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const vec = await loadVector();
     if (!el.isConnected) return;
     const { items, picks, rank } = this._map, L = window.L;
-    // 폰(640px 미만, 2026-11-19): 지도가 헤더·검색 아래 화면을 꽉 채우고 한 손가락으로 움직여요. 핀을 누르면 지도 아래쪽에 카드가 뜨고, 옆으로 넘기면 그 핀 근처 장소가 가까운 순서로 나와요 (phoneSheet)
-    const phone = innerWidth < 640;
-    const fitPhone = () => { if (!el.isConnected) return; const top = el.getBoundingClientRect().top + scrollY; el.style.height = Math.max(360, innerHeight - top) + 'px'; };
+    // 2026-11-19 (폰 먼저, 같은 날 데스크톱도): 지도가 헤더·검색 아래 화면을 꽉 채우고 바로 움직여요(한 손가락·마우스 끌기·휠 확대). 핀을 누르면 지도 아래쪽에 카드가 뜨고, 옆으로 넘기면 그 핀 근처 장소가 가까운 순서로 나와요 (phoneSheet).
+    // 아래 목록 카드 + 지도 번호 핀이 따라가던 예전 방식은 phone = innerWidth < 640 으로 바꾸면 데스크톱에서 돌아와요
+    const phone = true;
+    const fitPhone = () => { if (!el.isConnected) return; const top = el.getBoundingClientRect().top + scrollY; el.style.height = Math.max(360, Math.round(innerHeight * 0.78), innerHeight - top - (innerWidth < 640 ? 0 : 16)) + 'px'; };   // 화면 높이의 78% 이상 (위가 길면 조금 스크롤하면 지도 전체가 보여요)
     if (phone) fitPhone(); else el.style.height = '';
-    const map = L.map(el, { zoomControl: !phone, attributionControl: true, scrollWheelZoom: false, maxZoom: 19 });
+    // 마우스(데스크톱)는 휠로 확대하지 않으니 오른쪽 위(칩 줄 아래)에 +/− 버튼을 둬요. 터치 화면은 두 손가락으로 확대해서 버튼 없이
+    const zoomBtns = !matchMedia('(pointer: coarse)').matches && innerWidth >= 640;
+    const map = L.map(el, { zoomControl: zoomBtns, attributionControl: true, scrollWheelZoom: false, maxZoom: 19 });
     el.classList.toggle('vec', !!vec);
-    if (!phone) map.zoomControl.setPosition('topright');
+    if (zoomBtns) { map.zoomControl.setPosition('topright'); map.zoomControl.getContainer().style.marginTop = '52px'; }
     map.attributionControl.setPrefix(false);   // Leaflet 로고·링크는 빼고 지도 출처(OpenStreetMap)만 작게
     // 마우스 휠은 페이지 스크롤에 써요: 지도 위에서 그냥 굴리면 페이지가 스크롤되고, Ctrl(Mac은 ⌘)+휠(트랙패드 핀치도)일 때만 지도가 확대·축소돼요
-    if (!phone) {
+    // (2026-11-19) 전체 화면 지도에서도 그대로: 페이지를 내리다 지도 위에서 휠을 굴려도 확대·축소되지 않게
+    {
       const hint = document.createElement('div');
       hint.textContent = (/Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl') + ' + scroll to zoom the map';
       hint.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:1000;background:rgba(15,23,42,.45);color:#fff;font:600 14px system-ui,sans-serif;opacity:0;transition:opacity .2s';
@@ -2801,7 +2828,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         hint.style.opacity = '1'; clearTimeout(ht); ht = setTimeout(() => { hint.style.opacity = '0'; }, 900);
       }, { passive: false });
       // 터치 화면: 손가락 하나로 밀면 페이지가 스크롤되고, 두 손가락일 때만 지도가 움직여요 (이동·확대 모두)
-      if (matchMedia('(pointer: coarse)').matches) {
+      if (!phone && matchMedia('(pointer: coarse)').matches) {   // 전체 화면 지도(phone)는 한 손가락으로 바로 움직여요
         map.dragging.disable();
         hint.textContent = 'Use two fingers to move the map';
         el.addEventListener('touchmove', e => {
@@ -2819,7 +2846,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       const icon = L.divIcon({ className: '', html: `<div class="spot-pin" style="background:${s.color};font-size:11px">${esc(String(s.mark))}</div>`, iconSize: [20, 20], iconAnchor: [10, 10] });
       // 마우스: 올리면 작은 카드, 누르면 모달. 터치 화면: 핀을 누르면 작은 카드, 그 카드를 누르면 모달 (호버가 없어서)
       const coarse = matchMedia('(pointer: coarse)').matches, sp = byId(s.id);
-      const mk = L.marker([s.lat, s.lng], { icon, keyboard: true, zIndexOffset: z(s.mark), alt: s.name }).addTo(map).on('click', () => {
+      const mk = L.marker([s.lat, s.lng], { icon, keyboard: true, zIndexOffset: z(s.mark), alt: s.name, title: phone ? s.name : '' }).addTo(map).on('click', () => {
         if (phone && sp) return this._sheetShow && this._sheetShow(s.id);
         if (coarse && sp) {
           if (this._tip) map.closeTooltip(this._tip);
@@ -2856,6 +2883,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     else if ((picks || this.nearActive() || this.state.q) && items.length) map.fitBounds(L.latLngBounds(items.map(s => [s.lat, s.lng])).pad(0.15), { maxZoom: 14, animate: false });
     else map.fitBounds(METRO_BOUNDS, { animate: false });
     // 아래 목록에서 지금 보이는 맨 앞 3장 = 지도에 펼친 카드 3장이에요. 스크롤하면 새로 나온 3곳으로 바뀌고 지도가 부드럽게 따라가요. 보던 위치를 이어갈 땐 처음 한 번은 지도를 움직이지 않아요
+    if (phone) this.wireChips();
     if (phone) { this.phoneSheet(map, el, items, fitPhone); if (this._featScroll) { window.removeEventListener('scroll', this._featScroll); this._featScroll = null; } }
     else {
       const small = el.clientWidth < 640, cw = (small ? 112 : 150) + 6, ch = small ? 84 : 108, up = ch + 32, coarse = matchMedia('(pointer: coarse)').matches, N = (coarse || innerWidth < 768 || el.clientWidth < 640) ? 2 : 3;   // 폰은 2장만
