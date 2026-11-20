@@ -2877,7 +2877,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 2026-11-19 (폰 먼저, 같은 날 데스크톱도): 지도가 헤더·검색 아래 화면을 꽉 채우고 바로 움직여요(한 손가락·마우스 끌기·휠 확대). 핀을 누르면 지도 아래쪽에 카드가 뜨고, 옆으로 넘기면 그 핀 근처 장소가 가까운 순서로 나와요 (phoneSheet).
     // 아래 목록 카드 + 지도 번호 핀이 따라가던 예전 방식은 phone = innerWidth < 640 으로 바꾸면 데스크톱에서 돌아와요
     const phone = true;
-    const fitPhone = () => { if (!el.isConnected) return; const top = el.getBoundingClientRect().top + scrollY; el.style.height = Math.max(360, Math.round(innerHeight * 0.78), innerHeight - top - (innerWidth < 640 ? 0 : 16)) + 'px'; };   // 화면 높이의 78% 이상 (위가 길면 조금 스크롤하면 지도 전체가 보여요)
+    const fitPhone = () => { if (!el.isConnected) return; const top = el.getBoundingClientRect().top + scrollY; el.style.height = (innerWidth < 640 ? Math.max(360, innerHeight - top) : Math.max(360, Math.round(innerHeight * 0.78), innerHeight - top - 16)) + 'px'; };
+    // 폰: 지도가 화면 아래 끝에 딱 맞아요. 화면보다 길면 페이지를 내려야 하는데, 손가락이 지도에 닿으면 페이지 대신 지도가 움직여서 내릴 수가 없었어요 (사용자, 2026-11-19).
+    // 데스크톱: 화면 높이의 78% 이상 (휠은 페이지를 내리니까 조금 스크롤해서 지도 전체를 봐요)
     if (phone) fitPhone(); else el.style.height = '';
     // 마우스(데스크톱)는 휠로 확대하지 않으니 오른쪽 위(칩 줄 아래)에 +/− 버튼을 둬요. 터치 화면은 두 손가락으로 확대해서 버튼 없이
     const zoomBtns = !matchMedia('(pointer: coarse)').matches && innerWidth >= 640;
