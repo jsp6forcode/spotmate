@@ -1608,15 +1608,6 @@ class App {
       }
       case 'nearoff': this.geoToken = (this.geoToken || 0) + 1; this.set({ nearKey: '', geoMsg: '', geoBusy: false, wizMore: 10 }); return this.wizLocScroll();
       case 'copyplan': return this.copyPlan();
-      // 장소 창 Location 칸: 주소 복사 (다시 그리지 않고 버튼 글자만 잠깐 바꿔요)
-      case 'copyaddr': {
-        const s = byId(val); if (!s) return;
-        // 공원 등은 "Near 도로, 도시" 주소라서, 복사할 땐 "Near "를 빼요 (지도 앱에 붙여 넣기 좋게)
-        const text = ADDR[s.id] ? `${s.name}, ${ADDR[s.id].replace(/^Near /, '')}, BC` : `${s.name}, ${s.area}, BC`;
-        const done = ok => { const t = el.querySelector('[data-label]'); if (!t) return; t.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(() => { t.textContent = 'Copy'; }, 1500); };
-        try { navigator.clipboard.writeText(text).then(() => done(true), () => done(false)); } catch (e) { done(false); }
-        return;
-      }
       case 'more': return this.set({ restShown: this.state.restShown + REST_STEP });
       case 'share': return this.share(val);
       case 'shareev': return this.shareEvent(val);
@@ -1641,17 +1632,29 @@ class App {
       this.wizLocScroll();
     }
   }
-  // 검색창 예시: 날씨(비 오면 실내)와 계절에 맞는 질문. 화면이 좁으면 짧게
-  exampleQ() {
-    const m = new Date().getMonth() + 1, wide = innerWidth >= 1024, mid = innerWidth >= 640;
-    const pick = (long, mid2, short) => wide ? long : mid ? mid2 : short;
-    if (this.state.weather === 'rain') return pick('indoor play on a rainy day', 'indoor play on a rainy day', 'indoor play');
-    if (m >= 9 && m <= 10) return pick('pumpkin patch this weekend', 'pumpkin patch this weekend', 'pumpkin patch');
-    if (m === 11) return pick('salmon run this weekend', 'salmon run this weekend', 'salmon run');
-    if (m === 12) return pick('Christmas lights this weekend', 'Christmas lights this weekend', 'Christmas lights');
-    if (m <= 2) return pick('skiing in North Vancouver', 'skiing in North Vancouver', 'skiing');
-    if (m <= 5) return pick('spring flowers this weekend', 'spring flowers this weekend', 'spring flowers');
-    return pick('spray park near me this weekend', 'spray park near me', 'spray park near me');
+  // 검색창 예시 (2026-11-19, 사용자: 예시 바꿔줘): 계절에 맞는 검색어 몇 개를 3.5초마다 돌려 보여줘요 (rotateExamples). 비 오면 실내가 먼저.
+  // 모두 실제로 결과가 나오는 검색어만 (11월 기준 holiday lights 4곳, christmas market 15곳, ice skating 17곳, indoor play 40곳). 폰은 짧은 것만
+  exampleList() {
+    const m = new Date().getMonth() + 1, phone = innerWidth < 640;
+    let list = m >= 11 ? ['holiday lights', 'christmas market', 'ice skating', 'indoor play']
+      : m <= 2 ? ['ice skating', 'indoor play', 'museum tomorrow', 'free this weekend']
+      : m <= 5 ? ['playground in burnaby', 'farm this saturday', 'free things to do this weekend', 'museum tomorrow']
+      : m <= 8 ? ['spray park near me', 'beach this weekend', 'free things to do this weekend', 'farm this saturday']
+      : ['pumpkin patch this weekend', 'farm this saturday', 'indoor play', 'museum tomorrow'];
+    if (this.state.weather === 'rain') list = ['indoor play', ...list.filter(x => x !== 'indoor play')];
+    if (phone) list = list.map(x => x.replace(/ things to do/, '').replace(/ in burnaby$/, ' near me'));
+    return list;
+  }
+  exampleQ(n = 0) { const l = this.exampleList(); return l[n % l.length]; }
+  // 검색창이 비어 있고 쓰는 중이 아닐 때만 예시를 바꿔요 (다시 그리지 않고 placeholder만)
+  rotateExamples() {
+    if (this._exTimer) return;
+    this._exN = 0;
+    this._exTimer = setInterval(() => {
+      const i = document.querySelector('input[name="q"]');
+      if (!i || i === document.activeElement || i.value || this.state.qBusy) return;
+      i.placeholder = `Try “${this.exampleQ(++this._exN)}”`;
+    }, 3500);
   }
   // 검색 제안에서 장소를 고르면 모달 대신 지도에서 그 장소로 확대하고 카드 팝업을 띄워요
   async showOnMap(id) {
@@ -1946,6 +1949,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
     if (this._map) this.drawMap();
     if (modal) this.drawMini(byId(modal));
+    this.rotateExamples();
     this.root.querySelectorAll('[data-keep-scroll]').forEach(el => {
       const s = scrolls[el.dataset.keepScroll];
       if (s) { el.scrollLeft = s[0]; el.scrollTop = s[1]; }
@@ -2037,7 +2041,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <form data-act="search" role="search" class="relative">
           <button type="submit" aria-label="Search" ${s.qBusy ? 'disabled aria-busy="true"' : ''} class="absolute left-0 inset-y-0 w-10 sm:w-12 flex items-center justify-center rounded-lg sm:rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 disabled:opacity-60"><svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
           <input name="q" type="search" value="${esc(this.qDraft ?? s.q)}" autocomplete="off" enterkeyhint="search" aria-label="Search"
-            placeholder="${s.qBusy ? 'Thinking…' : `Try “${this.exampleQ()}”`}"
+            placeholder="${s.qBusy ? 'Thinking…' : `Try “${this.exampleQ(this._exN || 0)}”`}"
             class="w-full min-w-0 min-h-[30px] sm:min-h-[36px] pl-8 sm:pl-10 pr-3 sm:pr-4 text-xs sm:text-sm rounded-lg sm:rounded-xl bg-slate-100 text-slate-900 placeholder:text-slate-400 dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500">
         </form>
         `}
@@ -2780,15 +2784,21 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const vec = await loadVector();
     if (!el.isConnected || this._mini) return;
     const L = window.L;
-    const map = this._mini = L.map(el, { zoomControl: false, attributionControl: true, dragging: false, touchZoom: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false, tap: false, maxZoom: 19 });
-    map.attributionControl.setPrefix(false);
-    if (vec) L.maplibreGL({ style: this.state.dark ? VEC_STYLE.dark : VEC_STYLE.light, attribution: VEC_ATTR, interactive: false }).addTo(map);
-    else L.tileLayer(TILES, { attribution: TILE_ATTR, maxZoom: 19 }).addTo(map);
+    // 지도 출처는 지도 위에 겹치지 않게 지도 밑 작은 글씨로 따로 적어요 (modal의 Location 칸)
+    const map = this._mini = L.map(el, { zoomControl: false, attributionControl: false, dragging: false, touchZoom: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false, tap: false, maxZoom: 19 });
+    // 위치를 먼저 정해요 (벡터 지도 레이어는 지도 위치가 정해져야 만들어져요)
+    map.setView([s.lat, s.lng], 15, { animate: false });
+    map.panBy([0, -14], { animate: false });   // 핀 끝이 정확한 위치라서, 핀 몸통이 가운데 오게 살짝 내려요
+    if (vec) {
+      const gl = L.maplibreGL({ style: this.state.dark ? VEC_STYLE.dark : VEC_STYLE.light, interactive: false }).addTo(map).getMaplibreMap();
+      // 작은 지도엔 버스 정류장·가게 같은 아이콘과 글자, 일방통행 화살표, 도로 번호판을 숨겨요 (핀이 묻혀서 지도가 어수선했어요. 사용자, 2026-11-19). 길 이름은 그대로
+      const quiet = () => (gl.getStyle().layers || []).forEach(l => { if (/^(poi_|road_oneway|highway-shield|road_shield|highway-name-path)/.test(l.id)) gl.setLayoutProperty(l.id, 'visibility', 'none'); });
+      if (gl) { if (gl.isStyleLoaded()) quiet(); else gl.once('load', quiet); }
+    }
+    else L.tileLayer(TILES, { maxZoom: 19 }).addTo(map);
     // 큰 지도 핀과 같게: 장소 종류 색 물방울 + 흰색 아이콘
     const html = `<div style="position:relative;width:36px;height:46px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))"><svg viewBox="0 0 36 46" width="36" height="46" style="position:absolute;inset:0"><path d="M18 1C8.6 1 1 8.4 1 17.6 1 29.5 18 45 18 45s17-15.5 17-27.4C35 8.4 27.4 1 18 1z" fill="${groupColor(s)}" stroke="#fff" stroke-width="2"/></svg><span style="position:absolute;left:0;right:0;top:8px;display:flex;justify-content:center;color:#fff">${typeIcon(kindGroup(s), 17)}</span></div>`;
     L.marker([s.lat, s.lng], { icon: L.divIcon({ className: '', html, iconSize: [36, 46], iconAnchor: [18, 45] }), interactive: false, keyboard: false }).addTo(map);
-    map.setView([s.lat, s.lng], 15, { animate: false });
-    map.panBy([0, -14], { animate: false });   // 핀 끝이 정확한 위치라서, 핀 몸통이 가운데 오게 살짝 내려요
   }
   // 폰 지도 아래 카드: 사진 왼쪽, 종류·이름·지역·나이·오늘 시간 오른쪽, 저장(하트). 누르면 장소 창이 열려요
   sheetCard(s) {
@@ -3466,9 +3476,9 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               <div id="mmap" class="absolute inset-0" aria-hidden="true"></div>
               <a href="${mapsUrl(s)}" target="_blank" rel="noopener" aria-label="Open ${esc(s.name)} in Google Maps" class="absolute inset-0 z-[500]"></a>
             </div>
-            <div class="mt-2 flex items-center gap-2">
-              <p class="flex-1 min-w-0 text-sm text-slate-600 dark:text-slate-300 truncate" title="${esc(addr)}">${esc(addr)}</p>
-              <button data-act="copyaddr" data-val="${esc(s.id)}" class="${btn} bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></svg><span data-label>Copy</span></button>
+            <p class="mt-1 text-[10px] text-slate-400 dark:text-slate-500">Map: <a href="https://openfreemap.org" target="_blank" rel="noopener" class="underline">OpenFreeMap</a> · © <a href="https://openmaptiles.org/" target="_blank" rel="noopener" class="underline">OpenMapTiles</a> · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" class="underline">OpenStreetMap</a></p>
+            <div class="mt-2 flex flex-wrap items-center gap-2">
+              <p class="basis-full sm:basis-0 sm:flex-1 min-w-0 text-sm text-slate-600 dark:text-slate-300 sm:truncate" title="${esc(addr)}">${esc(addr)}</p>
               <a href="${mapsUrl(s)}" target="_blank" rel="noopener" class="${btn} bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"/></svg>Open map</a>
             </div>
           </section>`; })() : ''}
