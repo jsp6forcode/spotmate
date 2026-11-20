@@ -163,6 +163,8 @@ const TYPE_ICONS = {
   all: '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>'
 };
 const typeIcon = (key, size = 14) => `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none">${TYPE_ICONS[key] || TYPE_ICONS.fun}</svg>`;
+// 장소 창 섹션 제목: 모든 섹션이 같은 글꼴·크기·색 (사용자, 2026-11-19)
+const MODAL_H3 = 'text-lg font-extrabold tracking-tight text-slate-900 dark:text-slate-100';
 const KIND_GROUP = {}; Object.entries(CAT_GROUPS).forEach(([g, v]) => v.kinds.forEach(k => { KIND_GROUP[k] = g; }));
 const kindGroup = s => KIND_GROUP[kidProfile(s).kind] || 'fun';
 const groupColor = s => CAT_GROUPS[kindGroup(s)].color;
@@ -1137,7 +1139,7 @@ class App {
     return `
           <section id="reviews" class="scroll-mt-4">
             <div class="flex flex-wrap items-baseline justify-between gap-2">
-              <h3 class="font-bold">Parent reviews</h3>
+              <h3 class="${MODAL_H3}">Parent reviews</h3>
               ${st ? `<p class="text-sm">${stars(Math.round(st.avg))} <span class="font-semibold">${st.avg.toFixed(1)}</span> <span class="text-slate-500 dark:text-slate-400">· ${plural(st.n, 'review')}</span></p>` : ''}
             </div>
             ${!d ? `<div class="mt-2 flex flex-wrap items-center gap-3 text-sm">
@@ -3453,8 +3455,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
 
     // ── Before you go 카드: 라벨 | 내용 ──
     const wk = this.weekRows(s), adm = facts.rows.find(r => r.label === 'Admission');
-    const row = (label, html) => `<div class="grid grid-cols-[5.5rem_1fr] sm:grid-cols-[7rem_1fr] gap-3 py-3 first:pt-0 last:pb-0"><dt class="text-sm text-slate-500 dark:text-slate-400">${label}</dt><dd class="text-sm text-slate-800 dark:text-slate-200 min-w-0">${html}</dd></div>`;
-    const hoursHtml = wk.length ? wk.map(w => `<div class="${w.today ? 'font-semibold' : ''}">${esc(w.days)} ${esc(w.text)}${w.today && wk.length > 1 ? ' <span class="align-middle whitespace-nowrap text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-200">Today</span>' : ''}</div>`).join('')
+    const row = (label, html) => `<div class="grid grid-cols-[4.5rem_1fr] sm:grid-cols-[7rem_1fr] gap-3 py-3 first:pt-0 last:pb-0"><dt class="text-sm text-slate-500 dark:text-slate-400">${label}</dt><dd class="text-sm text-slate-800 dark:text-slate-200 min-w-0">${html}</dd></div>`;
+    const hoursHtml = wk.length ? wk.map(w => `<div class="${w.today ? 'font-semibold' : ''}">${esc(w.days)} <span class="whitespace-nowrap">${esc(w.text)}${w.today && wk.length > 1 ? '<span class="ml-1.5 align-middle text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-200">Today</span>' : ''}</span></div>`).join('')
       : (s.hours && !/unknown/i.test(s.hours) ? esc(s.hours) : '');
     const beforeRows = [
       hoursHtml ? row('Hours', hoursHtml) : '',
@@ -3469,7 +3471,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // ── 근처 장소: 가까운 아이 장소 10곳 (사진 카드, 옆으로 넘기기). 누르면 그 장소 창 ──
     const nearby = s.lat == null ? [] : SPOTS.filter(x => x.id !== s.id && x.lat != null && (!KIDS_ONLY || isKid(x))).map(x => [km(s, x), x]).sort((a, b) => a[0] - b[0]).slice(0, 10);
 
-    const H3 = 'text-lg font-extrabold tracking-tight';
+    const H3 = MODAL_H3;
     return `
     <div data-act="close" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center" style="position:fixed; inset:0; z-index:50; padding-top:max(12px, env(safe-area-inset-top, 0px)); padding-bottom:max(12px, env(safe-area-inset-bottom, 0px));">
       <div data-act="noop" role="dialog" aria-modal="true" tabindex="-1" aria-label="${esc(s.name)}" class="outline-none relative w-full max-w-2xl rounded-3xl bg-white dark:bg-slate-900 shadow-2xl overflow-hidden flex flex-col" style="max-height:100%">
@@ -3498,12 +3500,12 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           </div>
 
           ${notes.length ? `
-          <section class="rounded-2xl p-4 bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 shadow-sm" aria-label="Tiny Trips tip">
-            <div class="flex items-start gap-2.5">
-              <span class="shrink-0 mt-0.5 text-[11px] font-bold px-2 py-0.5 rounded-md border border-amber-300 bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:border-amber-400/40 dark:text-amber-200">Tiny Trips tip</span>
-              <div class="min-w-0 space-y-1 text-sm text-slate-800 dark:text-slate-200">${notes.slice(0, 2).map(n => `<p>${esc(n)}</p>`).join('')}</div>
+          <section aria-label="Tiny Trips tip">
+            <h3 class="${H3}">Tiny Trips tip</h3>
+            <div class="mt-3 rounded-2xl p-4 bg-sky-50 dark:bg-sky-500/10">
+              <div class="space-y-1 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${notes.slice(0, 2).map(n => `<p>${esc(n)}</p>`).join('')}</div>
+              <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Checked ${esc(shortDate(NOTES_META.updatedAt))} · ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'official site'}. Hours can change.</p>
             </div>
-            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Checked ${esc(shortDate(NOTES_META.updatedAt))} · ${/^https:\/\//.test(src) ? `<a href="${esc(src)}" target="_blank" rel="noopener" class="underline">${esc(host)} ↗</a>` : 'official site'}. Hours can change.</p>
           </section>` : ''}
 
           ${evs.length || tagLines.length ? (() => {
@@ -3522,12 +3524,15 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             <h3 class="${H3}">Before you go</h3>
             <dl class="mt-3 rounded-2xl p-4 bg-slate-50 dark:bg-slate-800/50 divide-y divide-slate-200 dark:divide-slate-700">${beforeRows}</dl>
             ${facts.checked ? `<p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">${facts.checked}</p>` : ''}
-            ${doList.length || eatList.length ? `
-            <div class="mt-3 rounded-2xl p-4 bg-slate-50 dark:bg-slate-800/50 space-y-3 text-sm">
-              ${doList.length ? `<div><p class="font-semibold">Things to do</p><ul class="mt-1 space-y-1 list-disc pl-5 text-slate-700 dark:text-slate-300">${doList.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>` : ''}
-              ${eatList.length ? `<div><p class="font-semibold">What to eat</p><ul class="mt-1 space-y-1 list-disc pl-5 text-slate-700 dark:text-slate-300">${eatList.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>` : ''}
-            </div>` : ''}
           </section>
+
+          ${[['Things to do', doList], ['What to eat', eatList]].filter(([, l]) => l.length).map(([title, l]) => `
+          <section>
+            <h3 class="${H3}">${title}</h3>
+            <div class="mt-3 rounded-2xl p-4 bg-slate-50 dark:bg-slate-800/50">
+              <ul class="space-y-1.5 list-disc pl-5 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${l.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+            </div>
+          </section>`).join('')}
 
           ${says ? `
           <section>
@@ -3542,7 +3547,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const n = RISE_NOTES[s.id] || {};
             return `
           <section class="rounded-2xl px-4 py-5 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-500/10 dark:to-fuchsia-500/10">
-            <h3 class="font-bold text-rose-800 dark:text-rose-300">Why more people are searching</h3>
+            <h3 class="${H3}">Why more people are searching</h3>
             <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">Searched ${fmtRise(s.rise)} its usual amount over ${esc(recentLabel())}.</p>
             ${n.why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(n.why)}${/^https:\/\//i.test(n.source || '') ? ` <a href="${esc(n.source)}" target="_blank" rel="noopener" class="text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>` : ''}
             ${n.rising && n.rising.length ? `
