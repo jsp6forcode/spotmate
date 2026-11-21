@@ -119,8 +119,8 @@ components:
     rounded: "{rounded.xl}"
     padding: "20px"
   map-pin:
-    rounded: "{rounded.full}"
-    size: "24px"
+    width: "30px"
+    height: "38px"
 ---
 
 # Design System: Tiny Trips
@@ -209,14 +209,14 @@ Soft lift on content, flat everywhere else. Place cards and dialogs float on wid
 ### Shadow Vocabulary
 - **Card rest** (`box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.07)`): place cards and empty-state panels.
 - **Card hover** (`box-shadow: 0 2px 4px rgba(15,23,42,.06), 0 14px 32px rgba(15,23,42,.12)`): place card hover.
-- **Pin** (`box-shadow: 0 0 0 2px #fff, 0 1px 4px rgba(0,0,0,.35)`): category pins; the white ring separates pins from busy map tiles.
+- **Pin** (`filter: drop-shadow(0 2px 3px rgba(0,0,0,.4))`): drop-shaped map pins; with the white outline it lifts pins off busy map tiles.
 
 ### Named Rules
 **The Neutral Shadow Rule.** Shadows are neutral ink, never coloured. No glows, no coloured halos, no radial colour washes behind content.
 
 ## Shapes
 
-Near-square: 2px for small elements, 3px for chips and badges, 4px for buttons and inputs, 6px for cards and dialogs. Tailwind's radius scale is remapped in `index.html` so `rounded-2xl`/`3xl` also resolve to 6px. Full circles are reserved for map pins, category dots, the "+N" cluster pin, the favourite heart and the back-to-top button. Borders are 1px hairlines in Cedar Border (Slate Ink in dark mode).
+Near-square: 2px for small elements, 3px for chips and badges, 4px for buttons and inputs, 6px for cards and dialogs. Tailwind's radius scale is remapped in `index.html` so `rounded-2xl`/`3xl` also resolve to 6px. Map pins are drops (rounded head, pointed tip). Full circles are reserved for category dots, the "+N" cluster pin, the favourite heart and the back-to-top button. Borders are 1px hairlines in Cedar Border (Slate Ink in dark mode).
 
 **The Square-Corners Rule.** Nothing above 6px radius except true circles. Over-rounded corners read as generic.
 
@@ -247,13 +247,15 @@ Plain and firm.
 Top tabs inside the hero (Explore, Events, Markets, Saved, About, Instagram): white text on the photo, the active tab a solid white pill with dark text. A sticky filter bar follows the hero. A round teal back-to-top button sits bottom right on long scrolls.
 
 ### Map Pin (signature)
-24px circle in the category colour with a 2px white ring and a white (or dark, for light colours) line icon. Hovered or linked pins scale 1.4× with an extra soft ring. Events are near-black pins, markets yellow. Clusters are white circles with a dark 2px border and a "+N" count, so they never look like a category.
+A 30×38px drop marker in the category colour with a white outline, a soft neutral drop shadow and a white (or dark, for light colours) line icon in the head; the tip is the exact location. The drop shape is what separates our places from the base map's round shop and stop icons, which are dimmed (icons 45%, labels 75% opacity). Hovered or linked pins scale 1.3× from the tip. Numbered pins keep the drop shape with a white fill, teal outline and the number in the head. Events are near-black drops, markets yellow. The place window's small map uses the same drop. Clusters are white circles with a dark 2px border and a "+N" count, so they never look like a place.
+
+**The Drop-Means-Ours Rule.** Only Tiny Trips places, events and markets use the drop shape. Base map icons stay round and dimmed.
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** use Inlet Teal for every pressable thing and nothing else.
-- **Do** keep corners at 2–6px; use full circles only for pins, dots, the heart and back-to-top.
+- **Do** keep corners at 2–6px; use full circles only for dots, clusters, the heart and back-to-top, and the drop shape only for our map pins.
 - **Do** pair every category colour with its line icon or a text label.
 - **Do** set names and headings in Bricolage Grotesque and facts in IBM Plex Sans.
 - **Do** use the neutral Card rest / Card hover shadows for lift.

@@ -599,6 +599,36 @@ function loadVector() {
   }
   return vecReady;
 }
+// 다크 지도(fiord)엔 가게·공원·버스 정류장 이름(POI) 레이어가 아예 없어요 (사용자, 2026-11-20: 다크 모드에선 버스 정류장·장소 이름이 안 떠요).
+// 밝은 지도(bright)의 POI 레이어를 가져와 다크 지도 글자색으로 바꿔 더해요. 두 스타일은 타일·아이콘·글꼴이 같아서 그대로 붙어요
+let brightPois;
+function addDarkPois(gl) {
+  if (!gl) return;
+  if (!brightPois) brightPois = fetch(VEC_STYLE.light).then(r => r.json()).then(st => (st.layers || []).filter(l => /^poi_/.test(l.id))).catch(() => []);
+  const add = () => brightPois.then(layers => {
+    try {
+      const style = gl.getStyle(); if (!style) return;
+      const before = (style.layers.find(l => /^place_/.test(l.id)) || {}).id;
+      layers.forEach(l => {
+        if (gl.getLayer(l.id)) return;
+        // 버스 정류장은 밝은 지도엔 최소 줌이 없어서 줌아웃해도 다 떠요. 다크 지도에선 밝은 글자가 더 튀어서 (사용자, 2026-11-20) 많이 확대했을 때(16+)만, 좀 더 차분한 색으로
+        const transit = l.id === 'poi_transit';
+        gl.addLayer({ ...l, ...(transit ? { minzoom: 16 } : {}), paint: { ...l.paint, ...POI_SOFT, 'text-color': transit ? '#8fb0cf' : '#d3dbe6', 'text-halo-color': 'hsla(228,60%,21%,0.8)', 'text-halo-width': 1.2 } }, before);
+      });
+    } catch (e) { /* 지도가 이미 지워졌으면 그냥 넘어가요 */ }
+  });
+  if (gl.isStyleLoaded()) add(); else gl.once('load', add);
+}
+// 지도 자체의 가게·정류장 아이콘은 흐리게 (사용자, 2026-11-20: 내 장소 핀이 지도의 가게 핀과 구별이 안 돼요). 이름 글자는 읽히게 조금만 흐려요
+const POI_SOFT = { 'icon-opacity': 0.45, 'text-opacity': 0.75 };
+function softenPois(gl) {
+  if (!gl) return;
+  const run = () => { try { (gl.getStyle().layers || []).forEach(l => { if (/^poi_/.test(l.id) && l.type === 'symbol') Object.entries(POI_SOFT).forEach(([k, v]) => gl.setPaintProperty(l.id, k, v)); }); } catch (e) {} };
+  if (gl.isStyleLoaded()) run(); else gl.once('load', run);
+}
+// 큰 지도의 장소·행사 핀: 장소 창 작은 지도와 같은 물방울 모양 (색 = 장소 종류, 흰 테두리, 흰 선 아이콘). 끝(15, 37)이 정확한 위치
+const DROP_SIZE = [30, 38], DROP_ANCHOR = [15, 37];
+const dropPin = (color, ink, key) => `<div class="spot-pin cat drop" style="color:${ink}"><svg class="drop-shape" viewBox="0 0 36 46" width="30" height="38" aria-hidden="true"><path d="M18 1C8.6 1 1 8.4 1 17.6 1 29.5 18 45 18 45s17-15.5 17-27.4C35 8.4 27.4 1 18 1z" fill="${color}" stroke="#fff" stroke-width="2.5"/></svg><span class="drop-ico">${typeIcon(key, 14)}</span></div>`;
 // 핀 묶기 (2026-11-19, 사용자: 줌아웃하면 복잡해요): 가까운 핀은 "+N" 동그라미 하나로. 못 불러오면 묶지 않고 그대로 그려요
 const CLUSTER = 'https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/';
 let clusterReady = null;
@@ -2837,7 +2867,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         }, { passive: true });
       }
     }
-    if (vec) L.maplibreGL({ style: this.state.dark ? VEC_STYLE.dark : VEC_STYLE.light, attribution: VEC_ATTR }).addTo(map);
+    if (vec) {
+      const layer = L.maplibreGL({ style: this.state.dark ? VEC_STYLE.dark : VEC_STYLE.light, attribution: VEC_ATTR }).addTo(map);
+      // 벡터 지도는 지도 위치가 정해진 뒤에 만들어져서, 그때 POI를 더해요
+      map.whenReady(() => this.state.dark ? addDarkPois(layer.getMaplibreMap()) : softenPois(layer.getMaplibreMap()));
+    }
     else L.tileLayer(TILES, { attribution: TILE_ATTR, maxZoom: 19 }).addTo(map);
     // 핀: 번호가 작을수록(순위가 높을수록) 위에 오게
     const z = m => typeof m === 'number' ? 1000 - m : 0;
@@ -2852,7 +2886,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       iconCreateFunction: c => L.divIcon({ className: '', html: `<div class="pin-cluster">+${c.getChildCount()}</div>`, iconSize: [32, 32], iconAnchor: [16, 16] }) }) : map;
     items.forEach(s => {
       // 핀 = 장소 종류 색 동그라미 + 흰색 아이콘 (이모지를 흰 실루엣으로: .glyph)
-      const icon = L.divIcon({ className: '', html: `<div class="spot-pin cat" style="background:${s.color};color:${s.ink}">${typeIcon(s.grp, 14)}</div>`, iconSize: [24, 24], iconAnchor: [12, 12] });
+      const icon = L.divIcon({ className: '', html: dropPin(s.color, s.ink, s.grp), iconSize: DROP_SIZE, iconAnchor: DROP_ANCHOR, popupAnchor: [0, -34], tooltipAnchor: [0, -20] });
       // 마우스: 올리면 작은 카드, 누르면 모달. 터치 화면: 핀을 누르면 작은 카드, 그 카드를 누르면 모달 (호버가 없어서)
       const coarse = matchMedia('(pointer: coarse)').matches, sp = byId(s.id);
       const mk = L.marker([s.lat, s.lng], { icon, keyboard: true, zIndexOffset: z(s.mark), alt: s.name, title: phone ? s.name : '' }).addTo(layer).on('click', () => {
@@ -2870,7 +2904,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     });
     // 행사·마켓 핀: 누르면 다음 날짜·시간과 장소/공식 정보 링크
     (this._map.events || []).forEach((ev, ei) => {
-      const icon = L.divIcon({ className: '', html: `<div class="spot-pin cat" style="background:${EV_PIN[ev.market ? 'market' : 'events'].color};color:${EV_PIN[ev.market ? 'market' : 'events'].ink}">${typeIcon(ev.market ? 'market' : 'events', 14)}</div>`, iconSize: [24, 24], iconAnchor: [12, 12] });
+      const evk = ev.market ? 'market' : 'events';
+      const icon = L.divIcon({ className: '', html: dropPin(EV_PIN[evk].color, EV_PIN[evk].ink, evk), iconSize: DROP_SIZE, iconAnchor: DROP_ANCHOR, popupAnchor: [0, -34], tooltipAnchor: [0, -20] });
       const html = `<div style="min-width:180px"><p style="font-weight:700;margin:0">${esc(ev.name)}${ev.forParents ? ' <span style="font-size:11px;font-weight:700;background:#fef3c7;color:#78350f;padding:1px 6px;border-radius:4px;white-space:nowrap">For parents 😉</span>' : ''}</p><p style="margin:4px 0">${esc(ev.when)}</p>
         <p style="margin:0">${ev.spotId ? `<button data-act="open" data-val="${esc(ev.spotId)}" style="font-weight:600;margin-right:10px">Place details</button>` : ''}${/^https:\/\//.test(ev.source) ? `<a href="${esc(ev.source)}" target="_blank" rel="noopener" >Official info ↗</a>` : ''}</p></div>`;
       const emk = L.marker([ev.lat, ev.lng], { icon, title: ev.name, keyboard: true, zIndexOffset: 2000 }).addTo(layer).bindPopup(html);
@@ -2912,8 +2947,10 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       const ringPin = (pin, on, n) => {
         const e = pin.mk.getElement(), d = e && e.querySelector('.spot-pin'); if (!d) return;
         if (FEAT_CALLOUTS) { d.classList.toggle('feat-pin', on); return; }
-        if (d.dataset.mark == null) d.dataset.mark = d.textContent;
-        d.classList.toggle('feat-num', on); d.textContent = on ? String(n) : d.dataset.mark;
+        // 번호를 달 때 아이콘 자리에만 번호를 넣고, 뗄 때 원래 아이콘(SVG)을 되돌려요
+        const slot = d.querySelector('.drop-ico') || d;
+        if (d._icon == null) d._icon = slot.innerHTML;
+        d.classList.toggle('feat-num', on); slot.innerHTML = on ? String(n) : d._icon;
       };
       // 아래 목록에서 지도에 펼친 카드와 같은 장소에 같은 번호 배지와 청록 테두리를 붙여요 (스크롤하면 새 카드로 옮겨가요)
       const markList = ids => {
