@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-20T00:05:00-08:00",
+  "title": "Design System: Tiny Trips",
+  "extensions": {
+    "colorMeta": {
+      "inlet-teal": { "role": "primary", "displayName": "Inlet Teal", "canonical": "#226277", "tonalRamp": ["#0d222b", "#183845", "#1d5062", "#226277", "#2c798f", "#4793a8", "#a9d2dd", "#eef6f8"] },
+      "inlet-teal-deep": { "role": "primary", "displayName": "Inlet Teal Deep", "canonical": "#1d5062" },
+      "inlet-teal-bright": { "role": "primary", "displayName": "Inlet Teal Bright", "canonical": "#2c798f" },
+      "inlet-teal-light": { "role": "primary", "displayName": "Inlet Teal Light", "canonical": "#4793a8" },
+      "inlet-teal-mist": { "role": "primary", "displayName": "Inlet Teal Mist", "canonical": "#d4e9ee" },
+      "inlet-teal-wash": { "role": "primary", "displayName": "Inlet Teal Wash", "canonical": "#eef6f8" },
+      "rain-sky": { "role": "neutral", "displayName": "Rain Sky", "canonical": "#f4f6f5", "tonalRamp": ["#0d1514", "#172120", "#24302f", "#374645", "#5c6e6d", "#a9b7b6", "#e5eae9", "#f4f6f5"] },
+      "wet-stone": { "role": "neutral", "displayName": "Wet Stone", "canonical": "#e5eae9" },
+      "cedar-border": { "role": "neutral", "displayName": "Cedar Border", "canonical": "#ced7d6" },
+      "moss-grey": { "role": "neutral", "displayName": "Moss Grey", "canonical": "#5c6e6d" },
+      "slate-ink": { "role": "neutral", "displayName": "Slate Ink", "canonical": "#374645" },
+      "forest-night": { "role": "neutral", "displayName": "Forest Night", "canonical": "#172120" },
+      "night-floor": { "role": "neutral", "displayName": "Night Floor", "canonical": "#0d1514" },
+      "pin-park": { "role": "tertiary", "displayName": "Park Green", "canonical": "#2E8B3E" },
+      "pin-trail-beach": { "role": "tertiary", "displayName": "Beach Sand", "canonical": "#D2B07A" },
+      "pin-water": { "role": "tertiary", "displayName": "Pool Blue", "canonical": "#56B4E9" },
+      "pin-museum-library": { "role": "tertiary", "displayName": "Museum Purple", "canonical": "#6A4C93" },
+      "pin-shops": { "role": "tertiary", "displayName": "Shops Pink", "canonical": "#CC79A7" },
+      "pin-indoor-rides": { "role": "tertiary", "displayName": "Play Orange", "canonical": "#E69F00" },
+      "pin-farm": { "role": "tertiary", "displayName": "Farm Brown", "canonical": "#7A4A1E" },
+      "pin-arts": { "role": "tertiary", "displayName": "Arts Vermilion", "canonical": "#D55E00" },
+      "pin-market": { "role": "tertiary", "displayName": "Market Yellow", "canonical": "#F0E442" },
+      "pin-event": { "role": "tertiary", "displayName": "Event Ink", "canonical": "#1f2328" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Place window title and big page titles." },
+      "headline": { "displayName": "Headline", "purpose": "Hero title and home section headings." },
+      "title": { "displayName": "Title", "purpose": "Every section heading inside the place window." },
+      "card-title": { "displayName": "Card Title", "purpose": "Place and event names on cards." },
+      "body": { "displayName": "Body", "purpose": "Running text." },
+      "body-small": { "displayName": "Body Small", "purpose": "Descriptions, tips and meta lines." },
+      "label": { "displayName": "Label", "purpose": "Chips, badges, filter labels and counts." }
+    },
+    "shadows": [
+      { "name": "card-rest", "value": "0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.07)", "purpose": "Place cards and empty-state panels at rest." },
+      { "name": "card-hover", "value": "0 2px 4px rgba(15,23,42,.06), 0 14px 32px rgba(15,23,42,.12)", "purpose": "Place card hover." },
+      { "name": "pin", "value": "0 0 0 2px #fff, 0 1px 4px rgba(0,0,0,.35)", "purpose": "White ring that separates category pins from map tiles." }
+    ],
+    "motion": [
+      { "name": "pin-highlight", "value": "transform .12s, box-shadow .12s", "purpose": "Pin scales up when its card is hovered." },
+      { "name": "feature-in", "value": "featIn .35s ease-out", "purpose": "Map photo cards rise in." },
+      { "name": "reduced-motion", "value": "transition: none; animation: none", "purpose": "All motion off under prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one action colour: every pressable primary action.",
+      "html": "<button class=\"ds-btn-primary\">See details</button>",
+      "css": ".ds-btn-primary { background: #226277; color: #fff; font: 600 16px/24px 'IBM Plex Sans', system-ui, sans-serif; padding: 8px 16px; min-height: 40px; border: 0; border-radius: 4px; cursor: pointer; transition: background .15s; } .ds-btn-primary:hover { background: #1d5062; } .ds-btn-primary:focus-visible { outline: 2px solid #2c798f; outline-offset: 2px; }"
+    },
+    {
+      "name": "Soft Toggle",
+      "kind": "button",
+      "refersTo": "button-soft",
+      "description": "Secondary filter toggles like Open now and Indoor; teal when pressed.",
+      "html": "<button class=\"ds-btn-soft\" aria-pressed=\"false\">Open now</button> <button class=\"ds-btn-soft\" aria-pressed=\"true\">Indoor</button>",
+      "css": ".ds-btn-soft { background: #e5eae9; color: #172120; font: 600 14px/20px 'IBM Plex Sans', system-ui, sans-serif; padding: 0 12px; min-height: 36px; border: 0; border-radius: 3px; cursor: pointer; } .ds-btn-soft[aria-pressed=true] { background: #226277; color: #fff; } .ds-btn-soft:hover { background: #ced7d6; } .ds-btn-soft[aria-pressed=true]:hover { background: #1d5062; } .ds-btn-soft:focus-visible { outline: 2px solid #2c798f; outline-offset: 2px; }"
+    },
+    {
+      "name": "Category Chip",
+      "kind": "chip",
+      "refersTo": "chip-selected",
+      "description": "Category filter with colour dot, line icon and count.",
+      "html": "<button class=\"ds-chip\"><span class=\"ds-chip-dot\" style=\"background:#2E8B3E\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 22v-6\"/><path d=\"M12 16c-4 0-6.5-2.5-6.5-5.5S8 5 12 2c4 3 6.5 5.5 6.5 8.5S16 16 12 16z\"/></svg></span>Playground &amp; park<span class=\"ds-chip-n\">48</span></button> <button class=\"ds-chip is-on\"><span class=\"ds-chip-dot\" style=\"background:#E69F00;color:#1f2328\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\"><rect x=\"3\" y=\"13\" width=\"8\" height=\"8\" rx=\"1\"/><rect x=\"13\" y=\"13\" width=\"8\" height=\"8\" rx=\"1\"/><rect x=\"8\" y=\"3\" width=\"8\" height=\"8\" rx=\"1\"/></svg></span>Indoor play<span class=\"ds-chip-n\">11</span></button>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 4px; border-radius: 3px; border: 1px solid #ced7d6; background: #fff; color: #24302f; font: 600 14px/20px 'IBM Plex Sans', system-ui, sans-serif; cursor: pointer; } .ds-chip.is-on { background: #226277; border-color: #226277; color: #fff; } .ds-chip-dot { width: 24px; height: 24px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; color: #fff; } .ds-chip-n { font-weight: 400; opacity: .7; } .ds-chip:focus-visible { outline: 2px solid #2c798f; outline-offset: 2px; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Filled field, no border, teal ring on focus.",
+      "html": "<input class=\"ds-input\" placeholder=\"Try &quot;christmas market&quot;\">",
+      "css": ".ds-input { width: 100%; min-height: 44px; padding: 8px 12px; background: #e5eae9; color: #172120; border: 0; border-radius: 4px; font: 400 16px/24px 'IBM Plex Sans', system-ui, sans-serif; } .ds-input::placeholder { color: #7c8e8d; } .ds-input:focus { outline: none; box-shadow: 0 0 0 2px #2c798f; }"
+    },
+    {
+      "name": "Place Card",
+      "kind": "card",
+      "refersTo": "card-place",
+      "description": "Photo-led card; whole card is the tap target.",
+      "html": "<article class=\"ds-card\" tabindex=\"0\"><div class=\"ds-card-img\"></div><div class=\"ds-card-body\"><span class=\"ds-badge\">Seasonal</span><h3 class=\"ds-card-title\">VanDusen Festival of Lights</h3><p class=\"ds-card-meta\">Nov 27 – Jan 3 · Vancouver</p></div></article>",
+      "css": ".ds-card { display: flex; flex-direction: column; width: 260px; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.07); transition: box-shadow .15s; cursor: pointer; } .ds-card:hover { box-shadow: 0 2px 4px rgba(15,23,42,.06), 0 14px 32px rgba(15,23,42,.12); } .ds-card:focus-visible { outline: 2px solid #2c798f; outline-offset: 2px; } .ds-card-img { height: 140px; background: linear-gradient(135deg, #2c798f, #183845); } .ds-card-body { padding: 12px 16px 16px; } .ds-badge { display: inline-block; font: 600 12px/16px 'IBM Plex Sans', system-ui, sans-serif; color: #D55E00; border: 1px solid #D55E00; border-radius: 3px; padding: 1px 6px; } .ds-card-title { margin: 6px 0 2px; font: 700 15px/1.3 'Bricolage Grotesque', system-ui, sans-serif; color: #172120; } .ds-card-meta { margin: 0; font: 400 14px/20px 'IBM Plex Sans', system-ui, sans-serif; color: #5c6e6d; }"
+    },
+    {
+      "name": "Section Card",
+      "kind": "card",
+      "refersTo": "card-section",
+      "description": "Place window section with hairline border, Title heading and source footnote.",
+      "html": "<div class=\"ds-section\"><h3>Before you go</h3><p>Open today 10am–5pm. Best for ages 2–8.</p><small>Checked Nov 2026 · official site</small></div>",
+      "css": ".ds-section { background: #fff; border: 1px solid #ced7d6; border-radius: 6px; padding: 20px; max-width: 420px; } .ds-section h3 { margin: 0; font: 800 18px/1.4 'Bricolage Grotesque', system-ui, sans-serif; letter-spacing: -0.025em; color: #172120; } .ds-section p { margin: 8px 0 0; font: 400 14px/1.625 'IBM Plex Sans', system-ui, sans-serif; color: #24302f; } .ds-section small { display: block; margin-top: 12px; font: 400 11px/1.4 'IBM Plex Sans', system-ui, sans-serif; color: #7c8e8d; }"
+    },
+    {
+      "name": "Map Pin",
+      "kind": "custom",
+      "refersTo": "map-pin",
+      "description": "Category-coloured circle with white ring and line icon; scales when its card is hovered.",
+      "html": "<span class=\"ds-pin\" style=\"background:#2E8B3E\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 22v-6\"/><path d=\"M12 16c-4 0-6.5-2.5-6.5-5.5S8 5 12 2c4 3 6.5 5.5 6.5 8.5S16 16 12 16z\"/></svg></span> <span class=\"ds-pin\" style=\"background:#56B4E9;color:#1f2328\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\"><circle cx=\"12\" cy=\"6\" r=\"2\"/><path d=\"M2 14c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2\"/></svg></span> <span class=\"ds-pin-cluster\">+8</span>",
+      "css": ".ds-pin { width: 24px; height: 24px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 0 0 2px #fff, 0 1px 4px rgba(0,0,0,.35); transition: transform .12s; margin: 6px; } .ds-pin:hover { transform: scale(1.4); } .ds-pin-cluster { display: inline-block; width: 32px; height: 32px; border-radius: 9999px; background: #fff; color: #1f2328; border: 2px solid #1f2328; font: 800 13px/28px system-ui, sans-serif; text-align: center; vertical-align: middle; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Rainy-Day Field Guide",
+    "overview": "Tiny Trips should feel like a well-thumbed local field guide a Vancouver parent keeps in the car: sea-and-forest colours, plain facts in a steady order, and real photos doing the selling. The palette comes from the place itself: deep Burrard Inlet teal for anything you can act on, and the blue-grey of a wet sky and damp cedar for everything else. Colour that means something (map pins, category dots) is the only bright colour on the page.\n\nDensity is practical, not airy. A parent on a phone, one hand on a stroller, should be able to scan a card in a second: photo, name, today's hours, ages, distance. Corners are almost square on purpose (2–6px), a deliberate step away from the over-rounded, bubbly look; only circles (pins, dots, the heart, the back-to-top button) stay round. Bricolage Grotesque gives headings a friendly, slightly hand-made voice; IBM Plex Sans keeps facts plain and legible.\n\nLight and dark themes are both first-class. Dark mode is a deep forest-night floor, not pure black, and map tiles are inverted to match.",
+    "keyCharacteristics": [
+      "Photo-led place cards on a pale rain-sky page",
+      "One action colour: inlet teal",
+      "Near-square corners; circles only for pins and dots",
+      "Category colour is meaning, never decoration",
+      "Soft neutral lift on cards and dialogs; everything else flat",
+      "Phone-first, one-handed, glanceable"
+    ],
+    "rules": [
+      { "name": "The One Voice Rule", "body": "Inlet teal is the only interactive colour. If it's teal, you can press it.", "section": "colors" },
+      { "name": "The Meaning-Only Rule", "body": "Category colours appear only on pins, type dots and category chips' dots. Never use them as decoration, section backgrounds or headings.", "section": "colors" },
+      { "name": "The Shape-Backs-Colour Rule", "body": "Any colour-coded mark also carries an icon or label; colour alone never carries meaning.", "section": "colors" },
+      { "name": "The Two-Voice Rule", "body": "Bricolage for names and headings, Plex for facts. Never set hours, prices or ages in Bricolage.", "section": "typography" },
+      { "name": "The Neutral Shadow Rule", "body": "Shadows are neutral ink, never coloured. No glows, no coloured halos, no radial colour washes behind content.", "section": "elevation" },
+      { "name": "The Square-Corners Rule", "body": "Nothing above 6px radius except true circles. Over-rounded corners read as generic.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do use Inlet Teal for every pressable thing and nothing else.",
+      "Do keep corners at 2–6px; use full circles only for pins, dots, the heart and back-to-top.",
+      "Do pair every category colour with its line icon or a text label.",
+      "Do set names and headings in Bricolage Grotesque and facts in IBM Plex Sans.",
+      "Do use the neutral Card rest / Card hover shadows for lift.",
+      "Do design both light (Rain Sky floor) and dark (Night Floor) themes for every surface.",
+      "Do keep touch targets at least 32px for chips and 40px for buttons and inputs."
+    ],
+    "donts": [
+      "Don't use coloured glows, coloured shadows or radial colour washes as backgrounds.",
+      "Don't round cards or buttons beyond 6px.",
+      "Don't use category colours as decoration or section backgrounds.",
+      "Don't introduce a second accent colour for actions.",
+      "Don't set body facts (hours, prices, ages) in the display font."
+    ]
+  }
+}
