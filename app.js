@@ -2781,10 +2781,11 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   // 지도 밑 "Good to know this month" (2026-11-19, 사용자: 뉴스 섹션 3·4번): 무료·할인(Free), 건강(Health), 아이 용품 리콜(Recall).
   // data/news.json에서 오늘이 until 이전인 것만, 리콜 → 건강 → 무료 순. 요약은 우리 말로, 출처 링크를 꼭 달아요. spotId가 있으면 그 장소 창을 여는 링크도
   newsSection() {
-    const today = vanDate(0), order = { recall: 0, health: 1, free: 2 };
+    // (2026-11-20, 사용자: 아이와 여행·이동에 필요한 소식 위주로) 이동 소식(페리·도로·대중교통·공항·여행 용품 리콜)이 먼저, 그다음 나들이(무료)·건강
+    const today = vanDate(0), order = { ferry: 0, road: 1, transit: 2, flight: 3, gear: 4, recall: 5, free: 6, health: 7 };
     const list = NEWS.filter(n => n && n.title && (!n.until || n.until >= today)).sort((a, b) => (order[a.type] ?? 9) - (order[b.type] ?? 9) || (b.date || '').localeCompare(a.date || '')).slice(0, 6);
     if (!list.length) return '';
-    const badge = { recall: ['Recall', 'border-rose-300 text-rose-700 dark:border-rose-400/50 dark:text-rose-300'], health: ['Health', 'border-sky-300 text-sky-700 dark:border-sky-400/50 dark:text-sky-300'], free: ['Free', 'border-emerald-300 text-emerald-700 dark:border-emerald-400/50 dark:text-emerald-300'] };
+    const badge = { ferry: ['Ferries', 'border-sky-300 text-sky-700 dark:border-sky-400/50 dark:text-sky-300'], road: ['Roads', 'border-amber-400 text-amber-800 dark:border-amber-400/50 dark:text-amber-300'], transit: ['Transit', 'border-violet-300 text-violet-700 dark:border-violet-400/50 dark:text-violet-300'], flight: ['Flights', 'border-indigo-300 text-indigo-700 dark:border-indigo-400/50 dark:text-indigo-300'], gear: ['Travel gear recall', 'border-rose-300 text-rose-700 dark:border-rose-400/50 dark:text-rose-300'], recall: ['Recall', 'border-rose-300 text-rose-700 dark:border-rose-400/50 dark:text-rose-300'], health: ['Health', 'border-teal-300 text-teal-700 dark:border-teal-400/50 dark:text-teal-300'], free: ['Free', 'border-emerald-300 text-emerald-700 dark:border-emerald-400/50 dark:text-emerald-300'] };
     const item = n => { const [label, cls] = badge[n.type] || ['News', 'border-slate-300 text-slate-600']; const sp = n.spotId && byId(n.spotId); return `
         <li class="py-3 border-b border-slate-200 dark:border-slate-700 sm:border-0">
           <div class="flex items-center gap-2"><span class="inline-block px-2 py-0.5 rounded-md border text-[11px] sm:text-xs font-semibold ${cls}">${label}</span>${n.date ? `<span class="text-xs text-slate-400 dark:text-slate-500">${esc(shortDate(n.date))}</span>` : ''}</div>

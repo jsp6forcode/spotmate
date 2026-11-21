@@ -1,7 +1,25 @@
 {
-  "updatedAt": "2026-11-19",
-  "note": "Good to know this month (under the map). Official sources only; summaries are our own words. 'until' = last day to show (blank = ongoing). Types: free, health, recall.",
+  "updatedAt": "2026-11-20",
+  "note": "Good to know this month (under the map). Focus: travelling and getting around with kids (ferries, roads, transit, flights, travel gear), then outings. Only this month's news from official sources; summaries are our own words. Old standing policies (e.g. 2021 free transit for kids) don't belong here. 'until' = last day to show. Types: ferry, road, transit, flight, gear, free, health.",
   "items": [
+    {
+      "id": "bcferries-holiday-saver-2026",
+      "type": "ferry",
+      "title": "Ferry deals on Christmas Day and New Year's Day",
+      "summary": "Saver fares on Fri Dec 25 and Fri Jan 1: from $49 one way for a car and driver between Metro Vancouver and Vancouver Island, and from $39 return to the Sunshine Coast. Book online ahead; space is limited.",
+      "date": "2026-11-20",
+      "until": "2027-01-01",
+      "source": { "name": "BC Ferries", "url": "https://www.bcferries.com/routes-fares/ferry-fares/holiday-saver-fare" }
+    },
+    {
+      "id": "bc-winter-tires-2026",
+      "type": "road",
+      "title": "Driving to the mountains? Winter tires are required",
+      "summary": "Winter tires or chains are required on many BC highways, including the Sea-to-Sky to Whistler, until March 31 or April 30 depending on the route. Most Lower Mainland city roads are exempt. All-wheel drive alone doesn't count.",
+      "date": "2026-11-20",
+      "until": "2027-03-31",
+      "source": { "name": "Government of BC", "url": "https://www2.gov.bc.ca/gov/content/transportation/driving-and-cycling/traveller-information/seasonal/winter-driving/winter-tire-and-chain-up-routes" }
+    },
     {
       "id": "vag-free-friday-dec",
       "type": "free",
@@ -13,40 +31,22 @@
       "source": { "name": "Vancouver Art Gallery", "url": "https://www.vanartgallery.bc.ca/free/" }
     },
     {
-      "id": "translink-kids-free",
+      "id": "vpl-fraserview-holiday-puppets-2026",
       "type": "free",
-      "title": "Kids 12 and under ride transit free",
-      "summary": "Free on buses with no pass needed. On SkyTrain, SeaBus and West Coast Express, kids ride free with a paying adult, up to four kids per adult.",
-      "date": "2026-11-19",
-      "until": "",
-      "source": { "name": "TransLink", "url": "https://buzzer.translink.ca/2021/08/kids-aged-12-and-under-ride-translink-services-for-free-starting-sept-1/" }
+      "title": "Holiday puppet show and sing-along at the library",
+      "summary": "Frog and Toad puppet show, then a holiday sing-along at the Fraserview Branch, Wed Dec 16 and Fri Dec 18, 4–5 pm. Drop-in, all ages.",
+      "date": "2026-11-20",
+      "until": "2026-12-18",
+      "source": { "name": "Vancouver Public Library", "url": "https://vpl.bibliocommons.com/v2/events?audiences=53c940484246f6147c000014" }
     },
     {
       "id": "flu-shot-kids-2026",
       "type": "health",
-      "title": "Free flu shots for kids 6 months and up",
-      "summary": "Book at getvaccinated.gov.bc.ca or call 1-833-838-2323. Kids getting a flu shot for the first time may need two doses, four weeks apart.",
+      "title": "Before holiday trips: free flu shots for kids 6 months and up",
+      "summary": "Book at getvaccinated.gov.bc.ca or call 1-833-838-2323. Kids getting a flu shot for the first time may need two doses, four weeks apart, so book early.",
       "date": "2026-11-19",
       "until": "2027-02-28",
       "source": { "name": "BC Centre for Disease Control", "url": "https://www.bccdc.ca/health-info/diseases-conditions/seasonal-respiratory/getting-vaccinated" }
-    },
-    {
-      "id": "recall-baby-brezza-sterilizer",
-      "type": "recall",
-      "title": "Baby Brezza SuperFast Sterilizer Dryer",
-      "summary": "Model BRZ0083 can overheat and melt, a fire and burn risk. Stop using it and contact the company for a free replacement.",
-      "date": "2026-11-05",
-      "until": "2026-12-31",
-      "source": { "name": "Health Canada", "url": "https://recalls-rappels.canada.ca/en/alert-recall/baby-brezza-superfast-sterilizer-dryer-recalled-due-fire-and-burn-hazards" }
-    },
-    {
-      "id": "recall-costway-high-chair",
-      "type": "recall",
-      "title": "Costway 3-in-1 Convertible High Chair",
-      "summary": "SKU BB4640 has no crotch restraint, so a child can slip, fall or get trapped. Stop using it and ask Costway for a refund.",
-      "date": "2026-11-06",
-      "until": "2026-12-31",
-      "source": { "name": "Health Canada", "url": "https://recalls-rappels.canada.ca/en/alert-recall/costway-convertible-high-chairs-recalled-due-fall-and-entrapment-hazards" }
     }
   ]
 }
