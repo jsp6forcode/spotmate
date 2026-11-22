@@ -531,6 +531,9 @@ const EVENT_TYPES = { market: 'Farmers market', festival: 'Festival', seasonal: 
 const TAG_NEUTRAL = 'border-slate-300 text-slate-600 dark:border-slate-600 dark:text-slate-300';
 const TAG_PILL = 'inline-block align-middle whitespace-nowrap px-1.5 py-0.5 rounded-md border text-[11px] font-semibold ' + TAG_NEUTRAL;
 const PARENTS_BADGE = '<span class="ml-1 ' + TAG_PILL + '">For parents</span>';
+// 바탕이 테마와 상관없이 정해진 곳 (2026-11-21): 지도 팝업은 다크 모드에서도 흰 바탕이라 글자는 늘 진하게, 사진 위 태그는 늘 흰 바탕 (청록은 누를 수 있는 것에만)
+const PARENTS_BADGE_POPUP = PARENTS_BADGE.replace(TAG_NEUTRAL, 'border-slate-300 text-slate-600');
+const TAG_ON_PHOTO = 'bg-white text-slate-700';
 // 카드 이유 박스 제목: 행사 종류·시즌 태그 이름에 맞게 (Coming up 대신)
 const EVENT_LABEL = { market: "Market", festival: "Festival", seasonal: "Seasonal", sale: "Warehouse sale", popup: "Pop-up" };
 const eventLabel = ev => EVENT_LABEL[ev.type] || "Event";
@@ -2370,7 +2373,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const evExtra = evText && why && why.text !== evText ? evText : '';
     return `
     <article data-act="open" data-val="${s.id}" tabindex="0" aria-label="See details for ${esc(s.name)}" class="group relative cursor-pointer flex flex-col rounded-2xl sm:rounded-[6px] bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_8px_24px_rgba(15,23,42,.07)] hover:shadow-[0_2px_4px_rgba(15,23,42,.06),0_14px_32px_rgba(15,23,42,.12)] transition">
-      ${spotTags(s).length || evHere ? `<p class="absolute top-1.5 left-1.5 sm:-top-2 sm:-left-2 z-20 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md ${tagStyle(t.id).solid} shadow-md">${esc(tagLabel(t))}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md ${evHere.ev.type === 'market' ? 'bg-[#F0E442] text-[#1f2328]' : 'bg-[#1f2328] text-white'} shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''}
+      ${spotTags(s).length || evHere ? `<p class="absolute top-1.5 left-1.5 sm:-top-2 sm:-left-2 z-20 flex gap-1">${spotTags(s).slice(0, 2).map(t => `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md ${TAG_ON_PHOTO} shadow-md">${esc(tagLabel(t))}</span>`).join('')}${evHere ? `<span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md ${evHere.ev.type === 'market' ? 'bg-[#F0E442] text-[#1f2328]' : 'bg-[#1f2328] text-white'} shadow-md">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''}</p>` : ''}
       <div class="relative rounded-t-2xl sm:rounded-t-[6px] overflow-hidden">
         ${this.cover(s, 'h-28 sm:h-36')}
         <div class="absolute inset-x-0 top-0 px-2.5 sm:px-4 ${spotTags(s).length || evHere ? "pt-8" : "pt-3"} sm:pt-3.5 pb-8 sm:pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent"><h3 class="font-brand text-[15px] sm:text-xl font-bold leading-tight tracking-[-0.01em] text-white [text-shadow:0_1px_3px_rgba(0,0,0,.5)]">${esc(s.name)}</h3>
@@ -2918,7 +2921,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     (this._map.events || []).forEach((ev, ei) => {
       const evk = ev.market ? 'market' : 'events';
       const icon = L.divIcon({ className: '', html: dropPin(EV_PIN[evk].color, EV_PIN[evk].ink, evk), iconSize: DROP_SIZE, iconAnchor: DROP_ANCHOR, popupAnchor: [0, -34], tooltipAnchor: [0, -20] });
-      const html = `<div style="min-width:180px"><p style="font-weight:700;margin:0">${esc(ev.name)}${ev.forParents ? ' ' + PARENTS_BADGE : ''}</p><p style="margin:4px 0">${esc(ev.when)}</p>
+      const html = `<div style="min-width:180px"><p style="font-weight:700;margin:0">${esc(ev.name)}${ev.forParents ? ' ' + PARENTS_BADGE_POPUP : ''}</p><p style="margin:4px 0">${esc(ev.when)}</p>
         <p style="margin:0">${ev.spotId ? `<button data-act="open" data-val="${esc(ev.spotId)}" style="font-weight:600;margin-right:10px">Place details</button>` : ''}${/^https:\/\//.test(ev.source) ? `<a href="${esc(ev.source)}" target="_blank" rel="noopener" >Official info ↗</a>` : ''}</p></div>`;
       const emk = L.marker([ev.lat, ev.lng], { icon, title: ev.name, keyboard: true, zIndexOffset: 2000 }).addTo(layer).bindPopup(html);
       this._pins['ev:' + ei] = { mk: emk, base: 2000 };
@@ -3360,7 +3363,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     const evHere = this._spotEvents && this._spotEvents[s.id], tg = spotTags(s);
     const heroChips = [
       oi ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-white/95 text-slate-800 shadow"><span class="w-2 h-2 rounded-full ${oi.open ? 'bg-emerald-500' : 'bg-rose-500'}"></span>${esc(oi.text)}</span>` : '',
-      ...tg.slice(0, 2).map(t => `<span class="text-xs font-semibold px-2.5 py-1 rounded-md ${tagStyle(t.id).solid} shadow">${esc(tagLabel(t))}</span>`),
+      ...tg.slice(0, 2).map(t => `<span class="text-xs font-semibold px-2.5 py-1 rounded-md ${TAG_ON_PHOTO} shadow">${esc(tagLabel(t))}</span>`),
       evHere ? `<span class="text-xs font-semibold px-2.5 py-1 rounded-md ${evHere.ev.type === 'market' ? 'bg-[#F0E442] text-[#1f2328]' : 'bg-[#1f2328] text-white'} shadow">${evHere.ev.type === 'market' ? 'Market' : 'Event'}</span>` : ''
     ].filter(Boolean).join('');
     const iconBtn = 'w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center shadow-lg backdrop-blur-sm';

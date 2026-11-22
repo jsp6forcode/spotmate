@@ -234,6 +234,7 @@ Plain and firm.
 - **Removable query chips:** Teal Mist background, Teal Deep text, trailing ×.
 - **Tags** (event types, news kinds, "For parents", "Few days only", "Today", season chips): one neutral style for all, a hairline Cedar Border with Moss Grey text and 3px corners (`TAG_NEUTRAL` / `TAG_PILL` in `app.js`). The text carries the meaning, not colour. The only coloured tags are product recalls (rose), because they are safety warnings.
 - **Toggles** (Open now, Indoor, Events/Markets on the map, season chips): Wet Stone when off, solid Inlet Teal with white text when on.
+- **Tags on fixed backgrounds:** a tag on a photo is solid white with Slate Ink text (`TAG_ON_PHOTO`). A tag in a Leaflet popup, which stays white in dark mode, always uses dark text (`PARENTS_BADGE_POPUP`). Neither takes `dark:` colours.
 - **Event and market labels on photos:** near-black for events and yellow for markets, matching their map pins.
 
 **The Quiet Tag Rule.** Tags never get their own colour. If a tag needs to stand out, it isn't a tag: it's a warning (rose) or a selection (teal).
