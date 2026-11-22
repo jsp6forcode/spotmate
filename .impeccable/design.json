@@ -146,6 +146,7 @@
       "Don't use category colours as decoration or section backgrounds.",
       "Don't introduce a second accent colour for actions.",
       "Don't set body facts (hours, prices, ages) in the display font.",
+      "Don't use generic stock photos in the hero, or fade white hero text below full strength (the photo credit may be 95%).",
       "Don't use emoji as icons (events, weather, categories, headings, badges). Use the line icon set (`typeIcon`, `wxSvg`, `evDot` in `app.js`); text symbols like ★ for ratings and ✓ are fine."
     ]
   }

@@ -204,7 +204,7 @@ Breakpoints: 640px (`sm`) and 768px (`md`).
 
 ## Elevation & Depth
 
-Soft lift on content, flat everywhere else. Place cards and dialogs float on wide, low-opacity neutral shadows tinted with the dark ink colour; hover deepens the shadow rather than moving the card. Section cards in the place window use a hairline border instead of a shadow. The photo hero uses a dark top-and-bottom gradient so white text reads over any photo.
+Soft lift on content, flat everywhere else. Place cards and dialogs float on wide, low-opacity neutral shadows tinted with the dark ink colour; hover deepens the shadow rather than moving the card. Section cards in the place window use a hairline border instead of a shadow. The photo hero uses an even Forest Night scrim (56–62%, Night Floor 62–76% in dark mode) so white text reads over the bright sky and water.
 
 ### Shadow Vocabulary
 - **Card rest** (`box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.07)`): place cards and empty-state panels.
@@ -248,8 +248,11 @@ Plain and firm.
 - **Style:** Wet Stone fill, no border, 4px corners, 40px (phone) to 44px tall, 12px side padding.
 - **Focus:** 2px Inlet Teal ring; no outline glow.
 
+### Hero Photo
+A real, recognisable Metro Vancouver outing, never generic stock: the Stanley Park seawall with the Lions Gate Bridge and North Shore mountains (bobanny, Wikimedia Commons, public domain). No identifiable faces and no company logos as the subject. The credit links to the Commons file page, and the same photo is the link-preview image. Hero text is full white, not faded: re-measure contrast at 375–1920px in both themes whenever the photo, crop or scrim changes.
+
 ### Navigation
-Top tabs inside the hero (Explore, Events, Markets, Saved, About, Instagram): white text on the photo, the active tab a solid white pill with dark text. A sticky filter bar follows the hero. A round teal back-to-top button sits bottom right on long scrolls.
+Top tabs inside the hero (Explore, Events, Markets, Saved, About, Instagram): white text on a translucent Forest Night (25%) plate over the photo, the active tab a solid white pill with dark text. A sticky filter bar follows the hero. A round teal back-to-top button sits bottom right on long scrolls.
 
 ### Map Pin (signature)
 A 30×38px drop marker in the category colour with a white outline, a soft neutral drop shadow and a white (or dark, for light colours) line icon in the head; the tip is the exact location. The drop shape is what separates our places from the base map's round shop and stop icons, which are dimmed (icons 45%, labels 75% opacity). Hovered or linked pins scale 1.3× from the tip. Numbered pins keep the drop shape with a white fill, teal outline and the number in the head. Events are near-black drops, markets yellow. The place window's small map uses the same drop. Clusters are white circles with a dark 2px border and a "+N" count, so they never look like a place.
@@ -273,4 +276,5 @@ A 30×38px drop marker in the category colour with a white outline, a soft neutr
 - **Don't** use category colours as decoration or section backgrounds.
 - **Don't** introduce a second accent colour for actions.
 - **Don't** set body facts (hours, prices, ages) in the display font.
+- **Don't** use generic stock photos in the hero, or fade white hero text below full strength (the photo credit may be 95%).
 - **Don't** use emoji as icons (events, weather, categories, headings, badges). Use the line icon set (`typeIcon`, `wxSvg`, `evDot` in `app.js`); text symbols like ★ for ratings and ✓ are fine.

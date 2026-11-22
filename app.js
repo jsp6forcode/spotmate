@@ -2009,7 +2009,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 지금 밴쿠버 날씨: 넓은 화면은 헤더 오른쪽에 크게, 모바일은 버튼 옆에 작게
     const wx = live ? `<div class="hidden sm:flex items-center gap-2 mt-1 h-8" title="Current weather in Vancouver (Open-Meteo)">
               <span class="leading-none" aria-hidden="true">${wxSvg(live.icon, 30)}</span>
-              <div class="text-right"><p class="text-xl font-extrabold leading-none">${live.temp}°C</p><p class="mt-0.5 text-xs text-white/85 capitalize">${esc(live.desc)}</p></div>
+              <div class="text-right"><p class="text-xl font-extrabold leading-none">${live.temp}°C</p><p class="mt-0.5 text-xs text-white capitalize">${esc(live.desc)}</p></div>
             </div>` : '';
     const wxSmall = live ? `<span class="sm:hidden text-sm font-bold" title="Current weather in Vancouver">${wxSvg(live.icon, 15)} ${live.temp}°C</span>` : '';
     // 다크 모드 버튼은 날씨와 헷갈리지 않게 해·달 대신 반쪽 원(명암) 아이콘
@@ -2017,29 +2017,29 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 첫 화면에 추천 카드가 보이도록 헤더를 낮게: 모바일은 부제 없이 로고 + 탭만
     // 인스타그램 계정으로 바로 가는 둥근 버튼 (다크 모드 버튼 옆)
     const igIcon = `<svg viewBox="0 0 24 24" class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`;
-    const tab = (v, label) => `<button data-act="view" data-val="${v}" class="shrink-0 px-2 sm:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-semibold transition-colors ${view === v ? 'bg-white text-violet-700 shadow' : 'text-white/90 hover:bg-white/15'}">${label}</button>`;
+    const tab = (v, label) => `<button data-act="view" data-val="${v}" class="shrink-0 px-2 sm:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-semibold transition-colors ${view === v ? 'bg-white text-violet-700 shadow' : 'text-white hover:bg-white/15'}">${label}</button>`;
     return `
     <header class="hero relative text-white">
       <div class="max-w-6xl mx-auto px-4 md:px-6 pt-3 pb-3 md:pt-4 md:pb-3">
         <div class="flex items-start justify-between gap-4">
           <div>
             <h1 class="font-brand text-2xl md:text-3xl font-extrabold tracking-tight leading-none">Tiny Trips</h1>
-            <p class="mt-0.5 sm:mt-1 text-white/85 text-xs sm:text-sm leading-snug">Big fun for little ones in Metro Vancouver</p>
+            <p class="mt-0.5 sm:mt-1 text-white text-xs sm:text-sm leading-snug">Big fun for little ones in Metro Vancouver</p>
           </div>
           <div class="flex flex-col items-end">
             <div class="flex items-center gap-2">
               ${wxSmall}
-              <span class="hidden sm:inline-block text-sm font-semibold text-white/85">Vancouver</span>
+              <span class="hidden sm:inline-block text-sm font-semibold text-white">Vancouver</span>
               <button data-act="dark" aria-label="${dark ? 'Switch to light mode' : 'Switch to dark mode'}" title="${dark ? 'Light mode' : 'Dark mode'}" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/15 hover:bg-white/25   flex items-center justify-center">${contrast}</button>
             </div>
             ${wx || '<div class="hidden sm:block mt-1 h-8" aria-hidden="true"></div>'}
           </div>
         </div>
-        <nav class="mt-2 sm:mt-2 inline-flex max-w-full overflow-x-auto no-scrollbar gap-0 sm:gap-1 p-1 rounded-md bg-white/10 backdrop-blur">
+        <nav class="mt-2 sm:mt-2 inline-flex max-w-full overflow-x-auto no-scrollbar gap-0 sm:gap-1 p-1 rounded-md bg-slate-900/25 backdrop-blur">
           ${tab('map', 'Explore')}${tab('events', 'Events')}${tab('markets', 'Markets')}${tab('plan', `Saved${plan.length ? ` (${plan.length})` : ''}`)}${tab('about', 'About')}<a href="https://www.instagram.com/tinytripsvan/" target="_blank" rel="noopener" aria-label="Tiny Trips on Instagram" title="Instagram @tinytripsvan" class="shrink-0 px-2 sm:px-3 py-1.5 sm:py-2 rounded-md text-white/90 hover:bg-white/15 flex items-center">${igIcon}</a>
         </nav>
       </div>
-      <a href="https://www.pexels.com/photo/7669218/" target="_blank" rel="noopener" class="absolute right-3 bottom-1.5 text-[8px] leading-none text-white/60 hover:text-white underline-offset-2 ">Photo: Kampus · Pexels</a>
+      <a href="https://commons.wikimedia.org/wiki/File:Stanley_Seawall.jpg" target="_blank" rel="noopener" class="absolute right-3 bottom-1.5 text-[8px] leading-none text-white/95 hover:text-white underline-offset-2 ">Photo: bobanny · Public domain</a>
     </header>`;
   }
 
