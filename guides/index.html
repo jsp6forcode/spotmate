@@ -123,6 +123,7 @@ tailwind.config = {
   .dark .vec .leaflet-tile-pane { filter: none; }   /* 벡터 지도는 다크 스타일을 따로 써서 반전하지 않아요 */
   .sticky-bar { position: sticky; top: env(safe-area-inset-top, 0px); }
   button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid #2c798f; outline-offset: 2px; }
+  .hero :is(button, a):focus-visible { outline-color: #fff; }   /* 어둡게 덮은 사진 위에선 청록 테두리가 안 보여서 흰색으로 (2026-11-21) */
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
@@ -149,6 +150,6 @@ tailwind.config = {
 </div></details><!--seo-end--></section>
 <button id="to-top" type="button" aria-label="Back to top" class="fixed z-40 right-4 bottom-4 sm:right-6 sm:bottom-6 w-12 h-12 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-2xl font-bold shadow-lg ring-1 ring-black/10 flex items-center justify-center" style="display:none"><span aria-hidden="true">↑</span></button>
 
-<script src="/app.js?v=932f382b"></script>
+<script src="/app.js?v=28715bc9"></script>
 </body>
 </html>

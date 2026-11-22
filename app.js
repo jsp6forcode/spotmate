@@ -446,9 +446,7 @@ const activeTags = () => { const d = vanDate(0); return SEASON.filter(t => t.fro
 const spotTags = s => activeTags().filter(t => t.spots[s.id]);
 // 태그별 색 (카드 사진 모서리 칩 = solid, 목록 위 칩 = soft). 새 태그는 회색 기본값
 // 시즌 태그 칩: 시즌마다 다른 색 대신 모두 같은 차분한 칩, 고르면 청록 (2026-11-20, 색은 누를 수 있는 것과 장소 종류에만)
-const TAG_STYLE = {
-};
-const tagStyle = id => TAG_STYLE[id] || { solid: 'bg-violet-600 text-white', soft: 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700' };
+const TAG_CHIP = { solid: 'bg-violet-600 text-white', soft: 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700' };
 // 데이터 기준일 → "today", "yesterday", "3 days ago"
 // data/parking.json: 스팟 근처 400m 안 주차장 (OpenStreetMap). { id: [{ m, fee?, kind?, name?, customers? }] }
 let PARKING = { spots: {}, radius: 400 };
@@ -1311,7 +1309,7 @@ class App {
     // 시즌: 스팟별 start(단풍 절정·첫 연어·개막일)가 지났으면 "지금" 2.5, 아직이면 예고라 0.5 (그것만으로는 순위 X, 닫힌 Playland가 순위에 오르지 않게)
     spotTags(s).forEach(t => {
       const x = t.spots[s.id], wait = x.start ? Math.round((Date.parse(x.start) - Date.parse(vanDate(0))) / 864e5) : 0;
-      out.push({ score: wait <= 0 ? 2.5 : 0.5, label: tagLabel(t), icon: t.emoji, text: x.why });
+      out.push({ score: wait <= 0 ? 2.5 : 0.5, label: tagLabel(t), text: x.why });
     });
     if (isRising(s)) out.push({ score: 1 + Math.min(s.rise - 1, 1) * 2, label: "Trending", text: (RISE_NOTES[s.id] && RISE_NOTES[s.id].why) || `Searched ${fmtRise(s.rise)} its usual amount` });
     return out.sort((a, b) => b.score - a.score);
@@ -2202,14 +2200,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         ${ds.map(d => fc[d] ? `<span class="inline-flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-sm font-semibold text-slate-800 dark:text-slate-100"><span class="inline-flex" aria-hidden="true">${wxSvg(fc[d].icon, innerWidth < 640 ? 14 : 18)}</span><span>${esc(day(d))} ${fc[d].max}°C<span class="font-normal text-slate-600 dark:text-slate-300 max-sm:hidden">, ${esc(fc[d].desc)}${fc[d].pop >= 30 ? `, ${fc[d].pop}% chance of rain` : ''}</span></span></span>` : '').join('')}
         </div>
       </div>
-      ${rainy && (s.view === 'list' || s.view === 'map') && !s.indoor ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-200">Rain is likely. <button data-act="indoor" class="font-semibold text-sky-700 dark:text-sky-300">Show indoor places</button></p>` : ''}
+      ${rainy && (s.view === 'list' || s.view === 'map') && !s.indoor ? `<p class="mt-2 text-sm text-slate-700 dark:text-slate-200">Rain is likely. <button data-act="indoor" class="font-semibold text-violet-700 dark:text-violet-300">Show indoor places</button></p>` : ''}
     </section>`;
   }
   // 목록 맨 위: 지금 시즌 태그 칩 (누르면 그 태그의 장소만). 순위와 이유는 카드에서 보여줘요
   seasonChips(inner = false) {
     const tags = activeTags().filter(t => this._tagCounts && this._tagCounts[t.id]);
     if (!tags.length) return '';
-    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-[11px] sm:text-sm font-semibold px-2 sm:px-3 py-0.5 sm:py-2 rounded-md ${on ? tagStyle(t.id).solid : tagStyle(t.id).soft}">${esc(tagLabel(t))} <span class="font-normal opacity-75">${this._tagCounts[t.id]}</span></button>`; };
+    const chip = t => { const on = this.state.tag === t.id; return `<button data-act="tag" data-val="${esc(t.id)}" aria-pressed="${on}" title="${esc(t.about || '')}" class="text-[11px] sm:text-sm font-semibold px-2 sm:px-3 py-0.5 sm:py-2 rounded-md ${on ? TAG_CHIP.solid : TAG_CHIP.soft}">${esc(tagLabel(t))} <span class="font-normal opacity-90">${this._tagCounts[t.id]}</span></button>`; };
     const body = `<span class="shrink-0 text-[11px] sm:text-sm font-semibold text-slate-600 dark:text-slate-300">In season:</span>${tags.map(chip).join('')}`;
     if (inner) return body;
     return `
@@ -2515,7 +2513,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (this.state.guide) return `<div id="list-top" class="scroll-mt-4"></div>${more([...ranked, ...fill, ...rest])}`;
     return `
       ${ranked.length ? `${heading('list-top', period ? `Worth going ${period}` : 'Worth going now', '')}
-      ${newCount ? `<p class="mt-3 text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">${plural(newCount, 'new spot')} since your last visit, shown first.</p>` : ''}
+      ${newCount ? `<p class="mt-3 text-sm font-semibold text-slate-700 dark:text-slate-200">${plural(newCount, 'new spot')} since your last visit, shown first.</p>` : ''}
       ${grid(ranked)}` : ''}
       ${fill.length ? (ranked.length ? `
       <div class="mt-8">
@@ -2568,7 +2566,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             const cats = [['all', `(${total}) All`, '', '#5c6e6d'], ['hot', `(${cc.hot || 0}) This week`, '', '#226277', 'This week'], ...catOptions().filter(k => k !== 'events').map(k => k === 'events' ? ['events', `(${evAll.length}) Events`, '', '#8e4a80', 'Events'] : [k, `(${cc[k] || 0}) ${CAT_GROUPS[k].label}`, '', CAT_GROUPS[k].color, CAT_GROUPS[k].label]).filter(c => c[0] === this.state.cat || c[1].indexOf("(0)") !== 0).sort((a, b) => a[4].localeCompare(b[4]))];
             // 2026-11-19: 지도 맨 위에 장소 종류 칩을 가로 스크롤 한 줄로 (끝에 Events·Markets 토글). 데스크톱도 폰과 같아요 (예전 왼쪽 세로 목록은 없앴어요)
             const count = k => k === 'all' ? total : k === 'events' ? evAll.length : (cc[k] || 0);
-            const chip = ([k, , icon, color, name]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1 sm:gap-1.5 pl-0.5 sm:pl-1 pr-2 sm:pr-3 py-0.5 sm:py-1 rounded-md shadow-md border ${this.state.cat === k ? 'bg-violet-600 border-violet-600 text-white' : 'bg-white/95 dark:bg-slate-900/90 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100'}"><span class="w-5 h-5 sm:w-6 sm:h-6 shrink-0 rounded-full flex items-center justify-center" style="background:${k === 'events' ? EV_PIN.events.color : color};color:${k === 'events' ? EV_PIN.events.ink : ((CAT_GROUPS[k] || {}).ink || '#fff')}">${typeIcon(k, innerWidth < 640 ? 12 : 14)}</span>${esc(name || 'All')}<span class="font-normal opacity-70">${count(k)}</span></button>`;
+            const chip = ([k, , icon, color, name]) => `<button data-act="cat" data-val="${k}" aria-pressed="${this.state.cat === k}" class="shrink-0 flex items-center gap-1 sm:gap-1.5 pl-0.5 sm:pl-1 pr-2 sm:pr-3 py-0.5 sm:py-1 rounded-md shadow-md border ${this.state.cat === k ? 'bg-violet-600 border-violet-600 text-white' : 'bg-white/95 dark:bg-slate-900/90 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100'}"><span class="w-5 h-5 sm:w-6 sm:h-6 shrink-0 rounded-full flex items-center justify-center" style="background:${k === 'events' ? EV_PIN.events.color : color};color:${k === 'events' ? EV_PIN.events.ink : ((CAT_GROUPS[k] || {}).ink || '#fff')}">${typeIcon(k, innerWidth < 640 ? 12 : 14)}</span>${esc(name || 'All')}<span class="font-normal opacity-90">${count(k)}</span></button>`;
             const tog = (a, on, l, n) => evToggle(a, on, l, n).replace('class="flex', 'class="shrink-0 py-0.5 sm:py-1.5 shadow-md flex');
             return `<div data-keep-scroll="mapchips" role="group" aria-label="Category" class="absolute inset-x-0 top-2 z-20 flex items-center gap-1.5 px-2 sm:px-3 pb-1 overflow-x-auto no-scrollbar text-xs sm:text-[13px] font-semibold">
               <!-- All 칩은 안 보여요: 아무 칩도 안 고르면 전체예요 (켜진 칩을 다시 누르면 꺼져요. 사용자, 2026-11-19) -->
@@ -3435,8 +3433,8 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             return `<div class="space-y-2">
             ${evs.length ? `<div class="rounded-xl px-4 py-3 text-sm ${evCls}"><p class="font-bold">${evLabel}</p>${evs.map(ev => `<p>${esc(ev.name)} · ${esc(dayLabel(ev.next))}, ${esc(eventHours(ev))}</p>`).join('')}</div>` : ''}
             ${tagLines.map(({ t, x, show }) => show
-              ? `<p class="text-sm leading-relaxed text-slate-800 dark:text-slate-200">${chip(`${esc(tagLabel(t))}`, tagStyle(t.id).soft)} ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`
-              : `<div class="flex">${chip(`${esc(tagLabel(t))}`, tagStyle(t.id).soft)}</div>`).join('')}
+              ? `<p class="text-sm leading-relaxed text-slate-800 dark:text-slate-200">${chip(`${esc(tagLabel(t))}`, TAG_CHIP.soft)} ${esc(x.why)}${/^https:\/\//i.test(x.source || '') ? ` <a href="${esc(x.source)}" target="_blank" rel="noopener" class="text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>`
+              : `<div class="flex">${chip(`${esc(tagLabel(t))}`, TAG_CHIP.soft)}</div>`).join('')}
             </div>`; })() : ''}
 
           <section>
@@ -3465,13 +3463,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           ${isRising(s) ? (() => {
             const n = RISE_NOTES[s.id] || {};
             return `
-          <section class="rounded-2xl px-4 py-5 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-500/10 dark:to-fuchsia-500/10">
+          <section class="rounded-2xl px-4 py-5 bg-slate-50 dark:bg-slate-800/50">
             <h3 class="${H3}">Why more people are searching</h3>
             <p class="mt-2 text-sm text-slate-700 dark:text-slate-300">Searched ${fmtRise(s.rise)} its usual amount over ${esc(recentLabel())}.</p>
             ${n.why ? `<p class="mt-2 text-sm leading-relaxed text-slate-800 dark:text-slate-200">${esc(n.why)}${/^https:\/\//i.test(n.source || '') ? ` <a href="${esc(n.source)}" target="_blank" rel="noopener" class="text-xs text-slate-500 dark:text-slate-400">Source ↗</a>` : ''}</p>` : ''}
             ${n.rising && n.rising.length ? `
             <p class="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">Searches that rose alongside it in the past 7 days (Google Trends, BC)</p>
-            <div class="mt-1.5 flex flex-wrap gap-1.5">${n.rising.map(x => `<span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-white/80 dark:bg-slate-800 text-rose-700 dark:text-rose-300">${esc(x)}</span>`).join('')}</div>` : ''}
+            <div class="mt-1.5 flex flex-wrap gap-1.5">${n.rising.map(x => `<span class="text-xs font-semibold px-2.5 py-1 rounded-md border ${TAG_NEUTRAL}">${esc(x)}</span>`).join('')}</div>` : ''}
             ${aiBlock}
           </section>`; })() : ''}
 
