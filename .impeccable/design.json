@@ -128,6 +128,7 @@
       { "name": "The Two-Voice Rule", "body": "Bricolage for names and headings, Plex for facts. Never set hours, prices or ages in Bricolage.", "section": "typography" },
       { "name": "The Neutral Shadow Rule", "body": "Shadows are neutral ink, never coloured. No glows, no coloured halos, no radial colour washes behind content.", "section": "elevation" },
       { "name": "The Drop-Means-Ours Rule", "body": "Only Tiny Trips places, events and markets use the drop shape. Base map icons stay round and dimmed.", "section": "components" },
+      { "name": "The Quiet Tag Rule", "body": "Tags never get their own colour. If a tag needs to stand out, it isn't a tag: it's a warning (rose) or a selection (teal).", "section": "components" },
       { "name": "The Square-Corners Rule", "body": "Nothing above 6px radius except true circles. Over-rounded corners read as generic.", "section": "shapes" }
     ],
     "dos": [
@@ -144,7 +145,8 @@
       "Don't round cards or buttons beyond 6px.",
       "Don't use category colours as decoration or section backgrounds.",
       "Don't introduce a second accent colour for actions.",
-      "Don't set body facts (hours, prices, ages) in the display font."
+      "Don't set body facts (hours, prices, ages) in the display font.",
+      "Don't use emoji as icons (events, weather, categories, headings, badges). Use the line icon set (`typeIcon`, `wxSvg`, `evDot` in `app.js`); text symbols like ★ for ratings and ✓ are fine."
     ]
   }
 }

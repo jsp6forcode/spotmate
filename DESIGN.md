@@ -232,7 +232,11 @@ Plain and firm.
 ### Chips
 - **Filter / category chips:** 3px corners, white with a hairline border (or a translucent white over the map), a coloured category dot with its line icon on the left, and a muted count on the right. Selected = solid Inlet Teal with white text.
 - **Removable query chips:** Teal Mist background, Teal Deep text, trailing ×.
-- **Badges on cards** ("Festival", "Seasonal", "Pop-up & show"): small 3px tags with a thin coloured border and matching text.
+- **Tags** (event types, news kinds, "For parents", "Few days only", "Today", season chips): one neutral style for all, a hairline Cedar Border with Moss Grey text and 3px corners (`TAG_NEUTRAL` / `TAG_PILL` in `app.js`). The text carries the meaning, not colour. The only coloured tags are product recalls (rose), because they are safety warnings.
+- **Toggles** (Open now, Indoor, Events/Markets on the map, season chips): Wet Stone when off, solid Inlet Teal with white text when on.
+- **Event and market labels on photos:** near-black for events and yellow for markets, matching their map pins.
+
+**The Quiet Tag Rule.** Tags never get their own colour. If a tag needs to stand out, it isn't a tag: it's a warning (rose) or a selection (teal).
 
 ### Cards / Containers
 - **Place card:** 6px corners, white (Forest Night in dark mode), Card rest shadow, photo on top or left with no padding, then name, meta line and facts. Whole card is the tap target, with a visible focus ring.
@@ -268,3 +272,4 @@ A 30×38px drop marker in the category colour with a white outline, a soft neutr
 - **Don't** use category colours as decoration or section backgrounds.
 - **Don't** introduce a second accent colour for actions.
 - **Don't** set body facts (hours, prices, ages) in the display font.
+- **Don't** use emoji as icons (events, weather, categories, headings, badges). Use the line icon set (`typeIcon`, `wxSvg`, `evDot` in `app.js`); text symbols like ★ for ratings and ✓ are fine.
