@@ -242,6 +242,29 @@ const FIREBASE_CONFIG = {
 };
 const FB_VER = '10.12.2';
 const REVIEW_MAX = 600;
+// ── 장소 제보 (2026-11-22): About 폼에서 "Suggest a place"를 고르면 지역·링크·사진까지 받아 Firestore "suggestions"에 저장해요 ──
+// Firebase가 무료(Spark) 요금제라 Storage를 못 써요. 그래서 사진은 브라우저에서 줄인 JPEG(data URL)로 문서 안에 같이 넣어요 (문서 한도 1MiB)
+// 제보는 사이트에 바로 나오지 않아요. 운영자(ADMIN_UID)만 About 탭 #suggestions 에서 읽고 지울 수 있어요 (firestore.rules)
+const ADMIN_UID = '94qUVledUwZccG5aMzxUAf7GyM03';
+const PHOTO_MAX = 650000;   // data URL 글자 수 (firestore.rules 의 700000 안쪽)
+async function shrinkPhoto(file) {
+  if (!file || !/^image\//.test(file.type)) throw new Error('not-image');
+  let img;
+  try { img = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+  catch (e) {   // 일부 브라우저는 createImageBitmap 옵션을 몰라요 → <img>로 읽어요 (HEIC처럼 못 읽는 형식은 여기서 실패)
+    const url = URL.createObjectURL(file);
+    try { img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = url; }); }
+    catch (e2) { throw new Error('unreadable'); } finally { setTimeout(() => URL.revokeObjectURL(url), 1000); }
+  }
+  for (const [side, q] of [[1280, 0.82], [1280, 0.7], [1024, 0.7], [900, 0.6], [720, 0.55]]) {
+    const k = Math.min(1, side / Math.max(img.width, img.height)), c = document.createElement('canvas');
+    c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    const out = c.toDataURL('image/jpeg', q);
+    if (out.length <= PHOTO_MAX) return out;
+  }
+  throw new Error('too-big');
+}
 // Cloudflare Worker 주소. 비어 있으면 AI 없이 위 규칙으로만 해석해요. API 키는 Worker에만 있어요
 const AI_SEARCH_URL = '';
 // Worker가 돌려준 필터 → parseQuery와 같은 모양. 실패하거나 8초가 지나면 null (규칙 검색으로 대신해요)
@@ -978,7 +1001,7 @@ class App {
       }
       if (e.target.dataset.act === 'rvtext' && this.state.reviewDraft) this.state.reviewDraft.text = e.target.value;
       // 피드백 폼: 다른 이유로 화면이 다시 그려져도 쓰던 글이 남게
-      if (e.target.form && e.target.form.dataset.act === 'feedback') this.fbDraft[e.target.name] = e.target.value;
+      if (e.target.form && e.target.form.dataset.act === 'feedback' && !/^(file|checkbox)$/.test(e.target.type)) this.fbDraft[e.target.name] = e.target.value;
     });
     this.root.addEventListener('keydown', e => {
       if (e.target.name !== 'q') return;
@@ -1123,26 +1146,72 @@ class App {
   }
   // ── About 탭의 피드백 폼: Firestore "feedback" 컬렉션에 쓰기만 (읽기는 Firebase 콘솔에서만, firestore.rules 참고) ──
   async sendFeedback() {
-    const d = this.fbDraft, message = (d.message || '').trim();
+    const d = this.fbDraft, message = (d.message || '').trim(), isPlace = d.type === 'place';
     if (d.website) return this.set({ feedbackSent: true, feedbackMsg: '' });   // 봇이 채우는 숨은 칸
-    if (!message) return this.set({ feedbackMsg: 'Please write a short message first.' });
+    if (isPlace && !(d.place || '').trim()) return this.set({ feedbackMsg: 'Please add the place name.' });
+    if (!message) return this.set({ feedbackMsg: isPlace ? 'Please tell us a little about why kids like it.' : 'Please write a short message first.' });
+    if (isPlace && d.photo && !d.photoOk) return this.set({ feedbackMsg: 'Please tick the photo box, or remove the photo.' });
     this.set({ feedbackBusy: true, feedbackMsg: '' });
     try {
       // Firebase는 첫 화면 뒤에 불러와요. 아직이면 잠깐 기다려요
       for (let i = 0; !this.fb && i < 40; i++) await new Promise(r => setTimeout(r, 200));
       if (!this.fb) throw new Error('Firebase not ready');
-      const F = this.fb.F;
-      await F.addDoc(F.collection(this.fb.db, 'feedback'), {
-        type: ['wrong', 'place', 'idea'].includes(d.type) ? d.type : 'idea',
-        place: (d.place || '').trim().slice(0, 100), message: message.slice(0, 1000), email: (d.email || '').trim().slice(0, 100),
+      const F = this.fb.F, cut = (v, n) => (v || '').trim().slice(0, n);
+      if (isPlace) await F.addDoc(F.collection(this.fb.db, 'suggestions'), {
+        name: cut(d.place, 100), area: cut(d.area, 80), link: cut(d.link, 300), why: message.slice(0, 1000), email: cut(d.email, 100),
+        photo: d.photo && d.photoOk ? d.photo : '', photoOk: !!(d.photo && d.photoOk), status: 'new', createdAt: F.serverTimestamp(),
+      });
+      else await F.addDoc(F.collection(this.fb.db, 'feedback'), {
+        type: ['wrong', 'idea'].includes(d.type) ? d.type : 'idea',
+        place: cut(d.place, 100), message: message.slice(0, 1000), email: cut(d.email, 100),
         createdAt: F.serverTimestamp(),
       });
       this.fbDraft = {};
-      this.set({ feedbackBusy: false, feedbackSent: true });
+      this.set({ feedbackBusy: false, feedbackSent: true, feedbackSentPlace: isPlace });
     } catch (e) { console.warn('Feedback failed', e); this.set({ feedbackBusy: false, feedbackMsg: "Sorry, it didn't send. Please try again in a moment." }); }
   }
+  // 운영자용: 제보 목록 읽기·지우기 (firestore.rules 에서 ADMIN_UID 만 허용). 사진은 내려받아 data/photos 등에 넣을 때 써요
+  async loadSuggestions() {
+    if (!this.fb) return;
+    const F = this.fb.F;
+    this.set({ sugAdmin: { busy: true, list: [], msg: '' } });
+    try {
+      const snap = await F.getDocs(F.query(F.collection(this.fb.db, 'suggestions'), F.orderBy('createdAt', 'desc'), F.limit(200)));
+      const list = []; snap.forEach(x => list.push({ id: x.id, ...x.data() }));
+      this.set({ sugAdmin: { busy: false, list, msg: list.length ? '' : 'No suggestions yet.' } });
+    } catch (e) { this.set({ sugAdmin: { busy: false, list: [], msg: `Couldn't load (${e.code || e.message}).` } }); }
+  }
+  async deleteSuggestion(id) {
+    if (!this.fb || !confirm('Delete this suggestion? This cannot be undone.')) return;
+    const F = this.fb.F, a = this.state.sugAdmin || { list: [] };
+    try { await F.deleteDoc(F.doc(this.fb.db, 'suggestions', id)); this.set({ sugAdmin: { ...a, list: a.list.filter(s => s.id !== id) } }); }
+    catch (e) { this.set({ sugAdmin: { ...a, msg: `Couldn't delete (${e.code || e.message}).` } }); }
+  }
+  suggestionsAdminView() {
+    if (location.hash !== '#suggestions') return '';
+    const { user } = this.state, a = this.state.sugAdmin, box = inner => `<section class="mt-6 sm:mt-10 max-w-2xl mx-auto rounded-2xl p-4 sm:p-6 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]"><h3 class="text-base sm:text-xl font-bold">Place suggestions</h3>${inner}</section>`;
+    if (!this.fb) return box('<p class="mt-2 text-sm text-slate-500">Loading…</p>');
+    if (!user) return box('<button data-act="rvsignin" class="mt-3 min-h-[44px] px-5 rounded-xl font-semibold bg-violet-600 text-white">Sign in with Google</button>');
+    if (user.uid !== ADMIN_UID) return box('<p class="mt-2 text-sm text-slate-500">Only the site owner can see suggestions.</p>');
+    const when = t => t && t.toDate ? t.toDate().toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+    const okPhoto = p => typeof p === 'string' && /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(p);
+    const rows = a ? a.list.map(s => `
+      <li class="py-4 border-t border-slate-200 dark:border-slate-700">
+        <p class="font-bold">${esc(s.name)}${s.area ? ` <span class="font-normal text-slate-500">· ${esc(s.area)}</span>` : ''} <span class="text-xs font-normal text-slate-500">${esc(when(s.createdAt))}</span></p>
+        ${s.link ? `<p class="text-sm break-all">${/^https:\/\//.test(s.link) ? `<a href="${esc(s.link)}" target="_blank" rel="noopener noreferrer" class="underline text-violet-700 dark:text-violet-300">${esc(s.link)}</a>` : esc(s.link)}</p>` : ''}
+        <p class="mt-1 text-sm whitespace-pre-line">${esc(s.why)}</p>
+        ${s.email ? `<p class="mt-1 text-xs text-slate-500">Reply to: ${esc(s.email)}</p>` : ''}
+        ${okPhoto(s.photo) ? `<img src="${s.photo}" alt="Photo sent with ${esc(s.name)}" class="mt-2 max-h-64 rounded-lg"><a href="${s.photo}" download="suggestion-${esc(s.id)}.jpg" class="inline-block mt-1 text-sm underline">Download photo</a> <span class="text-xs text-slate-500">(sender ticked: own photo, no children’s faces, OK to use)</span>` : ''}
+        <button data-act="sugdel" data-val="${esc(s.id)}" class="mt-2 block text-sm font-semibold text-rose-700 dark:text-rose-300">Delete</button>
+      </li>`).join('') : '';
+    return box(`
+      <p class="mt-1 text-xs text-slate-500">Only you can see this. Nothing here shows on the site until you add it to the data.</p>
+      <button data-act="sugload" class="mt-3 min-h-[40px] px-4 rounded-lg font-semibold bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300">${a && a.busy ? 'Loading…' : a ? 'Refresh' : 'Load suggestions'}</button>
+      ${a && a.msg ? `<p class="mt-2 text-sm" role="status">${esc(a.msg)}</p>` : ''}
+      <ul class="mt-3">${rows}</ul>`);
+  }
   aboutView() {
-    const d = this.fbDraft, { feedbackBusy, feedbackMsg, feedbackSent } = this.state;
+    const d = this.fbDraft, { feedbackBusy, feedbackMsg, feedbackSent } = this.state, isPlace = d.type === 'place';
     const field = 'mt-1 w-full min-h-[40px] sm:min-h-[44px] px-3 py-1.5 sm:py-2 rounded-xl   bg-slate-100 text-slate-900  dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500';
     const types = [['wrong', 'Something’s wrong (hours, details, a closed place)'], ['place', 'Suggest a place'], ['idea', 'An idea or other feedback']];
     return `
@@ -1158,27 +1227,50 @@ class App {
     <section id="feedback" class="mt-6 sm:mt-10 max-w-2xl mx-auto rounded-2xl p-4 sm:p-6 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]   ">
       <h3 class="text-base sm:text-xl font-bold">Send feedback</h3>
       ${feedbackSent ? `
-      <p class="mt-3 text-sm sm:text-base text-slate-700 dark:text-slate-200" role="status">Thank you so much! Your note is on its way.</p>
+      <p class="mt-3 text-sm sm:text-base text-slate-700 dark:text-slate-200" role="status">${this.state.feedbackSentPlace ? 'Thank you so much! I’ll check the place and add it if it’s a good fit for kids.' : 'Thank you so much! Your note is on its way.'}</p>
       <button data-act="fbagain" class="mt-4 min-h-[44px] px-4 rounded-xl font-semibold   text-slate-700  dark:text-slate-200">Send another</button>` : `
       <p class="mt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300">Wrong hours, a place that closed, a place we’re missing, or anything else. I read every one.</p>
       <form data-act="feedback" class="mt-4 space-y-3 sm:space-y-4">
         <label class="block text-xs sm:text-sm font-semibold">What’s it about?
           <select name="type" class="${field}">${types.map(([v, l]) => `<option value="${v}" ${(d.type || 'wrong') === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>
         </label>
-        <label class="block text-xs sm:text-sm font-semibold">Place name <span class="font-normal text-slate-500 dark:text-slate-400">(optional)</span>
-          <input name="place" maxlength="100" value="${esc(d.place || '')}" class="${field}" placeholder="e.g. Mundy Park">
+        <label class="block text-xs sm:text-sm font-semibold">Place name ${isPlace ? '' : '<span class="font-normal text-slate-500 dark:text-slate-400">(optional)</span>'}
+          <input name="place" maxlength="100" ${isPlace ? 'required' : ''} value="${esc(d.place || '')}" class="${field}" placeholder="e.g. Mundy Park">
         </label>
-        <label class="block text-xs sm:text-sm font-semibold">Your message
-          <textarea name="message" required maxlength="1000" rows="3" class="${field}" placeholder="Tell me what you noticed or what you’d like to see">${esc(d.message || '')}</textarea>
+        ${isPlace ? `
+        <label class="block text-xs sm:text-sm font-semibold">Area or city <span class="font-normal text-slate-500 dark:text-slate-400">(optional)</span>
+          <input name="area" maxlength="80" value="${esc(d.area || '')}" class="${field}" placeholder="e.g. Coquitlam">
         </label>
+        <label class="block text-xs sm:text-sm font-semibold">Address or map link <span class="font-normal text-slate-500 dark:text-slate-400">(optional)</span>
+          <input name="link" maxlength="300" value="${esc(d.link || '')}" class="${field}" placeholder="Paste a Google Maps link or type the address">
+        </label>` : ''}
+        <label class="block text-xs sm:text-sm font-semibold">${isPlace ? 'Why do kids like it?' : 'Your message'}
+          <textarea name="message" required maxlength="1000" rows="3" class="${field}" placeholder="${isPlace ? 'What is there for kids? What ages? Anything parents should know?' : 'Tell me what you noticed or what you’d like to see'}">${esc(d.message || '')}</textarea>
+        </label>
+        ${isPlace ? `
+        <div class="text-xs sm:text-sm">
+          <span class="block font-semibold">A photo you took there <span class="font-normal text-slate-500 dark:text-slate-400">(optional)</span></span>
+          ${d.photo ? `
+          <div class="mt-2 flex items-start gap-3">
+            <img src="${d.photo}" alt="Your photo" class="w-28 h-20 object-cover rounded-lg">
+            <button type="button" data-act="fbphotox" class="min-h-[40px] px-3 rounded-lg font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800">Remove photo</button>
+          </div>
+          <label class="mt-2 flex items-start gap-2 font-normal">
+            <input type="checkbox" name="photoOk" ${d.photoOk ? 'checked' : ''} class="mt-0.5 w-4 h-4 accent-violet-600">
+            <span>I took this photo, it doesn’t show children’s faces, and Tiny Trips may show it on the site.</span>
+          </label>` : `
+          <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" class="mt-1 block w-full text-sm file:mr-3 file:min-h-[40px] file:px-3 file:rounded-lg file:border-0 file:font-semibold file:bg-violet-50 file:text-violet-700 dark:file:bg-violet-500/15 dark:file:text-violet-300">
+          <span class="block mt-1 text-slate-500 dark:text-slate-400">Places with a real photo are easier for parents to picture. Please skip photos with people in them.</span>`}
+        </div>` : ''}
         <label class="block text-xs sm:text-sm font-semibold">Email <span class="font-normal text-slate-500 dark:text-slate-400">(optional, for a reply. Never shown on the site)</span>
           <input name="email" type="email" maxlength="100" value="${esc(d.email || '')}" class="${field}" autocomplete="email">
         </label>
         <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden">
         ${feedbackMsg ? `<p class="text-sm text-rose-700 dark:text-rose-300" role="status">${esc(feedbackMsg)}</p>` : ''}
-        <button type="submit" ${feedbackBusy ? 'disabled aria-busy="true"' : ''} class="min-h-[40px] sm:min-h-[48px] px-5 sm:px-6 text-sm sm:text-base rounded-xl font-bold bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-60">${feedbackBusy ? 'Sending…' : 'Send feedback'}</button>
+        <button type="submit" ${feedbackBusy ? 'disabled aria-busy="true"' : ''} class="min-h-[40px] sm:min-h-[48px] px-5 sm:px-6 text-sm sm:text-base rounded-xl font-bold bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-60">${feedbackBusy ? 'Sending…' : isPlace ? 'Send suggestion' : 'Send feedback'}</button>
       </form>`}
-    </section>`;
+    </section>
+    ${this.suggestionsAdminView()}`;
   }
   reviewStats(id) {
     const list = (this.reviews && this.reviews[id]) || [];
@@ -1672,12 +1764,28 @@ class App {
       case 'share': return this.share(val);
       case 'shareev': return this.shareEvent(val);
       case 'fxtoggle': return this.set({ fxOn: { ...this.state.fxOn, [val]: !this.state.fxOn[val] } });
+      case 'fbphotox': this.fbDraft.photo = ''; this.fbDraft.photoOk = false; return this.set({ feedbackMsg: '' });
+      case 'sugload': return this.loadSuggestions();
+      case 'sugdel': return this.deleteSuggestion(val);
+      // 장소 제보: About 탭 폼을 "Suggest a place"로 열어요 (Explore 목록 아래 링크)
+      case 'suggest': { this.fbDraft = { type: 'place' }; this.hideModal(); window.scrollTo({ top: 0 }); this.set({ view: 'about', feedbackSent: false, feedbackMsg: '' }); return setTimeout(() => { const t = document.getElementById('feedback'); if (t) t.scrollIntoView({ block: 'start' }); }, 0); }
       case 'report': { const s = byId(val); this.fbDraft = { type: 'wrong', place: s ? s.name : '' }; this.hideModal(); this.set({ view: 'about', feedbackSent: false, feedbackMsg: '' }); return setTimeout(() => { const t = document.getElementById('feedback'); if (t) t.scrollIntoView({ block: 'start' }); }, 0); }
       case 'clearplan': store('spotmate-plan', '[]'); return this.set({ plan: [], copyMsg: '', copyText: '' });
     }
   }
   onChange(e) {
     const el = e.target;
+    // 피드백 폼: 종류를 바꾸면 칸이 달라져서 다시 그려요. 사진은 고르자마자 줄여서 들고 있어요 (다시 그려도 남게)
+    if (el.form && el.form.dataset.act === 'feedback') {
+      if (el.name === 'type') { this.fbDraft.type = el.value; return this.set({ feedbackMsg: '' }); }
+      if (el.name === 'photoOk') { this.fbDraft.photoOk = el.checked; return; }
+      if (el.name === 'photo') {
+        const f = el.files && el.files[0]; if (!f) return;
+        this.set({ feedbackMsg: 'Getting your photo ready…' });
+        return shrinkPhoto(f).then(url => { this.fbDraft.photo = url; this.set({ feedbackMsg: '' }); })
+          .catch(err => { this.fbDraft.photo = ''; this.set({ feedbackMsg: err.message === 'too-big' ? 'That photo is too large. Please try a different one.' : 'That photo couldn’t be read. Please choose a JPG or PNG.' }); });
+      }
+    }
     if (el.dataset.act === 'sort') this.set({ sort: el.value });
     if (el.dataset.act === 'cat') this.set({ cat: el.value });
     // 날짜 계획: 다른 날을 고르면 Open now(지금 기준)는 꺼요
@@ -2641,6 +2749,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         // "Show more" 없이 전부 보여줘요 (스크롤이 끊기지 않게)
         return `<div class="hidden grid grid-cols-2 gap-1.5 sm:gap-5 md:grid-cols-3">${items.map(s => this.card(s)).join('')}</div>`;
       })() : evCat ? '' : '<p class="max-sm:px-4 text-sm text-slate-500">No places match these filters.</p>'}
+      ${picks ? '' : `<p class="mt-4 sm:mt-6 max-sm:px-4 text-sm text-slate-600 dark:text-slate-300">Know a great place for kids that’s missing? <button data-act="suggest" class="font-semibold text-violet-700 dark:text-violet-300 underline underline-offset-2">Suggest a place</button></p>`}
     </div>`;
   }
   // 지도 밑 "Good to know this month" (2026-11-19, 사용자: 뉴스 섹션 3·4번): 무료·할인(Free), 건강(Health), 아이 용품 리콜(Recall).

@@ -30,5 +30,22 @@ service cloud.firestore {
         && request.resource.data.email is string && request.resource.data.email.size() <= 100
         && request.resource.data.createdAt == request.time;
     }
+    // 장소 제보 (2026-11-22): 누구나 보낼 수 있어요(로그인 없이). 읽기·지우기는 운영자 계정(uid)만. 고치기는 아무도 못 해요
+    // 사진은 Storage 대신 줄인 JPEG data URL(70만 자 이하)로 문서 안에 들어와요. 사진이 있으면 photoOk(직접 찍음·아이 얼굴 없음·사용 허락)가 true 여야 해요
+    match /suggestions/{id} {
+      allow read, delete: if request.auth != null && request.auth.uid == '94qUVledUwZccG5aMzxUAf7GyM03';
+      allow update: if false;
+      allow create: if request.resource.data.keys().hasOnly(['name', 'area', 'link', 'why', 'email', 'photo', 'photoOk', 'status', 'createdAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 100
+        && request.resource.data.area is string && request.resource.data.area.size() <= 80
+        && request.resource.data.link is string && request.resource.data.link.size() <= 300
+        && request.resource.data.why is string && request.resource.data.why.size() > 0 && request.resource.data.why.size() <= 1000
+        && request.resource.data.email is string && request.resource.data.email.size() <= 100
+        && request.resource.data.photoOk is bool
+        && request.resource.data.photo is string && request.resource.data.photo.size() <= 700000
+        && (request.resource.data.photo == '' || (request.resource.data.photoOk == true && request.resource.data.photo.matches('data:image/jpeg;base64,[A-Za-z0-9+/=]+')))
+        && request.resource.data.status == 'new'
+        && request.resource.data.createdAt == request.time;
+    }
   }
 }
