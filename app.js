@@ -1142,7 +1142,24 @@ class App {
       const snap = await F.getDocs(F.query(F.collection(this.fb.db, 'reviews'), F.orderBy('createdAt', 'desc'), F.limit(3000)));
       snap.forEach(d => { const r = d.data(); (this.reviews[r.spotId] = this.reviews[r.spotId] || []).push({ ...r, id: d.id, date: r.createdAt && r.createdAt.toDate ? r.createdAt.toDate() : new Date() }); });
       this.set({ reviewsOn: true });
+      this.refreshReviewPins();
     } catch (e) { console.warn('Reviews unavailable', e); }
+  }
+  // 지도 핀: 부모 리뷰(Tiny Trips)가 있는 장소는 핀 오른쪽 위에 노란 별 + 리뷰 수 (사용자 요청, 2026-11-23)
+  pinIcon(s) {
+    const st = this.reviewStats(s.id);
+    const badge = st ? `<span class="rv-badge" title="${st.n} parent review${st.n > 1 ? 's' : ''}"><svg viewBox="0 0 24 24" width="10" height="10" aria-hidden="true"><path fill="currentColor" d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.7 7.3L12 17.6 5.7 21.5l1.7-7.3L2 9.5l7.1-.6z"/></svg><span>${st.n}</span></span>` : '';   // ★ 글자는 다른 폰트로 그려져 아래로 쏠려서 SVG 별로 (사용자, 2026-11-23)   // 리뷰가 1개여도 숫자를 보여줘요 (사용자, 2026-11-23)
+    return L.divIcon({ className: '', html: dropPin(s.color, s.ink, s.grp).replace(/<\/div>$/, badge + '</div>'), iconSize: DROP_SIZE, iconAnchor: DROP_ANCHOR, popupAnchor: [0, -34], tooltipAnchor: [0, -20] });
+  }
+  // 리뷰는 지도보다 늦게 올 수 있어서, 받은 뒤 이미 있는 핀을 다시 그려요 (리뷰 쓰기·지우기 뒤에도)
+  refreshReviewPins() {
+    const map = this._leaflet, cl = this._clusters;
+    Object.values(this._pins || {}).forEach(p => {
+      if (!p.item) return;
+      p.mk.setIcon(this.pinIcon(p.item));
+      // 리뷰가 생긴 핀은 묶음에서 빼서 늘 보이게 (지도가 리뷰보다 먼저 그려졌을 때)
+      if (map && cl && cl !== map && this.reviewStats(p.item.id) && cl.hasLayer(p.mk)) { cl.removeLayer(p.mk); p.mk.setZIndexOffset(p.base + 500).addTo(map); }
+    });
   }
   // ── About 탭의 피드백 폼: Firestore "feedback" 컬렉션에 쓰기만 (읽기는 Firebase 콘솔에서만, firestore.rules 참고) ──
   async sendFeedback() {
@@ -1304,13 +1321,13 @@ class App {
       await F.setDoc(F.doc(this.fb.db, 'reviews', id), { spotId, uid: user.uid, name: user.name, rating: d.rating, text, createdAt: F.serverTimestamp() });
       const list = (this.reviews[spotId] || []).filter(r => r.id !== id);
       this.reviews[spotId] = [{ id, spotId, uid: user.uid, name: user.name, rating: d.rating, text, date: new Date() }, ...list];
-      this.set({ reviewBusy: false, reviewDraft: null, reviewMsg: 'Thanks! Your review is up.' });
+      this.set({ reviewBusy: false, reviewDraft: null, reviewMsg: 'Thanks! Your review is up.' }); this.refreshReviewPins();
     } catch (e) { this.set({ reviewBusy: false, reviewMsg: "Couldn't save your review. Try again." }); }
   }
   async reviewDelete(spotId) {
     const { user } = this.state; if (!user) return;
     const id = `${spotId}_${user.uid}`;
-    try { await this.fb.F.deleteDoc(this.fb.F.doc(this.fb.db, 'reviews', id)); this.reviews[spotId] = (this.reviews[spotId] || []).filter(r => r.id !== id); this.set({ reviewMsg: 'Review deleted.', reviewDraft: null }); }
+    try { await this.fb.F.deleteDoc(this.fb.F.doc(this.fb.db, 'reviews', id)); this.reviews[spotId] = (this.reviews[spotId] || []).filter(r => r.id !== id); this.set({ reviewMsg: 'Review deleted.', reviewDraft: null }); this.refreshReviewPins(); }
     catch (e) { this.set({ reviewMsg: "Couldn't delete it. Try again." }); }
   }
   // 모달 안 "Parent reviews" 칸: 평균 별점, 리뷰 목록, 쓰기(로그인 필요)
@@ -3061,11 +3078,13 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
       maxClusterRadius: z => z >= 12 ? 6 : z >= 11 ? 10 : 14, disableClusteringAtZoom: 13, showCoverageOnHover: false, spiderfyOnMaxZoom: false, removeOutsideVisibleBounds: true,
       iconCreateFunction: c => { const n = c.getChildCount(), w = clusterWidth(n); return L.divIcon({ className: '', html: `<div class="pin-cluster" style="width:${w}px">+${n}</div>`, iconSize: [w, CLUSTER_SIZE], iconAnchor: [w / 2, CLUSTER_SIZE / 2] }); } }) : map;
     items.forEach(s => {
-      // 핀 = 장소 종류 색 동그라미 + 흰색 아이콘 (이모지를 흰 실루엣으로: .glyph)
-      const icon = L.divIcon({ className: '', html: dropPin(s.color, s.ink, s.grp), iconSize: DROP_SIZE, iconAnchor: DROP_ANCHOR, popupAnchor: [0, -34], tooltipAnchor: [0, -20] });
+      // 핀 = 장소 종류 색 동그라미 + 흰색 아이콘 (이모지를 흰 실루엣으로: .glyph). 부모 리뷰가 있으면 별 배지 (pinIcon)
+      const icon = this.pinIcon(s);
       // 마우스: 올리면 작은 카드, 누르면 모달. 터치 화면: 핀을 누르면 작은 카드, 그 카드를 누르면 모달 (호버가 없어서)
       const coarse = matchMedia('(pointer: coarse)').matches, sp = byId(s.id);
-      const mk = L.marker([s.lat, s.lng], { icon, keyboard: true, zIndexOffset: z(s.mark), alt: s.name, title: phone ? s.name : '' }).addTo(layer).on('click', () => {
+      // 리뷰가 있는 장소는 "+N"에 묶지 않고 늘 보이게 (별 배지가 묶음에 가려져서, 2026-11-23)
+      const rv = !!this.reviewStats(s.id);
+      const mk = L.marker([s.lat, s.lng], { icon, keyboard: true, zIndexOffset: z(s.mark) + (rv ? 500 : 0), alt: s.name, title: phone ? s.name : '' }).addTo(rv ? map : layer).on('click', () => {
         if (phone && sp) return this._sheetShow && this._sheetShow(s.id);
         if (coarse && sp) {
           if (this._tip) map.closeTooltip(this._tip);
@@ -3076,7 +3095,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         mk.closeTooltip(); this.opener = null; this.openModal(s.id);
       });
       if (sp && !coarse && !phone) mk.bindTooltip(() => this.miniCard(sp), { className: 'card-tip', direction: 'auto', offset: [0, 0], opacity: 1, sticky: false });
-      this._pins[s.id] = { mk, base: z(s.mark) };
+      this._pins[s.id] = { mk, base: z(s.mark), item: s };
     });
     // 행사·마켓 핀: 누르면 다음 날짜·시간과 장소/공식 정보 링크
     (this._map.events || []).forEach((ev, ei) => {
