@@ -2309,11 +2309,17 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   }
 
   // ── 행사 ──
-  eventRow(ev, compact = false) {
+  // 행사 사진 (2026-11-23 사용자 요청): 행사장 실제 사진만. 행사 데이터의 photo(위키미디어 공용 행사장 사진) → 연결된 장소의 실제 사진. 스톡 사진은 안 써요(행사장이 아니라서).
+  // 행사 포스터는 주최 측 저작물이라 허락 없이 못 써요
+  eventPhoto(ev) {
     const spot = ev.spotId && byId(ev.spotId);
+    return ev.photo || (spot && spot.photo) || null;
+  }
+  eventRow(ev, compact = false) {
+    const spot = ev.spotId && byId(ev.spotId), photo = this.eventPhoto(ev);
     return `
       <div id="ev-${esc(ev.id)}" class="flex gap-3 rounded-xl p-4 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]   ">
-        ${eventDate(ev)}
+        ${photo ? `<div class="shrink-0 flex flex-col gap-2 items-center">${eventDate(ev)}<div class="w-16 h-16 sm:w-24 sm:h-24 rounded-lg overflow-hidden">${this.cover({ name: ev.name, photo }, 'h-full')}</div></div>` : eventDate(ev)}
         <div class="flex-1 min-w-0">
           <p class="font-brand font-bold leading-snug">${esc(ev.name)}${ev.forParents ? ` ${PARENTS_BADGE}` : ''}${RARE_EVENT.includes(ev.type) ? ' <span class="ml-1 ' + TAG_PILL + '">Few days only</span>' : ''}</p>
           <p class="text-sm text-slate-600 dark:text-slate-300">${esc(eventHours(ev))} · ${esc(eventWhen(ev))}</p>
@@ -2817,7 +2823,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (!list.length) return '';
     const row = ev => { const sp = byId(ev.spotId); return `
         <li><button data-act="open" data-val="${esc(ev.spotId)}" class="w-full flex items-center gap-3 sm:gap-4 py-2.5 text-left">
-          <div class="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-md overflow-hidden pointer-events-none">${this.cover(sp, 'h-full')}</div>
+          <div class="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-md overflow-hidden pointer-events-none">${this.cover(ev.photo ? { ...sp, photo: ev.photo } : sp, 'h-full')}</div>
           <div class="min-w-0 flex-1">
             <p class="font-brand font-bold text-[15px] sm:text-base leading-snug clamp2">${esc(ev.name)}</p>
             <p class="mt-1 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200">${esc(eventWhen(ev))}</p>
