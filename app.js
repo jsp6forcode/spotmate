@@ -129,8 +129,10 @@ const CAT_GROUPS = {
   // 핀 색 (2026-11-16 디자인 정리): Tailwind 원색 대신 채도를 낮춘 밴쿠버 색. 공원=이끼, 트레일·해변=유목, 농장=올리브, 수영·스케이트=빙하 물빛, 박물관·도서관=저녁 안개 보라, 쇼핑=베리, 실내 놀이·체험=삼나무 껍질
   // 핀 색 (2026-11-19, 사용자: 색약이라 구별이 안 돼요 → 의미 있는 색으로): 장소가 뭔지 떠오르는 색. 공원 = 초록, 트레일·해변 = 모래, 농장 = 갈색, 물·얼음 = 하늘색, 박물관·도서관 = 보라,
   // 실내 놀이·놀이기구 = 주황, 미술 = 주홍, 쇼핑 = 분홍. 색약이어도 구별되게 밝기를 크게 다르게 하고(밝은 색엔 진한 아이콘 ink), 아이콘 모양이 1차 구별
-  playground: { label: 'Playground & park', color: '#2E8B3E', ink: '#fff', kinds: ['play', 'water', 'park', 'garden'] },   // 정원도 공원과 같이 (사용자 요청, 2026-10-21)
-  outdoors:   { label: 'Trail & beach', color: '#D2B07A', ink: '#1f2328', kinds: ['trail', 'beach'] },
+  // 정원도 공원과 같이 (사용자 요청, 2026-10-21). 트레일도 놀이터·공원과 같은 종류로, 해변은 따로 (사용자 요청, 2026-11-23)
+  playground: { label: 'Park, playground & trail', color: '#2E8B3E', ink: '#fff', kinds: ['play', 'water', 'park', 'garden', 'trail'] },
+  // 키 'outdoors'는 예전 링크(?cat=outdoors)가 깨지지 않게 그대로 두고, 이제 해변·호수만
+  outdoors:   { label: 'Beach & lake', color: '#D2B07A', ink: '#1f2328', kinds: ['beach'] },
   pool:       { label: 'Pool', color: '#56B4E9', ink: '#1f2328', kinds: ['pool'] },
   museum:     { label: 'Museum', color: '#6A4C93', ink: '#fff', kinds: ['museum', 'aquarium'] },
   mall:       { label: 'Mall & shops', color: '#CC79A7', ink: '#1f2328', kinds: ['mall', 'shop'] },
@@ -144,7 +146,7 @@ const CAT_GROUPS = {
 // 장소 종류 선 아이콘 (2026-11-19, 사용자: 이모지를 흰색으로 바꾸니 무슨 장소인지 안 보여요): 지도 핀·칩·카드 종류 표시에 같은 흰 선 아이콘을 써요
 const TYPE_ICONS = {
   playground: '<path d="M12 22v-6"/><path d="M12 16c-4 0-6.5-2.5-6.5-5.5S8 5 12 2c4 3 6.5 5.5 6.5 8.5S16 16 12 16z"/>',
-  outdoors: '<path d="M2 18l7-12 4 6 3-4 6 10z"/>',
+  outdoors: '<path d="M3 11a9 7 0 0 1 18 0z"/><path d="M12 11v9"/><path d="M3 21h18"/>',   // 해변: 비치 파라솔 (트레일 산 모양에서 바꿈. 물결은 수영장 아이콘과 헷갈려서)
   pool: '<circle cx="12" cy="6" r="2"/><path d="M2 14c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/><path d="M2 20c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/>',
   museum: '<path d="M2 9l10-6 10 6z"/><path d="M5 9v10M9.5 9v10M14.5 9v10M19 9v10"/><path d="M3 21h18"/>',
   mall: '<path d="M5 8h14l-1.2 13H6.2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
@@ -1148,7 +1150,7 @@ class App {
   // 지도 핀: 부모 리뷰(Tiny Trips)가 있는 장소는 핀 오른쪽 위에 노란 별 + 리뷰 수 (사용자 요청, 2026-11-23)
   pinIcon(s) {
     const st = this.reviewStats(s.id);
-    const badge = st ? `<span class="rv-badge" title="${st.n} parent review${st.n > 1 ? 's' : ''}"><svg viewBox="0 0 24 24" width="10" height="10" aria-hidden="true"><path fill="currentColor" d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.7 7.3L12 17.6 5.7 21.5l1.7-7.3L2 9.5l7.1-.6z"/></svg><span>${st.n}</span></span>` : '';   // ★ 글자는 다른 폰트로 그려져 아래로 쏠려서 SVG 별로 (사용자, 2026-11-23)   // 리뷰가 1개여도 숫자를 보여줘요 (사용자, 2026-11-23)
+    const badge = st ? `<span class="rv-badge" title="Average ${(Math.round(st.avg * 10) / 10).toFixed(1)} from ${st.n} parent review${st.n > 1 ? 's' : ''}"><svg viewBox="0 0 24 24" width="10" height="10" aria-hidden="true"><path fill="currentColor" d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.7 7.3L12 17.6 5.7 21.5l1.7-7.3L2 9.5l7.1-.6z"/></svg><span>${(Math.round(st.avg * 10) / 10).toFixed(1)}</span></span>` : '';   // 알약 안 숫자 = 평균 별점 (리뷰 수는 title에, 사용자 2026-11-23)   // ★ 글자는 다른 폰트로 그려져 아래로 쏠려서 SVG 별로 (사용자, 2026-11-23)   // 리뷰가 1개여도 숫자를 보여줘요 (사용자, 2026-11-23)
     return L.divIcon({ className: '', html: dropPin(s.color, s.ink, s.grp).replace(/<\/div>$/, badge + '</div>'), iconSize: DROP_SIZE, iconAnchor: DROP_ANCHOR, popupAnchor: [0, -34], tooltipAnchor: [0, -20] });
   }
   // 리뷰는 지도보다 늦게 올 수 있어서, 받은 뒤 이미 있는 핀을 다시 그려요 (리뷰 쓰기·지우기 뒤에도)
