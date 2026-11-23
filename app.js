@@ -1146,9 +1146,12 @@ class App {
   }
   // ── About 탭의 피드백 폼: Firestore "feedback" 컬렉션에 쓰기만 (읽기는 Firebase 콘솔에서만, firestore.rules 참고) ──
   async sendFeedback() {
-    const d = this.fbDraft, message = (d.message || '').trim(), isPlace = d.type === 'place';
+    // 'photo' = 이미 있는 장소의 사진 보내기 (2026-11-23). 제보와 같은 suggestions 컬렉션에 들어가요 (규칙 변경 없이). 사진 필수, 글은 선택
+    const isPhoto = d.type === 'photo', isPlace = d.type === 'place' || isPhoto;
+    const message = (d.message || '').trim() || (isPhoto ? 'Photo for this place' : '');
     if (d.website) return this.set({ feedbackSent: true, feedbackMsg: '' });   // 봇이 채우는 숨은 칸
     if (isPlace && !(d.place || '').trim()) return this.set({ feedbackMsg: 'Please add the place name.' });
+    if (isPhoto && !d.photo) return this.set({ feedbackMsg: 'Please choose a photo first.' });
     if (!message) return this.set({ feedbackMsg: isPlace ? 'Please tell us a little about why kids like it.' : 'Please write a short message first.' });
     if (isPlace && d.photo && !d.photoOk) return this.set({ feedbackMsg: 'Please tick the photo box, or remove the photo.' });
     this.set({ feedbackBusy: true, feedbackMsg: '' });
@@ -1167,7 +1170,7 @@ class App {
         createdAt: F.serverTimestamp(),
       });
       this.fbDraft = {};
-      this.set({ feedbackBusy: false, feedbackSent: true, feedbackSentPlace: isPlace });
+      this.set({ feedbackBusy: false, feedbackSent: true, feedbackSentPlace: isPhoto ? 'photo' : isPlace });
     } catch (e) { console.warn('Feedback failed', e); this.set({ feedbackBusy: false, feedbackMsg: "Sorry, it didn't send. Please try again in a moment." }); }
   }
   // 운영자용: 제보 목록 읽기·지우기 (firestore.rules 에서 ADMIN_UID 만 허용). 사진은 내려받아 data/photos 등에 넣을 때 써요
@@ -1211,9 +1214,11 @@ class App {
       <ul class="mt-3">${rows}</ul>`);
   }
   aboutView() {
-    const d = this.fbDraft, { feedbackBusy, feedbackMsg, feedbackSent } = this.state, isPlace = d.type === 'place';
+    const d = this.fbDraft, { feedbackBusy, feedbackMsg, feedbackSent } = this.state, isPhoto = d.type === 'photo', isNew = d.type === 'place', isPlace = isNew || isPhoto;
     const field = 'mt-1 w-full min-h-[40px] sm:min-h-[44px] px-3 py-1.5 sm:py-2 rounded-xl   bg-slate-100 text-slate-900  dark:bg-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500';
-    const types = [['wrong', 'Something’s wrong (hours, details, a closed place)'], ['place', 'Suggest a place'], ['idea', 'An idea or other feedback']];
+    const types = [['wrong', 'Something’s wrong (hours, details, a closed place)'], ['place', 'Suggest a place'], ['photo', 'Share a photo of a place'], ['idea', 'An idea or other feedback']];
+    // 사진 보내기가 드롭다운 안에만 있으면 안 보여서 (사용자 지적, 2026-11-23) 폼 위에 바로 가는 버튼 두 개
+    const quick = (v, l) => `<button type="button" data-act="fbtype" data-val="${v}" aria-pressed="${d.type === v}" class="min-h-[40px] px-3 rounded-lg text-sm font-semibold ${d.type === v ? 'bg-violet-600 text-white' : 'bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300'}">${l}</button>`;
     return `
     <section class="mt-5 sm:mt-8 max-w-2xl mx-auto">
       <h2 class="text-xl sm:text-3xl font-extrabold tracking-tight">Hello, fellow parents!</h2>
@@ -1227,9 +1232,10 @@ class App {
     <section id="feedback" class="mt-6 sm:mt-10 max-w-2xl mx-auto rounded-2xl p-4 sm:p-6 bg-white dark:bg-slate-900 shadow-[0_1px_2px_rgba(15,23,42,.04),0_4px_16px_rgba(15,23,42,.07)]   ">
       <h3 class="text-base sm:text-xl font-bold">Send feedback</h3>
       ${feedbackSent ? `
-      <p class="mt-3 text-sm sm:text-base text-slate-700 dark:text-slate-200" role="status">${this.state.feedbackSentPlace ? 'Thank you so much! I’ll check the place and add it if it’s a good fit for kids.' : 'Thank you so much! Your note is on its way.'}</p>
+      <p class="mt-3 text-sm sm:text-base text-slate-700 dark:text-slate-200" role="status">${this.state.feedbackSentPlace === 'photo' ? 'Thank you so much! I’ll check the photo and add it to the place.' : this.state.feedbackSentPlace ? 'Thank you so much! I’ll check the place and add it if it’s a good fit for kids.' : 'Thank you so much! Your note is on its way.'}</p>
       <button data-act="fbagain" class="mt-4 min-h-[44px] px-4 rounded-xl font-semibold   text-slate-700  dark:text-slate-200">Send another</button>` : `
-      <p class="mt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300">Wrong hours, a place that closed, a place we’re missing, or anything else. I read every one.</p>
+      <p class="mt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300">Wrong hours, a place that closed, a place we’re missing, a photo you took, or anything else. I read every one.</p>
+      <div class="mt-3 flex flex-wrap gap-2">${quick('place', 'Suggest a place')}${quick('photo', 'Share a photo')}</div>
       <form data-act="feedback" class="mt-4 space-y-3 sm:space-y-4">
         <label class="block text-xs sm:text-sm font-semibold">What’s it about?
           <select name="type" class="${field}">${types.map(([v, l]) => `<option value="${v}" ${(d.type || 'wrong') === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>
@@ -1237,19 +1243,16 @@ class App {
         <label class="block text-xs sm:text-sm font-semibold">Place name ${isPlace ? '' : '<span class="font-normal text-slate-500 dark:text-slate-400">(optional)</span>'}
           <input name="place" maxlength="100" ${isPlace ? 'required' : ''} value="${esc(d.place || '')}" class="${field}" placeholder="e.g. Mundy Park">
         </label>
-        ${isPlace ? `
+        ${isNew ? `
         <label class="block text-xs sm:text-sm font-semibold">Area or city <span class="font-normal text-slate-500 dark:text-slate-400">(optional)</span>
           <input name="area" maxlength="80" value="${esc(d.area || '')}" class="${field}" placeholder="e.g. Coquitlam">
         </label>
         <label class="block text-xs sm:text-sm font-semibold">Address or map link <span class="font-normal text-slate-500 dark:text-slate-400">(optional)</span>
           <input name="link" maxlength="300" value="${esc(d.link || '')}" class="${field}" placeholder="Paste a Google Maps link or type the address">
         </label>` : ''}
-        <label class="block text-xs sm:text-sm font-semibold">${isPlace ? 'Why do kids like it?' : 'Your message'}
-          <textarea name="message" required maxlength="1000" rows="3" class="${field}" placeholder="${isPlace ? 'What is there for kids? What ages? Anything parents should know?' : 'Tell me what you noticed or what you’d like to see'}">${esc(d.message || '')}</textarea>
-        </label>
         ${isPlace ? `
         <div class="text-xs sm:text-sm">
-          <span class="block font-semibold">A photo you took there <span class="font-normal text-slate-500 dark:text-slate-400">(optional)</span></span>
+          <span class="block font-semibold">A photo you took there ${isPhoto ? '' : '<span class="font-normal text-slate-500 dark:text-slate-400">(optional)</span>'}</span>
           ${d.photo ? `
           <div class="mt-2 flex items-start gap-3">
             <img src="${d.photo}" alt="Your photo" class="w-28 h-20 object-cover rounded-lg">
@@ -1262,12 +1265,15 @@ class App {
           <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" class="mt-1 block w-full text-sm file:mr-3 file:min-h-[40px] file:px-3 file:rounded-lg file:border-0 file:font-semibold file:bg-violet-50 file:text-violet-700 dark:file:bg-violet-500/15 dark:file:text-violet-300">
           <span class="block mt-1 text-slate-500 dark:text-slate-400">Places with a real photo are easier for parents to picture. Please skip photos with people in them.</span>`}
         </div>` : ''}
+        <label class="block text-xs sm:text-sm font-semibold">${isNew ? 'Why do kids like it?' : isPhoto ? 'Anything to add? <span class="font-normal text-slate-500 dark:text-slate-400">(optional)</span>' : 'Your message'}
+          <textarea name="message" ${isPhoto ? '' : 'required'} maxlength="1000" rows="3" class="${field}" placeholder="${isNew ? 'What is there for kids? What ages? Anything parents should know?' : isPhoto ? 'e.g. the new playground by the parking lot' : 'Tell me what you noticed or what you’d like to see'}">${esc(d.message || '')}</textarea>
+        </label>
         <label class="block text-xs sm:text-sm font-semibold">Email <span class="font-normal text-slate-500 dark:text-slate-400">(optional, for a reply. Never shown on the site)</span>
           <input name="email" type="email" maxlength="100" value="${esc(d.email || '')}" class="${field}" autocomplete="email">
         </label>
         <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden">
         ${feedbackMsg ? `<p class="text-sm text-rose-700 dark:text-rose-300" role="status">${esc(feedbackMsg)}</p>` : ''}
-        <button type="submit" ${feedbackBusy ? 'disabled aria-busy="true"' : ''} class="min-h-[40px] sm:min-h-[48px] px-5 sm:px-6 text-sm sm:text-base rounded-xl font-bold bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-60">${feedbackBusy ? 'Sending…' : isPlace ? 'Send suggestion' : 'Send feedback'}</button>
+        <button type="submit" ${feedbackBusy ? 'disabled aria-busy="true"' : ''} class="min-h-[40px] sm:min-h-[48px] px-5 sm:px-6 text-sm sm:text-base rounded-xl font-bold bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-60">${feedbackBusy ? 'Sending…' : isPhoto ? 'Send photo' : isPlace ? 'Send suggestion' : 'Send feedback'}</button>
       </form>`}
     </section>
     ${this.suggestionsAdminView()}`;
@@ -1706,6 +1712,7 @@ class App {
       case 'savedtab': return this.set({ savedTab: val === 'reviews' ? 'reviews' : 'saved' });
       case 'rvsignin': return this.reviewSignIn();
       case 'fbagain': return this.set({ feedbackSent: false, feedbackMsg: '' });
+      case 'fbtype': this.fbDraft.type = val; return this.set({ feedbackMsg: '' });
       case 'rvsignout': this.fb.A.signOut(this.fb.auth); return this.set({ reviewDraft: null, reviewMsg: '' });
       case 'rvwrite': { const mine = (this.reviews[val] || []).find(r => this.state.user && r.uid === this.state.user.uid); return this.set({ reviewDraft: { id: val, rating: mine ? mine.rating : 0, text: mine ? mine.text : '' }, reviewMsg: '' }); }
       case 'rvstar': return this.set({ reviewDraft: { ...this.state.reviewDraft, rating: +val } });

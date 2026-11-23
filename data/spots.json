@@ -86,7 +86,7 @@
       "tips": []
     },
     {
-      "id": "seatosky", "kids": true, "hours": "Mo-Su 09:00-18:00", "hoursSource": "web", "hoursUrl": "https://www.seatoskygondola.com/", "hoursUntil": "2026-11-07", "cat": "nature", "name": "Sea to Sky Gondola", "area": "Squamish",
+      "id": "seatosky", "kids": true, "hours": "Nov 16-Nov 26 off; Nov 27-Dec 31 09:00-17:00", "hoursSource": "web", "hoursUrl": "https://www.seatoskygondola.com/hours-and-prices/", "hoursUntil": "2026-12-31", "cat": "nature", "name": "Sea to Sky Gondola", "area": "Squamish",
       "lat": 49.6751, "lng": -123.157, "emoji": "🏔️", "placeId": "ChIJZ2GCywdYhlQRB8ip3H65t6c",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Sea_to_Sky_Gondola_02.jpg/960px-Sea_to_Sky_Gondola_02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"DarkNight0917","license":"CC BY-SA 4.0","licenseUrl":"https://creativecommons.org/licenses/by-sa/4.0","source":"https://commons.wikimedia.org/wiki/File:Sea_to_Sky_Gondola_02.jpg"},
       "trend": [11, 17, 20], "env": "outdoor", "price": "$$$", "time": "Half day", "crowd": "attraction", "weather": ["sunny"],
