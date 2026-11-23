@@ -91,7 +91,7 @@ components:
     textColor: "{colors.forest-night}"
     rounded: "{rounded.md}"
     padding: "0 12px"
-    height: "36px"
+    height: "32px"
   chip-selected:
     backgroundColor: "{colors.inlet-teal}"
     textColor: "{colors.white}"
@@ -107,17 +107,15 @@ components:
     backgroundColor: "{colors.wet-stone}"
     textColor: "{colors.forest-night}"
     rounded: "{rounded.lg}"
-    padding: "8px 12px"
-    height: "44px"
+    padding: "0 16px 0 40px"
+    height: "36px"
   card-place:
     backgroundColor: "{colors.white}"
     textColor: "{colors.forest-night}"
     rounded: "{rounded.xl}"
   card-section:
-    backgroundColor: "{colors.white}"
     textColor: "{colors.forest-night}"
-    rounded: "{rounded.xl}"
-    padding: "20px"
+    padding: "20px 0 0"
   map-pin:
     width: "30px"
     height: "38px"
@@ -131,12 +129,12 @@ components:
 
 Tiny Trips should feel like a well-thumbed local field guide a Vancouver parent keeps in the car: sea-and-forest colours, plain facts in a steady order, and real photos doing the selling. The palette comes from the place itself: deep Burrard Inlet teal for anything you can act on, and the blue-grey of a wet sky and damp cedar for everything else. Colour that means something (map pins, category dots) is the only bright colour on the page.
 
-Density is practical, not airy. A parent on a phone, one hand on a stroller, should be able to scan a card in a second: photo, name, today's hours, ages, distance. Corners are almost square on purpose (2–6px), a deliberate step away from the over-rounded, bubbly look; only circles (pins, dots, the heart, the back-to-top button) stay round. Bricolage Grotesque gives headings a friendly, slightly hand-made voice; IBM Plex Sans keeps facts plain and legible.
+Density is practical, not airy. A parent on a phone, one hand on a stroller, should be able to scan a pin card in a second: photo, name, today's hours, ages, distance. Corners are almost square on purpose (2–6px), a deliberate step away from the over-rounded, bubbly look; only circles (pins, dots, the heart, the back-to-top button) stay round. Bricolage Grotesque gives headings a friendly, slightly hand-made voice; IBM Plex Sans keeps facts plain and legible.
 
-Light and dark themes are both first-class. Dark mode is a deep forest-night floor, not pure black, and map tiles are inverted to match.
+Light and dark themes are both first-class. Dark mode is a deep forest-night floor, not pure black, and the main map uses its own dark vector style (only the fallback raster tiles are inverted).
 
 **Key Characteristics:**
-- Photo-led place cards on a pale rain-sky page
+- Map first: photo-led pin cards over the map, on a pale rain-sky page
 - One action colour: inlet teal
 - Near-square corners; circles only for pins and dots
 - Category colour is meaning, never decoration
@@ -180,13 +178,15 @@ Okabe-Ito-based, chosen for colour-blind users and for meaning: park = green, tr
 **Display Font:** Bricolage Grotesque (with system-ui), weights 700 and 800 only
 **Body Font:** IBM Plex Sans (with system-ui, -apple-system, Segoe UI), weights 400–700
 
+**How it is applied:** `h1`–`h3` get Bricolage from a base rule in `index.html`. Names that aren't headings (pin card, hover card, search suggestion, event and popup names, news titles, Saved, Nearby, empty-state titles) carry `font-brand` in `app.js`. A tag inside a name carries `font-sans`. Any new element showing a name needs the class.
+
 **Character:** Bricolage is warm and a little quirky, which suits the brand name and headings; Plex is sober and highly legible, which suits hours, prices and ages.
 
 ### Hierarchy
 - **Display** (800, 30px, tight tracking): the place window title and big page titles.
-- **Headline** (800, 24px): the hero "Tiny Trips" title and section headings like "Events, markets & festivals".
+- **Headline** (800, 20px on phones, 24px from 640px): section headings like "Events, markets & festivals". The hero "Tiny Trips" title is 24px, 30px from 768px.
 - **Title** (800, 18px): every section heading inside the place window; all sections share this one style.
-- **Card Title** (700, 15px, Bricolage): place and event names on cards; truncated or clamped to two lines.
+- **Card Title** (700, 14–16px, Bricolage): place, event and news names; clamped to two lines or truncated on one-line rows. Never below 14px in Bricolage.
 - **Body** (400, 16px/24px): running text.
 - **Body Small** (400, 14px, relaxed): descriptions, tips, meta lines in Moss Grey.
 - **Label** (600, 12px): chips, badges, filter labels, counts.
@@ -196,15 +196,15 @@ Okabe-Ito-based, chosen for colour-blind users and for meaning: park = green, tr
 
 ## Layout
 
-A single centred column, max 1152px wide (`max-w-6xl`), with 16px side gutters on phones and 24px from 768px up. The home page stacks: photo hero with weather, sticky filter bar, category chip row, map, then a card grid. Cards are one column on phones and grow to a multi-column grid on wider screens; on the map view, the list snaps card rows under the map on touch devices.
+A single centred column, max 1152px wide (`max-w-6xl`), with 16px side gutters on phones and 24px from 768px up. The home page stacks: photo hero with weather, filter bar (it scrolls away, it is not sticky), map with the category chip row on top of it, then events, news and safety. There is no place list on Explore at any width (owner decision 2026-11-19): tapping a pin opens a swipeable row of pin cards over the bottom of the map. The card grid code remains but is hidden there.
 
-Spacing follows Tailwind's 4px step: 8px inside chips, 16px card padding on phones and 20px from 640px up, 32px between major sections. Touch targets are at least 32px (chips) and 40–44px (buttons, inputs). Safe-area insets are respected at the top and bottom.
+Spacing follows Tailwind's 4px step: 8px inside chips, 16px card padding on phones and 20px from 640px up, 32px between major sections. Touch target goal: at least 32px for chips and 40–44px for buttons and inputs. **Known gaps:** on phones category chips are 26px, map toggles 23px, season chips 21px and search 30px; filter buttons are 32px at every width. Safe-area insets are respected at the top and bottom.
 
 Breakpoints: 640px (`sm`) and 768px (`md`).
 
 ## Elevation & Depth
 
-Soft lift on content, flat everywhere else. Place cards and dialogs float on wide, low-opacity neutral shadows tinted with the dark ink colour; hover deepens the shadow rather than moving the card. Section cards in the place window use a hairline border instead of a shadow. The photo hero uses an even Forest Night scrim (56–62%, Night Floor 62–76% in dark mode) so white text reads over the bright sky and water.
+Soft lift on content, flat everywhere else. Place cards and dialogs float on wide, low-opacity neutral shadows tinted with the dark ink colour; hover deepens the shadow rather than moving the card. Sections in the place window are unboxed: a hairline rule above each heading, no fill and no shadow. The photo hero uses an even Forest Night scrim (56–62%, Night Floor 62–76% in dark mode) so white text reads over the bright sky and water.
 
 ### Shadow Vocabulary
 - **Card rest** (`box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.07)`): place cards and empty-state panels.
@@ -227,35 +227,39 @@ Plain and firm.
 - **Shape:** gently squared (4px).
 - **Primary:** Inlet Teal fill, white semibold text, 8px × 16px padding, 40px minimum height.
 - **Hover / Focus:** hover darkens to Inlet Teal Deep; focus shows a 2px Inlet Teal Bright outline offset 2px.
-- **Soft:** Wet Stone fill with Forest Night text for secondary toggles ("Open now", "Indoor"); becomes Inlet Teal with white text when pressed.
+- **Soft:** 32px tall, Wet Stone fill with Forest Night text for secondary toggles ("Open now", "Indoor"); becomes Inlet Teal with white text when pressed.
 
 ### Chips
 - **Filter / category chips:** 3px corners, white with a hairline border (or a translucent white over the map), a coloured category dot with its line icon on the left, and a muted count on the right. Selected = solid Inlet Teal with white text.
 - **Removable query chips:** Teal Mist background, Teal Deep text, trailing ×.
-- **Tags** (event types, news kinds, "For parents", "Few days only", "Today", season chips): one neutral style for all, a hairline Cedar Border with Moss Grey text and 3px corners (`TAG_NEUTRAL` / `TAG_PILL` in `app.js`). The text carries the meaning, not colour. The only coloured tags are product recalls (rose), because they are safety warnings.
+- **Tags** (news kinds, "For parents", "Few days only", "Today", season chips): one neutral style for all, a hairline Cedar Border with Moss Grey text and 3px corners (`TAG_NEUTRAL` / `TAG_PILL` in `app.js`). The text carries the meaning, not colour. The only coloured tags are product recalls (rose), because they are safety warnings.
 - **Toggles** (Open now, Indoor, Events/Markets on the map, season chips): Wet Stone when off, solid Inlet Teal with white text when on.
 - **Tags on fixed backgrounds:** a tag on a photo is solid white with Slate Ink text (`TAG_ON_PHOTO`). A tag in a Leaflet popup, which stays white in dark mode, always uses dark text (`PARENTS_BADGE_POPUP`). Neither takes `dark:` colours.
+- **Category in lists** (pin card, Saved): a 16px category dot with its icon, then the name in plain grey text. Never a filled category badge. Saved's order number is a Wet Stone square, not a coloured circle.
+- **Event rows:** lead with a date block (weekday, Today, Tomorrow or Until; a 24px day; the month) in Plex with tabular numerals, not an icon. The event type is plain text in the detail line, not a tag above the title.
 - **Event and market labels on photos:** near-black for events and yellow for markets, matching their map pins.
 
 **The Quiet Tag Rule.** Tags never get their own colour. If a tag needs to stand out, it isn't a tag: it's a warning (rose) or a selection (teal).
 
 ### Cards / Containers
-- **Place card:** 6px corners, white (Forest Night in dark mode), Card rest shadow, photo on top or left with no padding, then name, meta line and facts. Whole card is the tap target, with a visible focus ring.
-- **Section card (place window):** 6px corners, white, hairline Cedar Border, 16–20px padding, Title-style heading, small Moss Grey footnote for sources.
+- **Pin card:** 6px corners, white (Forest Night in dark mode), shown over the map after a pin tap: photo, then name, meta line and facts. Whole card is the tap target, with a visible focus ring.
+- **Section (place window):** one field-guide format for every section: a 1px Cedar Border rule (Slate Ink in dark mode), 20px of space, a Title-style heading, then plain content with no fill and no box, and a small Moss Grey source line. Facts and reviews are separated by lighter hairlines.
 - **Internal padding:** 16px on phones, 20px from 640px up.
 
 ### Inputs / Fields
-- **Style:** Wet Stone fill, no border, 4px corners, 40px (phone) to 44px tall, 12px side padding.
+- **Style:** Wet Stone fill, no border, 4px corners. Search is 30px tall on phones and 36px from 640px, with room for the icon on the left; forms are 40–44px with 12px side padding.
 - **Focus:** 2px Inlet Teal ring; no outline glow.
 
 ### Hero Photo
 A real, recognisable Metro Vancouver outing, never generic stock: the Stanley Park seawall with the Lions Gate Bridge and North Shore mountains (bobanny, Wikimedia Commons, public domain). No identifiable faces and no company logos as the subject. The credit links to the Commons file page, and the same photo is the link-preview image. Hero text is full white, not faded: re-measure contrast at 375–1920px in both themes whenever the photo, crop or scrim changes.
 
 ### Navigation
-Top tabs inside the hero (Explore, Events, Markets, Saved, About, Instagram): white text on a translucent Forest Night (25%) plate over the photo, the active tab a solid white pill with dark text. A sticky filter bar follows the hero. A round teal back-to-top button sits bottom right on long scrolls. Keyboard focus inside the hero is a white 2px outline, because teal disappears on the scrimmed photo.
+Top tabs inside the hero (Explore, Events, Markets, Saved, About, Instagram): white text on a translucent Forest Night (25%) plate over the photo, the active tab a solid white pill with dark text. The filter bar follows the hero and scrolls with the page. A round teal back-to-top button sits bottom right on long scrolls. Keyboard focus inside the hero is a white 2px outline, because teal disappears on the scrimmed photo.
 
 ### Map Pin (signature)
-A 30×38px drop marker in the category colour with a white outline, a soft neutral drop shadow and a white (or dark, for light colours) line icon in the head; the tip is the exact location. The drop shape is what separates our places from the base map's round shop and stop icons, which are dimmed (icons 45%, labels 75% opacity). Hovered or linked pins scale 1.3× from the tip. Numbered pins keep the drop shape with a white fill, teal outline and the number in the head. Events are near-black drops, markets yellow. The place window's small map uses the same drop. Clusters are white circles with a dark 2px border and a "+N" count, so they never look like a place.
+A 30×38px drop marker in the category colour with a white outline, a soft neutral drop shadow and a white (or dark, for light colours) line icon in the head; the tip is the exact location. The drop shape is what separates our places from the base map's round shop and stop icons, which are dimmed (icons 45%, labels 75% opacity). Hovered or linked pins scale 1.3× from the tip. Events are near-black drops, markets yellow. The place window's small map uses the same drop. Clusters are 24px-tall circles with a "+N" count, widening into short pills (31px, 38px) for two and three digits: white with a dark 2px border in light mode, near-black with a white border in dark mode.
+
+**The Readable-Count Rule.** Cluster numbers sit in their own layer above pins and below popups, never overlap each other, and shift up to 30px on screen to leave pin heads and the origin dot free (`spreadClusters` in `app.js`). Don't fix crowding by grouping earlier: the owner twice asked for late grouping (2026-11-19).
 
 **The Drop-Means-Ours Rule.** Only Tiny Trips places, events and markets use the drop shape. Base map icons stay round and dimmed.
 
@@ -274,6 +278,7 @@ A 30×38px drop marker in the category colour with a white outline, a soft neutr
 - **Don't** use coloured glows, coloured shadows or radial colour washes as backgrounds.
 - **Don't** round cards or buttons beyond 6px.
 - **Don't** use category colours as decoration or section backgrounds.
+- **Don't** put place-window sections in tinted boxes, pastel or grey. Separate them with a rule and space.
 - **Don't** introduce a second accent colour for actions.
 - **Don't** set body facts (hours, prices, ages) in the display font.
 - **Don't** use generic stock photos in the hero, or fade white hero text below full strength (the photo credit may be 95%).

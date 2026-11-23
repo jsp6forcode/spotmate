@@ -39,6 +39,7 @@ What Google Maps or a blog list can't truthfully offer together:
 - Wineries count only with an official kid-friendly fact.
 - No parking information anywhere.
 - Cards never show "Hours unknown"; unknown hours show nothing.
+- Wording: a listing is a **place**, never a "spot" ("spot" survives only in URLs, ids and everyday phrases like "reserve a spot"). The chip for places with an event or market in the next 7 days, or something in season, is **What's on**. **This weekend** means Saturday and Sunday only; a rolling week is **Next 7 days**. The Events tab is titled **Events**, not "for families", because it includes marked sales for parents.
 - The place window must not repeat text; new sections go through `dd.fresh()`.
 - Photos must match the description: a real Commons photo first, otherwise labelled Pexels stock varied by place kind, otherwise an illustration. Sumo Dino keeps its claw-machine photo.
 - News covers this month's official news only, travel and getting around first.

@@ -96,7 +96,7 @@ $rows = foreach ($s in $spots) { foreach ($kk in $s.kinds) { $c = $s.psobject.Co
 
 # 제목: 종류 이름에 이미 'Kid'가 들어 있으면 'for kids'를 또 붙이지 않아요 (Kids gyms for kids 같은 겹침 방지)
 function KindHead($kp, $where) { if ($kp -match '^kid' -or "$kp $where".Length -gt 38) { "$kp $where" } else { "$kp $where for kids" } }
-function Spots($n) { if ($n -eq 1) { '1 spot' } else { "$n spots" } }
+function Spots($n) { if ($n -eq 1) { '1 place' } else { "$n places" } }
 # 만들 페이지 정하기
 $pages =New-Object System.Collections.ArrayList
 foreach ($g in $rows | Group-Object kind, city) {
@@ -209,12 +209,12 @@ foreach ($p in $pages) {
   if ($free) { $bits += $(if ($isIndoorPage) { "$free of them free" } else { "$free free" }) }
   if ($indoor -and -not $isIndoorPage) { $bits += "$indoor indoor" }
   $lead = if ($isIndoorPage) { "$(Plural $n 'indoor place') to take kids ${where}, good for rainy days: play centres, libraries, museums, pools and more for babies, toddlers and school-age kids." } else { "$(Plural $n 'kid-friendly place') ${where}: $what picked for families with babies, toddlers and school-age kids." }
-  $lead += $(if ($bits) { " $($bits -join ', ')." } else { '' }) + ' Open any spot in Tiny Trips for hours and what parents say.'
+  $lead += $(if ($bits) { " $($bits -join ', ')." } else { '' }) + ' Open any place in Tiny Trips for hours and what parents say.'
   # 검색 결과 설명문: 개수와 대표 장소 이름을 앞에, 무료·실내 수를 뒤에 (모든 페이지가 같은 문장으로 시작하지 않게)
   # 길면(검색 결과에서 잘려요) 이름을 3개에서 2개, 1개로 줄여요
   foreach ($k in 3, 2, 1) {
     $top = NameList $list $k
-    $d1 = if ($isIndoorPage) { "Rainy day ideas: $n indoor places ${where} for kids, including $top." } elseif ($p.kindPlural) { "$n kid-friendly spots ${where}: $what, including $top." } else { "$n places to take kids ${where}, including $top." }
+    $d1 = if ($isIndoorPage) { "Rainy day ideas: $n indoor places ${where} for kids, including $top." } elseif ($p.kindPlural) { "$n kid-friendly places ${where}: $what, including $top." } else { "$n places to take kids ${where}, including $top." }
     $desc = ($d1 + $(if ($bits) { " $($bits -join ', ')." } else { '' }) + ' Hours and what parents say for each.') -replace '\s+', ' '
     if ($desc.Length -le 165) { break }
   }
@@ -237,13 +237,13 @@ foreach ($p in $pages) {
   $gemL = @($list | Where-Object { $_.gem })
   $topTime = (SortOrd @($list | Where-Object { $_.time } | Group-Object time) { param($g) ('{0:D6}' -f (999999 - $g.Count)) + $g.Name } | Select-Object -First 1)
   $QA = New-Object System.Collections.ArrayList
-  if ($gemL.Count) { [void]$QA.Add(@("Which $what $where are worth a special trip?", "Tiny Trips marks $(NameList $gemL 4) as standout spots.")) }
-  if ($freeL.Count -eq $n -and $n -gt 1) { [void]$QA.Add(@("Are there free $what ${where}?", "Yes. All $n spots on this list are free to visit.")) }
+  if ($gemL.Count) { [void]$QA.Add(@("Which $what $where are worth a special trip?", "Tiny Trips marks $(NameList $gemL 4) as $(if ($gemL.Count -eq 1) { 'a standout place' } else { 'standout places' }).")) }
+  if ($freeL.Count -eq $n -and $n -gt 1) { [void]$QA.Add(@("Are there free $what ${where}?", "Yes. All $n places on this list are free to visit.")) }
   elseif ($freeL.Count) { [void]$QA.Add(@("Are there free $what ${where}?", "Yes. $($freeL.Count) of the $n are free, including $(NameList $freeL 5).")) }
   else { [void]$QA.Add(@("Are there free $what ${where}?", "Most of these charge admission. Each listing in the app shows the price range.")) }
-  if ($inL.Count -eq $n -and $n -gt 1) { [void]$QA.Add(@("What is good on a rainy day ${where}?", "All $n spots on this list are indoors, so they work in any weather.")) }
+  if ($inL.Count -eq $n -and $n -gt 1) { [void]$QA.Add(@("What is good on a rainy day ${where}?", "All $n places on this list are indoors, so they work in any weather.")) }
   elseif ($inL.Count) { [void]$QA.Add(@("What is good on a rainy day ${where}?", "Indoor options on this list: $(NameList $inL 5).")) }
-  else { [void]$QA.Add(@("What is good on a rainy day ${where}?", "These spots are mostly outdoors. For wet days, open the Indoor filter in the app or see the indoor play guides.")) }
+  else { [void]$QA.Add(@("What is good on a rainy day ${where}?", "These places are mostly outdoors. For wet days, open the Indoor filter in the app or see the indoor play guides.")) }
   if ($p.kind -and $AGES[$p.kind]) { [void]$QA.Add(@("What ages are $what $where good for?", "They suit $(AgeText $AGES[$p.kind]).")) }
   if ($topTime) { [void]$QA.Add(@("How long should we plan for?", "Most visits here take about $($topTime.Name). Each listing shows its own time.")) }
   # "places to take kids near me" 같은 검색 (2026-11-19, 사용자): 도시 전체·실내 페이지에 사람들이 실제로 치는 말로 묻고 답해요. 앱이 정말 하는 일만 적어요 (Near me = 거리순, 오늘 시간·날씨·행사)
@@ -277,7 +277,7 @@ foreach ($p in $pages) {
   $introHtml = (($intro | ForEach-Object { "<p class=""mb-3"">$(Esc $_)</p>" }) -join '')
   $qaHtml = $introHtml + '<h2 class="font-bold text-base mt-6 mb-2 text-slate-900 dark:text-slate-100">Quick answers</h2>' + (($QA | ForEach-Object { "<h3 class=""font-semibold mt-3 text-slate-900 dark:text-slate-100"">$(Esc $_[0])</h3><p class=""mb-1"">$(Esc $_[1])</p>" }) -join '')
   $faq = ([ordered]@{ '@context' = 'https://schema.org'; '@type' = 'FAQPage'; mainEntity = @($QA | ForEach-Object { [ordered]@{ '@type' = 'Question'; name = $_[0]; acceptedAnswer = [ordered]@{ '@type' = 'Answer'; text = $_[1] } } }) } | ConvertTo-Json -Depth 6 -Compress) -replace '</', '<\/'
-  $body = "<nav class=""mb-2""><a class=""$L"" href=""/"">Tiny Trips</a> › <a class=""$L"" href=""/guides/"">Guides</a></nav><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">$(Esc $p.h1)</h1><p class=""mb-4"">$(Esc $lead)</p>" + $qaHtml + "<h2 class=""font-bold text-base mt-6 mb-2 text-slate-900 dark:text-slate-100"">All spots</h2>" + $sb.ToString() + $relHtml + "<p class=""mt-6 text-xs"">Details change, so check the official site before you go.</p>"
+  $body = "<nav class=""mb-2""><a class=""$L"" href=""/"">Tiny Trips</a> › <a class=""$L"" href=""/guides/"">Guides</a></nav><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">$(Esc $p.h1)</h1><p class=""mb-4"">$(Esc $lead)</p>" + $qaHtml + "<h2 class=""font-bold text-base mt-6 mb-2 text-slate-900 dark:text-slate-100"">All places</h2>" + $sb.ToString() + $relHtml + "<p class=""mt-6 text-xs"">Details change, so check the official site before you go.</p>"
   $body = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">About this guide: $(Esc $p.h1)</summary><div class=""mt-3"">" + $body + "</div></details>"
   $html = $shell
   $html = Sub $html '<title>[^<]*</title>' "<title>$(Esc $(if (($p.title.Length + 13) -le 68) { "$($p.title) | Tiny Trips" } else { $p.title }))</title>"
@@ -315,9 +315,9 @@ foreach ($s in $spots) {
   $sdesc = (("$($s.name) in $($s.area): $($s.summary.TrimEnd('.')). $(if ($sfacts) { "$sfacts. " })Hours and tips for families.") -replace '\s+', ' ')
   if ($sdesc.Length -gt 300) { $sdesc = $sdesc.Substring(0, 297) + '...' }
   $more = @($guideOf[$s.id] | Select-Object -First 6)
-  $moreHtml = if ($more) { '<div class="mt-4"><strong>Guides with this spot</strong><ul class="list-disc pl-5 mt-1">' + (($more | ForEach-Object { "<li><a class=""$L"" href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a></li>" }) -join '') + '</ul></div>' } else { '' }
+  $moreHtml = if ($more) { '<div class="mt-4"><strong>Guides with this place</strong><ul class="list-disc pl-5 mt-1">' + (($more | ForEach-Object { "<li><a class=""$L"" href=""/guides/$($_.slug)/"">$(Esc $_.h1)</a></li>" }) -join '') + '</ul></div>' } else { '' }
   # 장소 본문: 데이터에 있는 것만 문장으로 풀어요 (종류, 가격, 시간, 날씨, 나이, 영업시간, 가까운 곳)
-  $kindLow = if ($s.kind -eq 'sight') { 'spot' } else { $s.kindOne.ToLower() }
+  $kindLow = if ($s.kind -eq 'sight') { 'place' } else { $s.kindOne.ToLower() }
   $para = New-Object System.Collections.ArrayList
   $p1 = "$($s.name) is a $kindLow in $($s.area)$(if ($s.city -and $s.area -ne $s.city -and $s.area -notmatch [regex]::Escape($s.city)) { ", $($s.city)" })"
   $p1 += $(if ($s.price -match '^free') { ' that is free to visit' } elseif ($s.price) { " with a typical cost of $($s.price)" } else { '' })
@@ -397,7 +397,7 @@ $mp = @($pages | Where-Object { -not $_.city })
 # 안내 목록도 진짜 앱을 보여주고, 도시·종류별 목록은 아래에 접어 둬요 (다른 안내 페이지와 같은 방식)
 $L = 'underline text-violet-700 dark:text-violet-300'
 $idxBody = ($idx.ToString()).Replace('<h2>', '<h2 class="font-bold mt-5 mb-1">').Replace('<ul>', '<ul class="list-disc pl-5 space-y-0.5">').Replace('<a href', "<a class=""$L"" href")
-$idxBody = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">Places to take kids in Metro Vancouver: guides by city and kind</summary><div class=""mt-3""><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">Places to take kids in Metro Vancouver</h1><p class=""mb-2"">Pick a city or a kind of place. Each guide lists the spots with a short description, and links to the Tiny Trips app for hours and what parents say.</p>" + $idxBody + "</div></details>"
+$idxBody = "<details><summary class=""cursor-pointer select-none font-semibold text-slate-500 dark:text-slate-400"">Places to take kids in Metro Vancouver: guides by city and kind</summary><div class=""mt-3""><h1 class=""font-brand text-2xl md:text-3xl font-extrabold mb-2 text-slate-900 dark:text-slate-100"">Places to take kids in Metro Vancouver</h1><p class=""mb-2"">Pick a city or a kind of place. Each guide lists the places with a short description, and links to the Tiny Trips app for hours and what parents say.</p>" + $idxBody + "</div></details>"
 $idxDesc = 'Guides to playgrounds, spray parks, farms, museums and indoor play for kids in Metro Vancouver, Abbotsford and Chilliwack, by city and by kind.'
 $idxTitle = 'Places to take kids in Metro Vancouver: guides by city and kind'
 $idxHtml = $shell
