@@ -428,7 +428,7 @@
       "summary": "Short forest hike to a pair of waterfalls", "signals": [], "why": "", "tips": []
     },
     {
-      "id": "deasisland", "kids": true, "cat": "nature", "gem": true, "name": "Deas Island Regional Park", "area": "Delta",
+      "id": "deasisland", "kids": true, "cat": "nature", "name": "Deas Island Regional Park", "area": "Delta",
       "lat": 49.1214, "lng": -123.0649, "emoji": "🦅", "placeId": "ChIJAYnYN8zfhVQRves7o5BO21s", "hours": "sunrise-sunset", "hoursSource": "park",
       "photo": {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Burrvilla-spring.jpg/960px-Burrvilla-spring.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail","credit":"Tony Fox","license":"CC BY-SA 3.0","licenseUrl":"http://creativecommons.org/licenses/by-sa/3.0/","source":"https://commons.wikimedia.org/wiki/File:Burrvilla-spring.jpg"},
       "trend": null, "env": "outdoor", "price": "Free", "time": "1–2 hrs", "crowd": "park", "weather": ["sunny", "cloudy"],

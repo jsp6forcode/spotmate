@@ -1,4 +1,4 @@
-# 매달 1일: 히든젬 / Family pick / 먹거리 스팟이 아직 기준을 만족하는지 Places API로 점검
+# 매달 1일: Vancouver classic(gem)·아이 동반(family) 장소가 폐업했는지 Places API로 점검 (Place Details Pro, 월 5,000회 무료 안)
 name: Monthly review refresh
 
 on:

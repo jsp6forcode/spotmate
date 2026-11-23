@@ -183,14 +183,15 @@ const EV_PIN = { events: { color: '#1f2328', ink: '#fff' }, market: { color: '#F
 const evDot = (market, size = 28) => { const p = EV_PIN[market ? 'market' : 'events']; return `<span class="dark:ring-1 dark:ring-white/40" style="display:inline-flex;align-items:center;justify-content:center;width:${size}px;height:${size}px;border-radius:9999px;background:${p.color};color:${p.ink}">${typeIcon(market ? 'market' : 'events', Math.round(size * 0.55))}</span>`; };
 // 카테고리 드롭다운 항목 ('all' 제외): 아이 동반 장소가 하나라도 있는 그룹만, 그리고 행사
 const catOptions = () => [...Object.keys(CAT_GROUPS).filter(g => SPOTS.some(s => isKid(s) && kindGroup(s) === g)), 'events'];
-// "Vancouver classic": 이미 많은 사람이 알고 좋아하는 곳. 데이터의 gem(평점 4.6+·리뷰 300+)과 검색량 상위(isClassic)를 합쳤어요
-const CLASSIC = { label: 'Vancouver classic', criteria: 'A local favourite that plenty of people already know and love: rated 4.6+ on Google from 300+ reviews, or one of the most searched places in BC.' };
+// "Vancouver classic": 이미 많은 사람이 알고 좋아하는 곳. 데이터의 gem과 검색량 상위(isClassic)를 합쳤어요
+// gem은 추가할 때 평점 4.6+·리뷰 300+ 였던 곳이지만, 2026-11-22부터 매달 평점을 다시 재지 않아요 (Google 무료 한도). 그래서 숫자는 화면에 쓰지 않아요
+const CLASSIC = { label: 'Vancouver classic', criteria: 'A local favourite that plenty of people already know and love, or one of the most searched places in BC.' };
 // 🧸 Kids 필터: 아이 동반 장소(family: true, 놀이터·수영장·몰·농장 등)와 아이랑 가기 좋은 곳(kids: true)만 남겨요
 const KIDS_TAG = "Playgrounds, spray parks and pools built for kids, plus places Google marks as good for children or where Google reviews (4.0+ rating, 50+ reviews) say it's great for families.";
 const isVanClassic = s => !!s.gem || isClassic(s);
 // 모달의 "왜 골랐나" 정보: 히든젬 > 아이 동반. 해당 없으면 null
 function pickOf(s) {
-  if (s.gem) return { label: CLASSIC.label, short: 'Google 4.6+ · 300+ reviews', heading: "Why it's a Vancouver classic", criteria: CLASSIC.criteria };
+  if (s.gem) return { label: CLASSIC.label, short: 'Local favourite', heading: "Why it's a Vancouver classic", criteria: CLASSIC.criteria };
   if (isClassic(s)) return { label: CLASSIC.label, short: 'Among the most searched', heading: "Why it's a Vancouver classic", criteria: CLASSIC.criteria };
   if (s.family) return { label: 'Kid-friendly', short: 'Google 4.0+ · 50+ reviews', heading: "Why it's kid-friendly", criteria: KIDS_TAG };
   if (s.kids) return { label: 'Kid-friendly', short: 'Good for children', heading: "Why it's kid-friendly", criteria: KIDS_TAG };
