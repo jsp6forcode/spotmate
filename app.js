@@ -528,6 +528,8 @@ const byId = id => SPOTS.find(s => s.id === id);
 const pid = (k, s) => s.placeId ? `&${k}=${encodeURIComponent(s.placeId)}` : '';
 const mapsUrl = s => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(s.name + ' BC') + pid('query_place_id', s);
 const dirUrl = s => 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(s.name + ' BC') + pid('destination_place_id', s);
+// 대중교통 길찾기 (구글 지도 링크만, 2026-11-23 사용자: 장소 창 지도에서 대중교통으로 어떻게 가는지 찾을 수 있게)
+const transitUrl = s => dirUrl(s) + '&travelmode=transit';
 const infoUrl = s => 'https://www.google.com/search?q=' + encodeURIComponent(s.name + ' Vancouver');
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 function km(a, b) {
@@ -651,6 +653,31 @@ function addDarkPois(gl) {
     } catch (e) { /* 지도가 이미 지워졌으면 그냥 넘어가요 */ }
   });
   if (gl.isStyleLoaded()) add(); else gl.once('load', add);
+}
+// 장소 창 작은 지도: 구글 지도처럼 밝고 단순하게 (사용자, 2026-11-23). bright 스타일의 색을 바꿔요:
+// 연회색 땅, 흰 길(회색 테두리), 노란 고속도로, 연두 공원, 하늘색 물. 동네 구분 색·가게 아이콘·일방통행 화살표·도로 번호판은 숨기고, 버스·전철 정류장은 파란 글자로 보여줘요
+function googleLook(gl) {
+  try {
+    const set = (id, k, v) => { if (gl.getLayer(id)) gl.setPaintProperty(id, k, v); };
+    const hide = id => gl.setLayoutProperty(id, 'visibility', 'none');
+    (gl.getStyle().layers || []).forEach(l => {
+      const id = l.id;
+      if (/^(landuse-|poi_r|road_oneway|highway-shield|road_shield|highway-name-path|building-top|landcover-sand|aeroway-)/.test(id)) return hide(id);
+      if (/casing$/.test(id) && l.type === 'line') return set(id, 'line-color', /motorway/.test(id) ? '#f2c14e' : '#dadce0');
+      if (/^(highway|tunnel|bridge)-(minor|service|link|secondary|trunk|primary)/.test(id) && l.type === 'line') return set(id, 'line-color', '#ffffff');
+      if (/motorway/.test(id) && l.type === 'line') return set(id, 'line-color', '#fde293');
+      if (/path$/.test(id) && l.type === 'line') return set(id, 'line-color', '#c8ccd0');
+      if (/^(highway-name|label_)/.test(id) && l.type === 'symbol') return set(id, 'text-color', '#5f6368');
+    });
+    set('background', 'background-color', '#f1f3f4');
+    ['park', 'landcover-grass', 'landcover-grass-park'].forEach(id => set(id, 'fill-color', '#cdeccb'));
+    set('landcover-wood', 'fill-color', '#b9e0b4'); set('landcover-wood', 'fill-opacity', 0.6);
+    set('water', 'fill-color', '#aadaff');
+    set('building', 'fill-color', '#e3e5e8'); set('building', 'fill-outline-color', '#d6d9dd');
+    set('road_area_pier', 'fill-color', '#f1f3f4'); set('road_pier', 'line-color', '#f1f3f4');
+    // 버스·전철 정류장: 아이콘은 진하게, 이름은 구글 지도 대중교통 파랑
+    if (gl.getLayer('poi_transit')) { set('poi_transit', 'icon-opacity', 1); set('poi_transit', 'text-color', '#1a73e8'); set('poi_transit', 'text-halo-color', '#ffffff'); set('poi_transit', 'text-halo-width', 1.4); }
+  } catch (e) { /* 지도가 이미 지워졌으면 넘어가요 */ }
 }
 // 지도 자체의 가게·정류장 아이콘은 흐리게 (사용자, 2026-11-20: 내 장소 핀이 지도의 가게 핀과 구별이 안 돼요). 이름 글자는 읽히게 조금만 흐려요
 const POI_SOFT = { 'icon-opacity': 0.45, 'text-opacity': 0.75 };
@@ -2236,7 +2263,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
           // 검색에서 찾는 말만 칩으로 (× 누르면 그 조건만 꺼요). 날짜·영업·아이·실내·가격·딜은 아래 버튼이 켜진 색으로 보여줘서 칩으로 반복하지 않아요.
           // 위치는 모바일에선 필터 안에 접혀 있어서 모바일에서만 칩으로 보여줘요
           const chips = [...s.kw.map(k => [`kw:${k.key}`, k.label]), ...(s.free ? [['free', 'Free']] : [])];
-          const near = this.nearActive() ? (s.radius === 'any' ? `Near ${this.originLabel()}` : `Within ${radiusLabel(s.radius)} of ${this.originLabel()}`) : '';
+          const near = this.nearActive() ? (s.radius === 'any' ? `${s.nearKey === 'spot' ? 'Around' : 'Near'} ${this.originLabel()}` : `Within ${radiusLabel(s.radius)} of ${this.originLabel()}`) : '';
           const chip = (k, label, extra = '') => `<button data-act="qrm" data-val="${esc(k)}" aria-label="Remove ${esc(label)}" class="${extra} inline-flex items-center gap-1 min-h-[32px] px-2.5 py-1 rounded-md font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 dark:bg-violet-500/20 dark:text-violet-200">${esc(label)} <span aria-hidden="true">×</span></button>`;
           return `
         <div class="flex flex-wrap items-center gap-1.5 text-sm">
@@ -2308,7 +2335,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
             <select data-act="near" aria-label="Location" class="w-full min-w-0 sm:w-auto h-8 px-3 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
               <option value="" ${!near ? 'selected' : ''}>Anywhere</option>
               ${s.nearKey === 'here' && near ? '<option value="here" selected>My location</option>' : '<option value="gps">My location</option>'}
-              ${Object.entries(ORIGINS).filter(([k, o]) => !o.extra || s.nearKey === k).map(([k, o]) => `<option value="${k}" ${s.nearKey === k ? 'selected' : ''}>Near ${o.label}</option>`).join('')}
+              ${Object.entries(ORIGINS).filter(([k, o]) => !o.extra || s.nearKey === k).map(([k, o]) => `<option value="${k}" ${s.nearKey === k ? 'selected' : ''}>${k === 'spot' ? 'Around' : 'Near'} ${o.label}</option>`).join('')}
             </select>
           </label>
           ${withIndoor ? `<button data-act="indoor" aria-pressed="${s.indoor}" title="Indoor places, plus places with both indoor and outdoor areas" class="h-8 px-3 rounded-lg font-semibold transition-colors ${s.indoor ? 'bg-violet-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'}">${s.indoor ? 'Indoor only ✓' : 'Indoor only'}</button>` : ''}
@@ -2865,6 +2892,35 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
         <ul class="mt-2 sm:grid sm:grid-cols-2 sm:gap-x-8">${list.map(row).join('')}</ul>
       </section>`;
   }
+  // 장소 창 지도 밑 "가까운 정류장": 지도 타일(OpenStreetMap 데이터)에 들어 있는 버스·전철 정류장 중 가까운 3곳과 걸어서 몇 분인지 (사용자, 2026-11-23: 대중교통으로 어떻게 가는지)
+  // 지도가 다 그려진 뒤(idle) 화면에 실린 타일에서 찾아요. 없으면 아무것도 안 보여요 (By transit 버튼으로 구글 길찾기)
+  nearStops(gl, s) {
+    const box = document.getElementById('mtransit');
+    if (!box) return;
+    const run = () => {
+      if (!box.isConnected) return;
+      let feats = [];
+      try { feats = gl.querySourceFeatures('openmaptiles', { sourceLayer: 'poi' }); } catch (e) { return; }
+      const seen = new Map();
+      feats.forEach(f => {
+        const p = f.properties || {}, cls = p.class, sub = p.subclass || '';
+        const rail = cls === 'rail' || cls === 'railway' || /^(station|halt|subway|tram_stop|light_rail)/.test(sub);
+        const bus = cls === 'bus' || /bus_(stop|station)/.test(sub);
+        const ferry = cls === 'ferry_terminal';
+        if (!(rail || bus || ferry)) return;
+        const name = p['name:latin'] || p.name_en || p.name; if (!name || f.geometry.type !== 'Point') return;
+        const [lng, lat] = f.geometry.coordinates, d = km(s, { lat, lng }) * 1000;
+        const key = name.toLowerCase();
+        if (d <= 800 && (!seen.has(key) || seen.get(key).d > d)) seen.set(key, { name, d, kind: rail ? 'rail' : ferry ? 'ferry' : 'bus' });
+      });
+      const list = [...seen.values()].sort((a, b) => a.d - b.d).slice(0, 3);
+      if (!list.length) return;
+      const icon = k => k === 'rail' ? 'SkyTrain/rail' : k === 'ferry' ? 'Ferry' : 'Bus';
+      box.innerHTML = `<p class="text-xs font-semibold text-slate-500 dark:text-slate-400">Nearest stops</p><ul class="mt-1 space-y-0.5">${list.map(t => `<li class="flex gap-2"><span class="shrink-0 text-xs font-semibold px-1.5 rounded bg-sky-50 text-sky-800 dark:bg-sky-500/15 dark:text-sky-200">${icon(t.kind)}</span><span class="min-w-0 truncate">${esc(t.name)}</span><span class="shrink-0 text-slate-500 dark:text-slate-400">${Math.max(1, Math.round(t.d / 80))} min walk</span></li>`).join('')}</ul>`;
+    };
+    // 'idle'은 언덕 그림자 타일 때문에 안 올 때가 있어서, 타일이 들어올 시간을 두고 몇 번 다시 찾아요 (같은 결과면 그대로)
+    gl.once('idle', run); [1200, 3000, 6000].forEach(t => setTimeout(run, t));
+  }
   // 장소 창 Location 칸의 작은 지도: 움직이지 않는 지도에 물방울 모양 핀 하나 (색·아이콘은 큰 지도 핀과 같아요). 누르면 위에 덮인 링크로 구글 지도가 열려요
   async drawMini(s) {
     const el = document.getElementById('mmap'); if (!el || !s || s.lat == null) return;
@@ -2877,11 +2933,22 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     // 위치를 먼저 정해요 (벡터 지도 레이어는 지도 위치가 정해져야 만들어져요)
     map.setView([s.lat, s.lng], 15, { animate: false });
     map.panBy([0, -14], { animate: false });   // 핀 끝이 정확한 위치라서, 핀 몸통이 가운데 오게 살짝 내려요
+    // 처음 열 때는 장소 창이 아직 크기를 다 잡기 전에 지도가 만들어져서, 벡터 지도 캔버스가 기본 400×300에 멈춰 빈 지도가 됐어요 (사용자, 2026-11-23: 닫았다 다시 열어야 보여요).
+    // 칸 크기가 바뀌면 지도와 캔버스 크기를 다시 맞춰요
+    let gl = null;
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver(() => { if (!el.isConnected || this._mini !== map) return ro.disconnect(); map.invalidateSize({ pan: false }); map.setView([s.lat, s.lng], 15, { animate: false }); map.panBy([0, -14], { animate: false }); if (gl) gl.resize(); });
+      ro.observe(el);
+    }
     if (vec) {
-      const gl = L.maplibreGL({ style: this.state.dark ? VEC_STYLE.dark : VEC_STYLE.light, interactive: false }).addTo(map).getMaplibreMap();
-      // 작은 지도엔 버스 정류장·가게 같은 아이콘과 글자, 일방통행 화살표, 도로 번호판을 숨겨요 (핀이 묻혀서 지도가 어수선했어요. 사용자, 2026-11-19). 길 이름은 그대로
-      const quiet = () => (gl.getStyle().layers || []).forEach(l => { if (/^(poi_|road_oneway|highway-shield|road_shield|highway-name-path)/.test(l.id)) gl.setLayoutProperty(l.id, 'visibility', 'none'); });
-      if (gl) { if (gl.isStyleLoaded()) quiet(); else gl.once('load', quiet); }
+      // 큰 지도처럼 .vec 를 달아야 다크 모드 색 반전(옛 래스터 타일용 CSS)이 안 걸려요. 안 달면 다크 지도가 뒤집혀 연보라색이 됐어요 (사용자, 2026-11-23)
+      el.classList.add('vec');
+      // 장소 창 지도는 다크 모드에서도 구글 지도 같은 밝고 단순한 지도 (사용자, 2026-11-23: 너무 복잡해요, 구글맵 같은 테마로). 가게 아이콘은 숨기고 버스·전철 정류장만 보여줘요
+      gl = L.maplibreGL({ style: VEC_STYLE.light, interactive: false }).addTo(map).getMaplibreMap();
+      if (gl) {
+        const look = () => { googleLook(gl); this.nearStops(gl, s); };
+        if (gl.isStyleLoaded()) look(); else gl.once('load', look);
+      }
     }
     else L.tileLayer(TILES, { maxZoom: 19 }).addTo(map);
     // 큰 지도 핀과 같게: 장소 종류 색 물방울 + 흰색 아이콘
@@ -3063,7 +3130,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
     if (vec) {
       const layer = L.maplibreGL({ style: this.state.dark ? VEC_STYLE.dark : VEC_STYLE.light, attribution: VEC_ATTR }).addTo(map);
       // 벡터 지도는 지도 위치가 정해진 뒤에 만들어져서, 그때 POI를 더해요
-      map.whenReady(() => this.state.dark ? addDarkPois(layer.getMaplibreMap()) : softenPois(layer.getMaplibreMap()));
+      map.whenReady(() => this.state.dark ? addDarkPois(layer.getMaplibreMap()) : softenPois(layer.getMaplibreMap()));   // 메인 지도는 원래 fiord 그대로 (사용자, 2026-11-23: 그전이 나아요)
     }
     else L.tileLayer(TILES, { attribution: TILE_ATTR, maxZoom: 19 }).addTo(map);
     // 핀: 번호가 작을수록(순위가 높을수록) 위에 오게
@@ -3675,10 +3742,14 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
               <a href="${mapsUrl(s)}" target="_blank" rel="noopener" aria-label="Open ${esc(s.name)} in Google Maps" class="absolute inset-0 z-[500]"></a>
             </div>
             <p class="mt-1 text-[10px] text-slate-400 dark:text-slate-500">Map: <a href="https://openfreemap.org" target="_blank" rel="noopener" class="underline">OpenFreeMap</a> · © <a href="https://openmaptiles.org/" target="_blank" rel="noopener" class="underline">OpenMapTiles</a> · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" class="underline">OpenStreetMap</a></p>
-            <div class="mt-2 flex items-center gap-3">
-              <p class="flex-1 min-w-0 text-sm text-slate-700 dark:text-slate-200">${esc(addr)}</p>
-              <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="h-9 shrink-0 inline-flex items-center gap-1.5 px-3 rounded-lg text-[13px] font-semibold bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"/></svg>Directions</a>
+            <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+              <p class="flex-1 min-w-[10rem] text-sm text-slate-700 dark:text-slate-200">${esc(addr)}</p>
+              <div class="flex gap-2 shrink-0">
+                <a href="${transitUrl(s)}" target="_blank" rel="noopener" class="h-9 inline-flex items-center gap-1.5 px-3 rounded-lg text-[13px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M8 21l1.5-4M16 21l-1.5-4"/><circle cx="8.5" cy="14" r=".6" fill="currentColor"/><circle cx="15.5" cy="14" r=".6" fill="currentColor"/></svg>By transit</a>
+                <a href="${dirUrl(s)}" target="_blank" rel="noopener" class="h-9 inline-flex items-center gap-1.5 px-3 rounded-lg text-[13px] font-semibold bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"/></svg>Directions</a>
+              </div>
             </div>
+            <div id="mtransit" class="mt-2 text-sm text-slate-700 dark:text-slate-200" aria-live="polite"></div>
           </section>`; })() : ''}
 
           ${nearby.length ? `
