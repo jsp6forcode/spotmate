@@ -51,6 +51,11 @@ if ($Set -eq 'wine') {
   # 아이 데리고 가기 좋은 와이너리·시더리 후보 (2026-10-02, 사용자 요청). 반경은 위쪽 fraser 세트와 같은 방식이 아니라 메트로 기준 30km
   $queries = [ordered]@{ wine = @('winery in Langley BC', 'winery in Abbotsford BC', 'winery Fort Langley', 'vineyard in Surrey BC', 'cidery in Fraser Valley BC', 'winery in Chilliwack BC', 'winery in Maple Ridge BC', 'winery Delta BC', 'family friendly winery Fraser Valley', 'winery with playground BC') }
 }
+if ($Set -eq 'richmond') {
+  # 리치몬드 보강 (2026-11-23, 사용자: 장소가 너무 없어 보여요). 12회 호출
+  $q = @('playground', 'spray park', 'park', 'beach', 'indoor playground', 'ice rink public skating', 'swimming pool', 'library', 'museum', 'attractions for kids', 'trail walk', 'shopping mall')
+  $queries = [ordered]@{ richmond = @($q | ForEach-Object { "$_ in Richmond BC" }) }
+}
 $fields = 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.primaryTypeDisplayName,places.location'
 $headers = @{ 'X-Goog-Api-Key' = $key; 'X-Goog-FieldMask' = $fields }
 $calls = 0
@@ -60,7 +65,7 @@ $rows = :outer foreach ($cat in $queries.Keys) {
     if ($Only.Count -and $q -notin $Only) { continue }
     $body = @{
       textQuery = $q; pageSize = 20; languageCode = 'en'
-      locationBias = @{ circle = @{ center = @{ latitude = $(if ($Set -like 'fraser*') { if ($cat -eq 'chilliwack') { 49.16 } else { 49.05 } } else { 49.25 }); longitude = $(if ($Set -like 'fraser*') { if ($cat -eq 'chilliwack') { -121.95 } else { -122.3 } } else { -123.1 }) }; radius = $(if ($Set -like 'fraser*') { 15000.0 } else { 30000.0 }) } }
+      locationBias = @{ circle = @{ center = @{ latitude = $(if ($Set -eq 'richmond') { 49.165 } elseif ($Set -like 'fraser*') { if ($cat -eq 'chilliwack') { 49.16 } else { 49.05 } } else { 49.25 }); longitude = $(if ($Set -eq 'richmond') { -123.135 } elseif ($Set -like 'fraser*') { if ($cat -eq 'chilliwack') { -121.95 } else { -122.3 } } else { -123.1 }) }; radius = $(if ($Set -eq 'richmond') { 9000.0 } elseif ($Set -like 'fraser*') { 15000.0 } else { 30000.0 }) } }
     } | ConvertTo-Json -Depth 5
     try {
       $res = Invoke-RestMethod -Method Post -Uri 'https://places.googleapis.com/v1/places:searchText' -Headers $headers `

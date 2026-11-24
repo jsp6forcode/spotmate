@@ -40,6 +40,8 @@ Ok "spots.json: $($spots.Count)곳"
 #   (예: "Whonnock Lake Park" ↔ "Whonnock Lake", "Grouse Mountain Regional Park" ↔ "Grouse Mountain")
 # 따로 두기로 정한 곳(별개 명소, 공원 안 놀이터·수영장)은 아래 $sameOk 에 "id|id"로 적어서 통과시켜요
 $sameOk = @(
+  # 2026-11-23 리치몬드 보강: 마을 안 박물관, 오벌 건물 안 스케이트장 vs 올림픽 박물관, 같은 임시 건물의 도서관 vs 커뮤니티 센터
+  'stevestonmuseum|steveston', 'richmondoval|olympicexperienceatrichm', 'richmondpubliclibraryste|stevestoncommunitycentre',
   'giwaterpark|granville', 'stevestonpark|steveston', 'fortlangleynationalhisto|fortlangley', 'fortlangleypark|fortlangley', 'fortlangleykidspark|fortlangley',
   'mundyparktotlot|mundy', 'mundyparkpool|mundy', 'kensingtonparkoutdoorpoo|kensingtonpark', 'confederationparkwaterpa|confederationpark',
   'kitsilanobeachplayground|kits', 'robertburnabyparkplaygro|robertburnabypark', 'stanleyparkplayground|stanley', 'diefenbakerparkplaygroun|diefenbaker',

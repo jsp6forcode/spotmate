@@ -1,7 +1,30 @@
 {
   "note" : "SpotMate notes: kid-related facts checked on each place's official page (or the city or tourism board page). Not reviews. Prices and hours change, so check the source before you go.",
   "notes" : {
-    "aberdeenneighbourhoodpar" : {
+    "minorucentreactiveliving" : {
+      "items" : [
+        "Leisure pool with a river channel, a slide and a rain-cloud shower. Drop-in for kids 2–12 is $4.95."
+      ],
+      "source" : "https://richmond.ca/parks-recreation/centres/minoru.htm"
+    },
+    "richmondicecentre" : {
+      "items" : [
+        "Public skating is drop-in, and helmets are free to borrow during sessions. Check the city's public skate schedule for times."
+      ],
+      "source" : "https://www.richmond.ca/__shared/assets/RIC_Public_Skate_and_Drop-In_Schedule_Fall79530.pdf"
+    },
+    "richmondoval" : {
+      "items" : [
+        "Drop-in ice sessions open for registration 7 days ahead, and younger kids can use skating aids. The climbing wall needs a signed waiver and a first-visit orientation."
+      ],
+      "source" : "https://richmondoval.ca/drop_ins/drop-in-ice"
+    },
+    "richmondpubliclibraryste" : {
+      "items" : [
+        "Free drop-in Family Storytime, 10:30–11am; a parent or caregiver stays with the child. The branch is in a temporary spot at the Easthope Hub (4320 Moncton St)."
+      ],
+      "source" : "https://www.yourlibrary.ca/about/hours-locations"
+    },    "aberdeenneighbourhoodpar" : {
       "items" : [
         "Also here: an off-leash dog area and sports courts."
       ],
