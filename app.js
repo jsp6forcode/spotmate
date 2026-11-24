@@ -2894,11 +2894,33 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   }
   // 장소 창 지도 밑 "가까운 정류장": 지도 타일(OpenStreetMap 데이터)에 들어 있는 버스·전철 정류장 중 가까운 3곳과 걸어서 몇 분인지 (사용자, 2026-11-23: 대중교통으로 어떻게 가는지)
   // 지도가 다 그려진 뒤(idle) 화면에 실린 타일에서 찾아요. 없으면 아무것도 안 보여요 (By transit 버튼으로 구글 길찾기)
+  // 대중교통: TransLink GTFS로 미리 만든 data/transit.json (tools/transit-build.ps1) 에서 가까운 SkyTrain 역과 버스 정류장·노선 번호 (사용자, 2026-11-23)
+  // 장소 창을 처음 열 때 한 번만 받아요. TransLink 약관대로 출처 문장(legend)을 같이 보여줘요. 이 데이터가 없는 곳(애보츠포드·칠리왁 등)은 지도 타일의 정류장 이름으로 (nearStops)
+  async renderTransit(s) {
+    if (!this._transit) this._transit = fetch('/data/transit.json').then(r => r.ok ? r.json() : null).catch(() => null);
+    const data = await this._transit, t = data && data.spots && data.spots[s.id];
+    const box = document.getElementById('mtransit');
+    if (!t || !box || !box.isConnected) return;
+    const walk = d => `${Math.max(1, Math.round(d / 80))} min walk`;
+    const chip = (label, cls) => `<span class="shrink-0 text-xs font-semibold px-1.5 py-px rounded ${cls}">${esc(label)}</span>`;
+    const railKind = l => /SeaBus/i.test(l) ? 'SeaBus' : /West Coast Express/i.test(l) ? 'Train' : 'SkyTrain';
+    const rows = [];
+    if (t.rail) rows.push(`<li class="flex items-baseline gap-2">${chip(railKind(t.rail.l[0] || ''), 'bg-sky-600 text-white')}<span class="min-w-0"><span class="font-semibold">${esc(t.rail.n)}</span> <span class="text-slate-500 dark:text-slate-400">${esc(t.rail.l.join(', '))} · ${walk(t.rail.d)}</span></span></li>`);
+    (t.bus || []).forEach(b => {
+      const day = b.r.filter(r => !/^N\d/.test(r));   // 밤 버스(N9 등)는 빼요 (아이와 낮 나들이라서)
+      if (!day.length) return;
+      rows.push(`<li class="flex items-baseline gap-2">${chip('Bus', 'bg-sky-50 text-sky-800 dark:bg-sky-500/15 dark:text-sky-200')}<span class="min-w-0"><span class="font-semibold">${esc(day.join(' · '))}</span> <span class="text-slate-500 dark:text-slate-400">${esc(b.n)} · ${walk(b.d)}</span></span></li>`);
+    });
+    if (!rows.length) return;
+    box.dataset.src = 'translink';
+    box.innerHTML = `<p class="text-xs font-semibold text-slate-500 dark:text-slate-400">Getting here by transit</p><ul class="mt-1 space-y-1">${rows.join('')}</ul>
+      <p class="mt-1.5 text-[10px] leading-snug text-slate-400 dark:text-slate-500">${esc(data.legend)}</p>`;
+  }
   nearStops(gl, s) {
     const box = document.getElementById('mtransit');
     if (!box) return;
     const run = () => {
-      if (!box.isConnected) return;
+      if (!box.isConnected || box.dataset.src === 'translink') return;
       let feats = [];
       try { feats = gl.querySourceFeatures('openmaptiles', { sourceLayer: 'poi' }); } catch (e) { return; }
       const seen = new Map();
@@ -2924,6 +2946,7 @@ Data: ${JSON.stringify({ name: s.name, area: s.area, category: CATS[s.cat].label
   // 장소 창 Location 칸의 작은 지도: 움직이지 않는 지도에 물방울 모양 핀 하나 (색·아이콘은 큰 지도 핀과 같아요). 누르면 위에 덮인 링크로 구글 지도가 열려요
   async drawMini(s) {
     const el = document.getElementById('mmap'); if (!el || !s || s.lat == null) return;
+    this.renderTransit(s);
     try { await loadLeaflet(); } catch (e) { return; }
     const vec = await loadVector();
     if (!el.isConnected || this._mini) return;
