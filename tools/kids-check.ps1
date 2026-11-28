@@ -27,7 +27,8 @@ function Read-Error($err) {
   [regex]::Match($b, '"reason":\s*"([^"]+)"').Groups[1].Value
 }
 
-$calls = 0
+. (Join-Path $PSScriptRoot 'google-usage.ps1')   # 호출 수 기록 (data/google-api-usage.json)
+$calls = 0; $dCalls = 0; $sCalls = 0
 if ($Mode -eq 'existing') {
   $spots = (Get-Content (Join-Path $root 'data\spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots
   if ($Ids) { $spots = @($spots | Where-Object { $_.id -in $Ids }) }
@@ -36,20 +37,21 @@ if ($Mode -eq 'existing') {
       $found = ''
       if ($s.placeId) {
         $p = Invoke-RestMethod -Uri "https://places.googleapis.com/v1/places/$($s.placeId)" -Headers @{ 'X-Goog-Api-Key' = $key; 'X-Goog-FieldMask' = 'goodForChildren,reviews,rating,userRatingCount' }
+        $dCalls++
       } else {
         # placeId가 없으면 이름으로 검색 (스팟 좌표 300m 안)
         $body = @{ textQuery = "$($s.name) $($s.area)"; pageSize = 1; languageCode = 'en'; locationBias = @{ circle = @{ center = @{ latitude = $s.lat; longitude = $s.lng }; radius = 300.0 } } } | ConvertTo-Json -Depth 5
         $res = Invoke-RestMethod -Method Post -Uri 'https://places.googleapis.com/v1/places:searchText' -Headers @{ 'X-Goog-Api-Key' = $key; 'X-Goog-FieldMask' = 'places.id,places.displayName,places.goodForChildren,places.reviews,places.rating,places.userRatingCount' } `
           -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body))
+        $sCalls++
         $p = @($res.places)[0]
         if (-not $p) { throw 'not found' }
         $found = "$($p.id) ($($p.displayName.text))"
       }
-      $calls++
       [pscustomobject]@{ id = $s.id; cat = $s.cat; name = $s.name; goodForChildren = $p.goodForChildren; rating = $p.rating; reviews = $p.userRatingCount; kidReviews = "$(Get-KidMentions $p)/$(@($p.reviews).Count)"; foundPlaceId = $found }
     } catch { [pscustomobject]@{ id = $s.id; cat = $s.cat; name = $s.name; goodForChildren = 'ERR ' + (Read-Error $_); kidReviews = '' } }
   }
-  "API 호출 $calls 회 (Place Details Enterprise + Atmosphere, 월 1,000회 무료)"
+  Add-GoogleUsage -Tool 'kids-check' -Calls @{ 'Place Details Enterprise + Atmosphere' = $dCalls; 'Text Search Enterprise + Atmosphere' = $sCalls }
   $rows | Format-Table -AutoSize | Out-String -Width 300
   return
 }
@@ -84,7 +86,7 @@ $rows = :outer foreach ($q in $queries) {
       type = $p.primaryTypeDisplayName.text; address = ($p.formattedAddress -replace ', Canada$', ''); placeId = $p.id; query = $q }
   }
 }
-"API 호출 $calls 회 (Text Search Enterprise + Atmosphere, 월 1,000회 무료)"
+Add-GoogleUsage -Tool 'kids-check discover' -Calls @{ 'Text Search Enterprise + Atmosphere' = $calls }
 $ok = @($rows | Where-Object { -not $known[$_.placeId] -and $_.rating -ge $MinRating -and $_.reviews -ge $MinReviews -and ($_.kids -eq $true -or $_.m -ge 2) } |
   Sort-Object query, @{ e = { $_.reviews }; Descending = $true })
 "새 후보 $($ok.Count) 곳 (이미 있는 곳 제외)"

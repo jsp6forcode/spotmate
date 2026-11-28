@@ -100,7 +100,8 @@ $rows = :outer foreach ($cat in $queries.Keys) {
 }
 
 if ($SkipExisting) { $have = @{}; (Get-Content (Join-Path $root 'data/spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots | ForEach-Object { $have[$_.placeId] = $true }; $rows = @($rows | Where-Object { -not $have.ContainsKey($_.placeId) }) }
-"API 호출 $calls 회 (Text Search Enterprise, 월 1,000회 무료)"
+. (Join-Path $PSScriptRoot 'google-usage.ps1')   # 호출 수 기록 (data/google-api-usage.json)
+Add-GoogleUsage -Tool 'places-discover' -Calls @{ 'Text Search Enterprise' = $calls }
 $rows | Where-Object { $_.rating -ge $MinRating -and $_.reviews -ge $MinReviews } |
   Sort-Object cat, @{ e = { $_.rating * [math]::Log10($_.reviews + 1) }; Descending = $true } |
   Format-Table cat, name, rating, reviews, type, address, lat, lng, placeId -AutoSize | Out-String -Width 400

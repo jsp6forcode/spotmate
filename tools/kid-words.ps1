@@ -36,27 +36,29 @@ function Read-Error($err) {
 
 $spots = (Get-Content (Join-Path $root 'data\spots.json') -Raw -Encoding UTF8 | ConvertFrom-Json).spots
 $spots = if ($Ids) { @($spots | Where-Object { $_.id -in $Ids }) } else { @($spots | Where-Object { ($_.kids -or $_.family -or $_.play) }) }
-$calls = 0
+. (Join-Path $PSScriptRoot 'google-usage.ps1')   # 호출 수 기록 (data/google-api-usage.json)
+$dCalls = 0; $sCalls = 0
 $rows = foreach ($s in $spots) {
   try {
     $found = ''
     if ($s.placeId) {
       $p = Invoke-RestMethod -Uri "https://places.googleapis.com/v1/places/$($s.placeId)" -Headers @{ 'X-Goog-Api-Key' = $key; 'X-Goog-FieldMask' = 'reviews,userRatingCount' }
+      $dCalls++
     } else {
       $body = @{ textQuery = "$($s.name) $($s.area)"; pageSize = 1; languageCode = 'en'; locationBias = @{ circle = @{ center = @{ latitude = $s.lat; longitude = $s.lng }; radius = 300.0 } } } | ConvertTo-Json -Depth 5
       $res = Invoke-RestMethod -Method Post -Uri 'https://places.googleapis.com/v1/places:searchText' -Headers @{ 'X-Goog-Api-Key' = $key; 'X-Goog-FieldMask' = 'places.id,places.displayName,places.location,places.reviews,places.userRatingCount' } `
         -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body))
+      $sCalls++
       $p = @($res.places)[0]
       # 엉뚱한 곳이 잡히면(500 m 밖) 세지 않아요
       if (-not $p -or (Km $s.lat $s.lng $p.location.latitude $p.location.longitude) -gt 0.5) { throw 'not found nearby' }
       $found = $p.id
     }
-    $calls++
     $n = Count-KidWords $p
     [pscustomobject]@{ id = $s.id; name = $s.name; kidWords = $n; reviews = @($p.reviews).Count; total = [int]$p.userRatingCount; pass = ($n -ge $Min); foundPlaceId = $found }
   } catch { [pscustomobject]@{ id = $s.id; name = $s.name; kidWords = -1; reviews = 0; total = 0; pass = $null; foundPlaceId = ''; error = "$(Read-Error $_) $($_.Exception.Message)".Trim() } }
 }
-"API 호출 $calls 회 (월 1,000회 무료)"
+Add-GoogleUsage -Tool 'kid-words' -Calls @{ 'Place Details Enterprise + Atmosphere' = $dCalls; 'Text Search Enterprise + Atmosphere' = $sCalls }
 if ($Out) { $rows | ConvertTo-Json -Depth 3 | Set-Content -Path $Out -Encoding UTF8 }
 "통과 $(@($rows | Where-Object pass).Count) / 미달 $(@($rows | Where-Object { $_.pass -eq $false }).Count) / 확인 못 함 $(@($rows | Where-Object { $null -eq $_.pass }).Count)"
 $rows | Where-Object { -not $_.pass } | Format-Table id, name, kidWords, reviews, total, error -AutoSize | Out-String -Width 300

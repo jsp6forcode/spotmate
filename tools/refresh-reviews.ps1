@@ -85,3 +85,5 @@ $json = $result | ConvertTo-Json -Depth 4
 [IO.File]::WriteAllText($statusPath, $json + "`n", (New-Object Text.UTF8Encoding $false))
 "점검 $checked 곳, API 호출 $calls 회 (모두 Place Details Pro), 숨김 $($inactive.Count) 곳, 기준 미달 표시 이어받음(family) $($lowFamily.Count) 곳, 확인 실패 $errors 곳"
 $inactive.GetEnumerator() | ForEach-Object { "  - $($_.Key): $($_.Value)" }
+. (Join-Path $PSScriptRoot 'google-usage.ps1')   # 호출 수 기록 (data/google-api-usage.json, Actions 에서도 커밋돼요)
+Add-GoogleUsage -Tool 'refresh-reviews' -Calls @{ 'Place Details Pro' = $calls }

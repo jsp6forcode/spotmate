@@ -1,0 +1,39 @@
+{
+    "note":  "Google Places API call counts per SKU (numbers only, no Google content). Written by tools/google-usage.ps1. Counting started 2026-11-28; earlier usage is in Cloud Billing.",
+    "freeCaps":  {
+                     "Place Details Pro":  5000,
+                     "Place Details Enterprise":  1000,
+                     "Place Details Enterprise + Atmosphere":  1000,
+                     "Text Search Pro":  5000,
+                     "Text Search Enterprise":  1000,
+                     "Text Search Enterprise + Atmosphere":  1000
+                 },
+    "months":  {
+                   "2026-11":  {
+                                   "Text Search Enterprise + Atmosphere":  21
+                               }
+               },
+    "runs":  [
+                 {
+                     "at":  "2026-11-28 00:50",
+                     "tool":  "kids-check",
+                     "calls":  {
+                                   "Text Search Enterprise + Atmosphere":  10
+                               }
+                 },
+                 {
+                     "at":  "2026-11-28 00:51",
+                     "tool":  "kids-check discover",
+                     "calls":  {
+                                   "Text Search Enterprise + Atmosphere":  6
+                               }
+                 },
+                 {
+                     "at":  "2026-11-28 00:51",
+                     "tool":  "kids-check discover",
+                     "calls":  {
+                                   "Text Search Enterprise + Atmosphere":  5
+                               }
+                 }
+             ]
+}

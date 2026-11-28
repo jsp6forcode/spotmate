@@ -2,6 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://tinytripsvan.ca/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/guides/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq></url>
+  <url><loc>https://tinytripsvan.ca/guides/arcades-and-mini-golf-metro-vancouver/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/guides/arcades-and-mini-golf-richmond/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/guides/arts-and-crafts-metro-vancouver/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/guides/beaches-and-lakes-burnaby/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq></url>
@@ -67,6 +68,7 @@
   <url><loc>https://tinytripsvan.ca/guides/libraries-vancouver/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/guides/museums-burnaby/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/guides/museums-metro-vancouver/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq></url>
+  <url><loc>https://tinytripsvan.ca/guides/museums-new-westminster/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/guides/museums-richmond/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/guides/museums-vancouver/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/guides/parks-abbotsford/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq></url>
@@ -305,6 +307,7 @@
   <url><loc>https://tinytripsvan.ca/spots/capilano/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/capilanomall/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/capilanoriver/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://tinytripsvan.ca/spots/capitalcityarcade/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/capitolhillreservoirpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/captainscovepark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/cariboopark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
@@ -460,6 +463,7 @@
   <url><loc>https://tinytripsvan.ca/spots/edmondscommunitycentre/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/edmondspark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/eldonpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://tinytripsvan.ca/spots/elginheritagepark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/eliteninjachilliwack/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/elkspark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/emersonpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
@@ -506,6 +510,7 @@
   <url><loc>https://tinytripsvan.ca/spots/friendshipgarden/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/funcircleindoorplaygroun/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/fundays365/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://tinytripsvan.ca/spots/funfunpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/gallowaypark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/gameongo/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/gardencity/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
@@ -539,6 +544,7 @@
   <url><loc>https://tinytripsvan.ca/spots/goldstonepark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/goodneighbourpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/grandboulevardpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://tinytripsvan.ca/spots/grantnarrows/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/grantpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/granville/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/granvillelooppark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
@@ -870,6 +876,7 @@
   <url><loc>https://tinytripsvan.ca/spots/playgroundmcarthurglende/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/playland/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/playscapecaf/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://tinytripsvan.ca/spots/pocoheritagemuseum/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/poiriersportleisurecompl/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/pomoarts/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/pomomuseum/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
@@ -945,6 +952,7 @@
   <url><loc>https://tinytripsvan.ca/spots/saintgeorgestreetpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/saintmaryspark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/salishpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://tinytripsvan.ca/spots/samsonvmaritimemuseum/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/sandycovepark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/sappertonlandingpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/sappertonpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
@@ -1139,12 +1147,15 @@
   <url><loc>https://tinytripsvan.ca/spots/westrichmondcommunitycen/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/westvancouveraquaticcent/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/westvancouvercommunityce/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://tinytripsvan.ca/spots/westvanmemoriallibrary/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/westviewpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/westwindplayground/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/westwoodpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/westwoodsummitpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/whiterockcommunitycentre/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://tinytripsvan.ca/spots/whiterocklibrary/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/whiterockmuseumarchives/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://tinytripsvan.ca/spots/whiterockpromenade/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/whonnocklakepark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/whytecliff/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/whytecliffbeach/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
@@ -1162,6 +1173,7 @@
   <url><loc>https://tinytripsvan.ca/spots/willowviewfarms/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/winskillpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/wonderland/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://tinytripsvan.ca/spots/worldstallesttinsoldier/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/xtmregionalpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/yarrowpioneerpark/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
   <url><loc>https://tinytripsvan.ca/spots/yorkson/</loc><lastmod>2026-11-28</lastmod><changefreq>monthly</changefreq></url>
